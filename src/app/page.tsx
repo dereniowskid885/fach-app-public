@@ -1,3 +1,3 @@
 export default function Home() {
-  return <div>Issue-solver-ui</div>;
+  return <div>home</div>;
 }
