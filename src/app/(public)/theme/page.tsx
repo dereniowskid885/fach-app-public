@@ -1,5 +1,5 @@
 import ThemeShowcase from '@/components/utilities/ThemeShowcase';
 
-export default function Theme() {
+export default function ThemeShow() {
   return <ThemeShowcase />;
 }

@@ -1,7 +1,7 @@
 'use server';
 
 import { IResult } from '@/constants/interfaces';
-import { LOGIN_URL } from '@/constants/urls';
+import { API_LOGIN_URL, API_REGISTER_URL } from '@/constants/api';
 import axios from 'axios';
 import { cookies } from 'next/headers';
 import { handleError } from './helpers';
@@ -11,9 +11,17 @@ export interface ILoginForm {
   password: string;
 }
 
-export const login = async ({ email, password }: ILoginForm): Promise<IResult> => {
+export interface IRegisterForm {
+  email: string;
+  name: string;
+  surname: string;
+  password: string;
+  passwordConfirm: string;
+}
+
+export const loginHandler = async ({ email, password }: ILoginForm): Promise<IResult> => {
   try {
-    const response = await axios.post(LOGIN_URL, {
+    const response = await axios.post(API_LOGIN_URL, {
       accountName: email,
       password: password
     });
@@ -31,23 +39,26 @@ export const login = async ({ email, password }: ILoginForm): Promise<IResult> =
   }
 };
 
-// export async function register(
-//   nickname: string,
-//   name: string,
-//   surname: string,
-//   email: string,
-//   password: string
-// ) {
-//   const t = await getTranslations('Errors');
+// TODO: extend backend register endpoint with missing values
+export const registerHandler = async ({
+  email,
+  name,
+  surname,
+  password,
+  passwordConfirm
+}: IRegisterForm): Promise<IResult> => {
+  try {
+    const response = await axios.post(API_REGISTER_URL, {
+      accountName: email,
+      password: password
+    });
 
-//   return axios
-//     .post(process.env.NEXT_USER_API + '/register', {
-//       nickname,
-//       name,
-//       surname,
-//       email,
-//       password
-//     })
-//     .then(() => ({ success: true, error: '' }))
-//     .catch(() => ({ success: false, error: t('registerError') }));
-// }
+    if (response.status === 201) {
+      return { success: true };
+    } else {
+      return { success: false, error: 'Registration error' };
+    }
+  } catch (err) {
+    return handleError(err);
+  }
+};

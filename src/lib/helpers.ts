@@ -1,6 +1,8 @@
 import { IResult } from '@/constants/interfaces';
 import axios from 'axios';
 
+// helpful with axios error handling
+// gets axios error message or returns default unknown error
 export const handleError = (error: unknown) => {
   let result: IResult = { success: false };
 
