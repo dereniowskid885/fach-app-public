@@ -19,12 +19,9 @@ export interface IRegisterForm {
   passwordConfirm: string;
 }
 
-export const loginHandler = async ({ email, password }: ILoginForm): Promise<IResult> => {
+export const loginHandler = async (formData: ILoginForm): Promise<IResult> => {
   try {
-    const response = await axios.post(API_LOGIN_URL, {
-      accountName: email,
-      password: password
-    });
+    const response = await axios.post(API_LOGIN_URL, formData);
 
     if (response.status === 200 && response.data.accessToken) {
       const expires = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
@@ -49,8 +46,8 @@ export const registerHandler = async ({
 }: IRegisterForm): Promise<IResult> => {
   try {
     const response = await axios.post(API_REGISTER_URL, {
-      accountName: email,
-      password: password
+      email,
+      password
     });
 
     if (response.status === 201) {

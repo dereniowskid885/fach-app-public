@@ -51,11 +51,25 @@ export default function Login() {
           <div className="flex w-full flex-col gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="email">Email</Label>
-              <Input {...register('email')} id="email" placeholder="jankowalski@gmail.com" />
+              <Input
+                {...register('email')}
+                id="email"
+                type="email"
+                placeholder="jankowalski@gmail.com"
+                minLength={7}
+                maxLength={32}
+              />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="password">Password</Label>
-              <Input {...register('password')} id="password" type="password" placeholder="******" />
+              <Input
+                {...register('password')}
+                id="password"
+                type="password"
+                placeholder="*******"
+                minLength={7}
+                maxLength={64}
+              />
             </div>
             {formState.errors.root && (
               <Typography variant="p" className="text-center font-bold text-error">

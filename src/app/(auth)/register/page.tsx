@@ -3,31 +3,39 @@
 import { Button } from '@/components/shadcn/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/shadcn/card';
 import { Input } from '@/components/shadcn/input';
+import AlertDialog from '@/components/ui/AlertDialog';
 import { Typography } from '@/components/ui/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
 import { IRegisterForm, registerHandler } from '@/lib/auth';
 import { Label } from '@radix-ui/react-label';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function Register() {
   const router = useRouter();
   const { register, handleSubmit, formState, setError } = useForm<IRegisterForm>();
 
+  const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
+
   const submitHandler = async (formData: IRegisterForm) => {
+    if (formData.password !== formData.passwordConfirm) {
+      setError('root', { message: 'Hasła muszą być takie same' });
+      return;
+    }
+
     const result = await registerHandler(formData);
 
     if (result.success) {
-      router.push(LOGIN_PATH);
+      setSuccessDialogOpen(true);
     } else {
       setError('root', { message: result.error });
     }
   };
 
   return (
-    <Card className="w-screen min-w-[400px] rounded-none border-none bg-primary-800 sm:w-auto">
+    <Card className="w-screen rounded-none border-none bg-primary-800 sm:w-auto sm:min-w-[400px]">
       <CardHeader className="space-y-4 text-center">
         <CardTitle>
           <Typography variant="h3" className="font-normal text-white">
@@ -40,19 +48,49 @@ export default function Register() {
           <div className="flex w-full flex-col gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="email">Email</Label>
-              <Input {...register('email')} id="email" placeholder="jankowalski@gmail.com" />
+              <Input
+                {...register('email')}
+                id="email"
+                type="email"
+                placeholder="jankowalski@gmail.com"
+                minLength={7}
+                maxLength={48}
+                required
+              />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name">Imię</Label>
-              <Input {...register('name')} id="name" placeholder="Jan" />
+              <Input
+                {...register('name')}
+                id="name"
+                placeholder="Jan"
+                minLength={2}
+                maxLength={20}
+                required
+              />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="surname">Nazwisko</Label>
-              <Input {...register('surname')} id="surname" placeholder="Kowalski" />
+              <Input
+                {...register('surname')}
+                id="surname"
+                placeholder="Kowalski"
+                minLength={3}
+                maxLength={25}
+                required
+              />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="password">Hasło</Label>
-              <Input {...register('password')} id="password" type="password" placeholder="******" />
+              <Input
+                {...register('password')}
+                id="password"
+                type="password"
+                placeholder="*******"
+                minLength={7}
+                maxLength={64}
+                required
+              />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="passwordConfirm">Powtórz hasło</Label>
@@ -60,7 +98,10 @@ export default function Register() {
                 {...register('passwordConfirm')}
                 id="passwordConfirm"
                 type="password"
-                placeholder="******"
+                placeholder="*******"
+                minLength={7}
+                maxLength={64}
+                required
               />
             </div>
             {formState.errors.root && (
@@ -77,6 +118,14 @@ export default function Register() {
           </Link>
         </CardFooter>
       </form>
+      <AlertDialog
+        open={successDialogOpen}
+        title="Konto utworzone"
+        cancelButtonText="Zamknij"
+        confirmButtonText="Przejdź do logowania"
+        cancelButtonHandler={() => setSuccessDialogOpen(false)}
+        confirmButtonHandler={() => router.push(LOGIN_PATH)}
+      />
     </Card>
   );
 }
