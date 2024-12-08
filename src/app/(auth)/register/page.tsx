@@ -17,10 +17,14 @@ export default function Register() {
   const router = useRouter();
   const { register, handleSubmit, formState, setError } = useForm<IRegisterForm>();
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
 
   const submitHandler = async (formData: IRegisterForm) => {
+    setIsLoading(true);
+
     if (formData.password !== formData.passwordConfirm) {
+      setIsLoading(false);
       setError('root', { message: 'Hasła muszą być takie same' });
       return;
     }
@@ -28,8 +32,10 @@ export default function Register() {
     const result = await registerHandler(formData);
 
     if (result.success) {
+      setIsLoading(false);
       setSuccessDialogOpen(true);
     } else {
+      setIsLoading(false);
       setError('root', { message: result.error });
     }
   };
@@ -112,7 +118,9 @@ export default function Register() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button type="submit">Potwierdź</Button>
+          <Button loading={isLoading} type="submit">
+            Potwierdź
+          </Button>
           <Link href={LOGIN_PATH}>
             <Button variant="outline">Anuluj</Button>
           </Link>
