@@ -14,3 +14,8 @@ export const handleError = (error: unknown) => {
 
   return result;
 };
+
+export const getLastPathSegment = (path: string) => {
+  const splittedPath = path.split('/');
+  return splittedPath[splittedPath.length - 1];
+};
