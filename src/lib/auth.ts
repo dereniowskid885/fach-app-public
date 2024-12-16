@@ -1,7 +1,12 @@
 'use server';
 
 import { IResult } from '@/constants/interfaces';
-import { API_LOGIN_URL, API_REGISTER_URL } from '@/constants/api';
+import {
+  API_LOGIN_URL,
+  API_PASSWORD_RESET_REQUEST_URL,
+  API_PASSWORD_RESET_URL,
+  API_REGISTER_URL
+} from '@/constants/api';
 import axios from 'axios';
 import { cookies } from 'next/headers';
 import { handleError } from './helpers';
@@ -17,6 +22,16 @@ export interface IRegisterForm {
   surname: string;
   password: string;
   passwordConfirm: string;
+}
+
+export interface IPasswordResetRequestForm {
+  email: string;
+}
+
+export interface IPasswordResetForm {
+  newPassword: string;
+  newPasswordConfirm: string;
+  token: string;
 }
 
 export const loginHandler = async (formData: ILoginForm): Promise<IResult> => {
@@ -41,8 +56,7 @@ export const registerHandler = async ({
   email,
   name,
   surname,
-  password,
-  passwordConfirm
+  password
 }: IRegisterForm): Promise<IResult> => {
   try {
     const response = await axios.post(API_REGISTER_URL, {
@@ -54,6 +68,42 @@ export const registerHandler = async ({
       return { success: true };
     } else {
       return { success: false, error: 'Registration error' };
+    }
+  } catch (err) {
+    return handleError(err);
+  }
+};
+
+export const passwordResetRequestHandler = async (
+  formData: IPasswordResetRequestForm
+): Promise<IResult> => {
+  try {
+    const response = await axios.post(API_PASSWORD_RESET_REQUEST_URL, formData);
+
+    if (response.status === 200) {
+      return { success: true };
+    } else {
+      return { success: false, error: 'Password reset request error' };
+    }
+  } catch (err) {
+    return handleError(err);
+  }
+};
+
+export const passwordResetHandler = async ({
+  newPassword,
+  token
+}: IPasswordResetForm): Promise<IResult> => {
+  try {
+    const response = await axios.post(API_PASSWORD_RESET_URL, {
+      newPassword,
+      token
+    });
+
+    if (response.status === 200) {
+      return { success: true };
+    } else {
+      return { success: false, error: 'Password reset error' };
     }
   } catch (err) {
     return handleError(err);
