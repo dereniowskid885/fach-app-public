@@ -11,8 +11,9 @@ import {
 } from '@/components/shadcn/card';
 import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
+import PasswordInput from '@/components/ui/PasswordInput';
 import { Typography } from '@/components/ui/Typography';
-import { HOME_PATH, REGISTER_PATH } from '@/constants/routes';
+import { HOME_PATH, PASSWORD_RESET_PATH, REGISTER_PATH } from '@/constants/routes';
 import { ILoginForm, loginHandler } from '@/lib/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -22,18 +23,19 @@ import { useForm } from 'react-hook-form';
 export default function Login() {
   const router = useRouter();
   const { register, handleSubmit, formState, setError } = useForm<ILoginForm>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
   const submitHandler = async (formData: ILoginForm) => {
-    setIsLoading(true);
+    setLoading(true);
     const result = await loginHandler(formData);
 
     if (result.success) {
       router.push(HOME_PATH);
     } else {
-      setIsLoading(false);
       setError('root', { message: result.error });
     }
+
+    setLoading(false);
   };
 
   return (
@@ -54,7 +56,7 @@ export default function Login() {
         <CardContent>
           <div className="flex w-full flex-col gap-4">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">E-mail</Label>
               <Input
                 {...register('email')}
                 id="email"
@@ -62,18 +64,17 @@ export default function Login() {
                 placeholder="jankowalski@gmail.com"
                 minLength={7}
                 maxLength={32}
+                required
               />
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                {...register('password')}
-                id="password"
-                type="password"
-                placeholder="*******"
-                minLength={7}
-                maxLength={64}
-              />
+              <Label htmlFor="password">Hasło</Label>
+              <PasswordInput register={register('password')} id="password" />
+              <Link href={PASSWORD_RESET_PATH}>
+                <Typography variant="small" className="block text-right text-info hover:underline">
+                  Zapomniałeś hasła ?
+                </Typography>
+              </Link>
             </div>
             {formState.errors.root && (
               <Typography variant="p" className="text-center font-bold text-error">
