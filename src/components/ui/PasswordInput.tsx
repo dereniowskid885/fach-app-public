@@ -31,6 +31,7 @@ export default function PasswordInput({
         placeholder="*******"
         minLength={minLength}
         maxLength={maxLength}
+        required
       />
       <div
         className="absolute right-[12px] top-[50%] translate-y-[-50%] cursor-pointer opacity-70"

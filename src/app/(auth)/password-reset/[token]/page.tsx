@@ -34,23 +34,21 @@ export default function PasswordResetForm() {
   const [isFormVisible, setFormVisible] = useState<boolean>(!tokenExpired);
 
   const submitHandler = async (formData: IPasswordResetForm) => {
-    setLoading(true);
-
     if (formData.newPassword !== formData.newPasswordConfirm) {
-      setLoading(false);
       setError('root', { message: 'Hasła muszą być takie same' });
       return;
     }
 
+    setLoading(true);
     const result = await passwordResetHandler({ ...formData, token });
 
     if (result.success) {
-      setLoading(false);
       setFormVisible(false);
     } else {
-      setLoading(false);
       setError('root', { message: result.error });
     }
+
+    setLoading(false);
   };
 
   return (
