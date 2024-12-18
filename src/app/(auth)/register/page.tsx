@@ -22,14 +22,12 @@ export default function Register() {
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
 
   const submitHandler = async (formData: IRegisterForm) => {
-    setLoading(true);
-
     if (formData.password !== formData.passwordConfirm) {
-      setLoading(false);
       setError('root', { message: 'Hasła muszą być takie same' });
       return;
     }
 
+    setLoading(true);
     const result = await registerHandler(formData);
 
     if (result.success) {

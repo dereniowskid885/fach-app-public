@@ -32,9 +32,10 @@ export default function Login() {
     if (result.success) {
       router.push(HOME_PATH);
     } else {
-      setLoading(false);
       setError('root', { message: result.error });
     }
+
+    setLoading(false);
   };
 
   return (
@@ -63,6 +64,7 @@ export default function Login() {
                 placeholder="jankowalski@gmail.com"
                 minLength={7}
                 maxLength={32}
+                required
               />
             </div>
             <div className="flex flex-col space-y-1.5">

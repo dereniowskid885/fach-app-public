@@ -32,9 +32,10 @@ export default function PasswordResetRequest() {
     if (result.success) {
       setEmailSent(true);
     } else {
-      setLoading(false);
       setError('root', { message: result.error });
     }
+
+    setLoading(false);
   };
 
   return (
