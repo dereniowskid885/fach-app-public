@@ -32,12 +32,12 @@ export default function Register() {
     const result = await registerHandler(formData);
 
     if (result.success) {
-      setIsLoading(false);
       setSuccessDialogOpen(true);
     } else {
-      setIsLoading(false);
       setError('root', { message: result.error });
     }
+
+    setIsLoading(false);
   };
 
   return (
