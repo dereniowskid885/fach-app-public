@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { LOGIN_PATH, protectedRoutes, publicRoutes } from './constants/routes';
+import { LOGIN_PATH, protectedRoutes } from './constants/routes';
 import { isTokenExpired } from './lib/token';
 
 export default async function middleware(request: NextRequest) {
@@ -7,10 +7,9 @@ export default async function middleware(request: NextRequest) {
   const isProtectedRoute = protectedRoutes.includes(path);
 
   const token = request.cookies.get('token');
-  const tokenExpired = token && isTokenExpired(token?.value);
-  const unAuthenticated = !token || tokenExpired;
+  const isTokenInvalid = !token || isTokenExpired(token?.value);
 
-  if (isProtectedRoute && unAuthenticated) {
+  if (isProtectedRoute && isTokenInvalid) {
     return NextResponse.redirect(new URL(LOGIN_PATH, request.nextUrl));
   }
 
