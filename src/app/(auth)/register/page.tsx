@@ -4,6 +4,7 @@ import { Button } from '@/components/shadcn/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/shadcn/card';
 import { Input } from '@/components/shadcn/input';
 import AlertDialog from '@/components/ui/AlertDialog';
+import PasswordInput from '@/components/ui/PasswordInput';
 import { Typography } from '@/components/ui/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
 import { IRegisterForm, registerHandler } from '@/lib/auth';
@@ -17,18 +18,16 @@ export default function Register() {
   const router = useRouter();
   const { register, handleSubmit, formState, setError } = useForm<IRegisterForm>();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
 
   const submitHandler = async (formData: IRegisterForm) => {
-    setIsLoading(true);
-
     if (formData.password !== formData.passwordConfirm) {
-      setIsLoading(false);
       setError('root', { message: 'Hasła muszą być takie same' });
       return;
     }
 
+    setLoading(true);
     const result = await registerHandler(formData);
 
     if (result.success) {
@@ -37,7 +36,7 @@ export default function Register() {
       setError('root', { message: result.error });
     }
 
-    setIsLoading(false);
+    setLoading(false);
   };
 
   return (
@@ -53,7 +52,7 @@ export default function Register() {
         <CardContent>
           <div className="flex w-full flex-col gap-4">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">E-mail</Label>
               <Input
                 {...register('email')}
                 id="email"
@@ -88,27 +87,11 @@ export default function Register() {
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="password">Hasło</Label>
-              <Input
-                {...register('password')}
-                id="password"
-                type="password"
-                placeholder="*******"
-                minLength={7}
-                maxLength={64}
-                required
-              />
+              <PasswordInput register={register('password')} id="password" />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="passwordConfirm">Powtórz hasło</Label>
-              <Input
-                {...register('passwordConfirm')}
-                id="passwordConfirm"
-                type="password"
-                placeholder="*******"
-                minLength={7}
-                maxLength={64}
-                required
-              />
+              <PasswordInput register={register('passwordConfirm')} id="passwordConfirm" />
             </div>
             {formState.errors.root && (
               <Typography variant="p" className="text-center font-bold text-error">
@@ -122,7 +105,7 @@ export default function Register() {
             Potwierdź
           </Button>
           <Link href={LOGIN_PATH}>
-            <Button variant="outline">Anuluj</Button>
+            <Button variant="outline">Wróć</Button>
           </Link>
         </CardFooter>
       </form>
