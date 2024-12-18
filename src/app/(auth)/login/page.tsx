@@ -12,22 +12,26 @@ import {
 import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
 import { Typography } from '@/components/ui/Typography';
-import { DASHBOARD_PATH, REGISTER_PATH } from '@/constants/routes';
+import { HOME_PATH, REGISTER_PATH } from '@/constants/routes';
 import { ILoginForm, loginHandler } from '@/lib/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function Login() {
   const router = useRouter();
   const { register, handleSubmit, formState, setError } = useForm<ILoginForm>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitHandler = async (formData: ILoginForm) => {
+    setIsLoading(true);
     const result = await loginHandler(formData);
 
     if (result.success) {
-      router.push(DASHBOARD_PATH);
+      router.push(HOME_PATH);
     } else {
+      setIsLoading(false);
       setError('root', { message: result.error });
     }
   };
@@ -79,7 +83,9 @@ export default function Login() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button type="submit">Zaloguj</Button>
+          <Button loading={isLoading} type="submit">
+            Zaloguj
+          </Button>
           <Link href={REGISTER_PATH}>
             <Button variant="outline">Rejestracja</Button>
           </Link>
