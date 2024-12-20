@@ -1,1 +1,0 @@
-### Issue Solver Prototype
