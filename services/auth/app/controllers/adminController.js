@@ -2,7 +2,7 @@ const User = require('../models/User');
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}).select('_id email role');
+    const users = await User.find({}).select('email role firstName lastName city');
 
     const mappedUsers = users.map((user) => ({
       userId: user._id,
@@ -20,7 +20,7 @@ const getUser = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const user = await User.findById(userId).select('_id email role');
+    const user = await User.findById(userId).select('email role firstName lastName city');
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -41,7 +41,7 @@ const getUser = async (req, res) => {
 const updateUserRole = async (req, res) => {
   const { userId, newRole } = req.body;
 
-  if (!['user', 'editor', 'admin'].includes(newRole)) {
+  if (!['user', 'specialist', 'admin'].includes(newRole)) {
     return res.status(400).json({ message: 'Invalid role provided' });
   }
 

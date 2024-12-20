@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 
 const register = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, surname, name, city } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({ message: 'Email and password are required' });
@@ -29,11 +29,11 @@ const register = async (req, res) => {
     }
 
 
-    const user = new User({ email, password, role: 'user' });
+    const user = new User({ email, password, role: 'user', firstName: name, lastName: surname, city });
 
     try {
-      await generateEmailVerificationLink(email);
       await user.save();
+      await generateEmailVerificationLink(email);
     } catch (validationError) {
       if (validationError.name === 'ValidationError') {
         const errors = Object.values(validationError.errors).map((err) => err.message);

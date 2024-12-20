@@ -21,8 +21,26 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['user', 'editor', 'admin'],
+      enum: ['user', 'specialist', 'admin'],
       default: 'user',
+    },
+    firstName: {
+      type: String,
+      required: true,
+      minlength: 2,
+      maxlength: 20,
+    },
+    lastName: {
+      type: String,
+      required: true,
+      minlength: 3,
+      maxlength: 25,
+    },
+    city: {
+      type: String,
+      required: false,
+      minlength: 3,
+      maxlength: 64,
     },
     refreshTokens: [
       {
