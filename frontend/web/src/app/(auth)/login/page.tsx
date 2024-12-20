@@ -11,10 +11,11 @@ import {
 } from '@/components/shadcn/card';
 import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
+import AlertDialog from '@/components/ui/AlertDialog';
 import PasswordInput from '@/components/ui/PasswordInput';
 import { Typography } from '@/components/ui/Typography';
 import { HOME_PATH, PASSWORD_RESET_PATH, REGISTER_PATH } from '@/constants/routes';
-import { ILoginForm, loginHandler } from '@/lib/auth';
+import { accountVerifyRequestHandler, ILoginForm, loginHandler } from '@/lib/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -22,20 +23,46 @@ import { useForm } from 'react-hook-form';
 
 export default function Login() {
   const router = useRouter();
-  const { register, handleSubmit, formState, setError } = useForm<ILoginForm>();
-  const [isLoading, setLoading] = useState(false);
+  const { register, handleSubmit, formState, setError, getValues } = useForm<ILoginForm>();
+  const [isSubmitLoading, setSubmitLoading] = useState<boolean>(false);
+
+  const [isEmailSent, setEmailSent] = useState<boolean>(false);
+  const [isAccountVerifyLoading, setAccountVerifyLoading] = useState<boolean>(false);
+  const [accountVerifyDialog, setAccountVerifyDialog] = useState<boolean>(false);
+  const [accountVerifyError, setAccountVerifyError] = useState<string>('');
 
   const submitHandler = async (formData: ILoginForm) => {
-    setLoading(true);
+    setSubmitLoading(true);
     const result = await loginHandler(formData);
 
     if (result.success) {
       router.push(HOME_PATH);
+    } else if (result.status === 403) {
+      openAccountVerifyDialog();
     } else {
       setError('root', { message: result.error });
     }
 
-    setLoading(false);
+    setSubmitLoading(false);
+  };
+
+  const accountVerifyRequest = async () => {
+    setAccountVerifyLoading(true);
+    const result = await accountVerifyRequestHandler({ email: getValues('email') });
+
+    if (result.success) {
+      setEmailSent(true);
+    } else {
+      setAccountVerifyError(result.error ?? '');
+    }
+
+    setAccountVerifyLoading(false);
+  };
+
+  const openAccountVerifyDialog = () => {
+    setEmailSent(false);
+    setAccountVerifyError('');
+    setAccountVerifyDialog(true);
   };
 
   return (
@@ -84,7 +111,7 @@ export default function Login() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button loading={isLoading} type="submit">
+          <Button loading={isSubmitLoading} type="submit">
             Zaloguj
           </Button>
           <Link href={REGISTER_PATH}>
@@ -92,6 +119,21 @@ export default function Login() {
           </Link>
         </CardFooter>
       </form>
+      <AlertDialog
+        open={accountVerifyDialog}
+        title="Konto nieaktywne"
+        description={
+          isEmailSent
+            ? 'Link do aktywacji konta został wysłany!'
+            : `Czy chcesz otrzymać link aktywacyjny na e-mail: ${getValues('email')}?`
+        }
+        cancelButtonText="Zamknij"
+        confirmButtonText={isEmailSent ? '' : 'Wyślij link'}
+        cancelButtonHandler={() => setAccountVerifyDialog(false)}
+        confirmButtonHandler={isEmailSent ? undefined : accountVerifyRequest}
+        errorMessage={accountVerifyError}
+        isLoadingConfirmButton={isAccountVerifyLoading}
+      />
     </Card>
   );
 }

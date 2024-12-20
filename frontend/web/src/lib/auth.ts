@@ -2,6 +2,8 @@
 
 import { IResult } from '@/constants/interfaces';
 import {
+  API_EMAIL_VERIFY_REQUEST_URL,
+  API_EMAIL_VERIFY_URL,
   API_LOGIN_URL,
   API_PASSWORD_RESET_REQUEST_URL,
   API_PASSWORD_RESET_URL,
@@ -29,9 +31,17 @@ export interface IPasswordResetRequestForm {
   email: string;
 }
 
+export interface IAccountVerifyRequestForm {
+  email: string;
+}
+
 export interface IPasswordResetForm {
   newPassword: string;
   newPasswordConfirm: string;
+  token: string;
+}
+
+export interface IAccountVerifyForm {
   token: string;
 }
 
@@ -82,20 +92,44 @@ export const passwordResetRequestHandler = async (
   }
 };
 
-export const passwordResetHandler = async ({
-  newPassword,
-  token
-}: IPasswordResetForm): Promise<IResult> => {
+export const passwordResetHandler = async (formData: IPasswordResetForm): Promise<IResult> => {
   try {
-    const response = await axios.post(API_PASSWORD_RESET_URL, {
-      newPassword,
-      token
-    });
+    const response = await axios.post(API_PASSWORD_RESET_URL, formData);
 
     if (response.status === 200) {
       return { success: true };
     } else {
       return { success: false, error: 'Password reset error' };
+    }
+  } catch (err) {
+    return handleError(err);
+  }
+};
+
+export const accountVerifyRequestHandler = async (
+  formData: IAccountVerifyRequestForm
+): Promise<IResult> => {
+  try {
+    const response = await axios.post(API_EMAIL_VERIFY_REQUEST_URL, formData);
+
+    if (response.status === 200) {
+      return { success: true };
+    } else {
+      return { success: false, error: 'Account verification request error' };
+    }
+  } catch (err) {
+    return handleError(err);
+  }
+};
+
+export const accountVerifyHandler = async (formData: IAccountVerifyForm): Promise<IResult> => {
+  try {
+    const response = await axios.post(API_EMAIL_VERIFY_URL, formData);
+
+    if (response.status === 200) {
+      return { success: true };
+    } else {
+      return { success: false, error: 'Account verification error' };
     }
   } catch (err) {
     return handleError(err);
