@@ -4,10 +4,18 @@ import axios from 'axios';
 // helpful with axios error handling
 // gets axios error message or returns default unknown error
 export const handleError = (error: unknown) => {
-  let result: IResult = { success: false };
+  const result: IResult = { success: false, error: 'Unknown server error' };
 
-  if (axios.isAxiosError(error)) {
-    result.error = error.response ? error.response.data.message : 'Unknown server error';
+  if (axios.isAxiosError(error) && error.response) {
+    if (error.response.status) {
+      result.status = error.response.status;
+    }
+
+    if (error.response.data.message) {
+      result.error = error.response.data.message;
+    } else if (error.response.statusText) {
+      result.error = error.response.statusText;
+    }
   }
 
   return result;
