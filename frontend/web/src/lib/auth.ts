@@ -68,6 +68,8 @@ export const registerHandler = async (formData: IRegisterForm): Promise<IResult>
 
     if (response.status === 201) {
       return { success: true };
+    } else if (response.status === 207) {
+      return { success: false, status: response.status };
     } else {
       return { success: false, error: 'Registration error' };
     }
