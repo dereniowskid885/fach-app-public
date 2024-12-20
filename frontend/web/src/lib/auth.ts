@@ -52,22 +52,9 @@ export const loginHandler = async (formData: ILoginForm): Promise<IResult> => {
   }
 };
 
-// TODO: extend backend register endpoint with missing values
-export const registerHandler = async ({
-  email,
-  name,
-  surname,
-  password,
-  city
-}: IRegisterForm): Promise<IResult> => {
+export const registerHandler = async (formData: IRegisterForm): Promise<IResult> => {
   try {
-    const response = await axios.post(API_REGISTER_URL, {
-      email,
-      password,
-      name,
-      surname,
-      city
-    });
+    const response = await axios.post(API_REGISTER_URL, formData);
 
     if (response.status === 201) {
       return { success: true };
