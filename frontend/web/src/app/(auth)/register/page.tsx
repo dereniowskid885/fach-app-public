@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form';
 
 export default function Register() {
   const router = useRouter();
-  const { register, handleSubmit, formState, setError } = useForm<IRegisterForm>();
+  const { register, handleSubmit, formState, setError, getValues } = useForm<IRegisterForm>();
 
   const [isLoading, setLoading] = useState<boolean>(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
@@ -122,6 +122,7 @@ export default function Register() {
       <AlertDialog
         open={successDialogOpen}
         title="Konto utworzone"
+        description={`Link do weryfikacji konta został wysłany na e-mail: ${getValues('email')}`}
         cancelButtonText="Zamknij"
         confirmButtonText="Przejdź do logowania"
         cancelButtonHandler={() => setSuccessDialogOpen(false)}
