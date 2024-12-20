@@ -22,6 +22,7 @@ export interface IRegisterForm {
   surname: string;
   password: string;
   passwordConfirm: string;
+  city: string;
 }
 
 export interface IPasswordResetRequestForm {
@@ -56,12 +57,16 @@ export const registerHandler = async ({
   email,
   name,
   surname,
-  password
+  password,
+  city
 }: IRegisterForm): Promise<IResult> => {
   try {
     const response = await axios.post(API_REGISTER_URL, {
       email,
-      password
+      password,
+      name,
+      surname,
+      city
     });
 
     if (response.status === 201) {
