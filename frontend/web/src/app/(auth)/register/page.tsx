@@ -4,6 +4,7 @@ import { Button } from '@/components/shadcn/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/shadcn/card';
 import { Input } from '@/components/shadcn/input';
 import AlertDialog from '@/components/ui/AlertDialog';
+import CitySelect from '@/components/ui/CitySelect';
 import PasswordInput from '@/components/ui/PasswordInput';
 import { Typography } from '@/components/ui/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
@@ -24,6 +25,11 @@ export default function Register() {
   const submitHandler = async (formData: IRegisterForm) => {
     if (formData.password !== formData.passwordConfirm) {
       setError('root', { message: 'Hasła muszą być takie same' });
+      return;
+    }
+
+    if (!formData.city) {
+      setError('root', { type: 'required', message: 'Miasto jest wymagane.' });
       return;
     }
 
@@ -92,6 +98,10 @@ export default function Register() {
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="passwordConfirm">Powtórz hasło</Label>
               <PasswordInput register={register('passwordConfirm')} id="passwordConfirm" />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="city">Miasto</Label>
+              <CitySelect register={register('city')} id="city" />
             </div>
             {formState.errors.root && (
               <Typography variant="p" className="text-center font-bold text-error">
