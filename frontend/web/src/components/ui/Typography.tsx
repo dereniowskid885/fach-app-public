@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 
 interface TypographyProps<T extends ElementType> extends React.HTMLAttributes<HTMLElement> {
   as?: T;
-  variant?: 'h1' | 'h2' | 'h3' | 'p' | 'lead' | 'large' | 'small' | 'muted';
+  variant?: 'h1' | 'h2' | 'h3' | 'p' | 'lead' | 'large' | 'small' | 'muted' | 'note';
 }
 
 export function Typography<T extends ElementType = 'p'>({
@@ -21,13 +21,14 @@ export function Typography<T extends ElementType = 'p'>({
     lead: 'text-xl text-muted-foreground',
     large: 'text-lg font-semibold',
     small: 'text-sm font-medium leading-none',
-    muted: 'text-sm text-muted-foreground'
+    muted: 'text-sm text-muted-foreground',
+    note: 'text-xs'
   };
 
   const defaultElement =
     variant === 'p' || variant === 'lead'
       ? 'p'
-      : variant === 'large' || variant === 'small' || variant === 'muted'
+      : variant === 'large' || variant === 'small' || variant === 'muted' || variant === 'note'
         ? 'span'
         : (variant as ElementType);
 
