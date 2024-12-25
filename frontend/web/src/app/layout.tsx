@@ -3,14 +3,12 @@ import localFont from 'next/font/local';
 import '@/styles/globals.css';
 import { ReactNode } from 'react';
 
-const geistSans = localFont({
-  src: '../../public/fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
+const arimoItalic = localFont({
+  src: '../../public/fonts/Arimo-Italic-VariableFont_wght.ttf',
   weight: '100 900'
 });
-const geistMono = localFont({
-  src: '../../public/fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
+const arimo = localFont({
+  src: '../../public/fonts/Arimo-VariableFont_wght.ttf',
   weight: '100 900'
 });
 
@@ -27,7 +25,7 @@ export interface IRootLayout {
 export default function RootLayout({ children }: IRootLayout) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} bg-primary-700 antialiased`}>
+      <body className={`${arimoItalic.className} ${arimo.className} bg-primary-700 antialiased`}>
         {children}
       </body>
     </html>
