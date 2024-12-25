@@ -1,5 +1,5 @@
 import LicenseNote from '@/components/ui/LicenseNote';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 export interface IAuthLayout {
   children: ReactNode;
