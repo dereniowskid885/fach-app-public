@@ -28,7 +28,6 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'Email already registered' });
     }
 
-
     const user = new User({ email, password, role: 'user', firstName: name, lastName: surname, city });
 
     try {
@@ -177,12 +176,6 @@ const requestPasswordReset = async (req, res) => {
       return res.status(404).json({ message: 'No account with this email exists' });
     }
 
-    if (!user.isVerified) {
-      return res.status(403).json({
-        message: 'Please verify your email before requesting password reset link',
-      });
-    }
-
     const resetToken = jwt.sign(
       {
         email: user.email,
@@ -267,12 +260,6 @@ const passwordReset = async (req, res) => {
     const user = await User.findOne({ email: decoded.email });
 
     if (!user) return res.status(400).json({ message: 'Invalid link' });
-
-    if (!user.isVerified) {
-      return res.status(403).json({
-        message: 'Please verify your email before resetting password',
-      });
-    }
 
     user.password = newPassword;
     await user.save();
