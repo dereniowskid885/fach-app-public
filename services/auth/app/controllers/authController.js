@@ -32,7 +32,14 @@ const register = async (req, res) => {
 
     try {
       await user.save();
-      await generateEmailVerificationLink(email);
+
+      const emailResult = await sendEmailVerificationLink(email);
+
+      if (!emailResult) {
+        return res.status(207).json({ message: 'Server error while sending email verification link.' });
+      }
+
+      return res.status(201).json({ message: 'User registered in database.' });
     } catch (validationError) {
       if (validationError.name === 'ValidationError') {
         const errors = Object.values(validationError.errors).map((err) => err.message);
@@ -53,8 +60,6 @@ const register = async (req, res) => {
         error: validationError.message,
       });
     }
-
-    return res.status(201).json({ message: 'User registered in database.' });
   } catch (err) {
     return res.status(500).json({
       message: 'Server error during registration',
@@ -212,10 +217,15 @@ const requestEmailVerificationLink = async (req, res) => {
   try {
     const { email } = req.body;
 
-    await generateEmailVerificationLink(email);
-    return res.status(200).json({ message: 'Email verification link sent on provided email.' });
+    const emailResult = await sendEmailVerificationLink(email);
+
+    if (emailResult) {
+      return res.status(200).json({ message: 'Email verification link sent on provided email.' });
+    } else {
+      return res.status(500).json({ message: 'Server error while sending email verification link.' });
+    }
   } catch (error) {
-    return res.status(500).json({ message: 'Server error while requesting email verification link' });
+    return res.status(500).json({ message: 'Server error while sending email verification link' });
   }
 };
 
@@ -278,7 +288,7 @@ const passwordReset = async (req, res) => {
   }
 };
 
-const generateEmailVerificationLink = async (email) => {
+const sendEmailVerificationLink = async (email) => {
   try {
     const baseUrl = process.env.FRONTEND_BASE_URL;
     const verificationPath = '/verify';
@@ -293,20 +303,25 @@ const generateEmailVerificationLink = async (email) => {
 
     const verificationLink = `${baseUrl}${verificationPath}/${verificationToken}`;
 
-    await transporter
+    const emailResult = await transporter
       .sendMail({
         to: email,
         subject: `${process.env.APP_NAME} - Email Verification`,
         html: `<div>Here is your verification link: <a href="${verificationLink}">CLICK</a></div>`,
       })
       .then(() => {
-        Logger.info(`Email Verification Link sent to: ${email}`);
+        Logger.info(`Email verification link sent to: ${email}`);
+        return true;
       })
       .catch((err) => {
         console.error('Error during sending email: ' + err);
+        return false;
       });
-  } catch (error) {
-    return res.status(500).json({ message: 'Server error while generating email verification link.' });
+
+    return emailResult;
+  } catch (err) {
+    console.error('Error while sending email verification link: ' + err);
+    return false;
   }
 };
 

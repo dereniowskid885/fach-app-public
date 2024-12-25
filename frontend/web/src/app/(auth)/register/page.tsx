@@ -3,6 +3,7 @@
 import { Button } from '@/components/shadcn/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/shadcn/card';
 import { Input } from '@/components/shadcn/input';
+import AccountVerifyDialog from '@/components/ui/AccountVerifyDialog';
 import AlertDialog from '@/components/ui/AlertDialog';
 import CitySelect from '@/components/ui/CitySelect';
 import PasswordInput from '@/components/ui/PasswordInput';
@@ -17,10 +18,11 @@ import { useForm } from 'react-hook-form';
 
 export default function Register() {
   const router = useRouter();
-  const { register, handleSubmit, formState, setError } = useForm<IRegisterForm>();
+  const { register, handleSubmit, formState, setError, getValues } = useForm<IRegisterForm>();
 
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
+  const [successDialog, setSuccessDialog] = useState<boolean>(false);
+  const [accountVerifyDialog, setAccountVerifyDialog] = useState<boolean>(false);
 
   const submitHandler = async (formData: IRegisterForm) => {
     if (formData.password !== formData.passwordConfirm) {
@@ -37,7 +39,9 @@ export default function Register() {
     const result = await registerHandler(formData);
 
     if (result.success) {
-      setSuccessDialogOpen(true);
+      setSuccessDialog(true);
+    } else if (result.status === 207) {
+      setAccountVerifyDialog(true);
     } else {
       setError('root', { message: result.error });
     }
@@ -120,12 +124,21 @@ export default function Register() {
         </CardFooter>
       </form>
       <AlertDialog
-        open={successDialogOpen}
+        open={successDialog}
         title="Konto utworzone"
+        description={`Link do weryfikacji konta został wysłany na e-mail: ${getValues('email')}`}
         cancelButtonText="Zamknij"
         confirmButtonText="Przejdź do logowania"
-        cancelButtonHandler={() => setSuccessDialogOpen(false)}
+        cancelButtonHandler={() => setSuccessDialog(false)}
         confirmButtonHandler={() => router.push(LOGIN_PATH)}
+      />
+      <AccountVerifyDialog
+        open={accountVerifyDialog}
+        email={getValues('email')}
+        title="Konto utworzone"
+        description={`Wystąpił problem podczas wysyłania linku aktywacyjnego. Czy chcesz wysłać link ponownie na e-mail: ${getValues('email')}?`}
+        emailSentDescription="Link do aktywacji konta został wysłany!"
+        closeDialogHandler={() => setAccountVerifyDialog(false)}
       />
     </Card>
   );

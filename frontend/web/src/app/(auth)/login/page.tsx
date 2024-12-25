@@ -11,6 +11,7 @@ import {
 } from '@/components/shadcn/card';
 import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
+import AccountVerifyDialog from '@/components/ui/AccountVerifyDialog';
 import PasswordInput from '@/components/ui/PasswordInput';
 import { Typography } from '@/components/ui/Typography';
 import { HOME_PATH, PASSWORD_RESET_PATH, REGISTER_PATH } from '@/constants/routes';
@@ -22,20 +23,24 @@ import { useForm } from 'react-hook-form';
 
 export default function Login() {
   const router = useRouter();
-  const { register, handleSubmit, formState, setError } = useForm<ILoginForm>();
-  const [isLoading, setLoading] = useState(false);
+  const { register, handleSubmit, formState, setError, getValues } = useForm<ILoginForm>();
+  const [isSubmitLoading, setSubmitLoading] = useState<boolean>(false);
+
+  const [accountVerifyDialog, setAccountVerifyDialog] = useState<boolean>(false);
 
   const submitHandler = async (formData: ILoginForm) => {
-    setLoading(true);
+    setSubmitLoading(true);
     const result = await loginHandler(formData);
 
     if (result.success) {
       router.push(HOME_PATH);
+    } else if (result.status === 403) {
+      setAccountVerifyDialog(true);
     } else {
       setError('root', { message: result.error });
     }
 
-    setLoading(false);
+    setSubmitLoading(false);
   };
 
   return (
@@ -84,7 +89,7 @@ export default function Login() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button loading={isLoading} type="submit">
+          <Button loading={isSubmitLoading} type="submit">
             Zaloguj
           </Button>
           <Link href={REGISTER_PATH}>
@@ -92,6 +97,14 @@ export default function Login() {
           </Link>
         </CardFooter>
       </form>
+      <AccountVerifyDialog
+        open={accountVerifyDialog}
+        email={getValues('email')}
+        title="Konto nieaktywne"
+        description={`Czy chcesz otrzymać link aktywacyjny na e-mail: ${getValues('email')}?`}
+        emailSentDescription="Link do aktywacji konta został wysłany!"
+        closeDialogHandler={() => setAccountVerifyDialog(false)}
+      />
     </Card>
   );
 }
