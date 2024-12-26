@@ -8,13 +8,13 @@ import { LOGIN_PATH } from '@/constants/routes';
 import { accountVerifyHandler } from '@/lib/auth';
 
 export interface IAccountVerifyPage {
-  params: { token: string };
+  params: Promise<{ token: string }>;
 }
 
 export default async function AccountVerifyPage({ params }: IAccountVerifyPage) {
   let isAccountVerifySuccess = false;
 
-  const token = params.token;
+  const token = (await params).token;
   const tokenExpired = isTokenExpired(token);
 
   if (!tokenExpired) {
