@@ -40,7 +40,7 @@ export default function Navigation() {
         <FaUser />
       </NavLink>
       <Button
-        className="nav-item gap-2 border-0 border-none bg-transparent hover:bg-transparent"
+        className="nav-item gap-1 border-0 border-none bg-transparent hover:bg-transparent"
         onClick={handleLogout}
         size="icon"
         variant="outline"
