@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { notFound } from 'next/navigation';
 
 export default function PasswordResetForm() {
   const { register, handleSubmit, formState, setError } = useForm<IPasswordResetForm>();
@@ -32,6 +33,10 @@ export default function PasswordResetForm() {
 
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isFormVisible, setFormVisible] = useState<boolean>(!tokenExpired);
+
+  if (!tokenPayload) {
+    notFound();
+  }
 
   const submitHandler = async (formData: IPasswordResetForm) => {
     if (formData.newPassword !== formData.newPasswordConfirm) {

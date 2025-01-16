@@ -1,4 +1,4 @@
-import { isTokenExpired } from '@/lib/token';
+import { isTokenExpired, isTokenInvalid } from '@/lib/token';
 import React from 'react';
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/shadcn/card';
 import { Typography } from '@/components/ui/Typography';
@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Button } from '@/components/shadcn/button';
 import { LOGIN_PATH } from '@/constants/routes';
 import { accountVerifyHandler } from '@/lib/auth';
+import { notFound } from 'next/navigation';
 
 export interface IAccountVerifyPage {
   params: Promise<{ token: string }>;
@@ -15,6 +16,12 @@ export default async function AccountVerifyPage({ params }: IAccountVerifyPage) 
   let isAccountVerifySuccess = false;
 
   const token = (await params).token;
+  const tokenInvalid = isTokenInvalid(token);
+
+  if (tokenInvalid) {
+    notFound();
+  }
+
   const tokenExpired = isTokenExpired(token);
 
   if (!tokenExpired) {
