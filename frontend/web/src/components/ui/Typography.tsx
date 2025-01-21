@@ -20,7 +20,7 @@ export function Typography<T extends ElementType = 'p'>({
     p: 'leading-7',
     lead: 'text-xl text-muted-foreground',
     large: 'text-lg font-semibold',
-    small: 'text-sm font-medium leading-none',
+    small: 'text-sm font-medium',
     muted: 'text-sm text-muted-foreground',
     note: 'text-xs'
   };

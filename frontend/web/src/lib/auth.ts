@@ -1,6 +1,6 @@
 'use server';
 
-import { IResult } from '@/constants/interfaces';
+import { IResult } from '@/constants/const';
 import {
   API_EMAIL_VERIFY_REQUEST_URL,
   API_EMAIL_VERIFY_URL,
