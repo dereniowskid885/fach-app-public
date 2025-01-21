@@ -1,4 +1,4 @@
-import { IResult } from '@/constants/interfaces';
+import { IResult } from '@/constants/const';
 import axios from 'axios';
 
 // helpful with axios error handling
