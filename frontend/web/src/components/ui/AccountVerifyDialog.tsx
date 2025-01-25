@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import AlertDialog from './AlertDialog';
+import DialogComponent from './DialogComponent';
 import { accountVerifyRequestHandler } from '@/lib/auth';
 
 export interface IAccountVerifyDialog {
@@ -48,7 +48,7 @@ export default function AccountVerifyDialog({
   };
 
   return (
-    <AlertDialog
+    <DialogComponent
       open={open}
       title={isEmailSent ? (emailSentTitle ?? title) : title}
       description={isEmailSent ? (emailSentDescription ?? description) : description}
