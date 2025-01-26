@@ -1,0 +1,26 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Auth Service",
+      "type": "shell",
+      "command": "cd services/auth ; npm run dev",
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Frontend",
+      "type": "shell",
+      "command": "cd frontend/web ; npm run dev",
+      "problemMatcher": []
+    },
+    {
+      "label": "Start App",
+      "dependsOn": ["Start Auth Service", "Start Frontend"],
+      "problemMatcher": [],
+      "presentation": {
+          "reveal": "always",
+          "panel": "shared"
+      }
+  }
+  ]
+}
