@@ -9,7 +9,6 @@ import {
   PROFILE_PATH,
   TICKETS_PATH
 } from '@/constants/routes';
-import { deleteCookie } from '@/lib/serverHelpers';
 import { useRouter } from 'next/navigation';
 import { MdHomeFilled } from 'react-icons/md';
 import { IoMdBriefcase } from 'react-icons/io';
@@ -17,12 +16,13 @@ import { MdOutlineFavorite } from 'react-icons/md';
 import { FaUser } from 'react-icons/fa';
 import { MdOutlineLogout } from 'react-icons/md';
 import { Typography } from '@/components/ui/Typography';
+import { logoutHandler } from '@/lib/auth';
 
 export default function Navigation() {
   const router = useRouter();
 
-  const handleLogout = () => {
-    deleteCookie('token').then(() => router.push(LOGIN_PATH));
+  const handleLogout = async () => {
+    await logoutHandler().then(() => router.push(LOGIN_PATH));
   };
 
   return (

@@ -10,7 +10,7 @@ export interface IMainLayout {
 }
 
 export default async function MainLayout({ children }: IMainLayout) {
-  const token = (await cookies()).get('token');
+  const token = (await cookies()).get('accessToken');
   const tokenPayload = getTokenPayload(token?.value ?? '');
 
   if (!tokenPayload) {
