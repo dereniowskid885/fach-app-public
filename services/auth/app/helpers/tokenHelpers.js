@@ -2,21 +2,27 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
 const generateTokens = (req, res, user) => {
-  const accessToken = generateAccessToken(user);
+  const accessToken = generateAccessToken(req, res, user);
   const { refreshToken, refreshTokenData } = generateRefreshToken(req, res, user);
   return { accessToken, refreshToken, refreshTokenData };
 };
 
-const generateAccessToken = (user) => {
+const generateAccessToken = (req, res, user) => {
   const { _id, role, email, firstName, lastName, city } = user;
   const fullName = `${firstName} ${lastName}`;
   const accessToken = jwt.sign(
     { userId: _id, role, email, name: firstName, surname: lastName, fullName, city},
     process.env.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: '30m',
+      expiresIn: '15m',
     },
   );
+  res.cookie('accessToken', accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 15 * 60 * 1000,
+  });
   return accessToken;
 };
 

@@ -90,18 +90,19 @@ const login = async (req, res) => {
       });
     }
 
-    const { accessToken, refreshTokenData } = generateTokens(req, res, user);
+    const { refreshTokenData } = generateTokens(req, res, user);
     await addTokenToDB(user._id, refreshTokenData);
-
-    return res.status(200).json({ accessToken });
+    return res.status(200).json({ success: true, message: 'User logged in succesfully.' });
   } catch (err) {
     return res.status(500).json({ message: 'Server error' });
   }
 };
 
 const refreshToken = async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
-  const deviceInfo = req.headers['user-agent'];
+  const refreshToken = req.cookies.refreshToken || req.headers['refresh-token'];
+
+  // For Next.js purposes it checks for custom header first
+  const deviceInfo = req.headers['customuaheader'] || req.headers['user-agent'];
 
   if (!refreshToken) {
     return res.status(401).json({ message: 'Refresh token not provided' });
@@ -121,11 +122,11 @@ const refreshToken = async (req, res) => {
       return res.status(401).json({ message: 'Invalid refresh token' });
     }
 
-    const accessToken = generateAccessToken(user);
+    generateAccessToken(user);
     await user.save();
     await removeExpiredTokens(user._id);
 
-    return res.status(200).json({ accessToken });
+    return res.status(200).json({ success: true, message: 'Access token refreshed.' });
   } catch (err) {
     if (err instanceof jwt.TokenExpiredError) {
       return res.status(401).json({ message: 'Refresh token expired' });
@@ -244,10 +245,10 @@ const verifyEmail = async (req, res) => {
     if (user.isVerified) return res.status(200).send({ message: 'User is already verified.' });
     await User.findByIdAndUpdate(user._id, { isVerified: true });
 
-    const { accessToken, refreshTokenData } = generateTokens(req, res, user);
+    const { refreshTokenData } = generateTokens(req, res, user);
     await addTokenToDB(user._id, refreshTokenData);
 
-    return res.status(200).json({ message: 'User has been verified.', accessToken });
+    return res.status(200).json({ message: 'User has been verified.' });
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {
       return res.status(400).json({ message: 'Invalid token' });
