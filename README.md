@@ -15,26 +15,14 @@ The repository is organized into the following directories:
 	\db
 ```
 
-## Starting the Frontend
+## How to start selected service or whole app
 
-Navigate to the frontend directory and start the development server:
+Use `Ctrl+Shift+P` and select `Tasks:Run Task`
 
-```bash
-cd frontend/web
-npm i
-npm run dev
-```
-The application will be available at http://localhost:3000.
+| Task | Result |
+| ------ | ------ |
+| Start App | Runs all services and frontend in seperated terminals |
+| Start Auth Service | Runs auth service |
 
-## Starting the Backend
-
-Navigate to the services directory and then to desired service
-
-```bash
-cd services
-cd "service_name"
-npm i
-npm run dev
-```
-
-The application will be available at http://localhost:5000.
+- Frontend will be available at http://localhost:3000.
+- Auth service will be available at http://localhost:5000.
