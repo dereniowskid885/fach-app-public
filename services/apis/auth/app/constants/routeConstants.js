@@ -1,9 +1,14 @@
 const BASE_ROUTE = '/api';
+const SWAGGER_ROUTE = `${BASE_ROUTE}/swagger`;
 const AUTH_ROUTE = `${BASE_ROUTE}/auth`;
 const USERS_ROUTE = `${BASE_ROUTE}/users`;
 
 const ROUTES = {
   BASE: BASE_ROUTE,
+  SWAGGER: {
+    BASE: SWAGGER_ROUTE,
+    EXPORT: `${SWAGGER_ROUTE}/export`,
+  },
   AUTH: {
     BASE: AUTH_ROUTE,
     LOGIN: `${AUTH_ROUTE}/login`,
