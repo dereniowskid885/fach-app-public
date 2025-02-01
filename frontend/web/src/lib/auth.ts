@@ -1,13 +1,5 @@
 import { IResult } from '@/constants/const';
-import {
-  API_EMAIL_VERIFY_REQUEST_URL,
-  API_EMAIL_VERIFY_URL,
-  API_LOGIN_URL,
-  API_LOGOUT_URL,
-  API_PASSWORD_RESET_REQUEST_URL,
-  API_PASSWORD_RESET_URL,
-  API_REGISTER_URL
-} from '@/constants/api';
+import { AuthAPI } from '@/constants/api';
 import axios from 'axios';
 import { handleError } from './helpers';
 
@@ -45,7 +37,7 @@ export interface IAccountVerifyForm {
 
 export const loginHandler = async (formData: ILoginForm): Promise<IResult> => {
   try {
-    const response = await axios.post(API_LOGIN_URL, formData, {
+    const response = await axios.post(AuthAPI.LOGIN, formData, {
       headers: {
         'Content-Type': 'application/json'
       },
@@ -64,7 +56,7 @@ export const loginHandler = async (formData: ILoginForm): Promise<IResult> => {
 
 export const registerHandler = async (formData: IRegisterForm): Promise<IResult> => {
   try {
-    const response = await axios.post(API_REGISTER_URL, formData);
+    const response = await axios.post(AuthAPI.REGISTER, formData);
 
     if (response.status === 201) {
       return { success: true };
@@ -82,7 +74,7 @@ export const passwordResetRequestHandler = async (
   formData: IPasswordResetRequestForm
 ): Promise<IResult> => {
   try {
-    const response = await axios.post(API_PASSWORD_RESET_REQUEST_URL, formData);
+    const response = await axios.post(AuthAPI.PASSWORD_RESET_REQUEST, formData);
 
     if (response.status === 200) {
       return { success: true };
@@ -96,7 +88,7 @@ export const passwordResetRequestHandler = async (
 
 export const passwordResetHandler = async (formData: IPasswordResetForm): Promise<IResult> => {
   try {
-    const response = await axios.post(API_PASSWORD_RESET_URL, formData);
+    const response = await axios.post(AuthAPI.PASSWORD_RESET, formData);
 
     if (response.status === 200) {
       return { success: true };
@@ -112,7 +104,7 @@ export const accountVerifyRequestHandler = async (
   formData: IAccountVerifyRequestForm
 ): Promise<IResult> => {
   try {
-    const response = await axios.post(API_EMAIL_VERIFY_REQUEST_URL, formData);
+    const response = await axios.post(AuthAPI.EMAIL_VERIFY_REQUEST, formData);
 
     if (response.status === 200) {
       return { success: true };
@@ -126,7 +118,7 @@ export const accountVerifyRequestHandler = async (
 
 export const accountVerifyHandler = async (formData: IAccountVerifyForm): Promise<IResult> => {
   try {
-    const response = await axios.post(API_EMAIL_VERIFY_URL, formData, { withCredentials: true });
+    const response = await axios.post(AuthAPI.EMAIL_VERIFY, formData, { withCredentials: true });
 
     if (response.status === 200) {
       return { success: true };
@@ -140,7 +132,7 @@ export const accountVerifyHandler = async (formData: IAccountVerifyForm): Promis
 
 export const logoutHandler = async (): Promise<IResult> => {
   try {
-    const response = await axios.post(API_LOGOUT_URL, {}, { withCredentials: true });
+    const response = await axios.post(AuthAPI.LOGOUT, {}, { withCredentials: true });
 
     if (response.status === 200) {
       return { success: true };
