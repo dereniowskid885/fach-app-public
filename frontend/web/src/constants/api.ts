@@ -1,9 +1,19 @@
-export const API_LOGIN_URL = process.env.NEXT_PUBLIC_USER_API + '/auth/login';
-export const API_REGISTER_URL = process.env.NEXT_PUBLIC_USER_API  + '/auth/register';
-export const API_PASSWORD_RESET_URL = process.env.NEXT_PUBLIC_USER_API  + '/auth/password-reset';
-export const API_PASSWORD_RESET_REQUEST_URL =
-  process.env.NEXT_PUBLIC_USER_API  + '/auth/password-reset-link';
-export const API_EMAIL_VERIFY_REQUEST_URL = process.env.NEXT_PUBLIC_USER_API  + '/auth/email-verify-link';
-export const API_EMAIL_VERIFY_URL = process.env.NEXT_PUBLIC_USER_API  + '/auth/email-verify';
-export const API_REFRESH_TOKEN_URL = process.env.NEXT_PUBLIC_USER_API + '/auth/refresh';
-export const API_LOGOUT_URL = process.env.NEXT_PUBLIC_USER_API + '/auth/logout';
+// API Base URLs
+const USER_SERVICE_API = process.env.NEXT_PUBLIC_USER_API + '/auth';
+const TICKETS_SERVICE_API = process.env.NEXT_PUBLIC_TICKETS_API;
+
+// Auth service URLs
+export const AuthAPI = {
+  LOGIN: `${USER_SERVICE_API}/login`,
+  LOGOUT: `${USER_SERVICE_API}/logout`,
+  REGISTER: `${USER_SERVICE_API}/register`,
+  PASSWORD_RESET: `${USER_SERVICE_API}/password-reset`,
+  PASSWORD_RESET_REQUEST: `${USER_SERVICE_API}/password-reset-link`,
+  EMAIL_VERIFY_REQUEST: `${USER_SERVICE_API}/email-verify-link`,
+  EMAIL_VERIFY: `${USER_SERVICE_API}/email-verify`
+};
+
+// Ticketing service URLs
+export const TicketsAPI = {
+  BASE: `${TICKETS_SERVICE_API}/tickets`
+};
