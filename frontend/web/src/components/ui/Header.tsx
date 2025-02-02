@@ -18,7 +18,7 @@ export interface IHeader {
 
 export default function Header({ userName }: IHeader) {
   return (
-    <header className="mx-2 mt-2 rounded-md bg-neutral-800 p-4 text-white">
+    <header className="absolute z-10 m-2 w-[calc(100%-1rem)] rounded-md bg-neutral-800 p-4 text-white">
       <Accordion type="single" collapsible>
         <AccordionItem value="header-content" className="border-0">
           <div className="align-center flex items-center justify-between border-b-[1px] border-b-white pb-2">
