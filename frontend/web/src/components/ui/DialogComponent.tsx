@@ -1,5 +1,5 @@
 import {
-  AlertDialog as AlertDialogComponent,
+  AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -9,8 +9,9 @@ import {
 } from '@/components/shadcn/alert-dialog';
 import { Typography } from './Typography';
 import { Button } from '../shadcn/button';
+import { ReactNode } from 'react';
 
-export interface IAlertDialog {
+export interface IDialogComponent {
   open: boolean;
   title: string;
   description?: string;
@@ -20,9 +21,10 @@ export interface IAlertDialog {
   confirmButtonHandler?: () => void;
   isLoadingConfirmButton?: boolean;
   errorMessage?: string;
+  content?: ReactNode;
 }
 
-export default function AlertDialog({
+export default function DialogComponent({
   open,
   title,
   description,
@@ -31,20 +33,22 @@ export default function AlertDialog({
   confirmButtonText,
   confirmButtonHandler,
   isLoadingConfirmButton,
-  errorMessage
-}: IAlertDialog) {
+  errorMessage,
+  content
+}: IDialogComponent) {
   return (
-    <AlertDialogComponent open={open}>
+    <AlertDialog open={open}>
       <AlertDialogContent>
         <AlertDialogHeader className="items-center">
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
-          {errorMessage ? (
-            <Typography variant="p" className="font-bold text-error">
-              {errorMessage}
-            </Typography>
-          ) : null}
         </AlertDialogHeader>
+        {content ? content : null}
+        {errorMessage ? (
+          <Typography variant="p" className="text-center font-bold text-error">
+            {errorMessage}
+          </Typography>
+        ) : null}
         <AlertDialogFooter className="flex-row items-center justify-center gap-2 sm:justify-center">
           {cancelButtonHandler && cancelButtonText ? (
             <AlertDialogCancel className="m-0" onClick={cancelButtonHandler}>
@@ -58,6 +62,6 @@ export default function AlertDialog({
           ) : null}
         </AlertDialogFooter>
       </AlertDialogContent>
-    </AlertDialogComponent>
+    </AlertDialog>
   );
 }

@@ -4,7 +4,7 @@ import { Button } from '@/components/shadcn/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/shadcn/card';
 import { Input } from '@/components/shadcn/input';
 import AccountVerifyDialog from '@/components/ui/AccountVerifyDialog';
-import AlertDialog from '@/components/ui/AlertDialog';
+import DialogComponent from '@/components/ui/DialogComponent';
 import CitySelect from '@/components/ui/CitySelect';
 import PasswordInput from '@/components/ui/PasswordInput';
 import { Typography } from '@/components/ui/Typography';
@@ -123,7 +123,7 @@ export default function Register() {
           </Link>
         </CardFooter>
       </form>
-      <AlertDialog
+      <DialogComponent
         open={successDialog}
         title="Konto utworzone"
         description={`Link do weryfikacji konta został wysłany na e-mail: ${getValues('email')}`}
