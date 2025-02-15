@@ -26,12 +26,12 @@ export function TicketInfoRow({ children, className }: TicketInfoRow) {
 }
 
 export interface ITicketCarouselCard {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   category: ETicketCategory;
   status: ETicketStatus;
-  assignee: string;
-  price: string;
+  assignee?: string;
+  price?: string;
 }
 
 export default function TicketCarouselCard({
