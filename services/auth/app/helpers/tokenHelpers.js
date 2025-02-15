@@ -11,29 +11,32 @@ const generateAccessToken = (req, res, user) => {
   const { _id, role, email, firstName, lastName, city } = user;
   const fullName = `${firstName} ${lastName}`;
   const accessToken = jwt.sign(
-    { userId: _id, role, email, name: firstName, surname: lastName, fullName, city},
+    { userId: _id, role, email, name: firstName, surname: lastName, fullName, city },
     process.env.ACCESS_TOKEN_SECRET,
     {
       expiresIn: '15m',
     },
   );
+  const accessTokenAge = 15 * 60 * 1000;
+
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: 15 * 60 * 1000,
+    maxAge: accessTokenAge,
   });
   return accessToken;
 };
 
 const generateRefreshToken = (req, res, user) => {
   const refreshToken = jwt.sign({ userId: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+  const refreshTokenAge = 30 * 24 * 60 * 60 * 1000;
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: 30 * 24 * 60 * 60 * 1000,
+    maxAge: refreshTokenAge,
   });
 
   const refreshTokenData = {

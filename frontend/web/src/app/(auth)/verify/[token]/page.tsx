@@ -1,21 +1,20 @@
+'use client';
+
 import { isTokenExpired, isTokenInvalid } from '@/lib/token';
-import React from 'react';
-import { Card, CardFooter, CardHeader, CardTitle } from '@/components/shadcn/card';
+import { Card, CardHeader, CardTitle } from '@/components/shadcn/card';
 import { Typography } from '@/components/ui/Typography';
-import Link from 'next/link';
-import { Button } from '@/components/shadcn/button';
-import { LOGIN_PATH } from '@/constants/routes';
 import { accountVerifyHandler } from '@/lib/auth';
-import { notFound } from 'next/navigation';
+import { notFound, usePathname } from 'next/navigation';
+import { AsyncCountdown } from '@/app/(auth)/verify/[token]/AsyncCountdown';
+import { useEffect, useState } from 'react';
+import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
 
-export interface IAccountVerifyPage {
-  params: Promise<{ token: string }>;
-}
+export default function AccountVerifyPage() {
+  const [isAccountVerifySuccess, setIsAccountVerifySuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-export default async function AccountVerifyPage({ params }: IAccountVerifyPage) {
-  let isAccountVerifySuccess = false;
-
-  const token = (await params).token;
+  const pathname = usePathname();
+  const token = pathname.split('/')[2];
   const tokenInvalid = isTokenInvalid(token);
 
   if (tokenInvalid) {
@@ -24,27 +23,39 @@ export default async function AccountVerifyPage({ params }: IAccountVerifyPage) 
 
   const tokenExpired = isTokenExpired(token);
 
-  if (!tokenExpired) {
-    const result = await accountVerifyHandler({ token });
-    isAccountVerifySuccess = result.success;
-  }
+  useEffect(() => {
+    const verifyHandler = async () => {
+      if (!tokenExpired) {
+        try {
+          const result = await accountVerifyHandler({ token });
+          setIsAccountVerifySuccess(result.success);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+      setIsLoading(false);
+    };
 
-  return (
+    verifyHandler();
+  }, [token, tokenExpired]);
+
+  return isLoading ? (
+    <LoadingSpinner />
+  ) : (
     <Card className="w-screen rounded-none border-none bg-primary-800 sm:w-auto sm:min-w-[400px]">
       <CardHeader className="space-y-4">
         <CardTitle>
           <Typography variant="h3" className="text-center font-normal text-white">
-            {isAccountVerifySuccess
-              ? 'Konto zostało aktywowane!'
-              : 'Link do aktywacji konta wygasł'}
+            {tokenExpired ? (
+              'Link do aktywacji konta wygasł'
+            ) : isAccountVerifySuccess ? (
+              <AsyncCountdown />
+            ) : (
+              'Weryfikacja konta nie powiodła się.'
+            )}
           </Typography>
         </CardTitle>
       </CardHeader>
-      <CardFooter className="flex justify-center">
-        <Link href={LOGIN_PATH}>
-          <Button>Przejdź do logowania</Button>
-        </Link>
-      </CardFooter>
     </Card>
   );
 }
