@@ -10,7 +10,9 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const ROUTES = require('./app/constants/routeConstants');
+const ROUTES_SWAGGER = require('@constants/swaggerConstants');
 const ticketRoutes = require('./app/routes/ticketRoutes');
+const swaggerRoutes = require('./app/routes/swaggerRoutes');
 
 // services common envs
 require('dotenv').config({ path: require.resolve('@root/.env.shared') });
@@ -35,8 +37,9 @@ app.use(tokenVerifyMiddleware);
 
 // routes
 app.use(ROUTES.TICKETS.BASE, ticketRoutes);
+app.use(ROUTES_SWAGGER.BASE, swaggerRoutes);
 
-const PORT = 5001;
-app.listen(PORT, () => {
-  console.log(`Ticketing service is running on port ${PORT}`);
+app.listen(process.env.TICKETING_SERVICE_PORT, () => {
+  console.log(`Ticketing service is running on port ${process.env.TICKETING_SERVICE_PORT}`);
+  console.log(`Swagger is available on: ${process.env.TICKETING_SERVICE_BASE_URL + ROUTES_SWAGGER.BASE}`);
 });
