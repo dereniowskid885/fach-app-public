@@ -1,26 +1,40 @@
 'use client';
 
 import { Carousel, CarouselContent, CarouselItem } from '@/components/shadcn/carousel';
-import { tickets } from '@/mocks/tickets';
 import TicketCarouselCard from './TicketCarouselCard';
 import { Button } from '@/components/shadcn/button';
 import { Typography } from './Typography';
-import { useState } from 'react';
-import { ETicketCategory } from '@/constants/ticket';
+import { useEffect, useState } from 'react';
+import { ETicketCategory, ITicket } from '@/constants/ticket';
 import TicketCreateDialog from './TicketCreateDialog';
 import CategorySelect from './CategorySelect';
+import axios from 'axios';
+import { TicketsAPI } from '@/constants/api';
 
 export default function TicketCarousel() {
   const [categoryFilter, setCategoryFilter] = useState<ETicketCategory | null>(null);
+  const [userTickets, setUserTickets] = useState<ITicket[]>([]);
   const [ticketCreateDialog, setTicketCreateDialog] = useState<boolean>(false);
 
+  useEffect(() => {
+    const getUserTickets = async () => {
+      const result = await axios.get(TicketsAPI.BASE, { withCredentials: true });
+
+      if (result.data) {
+        setUserTickets(result.data);
+      }
+    };
+
+    getUserTickets();
+  }, []);
+
   const ticketList = categoryFilter
-    ? tickets.filter(ticket => ticket.category === categoryFilter)
-    : tickets;
+    ? userTickets.filter(ticket => ticket.category === categoryFilter)
+    : userTickets;
 
   return (
     <div className="flex flex-col gap-2">
-      <Typography variant="h3">Twoje sprawy: {tickets.length}</Typography>
+      <Typography variant="h3">Twoje sprawy: {userTickets.length}</Typography>
       <div className="flex justify-between">
         <CategorySelect
           selectedCategory={categoryFilter}
@@ -37,7 +51,7 @@ export default function TicketCarousel() {
         <CarouselContent overflowHidden={false}>
           {ticketList.map(ticket => (
             <CarouselItem
-              key={ticket.id}
+              key={ticket._id}
               className="pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 [&:not(:first-of-type)]:pl-2"
             >
               <TicketCarouselCard

@@ -17,10 +17,13 @@ export enum ETicketStatus {
 }
 
 export interface ITicket {
-  id: string;
+  _id: string;
   category: ETicketCategory;
   status: ETicketStatus;
   assignee: string;
+  createdBy: string;
+  createdAt: Date;
+  updatedAt: Date;
   price: string;
   title: string;
   description: string;
