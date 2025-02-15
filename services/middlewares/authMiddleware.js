@@ -1,6 +1,6 @@
 // checks if request has valid cookie with token and saves it for further use in endpoints
 const checkAndParseToken = (req, jwt, ACCESS_TOKEN_SECRET) => {
-  const accessToken = req.cookies.token;
+  const accessToken = req.cookies.accessToken;
 
   if (!accessToken) {
     const error = new Error('Unauthorized: No token provided');
