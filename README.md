@@ -6,13 +6,14 @@ The repository is organized into the following directories:
 
 ```
 \frontend
-	\web
+  \web
 \services
-	\auth
-	\ticketing
+  \apis
+    \auth
+    \ticketing
+  ...
 \shared
-	\date
-	\db
+  ...
 ```
 
 ## How to start selected service or whole app
@@ -23,6 +24,8 @@ Use `Ctrl+Shift+P` and select `Tasks:Run Task`
 | ------ | ------ |
 | Start App | Runs all services and frontend in seperated terminals |
 | Start Auth Service | Runs auth service |
+| Start Ticketing Service | Runs ticketing service |
 
 - Frontend will be available at http://localhost:3000.
 - Auth service will be available at http://localhost:5000.
+- Ticketing service will be available at http://localhost:5001.
