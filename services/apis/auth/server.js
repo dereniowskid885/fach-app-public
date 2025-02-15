@@ -13,7 +13,6 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 
 const app = express();
-app.use(express.static('./app/public'));
 
 // services common envs
 require('dotenv').config({ path: require.resolve('@root/.env.shared') });
