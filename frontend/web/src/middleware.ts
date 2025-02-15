@@ -7,7 +7,6 @@ import { API_REFRESH_TOKEN_URL } from '@/constants/api';
 export default async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isProtectedRoute = protectedRoutes.includes(path);
-
   const token = request.cookies.get('accessToken');
   const isTokenInvalid = !token || isTokenExpired(token?.value);
   const requestHeaders = new Headers(request.headers);
@@ -29,7 +28,6 @@ export default async function middleware(request: NextRequest) {
       );
 
       if (refreshResponse.status === 200) {
-        
         const response = NextResponse.next({
           request: {
             headers: requestHeaders
@@ -46,6 +44,5 @@ export default async function middleware(request: NextRequest) {
       return response;
     }
   }
-
   return NextResponse.next();
 }

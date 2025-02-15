@@ -9,12 +9,14 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const app = express();
 
-app.use(cors({
-  origin: 'http://localhost:3000',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Set-Cookie'],
-  credentials: true, 
-}));
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Set-Cookie'],
+    credentials: true,
+  }),
+);
 
 connectDB();
 

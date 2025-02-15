@@ -126,7 +126,7 @@ export const accountVerifyRequestHandler = async (
 
 export const accountVerifyHandler = async (formData: IAccountVerifyForm): Promise<IResult> => {
   try {
-    const response = await axios.post(API_EMAIL_VERIFY_URL, formData);
+    const response = await axios.post(API_EMAIL_VERIFY_URL, formData, { withCredentials: true });
 
     if (response.status === 200) {
       return { success: true };
