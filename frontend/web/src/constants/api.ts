@@ -6,6 +6,7 @@ const TICKETS_SERVICE_API = process.env.NEXT_PUBLIC_TICKETS_API;
 export const AuthAPI = {
   LOGIN: `${USER_SERVICE_API}/login`,
   LOGOUT: `${USER_SERVICE_API}/logout`,
+  REFRESH_TOKEN: `${USER_SERVICE_API}/refresh`,
   REGISTER: `${USER_SERVICE_API}/register`,
   PASSWORD_RESET: `${USER_SERVICE_API}/password-reset`,
   PASSWORD_RESET_REQUEST: `${USER_SERVICE_API}/password-reset-link`,

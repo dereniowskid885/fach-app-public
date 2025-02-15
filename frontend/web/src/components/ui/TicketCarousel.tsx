@@ -9,6 +9,7 @@ import { ETicketCategory, ITicket } from '@/constants/ticket';
 import TicketCreateDialog from './TicketCreateDialog';
 import CategorySelect from './CategorySelect';
 import axios from 'axios';
+import { TicketsAPI } from '@/constants/api';
 
 export default function TicketCarousel() {
   const [categoryFilter, setCategoryFilter] = useState<ETicketCategory | null>(null);

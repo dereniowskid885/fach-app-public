@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { LOGIN_PATH, protectedRoutes } from './constants/routes';
 import { isTokenExpired } from './lib/token';
 import axios from 'axios';
-import { API_REFRESH_TOKEN_URL } from '@/constants/api';
+import { AuthAPI } from './constants/api';
 
 export default async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
@@ -15,7 +15,7 @@ export default async function middleware(request: NextRequest) {
   if (isProtectedRoute && isTokenInvalid) {
     try {
       const refreshResponse = await axios.post(
-        API_REFRESH_TOKEN_URL,
+        AuthAPI.REFRESH_TOKEN,
         {},
         {
           headers: {
@@ -37,7 +37,7 @@ export default async function middleware(request: NextRequest) {
         return response;
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       const redirectUrl = new URL(LOGIN_PATH, request.nextUrl);
       const response = NextResponse.redirect(redirectUrl);
       response.cookies.delete('accessToken');
