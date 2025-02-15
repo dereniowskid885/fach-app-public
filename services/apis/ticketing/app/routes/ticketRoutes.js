@@ -123,11 +123,23 @@ router.post('/', createTicket);
  *                     description: Unique ticket ID
  *                     example: "66df7gh8sasd6f66767rt6"
  *                   category:
- *                     type: enum
+ *                     type: string
+ *                     enum:
+ *                      - "Mechanika pojazdowa"
+ *                      - "Elektronika"
+ *                      - "Dom"
  *                     description: Ticket category
  *                     example: "Elektronika"
  *                   status:
- *                     type: enum
+ *                     type: string
+ *                     enum:
+ *                      - "Wycena"
+ *                      - "Akceptacja wyceny"
+ *                      - "Oczekiwanie na płatność"
+ *                      - "W trakcie"
+ *                      - "Akceptacja rozwiązania"
+ *                      - "Badanie przez moderatora"
+ *                      - "Ukończony"
  *                     description: Ticket status
  *                     example: "Wycena"
  *                   assignee:
@@ -139,11 +151,13 @@ router.post('/', createTicket);
  *                     description: Author of the ticket
  *                     example: "jan.kowalski@onet.pl"
  *                   createdAt:
- *                     type: Date
+ *                     type: string
+ *                     format: date-time
  *                     description: Date of ticket creation
  *                     example: "December 25, 2023, at 10:00 AM"
  *                   updatedAt:
- *                     type: Date
+ *                     type: string
+ *                     format: date-time
  *                     description: Date of ticket last update
  *                     example: "December 25, 2023, at 10:00 AM"
  *                   price:

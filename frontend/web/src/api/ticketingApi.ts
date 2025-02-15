@@ -47,17 +47,24 @@ export type GetTicketsApiResponse = /** status 200 Tickets created by logged use
   /** Unique ticket ID */
   _id?: string;
   /** Ticket category */
-  category?: any;
+  category?: 'Mechanika pojazdowa' | 'Elektronika' | 'Dom';
   /** Ticket status */
-  status?: any;
+  status?:
+    | 'Wycena'
+    | 'Akceptacja wyceny'
+    | 'Oczekiwanie na p\u0142atno\u015B\u0107'
+    | 'W trakcie'
+    | 'Akceptacja rozwi\u0105zania'
+    | 'Badanie przez moderatora'
+    | 'Uko\u0144czony';
   /** Currently assigned user */
   assignee?: string;
   /** Author of the ticket */
   createdBy?: string;
   /** Date of ticket creation */
-  createdAt?: any;
+  createdAt?: string;
   /** Date of ticket last update */
-  updatedAt?: any;
+  updatedAt?: string;
   /** Price set by specialist and accepted by ticket author */
   price?: string;
   /** Title of the ticket */
