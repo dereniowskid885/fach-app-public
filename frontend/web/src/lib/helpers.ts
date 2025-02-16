@@ -1,4 +1,6 @@
 import { IResult } from '@/constants/const';
+import { SerializedError } from '@reduxjs/toolkit';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import axios from 'axios';
 
 // helpful with axios error handling
@@ -24,4 +26,8 @@ export const handleError = (error: unknown) => {
 export const getLastPathSegment = (path: string) => {
   const splittedPath = path.split('/');
   return splittedPath[splittedPath.length - 1];
+};
+
+export const getQueryErrorMessage = (error: FetchBaseQueryError | SerializedError) => {
+  return 'data' in error ? (error.data as { message: string }).message : 'Unknown error';
 };

@@ -4,17 +4,34 @@ import { Label } from '../shadcn/label';
 import { Input } from '../shadcn/input';
 import { Textarea } from '../shadcn/textarea';
 import CategorySelect from './CategorySelect';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ETicketCategory } from '@/constants/ticket';
 import { Typography } from './Typography';
+import { PostTicketsApiArg, usePostTicketsMutation } from '@/api/ticketingApi';
+import { getQueryErrorMessage } from '@/lib/helpers';
+import { useToast } from '@/hooks/use-toast';
+import { Toaster } from '../shadcn/toaster';
 
+interface ITicketCreateForm {
+  category: ETicketCategory;
+  title: string;
+  description: string;
+}
 export interface ITicketCreateDialog {
   open: boolean;
-  cancelButtonHandler: () => void;
+  refetchTickets: () => void;
+  closeDialog: () => void;
 }
 
-export default function TicketCreateDialog({ open, cancelButtonHandler }: ITicketCreateDialog) {
-  const { register, handleSubmit, formState } = useForm();
+export default function TicketCreateDialog({
+  open,
+  refetchTickets,
+  closeDialog
+}: ITicketCreateDialog) {
+  const { toast } = useToast();
+  const { register, handleSubmit, reset: resetForm, formState } = useForm<ITicketCreateForm>();
+  const [errorMessage, setErrorMessage] = useState<string | undefined>('');
+
   const [ticketCategory, setTicketCategory] = useState<ETicketCategory | null>(null);
   const descriptionMaxLength = 3000;
   const [descriptionCharsLeft, setDescriptionCharsLeft] = useState<number>(descriptionMaxLength);
@@ -23,11 +40,52 @@ export default function TicketCreateDialog({ open, cancelButtonHandler }: ITicke
     setDescriptionCharsLeft(descriptionMaxLength - currentDescriptionLength);
   };
 
-  // TODO: integrate with ticketing service
-  const submitHandler = () => console.log('Ticket created');
+  const [triggerCreateTicketMutation, { isLoading, error: mutationError }] =
+    usePostTicketsMutation();
+
+  useEffect(() => {
+    let errorMessage;
+
+    if (!ticketCategory) {
+      errorMessage = 'Wybierz kategorię sprawy';
+    } else if (mutationError) {
+      errorMessage = getQueryErrorMessage(mutationError);
+    } else {
+      // find first form error and return error message
+      errorMessage = Object.values(formState.errors).find(error => error.message)?.message;
+    }
+
+    setErrorMessage(errorMessage);
+  }, [formState]);
+
+  const submitHandler = async (formData: ITicketCreateForm) => {
+    if (!ticketCategory) {
+      return;
+    }
+
+    const payload: PostTicketsApiArg = {
+      body: {
+        ...formData,
+        category: ticketCategory
+      }
+    };
+
+    const result = await triggerCreateTicketMutation(payload);
+    const isMutationSuccess = !result.error;
+
+    if (isMutationSuccess) {
+      closeDialog();
+      resetForm();
+      refetchTickets();
+      toast({
+        title: 'Sprawa utworzona pomyślnie',
+        duration: 2000
+      });
+    }
+  };
 
   const ticketCreateForm = (
-    <form onSubmit={handleSubmit(submitHandler)}>
+    <form>
       <div className="flex flex-col gap-4 px-4 text-center">
         <div className="flex w-fit flex-col space-y-1.5 self-center">
           <CategorySelect
@@ -38,7 +96,13 @@ export default function TicketCreateDialog({ open, cancelButtonHandler }: ITicke
         <div className="flex flex-col space-y-1.5">
           <Label htmlFor="title">Tytuł</Label>
           <Input
-            {...register('title')}
+            {...register('title', {
+              required: 'Tytuł nie może być pusty',
+              minLength: {
+                value: 7,
+                message: 'Tytuł musi mieć minimum 7 znaków'
+              }
+            })}
             id="title"
             type="text"
             minLength={7}
@@ -49,7 +113,13 @@ export default function TicketCreateDialog({ open, cancelButtonHandler }: ITicke
         <div className="flex flex-col space-y-1.5">
           <Label htmlFor="description">Opis</Label>
           <Textarea
-            {...register('description')}
+            {...register('description', {
+              required: 'Opis nie może być pusty',
+              minLength: {
+                value: 7,
+                message: 'Opis musi mieć minimum 7 znaków'
+              }
+            })}
             id="description"
             className="min-h-60 resize-none"
             minLength={7}
@@ -66,15 +136,19 @@ export default function TicketCreateDialog({ open, cancelButtonHandler }: ITicke
   );
 
   return (
-    <DialogComponent
-      open={open}
-      title="Utwórz sprawę"
-      cancelButtonText="Anuluj"
-      confirmButtonText="Potwierdź"
-      confirmButtonHandler={submitHandler}
-      cancelButtonHandler={cancelButtonHandler}
-      content={ticketCreateForm}
-      errorMessage={formState.errors.root?.message}
-    />
+    <>
+      <DialogComponent
+        open={open}
+        title="Utwórz sprawę"
+        cancelButtonText="Anuluj"
+        confirmButtonText="Potwierdź"
+        confirmButtonHandler={handleSubmit(submitHandler)}
+        isLoadingConfirmButton={isLoading}
+        cancelButtonHandler={closeDialog}
+        content={ticketCreateForm}
+        errorMessage={errorMessage}
+      />
+      <Toaster />
+    </>
   );
 }
