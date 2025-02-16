@@ -4,35 +4,36 @@ import { Carousel, CarouselContent, CarouselItem } from '@/components/shadcn/car
 import TicketCarouselCard from './TicketCarouselCard';
 import { Button } from '@/components/shadcn/button';
 import { Typography } from './Typography';
-import { useEffect, useState } from 'react';
-import { ETicketCategory, ITicket } from '@/constants/ticket';
+import { useState } from 'react';
+import { ETicketCategory, ETicketStatus } from '@/constants/ticket';
 import TicketCreateDialog from './TicketCreateDialog';
 import CategorySelect from './CategorySelect';
-import axios from 'axios';
-import { TicketsAPI } from '@/constants/api';
+import { useGetTicketsQuery } from '@/api/ticketingApi';
+import { LoadingSpinner } from '../shadcn/loading-spinner';
+import { EFallbackKey } from '@/constants/enums';
+import { notFound } from 'next/navigation';
 
 export default function TicketCarousel() {
   const [categoryFilter, setCategoryFilter] = useState<ETicketCategory | null>(null);
-  const [userTickets, setUserTickets] = useState<ITicket[]>([]);
   const [ticketCreateDialog, setTicketCreateDialog] = useState<boolean>(false);
 
-  useEffect(() => {
-    const getUserTickets = async () => {
-      const result = await axios.get(TicketsAPI.BASE, { withCredentials: true });
+  const { data: userTickets = [], isLoading, isError, refetch } = useGetTicketsQuery();
 
-      if (result.data) {
-        setUserTickets(result.data);
-      }
-    };
-
-    getUserTickets();
-  }, []);
+  // TODO: error page component to be created
+  if (isError) {
+    notFound();
+  }
 
   const ticketList = categoryFilter
     ? userTickets.filter(ticket => ticket.category === categoryFilter)
     : userTickets;
 
-  return (
+  return isLoading ? (
+    // TODO: skeleton loader to be added
+    <div className="flex h-[420px] items-center justify-center">
+      <LoadingSpinner />
+    </div>
+  ) : (
     <div className="flex flex-col gap-2">
       <Typography variant="h3">Twoje sprawy: {userTickets.length}</Typography>
       <div className="flex justify-between">
@@ -47,19 +48,19 @@ export default function TicketCarousel() {
           </Typography>
         ) : null}
       </div>
-      <Carousel className="w-full overflow-visible">
+      <Carousel className="w-full cursor-pointer overflow-visible">
         <CarouselContent overflowHidden={false}>
-          {ticketList.map(ticket => (
+          {ticketList.map((ticket, index) => (
             <CarouselItem
-              key={ticket._id}
-              className="pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 [&:not(:first-of-type)]:pl-2"
+              key={ticket._id ?? `${EFallbackKey.TICKET_CAROUSEL}-${index}`}
+              className="select-none pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 [&:not(:first-of-type)]:pl-2"
             >
               <TicketCarouselCard
                 title={ticket.title}
                 description={ticket.description}
                 assignee={ticket.assignee}
-                status={ticket.status}
-                category={ticket.category}
+                status={ticket.status as ETicketStatus}
+                category={ticket.category as ETicketCategory}
                 price={ticket.price}
               />
             </CarouselItem>
@@ -75,7 +76,8 @@ export default function TicketCarousel() {
       </Button>
       <TicketCreateDialog
         open={ticketCreateDialog}
-        cancelButtonHandler={() => setTicketCreateDialog(false)}
+        refetchTickets={refetch}
+        closeDialog={() => setTicketCreateDialog(false)}
       />
     </div>
   );

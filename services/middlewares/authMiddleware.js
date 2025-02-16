@@ -1,5 +1,12 @@
+const ROUTES_SWAGGER = require("../constants/swaggerConstants");
+
 // checks if request has valid cookie with token and saves it for further use in endpoints
 const checkAndParseToken = (req, jwt, ACCESS_TOKEN_SECRET) => {
+  // skip token check on swagger pages
+  if (req.path.startsWith(ROUTES_SWAGGER.BASE)) {
+    return;
+  }
+
   const accessToken = req.cookies.accessToken;
 
   if (!accessToken) {

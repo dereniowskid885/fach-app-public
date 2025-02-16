@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '@/styles/globals.css';
 import { ReactNode } from 'react';
+import StoreProvider from '@/app/StoreProvider';
 
 const arimoItalic = localFont({
   src: '../../public/fonts/Arimo-Italic-VariableFont_wght.ttf',
@@ -24,10 +25,12 @@ export interface IRootLayout {
 
 export default function RootLayout({ children }: IRootLayout) {
   return (
-    <html lang="en">
-      <body className={`${arimoItalic.className} ${arimo.className} bg-primary-700 antialiased`}>
-        {children}
-      </body>
-    </html>
+    <StoreProvider>
+      <html lang="en">
+        <body className={`${arimoItalic.className} ${arimo.className} bg-primary-700 antialiased`}>
+          {children}
+        </body>
+      </html>
+    </StoreProvider>
   );
 }
