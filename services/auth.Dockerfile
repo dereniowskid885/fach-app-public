@@ -15,6 +15,7 @@ RUN npm install --production --silent --prefix ./${SERVICE_PATH}
 COPY ./${SERVICE_PATH}/ ./${SERVICE_PATH}
 COPY ./helpers ./helpers
 COPY ./middlewares ./middlewares
+COPY ./constants ./constants
 COPY ./alias.config.js ./alias.config.js
 COPY ./.env.shared ./.env.shared
 
