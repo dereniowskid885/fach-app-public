@@ -16,9 +16,9 @@ COPY ./${SERVICE_PATH}/ ./${SERVICE_PATH}
 COPY ./helpers ./helpers
 COPY ./middlewares ./middlewares
 COPY ./alias.config.js ./alias.config.js
-COPY ./.env.shared.example ./.env.shared
+COPY ./.env.shared ./.env.shared
 
-EXPOSE 3000
+EXPOSE 5000
 RUN chown -R node /usr/src/app
 USER node
 CMD ["npm", "start", "--prefix", "./${PREFIX}"]

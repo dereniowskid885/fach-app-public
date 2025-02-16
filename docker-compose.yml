@@ -5,8 +5,8 @@ services:
       context: services
       dockerfile: auth.Dockerfile
     env_file:
-      - ./services/apis/auth/.env.example
+      - ./services/apis/auth/.env
     environment:
       NODE_ENV: production
     ports:
-      - 3000:3000
+      - 5000:5000
