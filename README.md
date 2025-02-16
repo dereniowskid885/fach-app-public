@@ -27,5 +27,5 @@ Use `Ctrl+Shift+P` and select `Tasks:Run Task`
 | Start Ticketing Service | Runs ticketing service |
 
 - Frontend will be available at http://localhost:3000.
-- Auth service will be available at http://localhost:5000.
-- Ticketing service will be available at http://localhost:5001.
+- Auth service will be available at http://localhost:4000.
+- Ticketing service will be available at http://localhost:4001.
