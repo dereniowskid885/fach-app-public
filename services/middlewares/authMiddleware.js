@@ -1,4 +1,4 @@
-const ROUTES_SWAGGER = require("../constants/swaggerConstants");
+const ROUTES_SWAGGER = require('../constants/swaggerConstants');
 
 // checks if request has valid cookie with token and saves it for further use in endpoints
 const checkAndParseToken = (req, jwt, ACCESS_TOKEN_SECRET) => {
@@ -33,4 +33,4 @@ const checkUserRole = (roles) => (req) => {
   }
 };
 
-module.exports = { checkAndParseToken, checkUserRole }
+module.exports = { checkAndParseToken, checkUserRole };
