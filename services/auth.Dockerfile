@@ -19,7 +19,7 @@ COPY ./constants ./constants
 COPY ./alias.config.js ./alias.config.js
 COPY ./.env.shared ./.env.shared
 
-EXPOSE 5000
+EXPOSE 4000
 RUN chown -R node /usr/src/app
 USER node
 CMD ["npm", "start", "--prefix", "./${PREFIX}"]

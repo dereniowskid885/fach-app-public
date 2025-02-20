@@ -9,6 +9,6 @@ services:
     environment:
       NODE_ENV: development
     ports:
-      - 5000:5000
+      - 4000:4000
       - 9229:9229
     command: ["node", "--inspect=0.0.0.0:9229", "./apis/auth/server.js"]
