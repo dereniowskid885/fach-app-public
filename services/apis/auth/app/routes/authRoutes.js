@@ -55,7 +55,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User registered in database.
+ *                   example: User registered in database
  *       207:
  *         description: Server error while sending the email verification link
  *         content:
@@ -65,7 +65,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Server error while sending email verification link.
+ *                   example: Server error while sending email verification link
  *       400:
  *         description: Invalid input data or user already exists
  *         content:
@@ -89,7 +89,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Server error during registration
+ *                   example: Server error
  *                 error:
  *                   type: string
  */
@@ -100,7 +100,7 @@ router.post(`/register`, register);
  * /auth/login:
  *   post:
  *     summary: User login
- *     description: Authenticates a user with email and password, returning an access token.
+ *     description: Authenticates a user with email and password
  *     tags:
  *       - Authentication
  *     requestBody:
@@ -124,11 +124,11 @@ router.post(`/register`, register);
  *             schema:
  *               type: object
  *               properties:
- *                 accessToken:
+ *                 message:
  *                   type: string
- *                   description: JWT access token for authentication
+ *                   example: User logged in succesfully
  *       400:
- *         description: Invalid credentials
+ *         description: Invalid user or credentials
  *         content:
  *           application/json:
  *             schema:
@@ -144,14 +144,11 @@ router.post(`/register`, register);
  *             schema:
  *               type: object
  *               properties:
- *                 status:
- *                   type: string
- *                   example: unverified
  *                 message:
  *                   type: string
  *                   example: Email not verified
  *       500:
- *         description: Server error
+ *         description: Server error during user login
  *         content:
  *           application/json:
  *             schema:
@@ -160,6 +157,8 @@ router.post(`/register`, register);
  *                 message:
  *                   type: string
  *                   example: Server error
+ *                 error:
+ *                   type: string
  */
 router.post(`/login`, login);
 
@@ -168,7 +167,7 @@ router.post(`/login`, login);
  * /auth/refresh-token:
  *   post:
  *     summary: Refresh access token
- *     description: Generates a new access token using a valid refresh token.
+ *     description: Generates a new access token using a valid refresh token
  *     tags:
  *       - Authentication
  *     security:
@@ -181,9 +180,9 @@ router.post(`/login`, login);
  *             schema:
  *               type: object
  *               properties:
- *                 accessToken:
+ *                 message:
  *                   type: string
- *                   description: New JWT access token
+ *                   example: Access token refreshed
  *       401:
  *         description: Unauthorized request
  *         content:
@@ -214,6 +213,8 @@ router.post(`/login`, login);
  *                 message:
  *                   type: string
  *                   example: Server error
+ *                 error:
+ *                   type: string
  */
 router.post(`/refresh`, refreshToken);
 
@@ -222,7 +223,7 @@ router.post(`/refresh`, refreshToken);
  * /auth/logout:
  *   post:
  *     summary: Logout user
- *     description: Logs out the user by invalidating the refresh token.
+ *     description: Logs out the user by invalidating the refresh token
  *     tags:
  *       - Authentication
  *     security:
@@ -237,7 +238,7 @@ router.post(`/refresh`, refreshToken);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Logged out.
+ *                   example: Logged out
  *       400:
  *         description: Invalid refresh token
  *         content:
@@ -247,7 +248,7 @@ router.post(`/refresh`, refreshToken);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Invalid refresh token.
+ *                   example: Invalid refresh token
  *       401:
  *         description: Refresh token expired
  *         content:
@@ -257,7 +258,7 @@ router.post(`/refresh`, refreshToken);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Refresh token expired.
+ *                   example: Refresh token expired
  *       404:
  *         description: User not found
  *         content:
@@ -267,7 +268,7 @@ router.post(`/refresh`, refreshToken);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User not found.
+ *                   example: User not found
  *       500:
  *         description: Server error on logout
  *         content:
@@ -277,7 +278,9 @@ router.post(`/refresh`, refreshToken);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Server error on logout.
+ *                   example: Server error
+ *                 error:
+ *                   type: string
  */
 router.post(`/logout`, logout);
 
@@ -286,7 +289,7 @@ router.post(`/logout`, logout);
  * /auth/request-email-verification:
  *   post:
  *     summary: Request email verification link
- *     description: Sends an email verification link to the user's email address.
+ *     description: Sends an email verification link to the user's email address
  *     tags:
  *       - Authentication
  *     requestBody:
@@ -309,7 +312,7 @@ router.post(`/logout`, logout);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Email verification link sent on provided email.
+ *                   example: Email verification link sent on provided email
  *       500:
  *         description: Server error while sending email verification link
  *         content:
@@ -319,16 +322,18 @@ router.post(`/logout`, logout);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Server error while sending email verification link.
+ *                   example: Server error
+ *                 error:
+ *                   type: string
  */
-router.post(`/email-verify-link`, requestEmailVerificationLink);
+router.post(`/request-email-verification`, requestEmailVerificationLink);
 
 /**
  * @swagger
- * /auth/verify-email:
+ * /auth/email-verification:
  *   post:
- *     summary: Verify email address
- *     description: Verifies a user's email using a token sent to their email.
+ *     summary: Email verification
+ *     description: Verifies a user's email using a token sent to their email
  *     tags:
  *       - Authentication
  *     requestBody:
@@ -351,12 +356,9 @@ router.post(`/email-verify-link`, requestEmailVerificationLink);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User has been verified.
- *                 accessToken:
- *                   type: string
- *                   description: JWT access token for authentication
+ *                   example: User has been verified
  *       400:
- *         description: Invalid or expired token
+ *         description: Invalid link or token
  *         content:
  *           application/json:
  *             schema:
@@ -365,6 +367,26 @@ router.post(`/email-verify-link`, requestEmailVerificationLink);
  *                 message:
  *                   type: string
  *                   example: Invalid token
+ *       409:
+ *         description: User has already been verified
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User is already verified
+ *       410:
+ *         description: Token has expired
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Token expired
  *       500:
  *         description: Internal server error while verifying email
  *         content:
@@ -374,9 +396,11 @@ router.post(`/email-verify-link`, requestEmailVerificationLink);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Internal server error while verifying email.
+ *                   example: Server error
+ *                 error:
+ *                   type: string
  */
-router.post(`/email-verify`, verifyEmail);
+router.post(`/email-verification`, verifyEmail);
 
 /**
  * @swagger
@@ -406,7 +430,7 @@ router.post(`/email-verify`, verifyEmail);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Password reset link has been sent to your email.
+ *                   example: Password reset link has been sent to your email
  *       400:
  *         description: Email not provided or user not found
  *         content:
@@ -416,7 +440,7 @@ router.post(`/email-verify`, verifyEmail);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User with that email cannot be found.
+ *                   example: User with that email cannot be found
  *       404:
  *         description: No account associated with the provided email
  *         content:
@@ -426,7 +450,7 @@ router.post(`/email-verify`, verifyEmail);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: No account with this email exists.
+ *                   example: No account with this email exists
  *       500:
  *         description: Internal server error while processing the request
  *         content:
@@ -436,16 +460,18 @@ router.post(`/email-verify`, verifyEmail);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Internal server error while sending resetting password request.
+ *                   example: Server error
+ *                 error:
+ *                   type: string
  */
-router.post(`/password-reset-link`, requestPasswordReset);
+router.post(`/request-password-reset`, requestPasswordReset);
 
 /**
  * @swagger
  * /auth/password-reset:
  *   post:
  *     summary: Reset user password
- *     description: Resets the user's password using a valid reset token.
+ *     description: Resets the user's password using a valid reset token
  *     tags:
  *       - Authentication
  *     requestBody:
@@ -471,9 +497,9 @@ router.post(`/password-reset-link`, requestPasswordReset);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Password reset successful.
+ *                   example: Password reset successful
  *       400:
- *         description: Invalid or expired token
+ *         description: Invalid link or token
  *         content:
  *           application/json:
  *             schema:
@@ -481,7 +507,7 @@ router.post(`/password-reset-link`, requestPasswordReset);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Invalid token.
+ *                   example: Invalid token
  *       500:
  *         description: Server error while resetting password
  *         content:
@@ -491,7 +517,9 @@ router.post(`/password-reset-link`, requestPasswordReset);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Server error.
+ *                   example: Server error
+ *                 error:
+ *                   type: string
  */
 router.post(`/password-reset`, passwordReset);
 

@@ -38,8 +38,11 @@ const injectedRtkApi = api.injectEndpoints({
         body: queryArg.body
       })
     }),
-    postAuthVerifyEmail: build.mutation<PostAuthVerifyEmailApiResponse, PostAuthVerifyEmailApiArg>({
-      query: queryArg => ({ url: `/auth/verify-email`, method: 'POST', body: queryArg.body })
+    postAuthEmailVerification: build.mutation<
+      PostAuthEmailVerificationApiResponse,
+      PostAuthEmailVerificationApiArg
+    >({
+      query: queryArg => ({ url: `/auth/email-verification`, method: 'POST', body: queryArg.body })
     }),
     postAuthRequestPasswordReset: build.mutation<
       PostAuthRequestPasswordResetApiResponse,
@@ -102,12 +105,12 @@ export type PutUsersUpdateRoleApiArg = {
 };
 export type PostAuthRegisterApiResponse =
   /** status 201 User successfully registered in the database */
-    | {
-        message?: string;
-      }
-    | /** status 207 Server error while sending the email verification link */ {
-        message?: string;
-      };
+  | {
+      message?: string;
+    }
+  | /** status 207 Server error while sending the email verification link */ {
+      message?: string;
+    };
 export type PostAuthRegisterApiArg = {
   body: {
     /** User's email address */
@@ -123,8 +126,7 @@ export type PostAuthRegisterApiArg = {
   };
 };
 export type PostAuthLoginApiResponse = /** status 200 Successfully authenticated user */ {
-  /** JWT access token for authentication */
-  accessToken?: string;
+  message?: string;
 };
 export type PostAuthLoginApiArg = {
   body: {
@@ -136,8 +138,7 @@ export type PostAuthLoginApiArg = {
 };
 export type PostAuthRefreshTokenApiResponse =
   /** status 200 Successfully refreshed access token */ {
-    /** New JWT access token */
-    accessToken?: string;
+    message?: string;
   };
 export type PostAuthRefreshTokenApiArg = void;
 export type PostAuthLogoutApiResponse = /** status 200 Successfully logged out */ {
@@ -154,12 +155,11 @@ export type PostAuthRequestEmailVerificationApiArg = {
     email?: string;
   };
 };
-export type PostAuthVerifyEmailApiResponse = /** status 200 User has been verified successfully */ {
-  message?: string;
-  /** JWT access token for authentication */
-  accessToken?: string;
-};
-export type PostAuthVerifyEmailApiArg = {
+export type PostAuthEmailVerificationApiResponse =
+  /** status 200 User has been verified successfully */ {
+    message?: string;
+  };
+export type PostAuthEmailVerificationApiArg = {
   body: {
     /** Verification token sent via email */
     token?: string;
@@ -196,7 +196,7 @@ export const {
   usePostAuthRefreshTokenMutation,
   usePostAuthLogoutMutation,
   usePostAuthRequestEmailVerificationMutation,
-  usePostAuthVerifyEmailMutation,
+  usePostAuthEmailVerificationMutation,
   usePostAuthRequestPasswordResetMutation,
   usePostAuthPasswordResetMutation
 } = injectedRtkApi;
