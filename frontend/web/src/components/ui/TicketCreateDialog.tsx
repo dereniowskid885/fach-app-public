@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { ETicketCategory } from '@/constants/ticket';
 import { Typography } from './Typography';
 import { PostTicketsApiArg, usePostTicketsMutation } from '@/api/ticketingApi';
-import { getQueryErrorMessage } from '@/lib/helpers';
+import { parseQueryError } from '@/lib/helpers';
 import { useToast } from '@/hooks/use-toast';
 import { Toaster } from '../shadcn/toaster';
 
@@ -49,7 +49,7 @@ export default function TicketCreateDialog({
     if (!ticketCategory) {
       errorMessage = 'Wybierz kategorię sprawy';
     } else if (mutationError) {
-      errorMessage = getQueryErrorMessage(mutationError);
+      errorMessage = parseQueryError(mutationError).message;
     } else {
       // find first form error and return error message
       errorMessage = Object.values(formState.errors).find(error => error.message)?.message;
