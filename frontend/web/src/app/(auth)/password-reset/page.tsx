@@ -1,5 +1,9 @@
 'use client';
 
+import {
+  PostAuthRequestPasswordResetApiArg,
+  usePostAuthRequestPasswordResetMutation
+} from '@/api/authApi';
 import { Button } from '@/components/shadcn/button';
 import {
   Card,
@@ -13,29 +17,38 @@ import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
 import { Typography } from '@/components/ui/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
-import { IPasswordResetRequestForm, passwordResetRequestHandler } from '@/lib/auth';
+import { parseQueryError } from '@/lib/helpers';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+interface IPasswordResetRequestForm {
+  email: string;
+}
+
 export default function PasswordResetRequest() {
   const { register, handleSubmit, formState, setError, getValues } =
     useForm<IPasswordResetRequestForm>();
-
-  const [isLoading, setLoading] = useState<boolean>(false);
   const [isEmailSent, setEmailSent] = useState<boolean>(false);
 
+  const [triggerRequest, { isLoading }] = usePostAuthRequestPasswordResetMutation();
+
   const submitHandler = async (formData: IPasswordResetRequestForm) => {
-    setLoading(true);
-    const result = await passwordResetRequestHandler(formData);
+    const payload: PostAuthRequestPasswordResetApiArg = {
+      body: {
+        ...formData
+      }
+    };
 
-    if (result.success) {
-      setEmailSent(true);
+    const result = await triggerRequest(payload);
+
+    if (result.error) {
+      const { message } = parseQueryError(result.error);
+
+      setError('root', { message: message });
     } else {
-      setError('root', { message: result.error });
+      setEmailSent(true);
     }
-
-    setLoading(false);
   };
 
   return (

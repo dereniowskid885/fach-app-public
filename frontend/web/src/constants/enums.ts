@@ -7,3 +7,11 @@ export const enum EUserRole {
 export const enum EFallbackKey {
   TICKET_CAROUSEL = 'ticket-carousel'
 }
+
+export const enum EAccountVerificationResult {
+  TOKEN_EXPIRED = 'TOKEN_EXPIRED',
+  TOKEN_INVALID = 'TOKEN_INVALID',
+  ALREADY_VERIFIED = 'ALREADY_VERIFIED',
+  SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR'
+}

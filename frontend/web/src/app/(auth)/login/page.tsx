@@ -1,5 +1,6 @@
 'use client';
 
+import { PostAuthLoginApiArg, usePostAuthLoginMutation } from '@/api/authApi';
 import { Button } from '@/components/shadcn/button';
 import {
   Card,
@@ -15,32 +16,46 @@ import AccountVerifyDialog from '@/components/ui/AccountVerifyDialog';
 import PasswordInput from '@/components/ui/PasswordInput';
 import { Typography } from '@/components/ui/Typography';
 import { HOME_PATH, PASSWORD_RESET_PATH, REGISTER_PATH } from '@/constants/routes';
-import { ILoginForm, loginHandler } from '@/lib/auth';
+import { parseQueryError } from '@/lib/helpers';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+interface ILoginForm {
+  email: string;
+  password: string;
+}
+
 export default function Login() {
   const router = useRouter();
   const { register, handleSubmit, formState, setError, getValues } = useForm<ILoginForm>();
-  const [isSubmitLoading, setSubmitLoading] = useState<boolean>(false);
-
   const [accountVerifyDialog, setAccountVerifyDialog] = useState<boolean>(false);
 
-  const submitHandler = async (formData: ILoginForm) => {
-    setSubmitLoading(true);
-    const result = await loginHandler(formData);
+  const [triggerLogin, { isLoading }] = usePostAuthLoginMutation();
 
-    if (result.success) {
+  const submitHandler = async (formData: ILoginForm) => {
+    const payload: PostAuthLoginApiArg = {
+      body: {
+        ...formData
+      }
+    };
+
+    const result = await triggerLogin(payload);
+    const isMutationSuccess = !result.error;
+
+    if (isMutationSuccess) {
       router.push(HOME_PATH);
-    } else if (result.status === 403) {
-      setAccountVerifyDialog(true);
-    } else {
-      setError('root', { message: result.error });
+      return;
     }
 
-    setSubmitLoading(false);
+    const { status, message } = parseQueryError(result.error);
+
+    if (status === 403) {
+      setAccountVerifyDialog(true);
+    } else {
+      setError('root', { message: message });
+    }
   };
 
   return (
@@ -89,7 +104,7 @@ export default function Login() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button loading={isSubmitLoading} type="submit">
+          <Button loading={isLoading} type="submit">
             Zaloguj
           </Button>
           <Link href={REGISTER_PATH}>

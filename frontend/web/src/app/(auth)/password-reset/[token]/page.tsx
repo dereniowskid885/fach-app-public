@@ -14,14 +14,20 @@ import { Label } from '@/components/shadcn/label';
 import PasswordInput from '@/components/ui/PasswordInput';
 import { Typography } from '@/components/ui/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
-import { IPasswordResetForm, passwordResetHandler } from '@/lib/auth';
-import { getLastPathSegment } from '@/lib/helpers';
+import { getLastPathSegment, parseQueryError } from '@/lib/helpers';
 import { getTokenPayload, isTokenExpired } from '@/lib/token';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { notFound } from 'next/navigation';
+import { PostAuthPasswordResetApiArg, usePostAuthPasswordResetMutation } from '@/api/authApi';
+
+interface IPasswordResetForm {
+  newPassword: string;
+  newPasswordConfirm: string;
+  token: string;
+}
 
 export default function PasswordResetForm() {
   const { register, handleSubmit, formState, setError } = useForm<IPasswordResetForm>();
@@ -31,12 +37,13 @@ export default function PasswordResetForm() {
   const tokenExpired = isTokenExpired(token);
   const tokenPayload = getTokenPayload(token);
 
-  const [isLoading, setLoading] = useState<boolean>(false);
   const [isFormVisible, setFormVisible] = useState<boolean>(!tokenExpired);
 
   if (!tokenPayload) {
     notFound();
   }
+
+  const [triggerPasswordReset, { isLoading }] = usePostAuthPasswordResetMutation();
 
   const submitHandler = async (formData: IPasswordResetForm) => {
     if (formData.newPassword !== formData.newPasswordConfirm) {
@@ -44,16 +51,22 @@ export default function PasswordResetForm() {
       return;
     }
 
-    setLoading(true);
-    const result = await passwordResetHandler({ ...formData, token });
+    const payload: PostAuthPasswordResetApiArg = {
+      body: {
+        ...formData,
+        token
+      }
+    };
 
-    if (result.success) {
-      setFormVisible(false);
+    const result = await triggerPasswordReset(payload);
+
+    if (result.error) {
+      const { message } = parseQueryError(result.error);
+
+      setError('root', { message });
     } else {
-      setError('root', { message: result.error });
+      setFormVisible(false);
     }
-
-    setLoading(false);
   };
 
   return (
