@@ -37,10 +37,10 @@ const register = async (req, res) => {
       const emailResult = await sendEmailVerificationLink(email);
 
       if (!emailResult) {
-        return res.status(207).json({ message: 'Server error while sending email verification link.' });
+        return res.status(207).json({ message: 'Server error while sending email verification link' });
       }
 
-      return res.status(201).json({ message: 'User registered in database.' });
+      return res.status(201).json({ message: 'User registered in database' });
     } catch (validationError) {
       if (validationError.name === 'ValidationError') {
         const errors = Object.values(validationError.errors).map((err) => err.message);
@@ -63,7 +63,7 @@ const register = async (req, res) => {
     }
   } catch (err) {
     return res.status(500).json({
-      message: 'Server error during registration',
+      message: 'Server error',
       error: err.message,
     });
   }
@@ -86,16 +86,15 @@ const login = async (req, res) => {
 
     if (!user.isVerified) {
       return res.status(403).json({
-        status: 'unverified',
         message: 'Email not verified',
       });
     }
 
     const { refreshTokenData } = generateTokens(req, res, user);
     await addTokenToDB(user._id, refreshTokenData);
-    return res.status(200).json({ success: true, message: 'User logged in succesfully.' });
+    return res.status(200).json({ message: 'User logged in succesfully' });
   } catch (err) {
-    return res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
 
@@ -127,7 +126,7 @@ const refreshToken = async (req, res) => {
     await user.save();
     await removeExpiredTokens(user._id);
 
-    return res.status(200).json({ success: true, message: 'Access token refreshed.' });
+    return res.status(200).json({ message: 'Access token refreshed' });
   } catch (err) {
     if (err instanceof jwt.TokenExpiredError) {
       return res.status(401).json({ message: 'Refresh token expired' });
@@ -135,7 +134,7 @@ const refreshToken = async (req, res) => {
     if (err instanceof jwt.JsonWebTokenError) {
       return res.status(401).json({ message: 'Invalid refresh token' });
     }
-    return res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
 
@@ -156,19 +155,67 @@ const logout = async (req, res) => {
     );
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(404).json({ message: 'User not found' });
     }
     clearAllTokens(res);
-    return res.status(200).json({ message: 'Logged out.' });
+    return res.status(200).json({ message: 'Logged out' });
   } catch (err) {
     clearAllTokens(res);
     if (err instanceof jwt.TokenExpiredError) {
-      return res.status(401).json({ message: 'Refresh token expired.' });
+      return res.status(401).json({ message: 'Refresh token expired' });
     } else if (err instanceof jwt.JsonWebTokenError) {
-      return res.status(400).json({ message: 'Invalid refresh token.' });
+      return res.status(400).json({ message: 'Invalid refresh token' });
     } else {
-      return res.status(500).json({ message: 'Server error on logout.' });
+      return res.status(500).json({ message: 'Server error', error: err.message });
     }
+  }
+};
+
+const requestEmailVerificationLink = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const emailResult = await sendEmailVerificationLink(email);
+
+    if (emailResult) {
+      return res.status(200).json({ message: 'Email verification link sent on provided email' });
+    } else {
+      return res.status(500).json({ message: 'Server error while sending email verification link' });
+    }
+  } catch (err) {
+    return res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+const verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    const payload = jwt.verify(token, process.env.VERIFY_EMAIL_TOKEN_SECRET);
+
+    const { email } = payload;
+
+    const user = await User.findOne({ email });
+
+    if (!user) return res.status(400).json({ message: 'Invalid link' });
+
+    const { refreshTokenData } = generateTokens(req, res, user);
+    await addTokenToDB(user._id, refreshTokenData);
+
+    if (user.isVerified) return res.status(409).send({ message: 'User is already verified' });
+    await User.findByIdAndUpdate(user._id, { isVerified: true });
+
+    return res.status(200).json({ message: 'User has been verified' });
+  } catch (err) {
+    if (err.name === 'JsonWebTokenError') {
+      return res.status(400).json({ message: 'Invalid token' });
+    }
+
+    if (err.name === 'TokenExpiredError') {
+      return res.status(410).json({ message: 'Token has expired' });
+    }
+
+    return res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
 
@@ -210,56 +257,8 @@ const requestPasswordReset = async (req, res) => {
       });
 
     return res.status(200).json({ message: 'Password reset link has been sent to your email' });
-  } catch (error) {
-    return res.status(500).json({ message: 'Internal server error while sending resetting password request' });
-  }
-};
-
-const requestEmailVerificationLink = async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    const emailResult = await sendEmailVerificationLink(email);
-
-    if (emailResult) {
-      return res.status(200).json({ message: 'Email verification link sent on provided email.' });
-    } else {
-      return res.status(500).json({ message: 'Server error while sending email verification link.' });
-    }
-  } catch (error) {
-    return res.status(500).json({ message: 'Server error while sending email verification link' });
-  }
-};
-
-const verifyEmail = async (req, res) => {
-  try {
-    const { token } = req.body;
-
-    const payload = jwt.verify(token, process.env.VERIFY_EMAIL_TOKEN_SECRET);
-
-    const { email } = payload;
-
-    const user = await User.findOne({ email });
-
-    if (!user) return res.status(400).json({ message: 'Invalid link' });
-
-    if (user.isVerified) return res.status(200).send({ message: 'User is already verified.' });
-    await User.findByIdAndUpdate(user._id, { isVerified: true });
-
-    const { refreshTokenData } = generateTokens(req, res, user);
-    await addTokenToDB(user._id, refreshTokenData);
-
-    return res.status(200).json({ message: 'User has been verified.' });
-  } catch (error) {
-    if (error.name === 'JsonWebTokenError') {
-      return res.status(400).json({ message: 'Invalid token' });
-    }
-
-    if (error.name === 'TokenExpiredError') {
-      return res.status(400).json({ message: 'Token has expired' });
-    }
-
-    return res.status(500).json({ message: 'Internal server error while verifing email.' });
+  } catch (err) {
+    return res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
 
@@ -277,16 +276,16 @@ const passwordReset = async (req, res) => {
     await user.save();
 
     return res.status(200).json({ message: 'Password reset successful' });
-  } catch (error) {
-    if (error.name === 'JsonWebTokenError') {
+  } catch (err) {
+    if (err.name === 'JsonWebTokenError') {
       return res.status(400).json({ message: 'Invalid token' });
     }
 
-    if (error.name === 'TokenExpiredError') {
+    if (err.name === 'TokenExpiredError') {
       return res.status(400).json({ message: 'Token has expired' });
     }
 
-    return res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
 
