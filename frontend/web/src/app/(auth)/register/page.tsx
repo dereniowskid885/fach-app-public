@@ -9,20 +9,30 @@ import CitySelect from '@/components/ui/CitySelect';
 import PasswordInput from '@/components/ui/PasswordInput';
 import { Typography } from '@/components/ui/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
-import { IRegisterForm, registerHandler } from '@/lib/auth';
 import { Label } from '@radix-ui/react-label';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { PostAuthRegisterApiArg, usePostAuthRegisterMutation } from '@/api/authApi';
+import { parseQueryError } from '@/lib/helpers';
+
+interface IRegisterForm {
+  email: string;
+  name: string;
+  surname: string;
+  password: string;
+  passwordConfirm: string;
+  city: string;
+}
 
 export default function Register() {
   const router = useRouter();
   const { register, handleSubmit, formState, setError, getValues } = useForm<IRegisterForm>();
-
-  const [isLoading, setLoading] = useState<boolean>(false);
   const [successDialog, setSuccessDialog] = useState<boolean>(false);
   const [accountVerifyDialog, setAccountVerifyDialog] = useState<boolean>(false);
+
+  const [triggerRegister, { isLoading }] = usePostAuthRegisterMutation();
 
   const submitHandler = async (formData: IRegisterForm) => {
     if (formData.password !== formData.passwordConfirm) {
@@ -35,18 +45,27 @@ export default function Register() {
       return;
     }
 
-    setLoading(true);
-    const result = await registerHandler(formData);
+    const payload: PostAuthRegisterApiArg = {
+      body: {
+        ...formData
+      }
+    };
 
-    if (result.success) {
+    const result = await triggerRegister(payload);
+    const isMutationSuccess = !result.error;
+
+    if (isMutationSuccess) {
       setSuccessDialog(true);
-    } else if (result.status === 207) {
-      setAccountVerifyDialog(true);
-    } else {
-      setError('root', { message: result.error });
+      return;
     }
 
-    setLoading(false);
+    const { status, message } = parseQueryError(result.error);
+
+    if (status === 207) {
+      setAccountVerifyDialog(true);
+    } else {
+      setError('root', { message: message });
+    }
   };
 
   return (

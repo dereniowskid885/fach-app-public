@@ -16,13 +16,32 @@ import { MdOutlineFavorite } from 'react-icons/md';
 import { FaUser } from 'react-icons/fa';
 import { MdOutlineLogout } from 'react-icons/md';
 import { Typography } from '@/components/ui/Typography';
-import { logoutHandler } from '@/lib/auth';
+import { usePostAuthLogoutMutation } from '@/api/authApi';
+import { useToast } from '@/hooks/use-toast';
+import { Toaster } from '../shadcn/toaster';
+import { parseQueryError } from '@/lib/helpers';
+import { LoadingOverlay } from './LoadingOverlay';
 
 export default function Navigation() {
   const router = useRouter();
+  const { toast } = useToast();
+
+  const [triggerLogout, { isLoading: isLogoutLoading }] = usePostAuthLogoutMutation();
 
   const handleLogout = async () => {
-    await logoutHandler().then(() => router.push(LOGIN_PATH));
+    const result = await triggerLogout();
+    const isMutationSuccess = !result.error;
+
+    if (isMutationSuccess) {
+      router.push(LOGIN_PATH);
+    } else {
+      const { message } = parseQueryError(result.error);
+
+      toast({
+        title: message,
+        variant: 'destructive'
+      });
+    }
   };
 
   return (
@@ -48,6 +67,8 @@ export default function Navigation() {
         <MdOutlineLogout />
         <Typography variant="small">Wyloguj</Typography>
       </Button>
+      <LoadingOverlay isLoading={isLogoutLoading} />
+      <Toaster />
     </nav>
   );
 }
