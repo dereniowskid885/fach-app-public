@@ -5,12 +5,12 @@ import {
   CardDescription,
   CardHeader
 } from '@/components/shadcn/card';
-import { Typography } from './Typography';
+import { Typography } from '../common/Typography';
 import { ETicketCategory, ETicketStatus } from '@/constants/ticket';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar';
 import { ReactNode } from 'react';
-import TicketStatusBadge from '../utilities/TicketStatusBadge';
-import CategoryIcon from '../utilities/CategoryIcon';
+import TicketStatusBadge from './TicketStatusBadge';
+import CategoryIcon from './CategoryIcon';
 
 export interface TicketInfoRow {
   children: ReactNode;

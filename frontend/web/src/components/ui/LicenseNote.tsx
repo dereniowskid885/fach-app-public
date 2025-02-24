@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography } from './Typography';
+import { Typography } from '../common/Typography';
 import Link from 'next/link';
 
 export default function LicenseNote() {

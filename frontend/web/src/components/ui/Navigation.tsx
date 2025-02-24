@@ -15,12 +15,12 @@ import { IoMdBriefcase } from 'react-icons/io';
 import { MdOutlineFavorite } from 'react-icons/md';
 import { FaUser } from 'react-icons/fa';
 import { MdOutlineLogout } from 'react-icons/md';
-import { Typography } from '@/components/ui/Typography';
+import { Typography } from '@/components/common/Typography';
 import { usePostAuthLogoutMutation } from '@/api/authApi';
 import { useToast } from '@/hooks/use-toast';
 import { Toaster } from '../shadcn/toaster';
 import { parseQueryError } from '@/lib/helpers';
-import { LoadingOverlay } from './LoadingOverlay';
+import LoadingOverlay from '../common/LoadingOverlay';
 
 export default function Navigation() {
   const router = useRouter();

@@ -15,7 +15,7 @@ import {
 } from '@/components/shadcn/card';
 import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
-import { Typography } from '@/components/ui/Typography';
+import { Typography } from '@/components/common/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
 import { parseQueryError } from '@/lib/helpers';
 import Link from 'next/link';
