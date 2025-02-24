@@ -1,6 +1,6 @@
 import { notifications } from '@/mocks/notifications';
-import { Typography } from './Typography';
-import NotificationIcon from '../utilities/NotificationIcon';
+import { Typography } from '../common/Typography';
+import NotificationIcon from './NotificationIcon';
 
 export default function HeaderNotificationList() {
   return (

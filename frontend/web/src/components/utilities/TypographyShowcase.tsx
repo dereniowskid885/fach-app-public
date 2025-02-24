@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography } from '@/components/ui/Typography';
+import { Typography } from '@/components/common/Typography';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/shadcn/card';
 
 const TypographyShowcase = () => {

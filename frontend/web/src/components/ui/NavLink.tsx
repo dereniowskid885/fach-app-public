@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { ReactNode } from 'react';
-import { Typography } from './Typography';
+import { Typography } from '../common/Typography';
 
 export interface INavLink {
   href: string;
