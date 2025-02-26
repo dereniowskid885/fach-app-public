@@ -17,32 +17,35 @@ const generateAccessToken = (req, res, user) => {
       expiresIn: '15m',
     },
   );
-  const accessTokenAge = 15 * 60 * 1000;
+  const expirationTime = 900000; // 15 minutes - 15 * 60 * 1000
 
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: accessTokenAge,
+    maxAge: expirationTime,
+    expirationTime: expirationTime,
   });
+
   return accessToken;
 };
 
 const generateRefreshToken = (req, res, user) => {
   const refreshToken = jwt.sign({ userId: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
-  const refreshTokenAge = 30 * 24 * 60 * 60 * 1000;
+  const expirationTime = 604800000; // 7 days - 7 * 24 * 60 * 60 * 1000
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: refreshTokenAge,
+    maxAge: 2592000000, // 30 days - 30 * 24 * 60 * 60 * 1000,
+    expirationTime: expirationTime,
   });
 
   const refreshTokenData = {
     token: refreshToken,
     deviceInfo: req.headers['user-agent'],
-    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    expiresAt: new Date(Date.now() + expirationTime),
     createdAt: new Date(),
   };
 

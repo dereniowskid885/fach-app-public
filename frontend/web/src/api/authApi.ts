@@ -105,12 +105,12 @@ export type PutUsersUpdateRoleApiArg = {
 };
 export type PostAuthRegisterApiResponse =
   /** status 201 User successfully registered in the database */
-  | {
-      message?: string;
-    }
-  | /** status 207 Server error while sending the email verification link */ {
-      message?: string;
-    };
+    | {
+        message?: string;
+      }
+    | /** status 207 Server error while sending the email verification link */ {
+        message?: string;
+      };
 export type PostAuthRegisterApiArg = {
   body: {
     /** User's email address */
@@ -139,6 +139,7 @@ export type PostAuthLoginApiArg = {
 export type PostAuthRefreshTokenApiResponse =
   /** status 200 Successfully refreshed access token */ {
     message?: string;
+    accessToken?: string;
   };
 export type PostAuthRefreshTokenApiArg = void;
 export type PostAuthLogoutApiResponse = /** status 200 Successfully logged out */ {
