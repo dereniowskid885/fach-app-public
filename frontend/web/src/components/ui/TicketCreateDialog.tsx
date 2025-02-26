@@ -10,7 +10,6 @@ import { Typography } from '../common/Typography';
 import { PostTicketsApiArg, usePostTicketsMutation } from '@/api/ticketingApi';
 import { parseQueryError } from '@/lib/helpers';
 import { useToast } from '@/hooks/use-toast';
-import { Toaster } from '../shadcn/toaster';
 
 interface ITicketCreateForm {
   category: ETicketCategory;
@@ -136,19 +135,16 @@ export default function TicketCreateDialog({
   );
 
   return (
-    <>
-      <DialogComponent
-        open={open}
-        title="Utwórz sprawę"
-        cancelButtonText="Anuluj"
-        confirmButtonText="Potwierdź"
-        confirmButtonHandler={handleSubmit(submitHandler)}
-        isLoadingConfirmButton={isLoading}
-        cancelButtonHandler={closeDialog}
-        content={ticketCreateForm}
-        errorMessage={errorMessage}
-      />
-      <Toaster />
-    </>
+    <DialogComponent
+      open={open}
+      title="Utwórz sprawę"
+      cancelButtonText="Anuluj"
+      confirmButtonText="Potwierdź"
+      confirmButtonHandler={handleSubmit(submitHandler)}
+      isLoadingConfirmButton={isLoading}
+      cancelButtonHandler={closeDialog}
+      content={ticketCreateForm}
+      errorMessage={errorMessage}
+    />
   );
 }
