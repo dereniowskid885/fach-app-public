@@ -183,6 +183,8 @@ router.post(`/login`, login);
  *                 message:
  *                   type: string
  *                   example: Access token refreshed
+ *                 accessToken:
+ *                   type: string
  *       401:
  *         description: Unauthorized request
  *         content:
@@ -216,7 +218,7 @@ router.post(`/login`, login);
  *                 error:
  *                   type: string
  */
-router.post(`/refresh`, refreshToken);
+router.post(`/refresh-token`, refreshToken);
 
 /**
  * @swagger
