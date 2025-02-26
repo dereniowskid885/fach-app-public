@@ -68,7 +68,6 @@ export default function Navigation() {
         <Typography variant="small">Wyloguj</Typography>
       </Button>
       <LoadingOverlay isLoading={isLogoutLoading} />
-      <Toaster />
     </nav>
   );
 }
