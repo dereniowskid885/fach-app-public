@@ -1,5 +1,5 @@
 const express = require('express');
-const { createTicket, getUserTickets } = require('../controllers/ticketController');
+const { createTicket, getUserTickets, deleteTicket } = require('../controllers/ticketController');
 const router = express.Router();
 
 /**
@@ -184,5 +184,64 @@ router.post('/', createTicket);
  *                   example: Server error during retrieval of tickets
  */
 router.get('/', getUserTickets);
+
+/**
+ * @swagger
+ * /tickets/{id}:
+ *   delete:
+ *     summary: Delete ticket
+ *     description: Delete ticket with provided id
+ *     tags:
+ *       - Ticketing
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Ticket ID
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Ticket deletion ended with success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ticket deleted successfully
+ *       403:
+ *         description: Missing permissions to delete the ticket
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Missing permissions to delete the ticket
+ *       404:
+ *         description: Ticket with provided id does not exist
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ticket with provided id does not exist
+ *       500:
+ *         description: Server error during ticket deletion
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Server error during ticket deletion
+ */
+router.delete('/:id', deleteTicket);
 
 module.exports = router;
