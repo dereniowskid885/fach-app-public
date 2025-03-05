@@ -6,6 +6,9 @@ const injectedRtkApi = api.injectEndpoints({
     }),
     getTickets: build.query<GetTicketsApiResponse, GetTicketsApiArg>({
       query: () => ({ url: `/tickets` })
+    }),
+    deleteTicketsById: build.mutation<DeleteTicketsByIdApiResponse, DeleteTicketsByIdApiArg>({
+      query: queryArg => ({ url: `/tickets/${queryArg.id}`, method: 'DELETE' })
     })
   }),
   overrideExisting: false
@@ -73,4 +76,12 @@ export type GetTicketsApiResponse = /** status 200 Tickets created by logged use
   description?: string;
 }[];
 export type GetTicketsApiArg = void;
-export const { usePostTicketsMutation, useGetTicketsQuery } = injectedRtkApi;
+export type DeleteTicketsByIdApiResponse = /** status 200 Ticket deletion ended with success */ {
+  message?: string;
+};
+export type DeleteTicketsByIdApiArg = {
+  /** Ticket ID */
+  id: string;
+};
+export const { usePostTicketsMutation, useGetTicketsQuery, useDeleteTicketsByIdMutation } =
+  injectedRtkApi;
