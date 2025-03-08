@@ -1,12 +1,14 @@
 import { authApi } from '@/api/authApi';
 import { ticketingApi } from '@/api/ticketingApi';
 import { configureStore } from '@reduxjs/toolkit';
+import userDataSlice from './slices/UserDataSlice';
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       [authApi.reducerPath]: authApi.reducer,
-      [ticketingApi.reducerPath]: ticketingApi.reducer
+      [ticketingApi.reducerPath]: ticketingApi.reducer,
+      userDataSlice
     },
     middleware: getDefaultMiddleware =>
       getDefaultMiddleware().concat(authApi.middleware).concat(ticketingApi.middleware)
