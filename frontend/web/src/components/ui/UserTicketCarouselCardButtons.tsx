@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from '../shadcn/button';
 import { useDeleteTicketsByIdMutation, useGetTicketsQuery } from '@/api/ticketingApi';
 import { useToast } from '@/hooks/use-toast';
@@ -8,22 +8,22 @@ import DialogComponent from '../common/DialogComponent';
 import { ETicketStatus } from '@/constants/ticket';
 import { parseQueryError } from '@/lib/helpers';
 
-type TStatusActionButton = Partial<{
+export type TStatusActionButton = Partial<{
   [key in ETicketStatus]: {
     title: string;
     handler: () => void;
   };
 }>;
 
-export interface ITicketCarouselCardButtons {
+export interface IUserTicketCarouselCardButtons {
   ticketId: string;
   ticketStatus: ETicketStatus;
 }
 
-export const TicketCarouselCardButtons = ({
+export const UserTicketCarouselCardButtons = ({
   ticketId,
   ticketStatus
-}: ITicketCarouselCardButtons) => {
+}: IUserTicketCarouselCardButtons) => {
   const { toast } = useToast();
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [deleteDialog, setDeleteDialog] = useState<boolean>(false);
