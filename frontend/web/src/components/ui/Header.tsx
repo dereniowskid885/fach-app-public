@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography } from './Typography';
+import { Typography } from '../common/Typography';
 import { MdFavoriteBorder } from 'react-icons/md';
 import { IoIosNotificationsOutline } from 'react-icons/io';
 import {

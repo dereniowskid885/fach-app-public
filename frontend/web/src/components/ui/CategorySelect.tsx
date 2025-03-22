@@ -2,7 +2,7 @@
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn/popover';
 import { Button } from '../shadcn/button';
-import CategoryIcon from '../utilities/CategoryIcon';
+import CategoryIcon from './CategoryIcon';
 import { BiSolidCategory } from 'react-icons/bi';
 import {
   Command,

@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/shadcn/button';
-import { Typography } from '@/components/ui/Typography';
+import { Typography } from '@/components/common/Typography';
 import { useEffect, useState } from 'react';
 
 export interface IAsyncCountdown {
@@ -12,13 +12,13 @@ export interface IAsyncCountdown {
   buttonText: string;
 }
 
-export const AsyncCountdown = ({
+export default function AsyncCountdown({
   seconds = 5,
   endOfCountdownHandler,
   title,
   description,
   buttonText
-}: IAsyncCountdown) => {
+}: IAsyncCountdown) {
   const [count, setCount] = useState<number>(seconds);
 
   const timer = count > 0 ? setTimeout(() => setCount(count - 1), 1000) : undefined;
@@ -47,4 +47,4 @@ export const AsyncCountdown = ({
       <Button onClick={handleClick}>{buttonText}</Button>
     </div>
   );
-};
+}

@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import '@/styles/globals.css';
 import { ReactNode } from 'react';
 import StoreProvider from '@/app/StoreProvider';
+import { Toaster } from '@/components/shadcn/toaster';
 
 const arimoItalic = localFont({
   src: '../../public/fonts/Arimo-Italic-VariableFont_wght.ttf',
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: IRootLayout) {
       <html lang="en">
         <body className={`${arimoItalic.className} ${arimo.className} bg-primary-700 antialiased`}>
           {children}
+          <Toaster />
         </body>
       </html>
     </StoreProvider>

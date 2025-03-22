@@ -13,14 +13,16 @@ import {
 import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
 import AccountVerifyDialog from '@/components/ui/AccountVerifyDialog';
-import PasswordInput from '@/components/ui/PasswordInput';
-import { Typography } from '@/components/ui/Typography';
+import PasswordInput from '@/components/common/PasswordInput';
+import { Typography } from '@/components/common/Typography';
 import { HOME_PATH, PASSWORD_RESET_PATH, REGISTER_PATH } from '@/constants/routes';
 import { parseQueryError } from '@/lib/helpers';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { isCookie } from '@/lib/isCookie';
+import { useToast } from '@/hooks/use-toast';
 
 interface ILoginForm {
   email: string;
@@ -29,6 +31,7 @@ interface ILoginForm {
 
 export default function Login() {
   const router = useRouter();
+  const { toast } = useToast();
   const { register, handleSubmit, formState, setError, getValues } = useForm<ILoginForm>();
   const [accountVerifyDialog, setAccountVerifyDialog] = useState<boolean>(false);
 
@@ -57,6 +60,32 @@ export default function Login() {
       setError('root', { message: message });
     }
   };
+
+  const toastClickHandler = (closeToast: () => void) => {
+    router.push(HOME_PATH);
+    closeToast();
+  };
+
+  useEffect(() => {
+    const checkUserSession = async () => {
+      const hasRefreshToken = await isCookie('refreshToken');
+
+      if (hasRefreshToken) {
+        const { dismiss } = toast({
+          title: 'Jesteś zalogowany!',
+          action: (
+            <Button variant="outline" onClick={() => toastClickHandler(dismiss)}>
+              Przejdź do aplikacji
+            </Button>
+          ),
+          duration: 30000,
+          type: 'background'
+        });
+      }
+    };
+
+    checkUserSession();
+  }, []);
 
   return (
     <Card className="w-screen min-w-[300px] rounded-none border-none bg-primary-800 sm:w-auto">
