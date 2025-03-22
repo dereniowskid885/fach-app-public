@@ -6,6 +6,10 @@ const ticketSchema = new mongoose.Schema({
     enum: ['Mechanika pojazdowa', 'Elektronika', 'Dom'],
     required: true,
   },
+  city: {
+    type: String,
+    required: true,
+  },
   status: {
     type: String,
     enum: [

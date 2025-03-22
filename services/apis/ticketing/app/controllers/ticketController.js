@@ -4,7 +4,22 @@ const getUserTickets = async (req, res) => {
   try {
     const user = req.user;
 
-    const tickets = await Ticket.find({ createdBy: user.email });
+    const tickets = await Ticket.find({ assignee: user.email });
+
+    return res.status(200).json(tickets);
+  } catch (err) {
+    return res.status(500).json({
+      message: 'Server error during retrieval of tickets',
+      error: err.message,
+    });
+  }
+};
+
+const getAvailableTickets = async (req, res) => {
+  try {
+    const { city } = req.user;
+
+    const tickets = await Ticket.find({ city });
 
     return res.status(200).json(tickets);
   } catch (err) {
@@ -20,7 +35,14 @@ const createTicket = async (req, res) => {
     const user = req.user;
     const { title, description, category } = req.body;
 
-    const ticket = new Ticket({ createdBy: user.email, assignee: user.email, title, description, category });
+    const ticket = new Ticket({
+      createdBy: user.email,
+      assignee: user.email,
+      city: user.city,
+      title,
+      description,
+      category,
+    });
 
     try {
       await ticket.save();
@@ -72,4 +94,5 @@ module.exports = {
   createTicket,
   deleteTicket,
   getUserTickets,
+  getAvailableTickets,
 };

@@ -5,28 +5,17 @@ import {
   CardDescription,
   CardHeader
 } from '@/components/shadcn/card';
-import { Typography } from '../common/Typography';
 import { ETicketCategory, ETicketStatus } from '@/constants/ticket';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar';
-import { ReactNode } from 'react';
 import TicketStatusBadge from './TicketStatusBadge';
 import CategoryIcon from './CategoryIcon';
-import { TicketCarouselCardButtons } from './TicketCarouselCardButtons';
-
-export interface TicketInfoRow {
-  children: ReactNode;
-  className?: string;
-}
-
-export function TicketInfoRow({ children, className }: TicketInfoRow) {
-  return (
-    <Typography variant="muted" className={`text-neutral-500 ${className}`}>
-      {children}
-    </Typography>
-  );
-}
+import { UserTicketCarouselCardButtons } from './UserTicketCarouselCardButtons';
+import { TicketInfoRow } from './TicketInfoRow';
+import { EUserRole } from '@/constants/enums';
+import { SpecialistTicketCarouselCardButtons } from './SpecialistTicketCarouselCardButtons';
 
 export interface ITicketCarouselCard {
+  role: EUserRole;
   id?: string;
   title?: string;
   description?: string;
@@ -37,6 +26,7 @@ export interface ITicketCarouselCard {
 }
 
 export default function TicketCarouselCard({
+  role,
   id,
   title,
   description,
@@ -66,7 +56,11 @@ export default function TicketCarouselCard({
           </div>
           <CardTitle>{title}</CardTitle>
           <CardDescription className="line-clamp-2 text-neutral-400">{description}</CardDescription>
-          <TicketCarouselCardButtons ticketId={id ?? ''} ticketStatus={status} />
+          {role === EUserRole.USER ? (
+            <UserTicketCarouselCardButtons ticketId={id ?? ''} ticketStatus={status} />
+          ) : role === EUserRole.SPECIALIST ? (
+            <SpecialistTicketCarouselCardButtons ticketStatus={status} />
+          ) : null}
         </CardHeader>
       </CardContent>
     </Card>

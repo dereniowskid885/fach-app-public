@@ -25,7 +25,7 @@ const checkAndParseToken = (req, jwt, ACCESS_TOKEN_SECRET) => {
   }
 };
 
-const checkUserRole = (roles) => (req) => {
+const checkUserRole = (req, roles) => {
   if (!roles.includes(req.user.role)) {
     const error = new Error('Forbidden: Required role is missing');
     error.status = 403;

@@ -1,5 +1,9 @@
+const createMiddleware = require('@helpers/createMiddleware');
+const { checkUserRole } = require('@middlewares/authMiddleware');
+const checkSpecialistRole = createMiddleware(checkUserRole, ['specialist']);
+
+const { createTicket, getUserTickets, deleteTicket, getAvailableTickets } = require('../controllers/ticketController');
 const express = require('express');
-const { createTicket, getUserTickets, deleteTicket } = require('../controllers/ticketController');
 const router = express.Router();
 
 /**
@@ -20,6 +24,9 @@ const router = express.Router();
  *               - description
  *               - category
  *             properties:
+ *               city:
+ *                 type: string
+ *                 example: "katowice"
  *               category:
  *                 type: string
  *                 enum:
@@ -122,6 +129,9 @@ router.post('/', createTicket);
  *                     type: string
  *                     description: Unique ticket ID
  *                     example: "66df7gh8sasd6f66767rt6"
+ *                   city:
+ *                     type: string
+ *                     example: "katowice"
  *                   category:
  *                     type: string
  *                     enum:
@@ -184,6 +194,94 @@ router.post('/', createTicket);
  *                   example: Server error during retrieval of tickets
  */
 router.get('/', getUserTickets);
+
+/**
+ * @swagger
+ * /tickets/specialist:
+ *   get:
+ *     summary: Retrieve pending tickets for specialist (ready to be taken)
+ *     description: Returns tickets filtered by specialist category and that are created by users from the same city as specialist
+ *     tags:
+ *       - Ticketing
+ *     responses:
+ *       200:
+ *         description: Pending tickets - ready to be taken by specialist
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     description: Unique ticket ID
+ *                     example: "66df7gh8sasd6f66767rt6"
+ *                   city:
+ *                     type: string
+ *                     example: "katowice"
+ *                   category:
+ *                     type: string
+ *                     enum:
+ *                      - "Mechanika pojazdowa"
+ *                      - "Elektronika"
+ *                      - "Dom"
+ *                     description: Ticket category
+ *                     example: "Elektronika"
+ *                   status:
+ *                     type: string
+ *                     enum:
+ *                      - "Wycena"
+ *                      - "Akceptacja wyceny"
+ *                      - "Oczekiwanie na płatność"
+ *                      - "W trakcie"
+ *                      - "Akceptacja rozwiązania"
+ *                      - "Badanie przez moderatora"
+ *                      - "Ukończony"
+ *                     description: Ticket status
+ *                     example: "Wycena"
+ *                   assignee:
+ *                     type: string
+ *                     description: Currently assigned user
+ *                     example: "jan.kowalski@onet.pl"
+ *                   createdBy:
+ *                     type: string
+ *                     description: Author of the ticket
+ *                     example: "jan.kowalski@onet.pl"
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     description: Date of ticket creation
+ *                     example: "December 25, 2023, at 10:00 AM"
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
+ *                     description: Date of ticket last update
+ *                     example: "December 25, 2023, at 10:00 AM"
+ *                   price:
+ *                     type: string
+ *                     description: Price set by specialist and accepted by ticket author
+ *                     example: "5 PLN"
+ *                   title:
+ *                     type: string
+ *                     description: Title of the ticket
+ *                     example: "Ticket with some problem"
+ *                   description:
+ *                     type: string
+ *                     description: Description of the ticket
+ *                     example: "Example ticket description"
+ *       500:
+ *         description: Server error during retrieval of tickets
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Server error during retrieval of tickets
+ */
+router.get('/specialist', checkSpecialistRole, getAvailableTickets);
 
 /**
  * @swagger
