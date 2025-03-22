@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar'
 import { ReactNode } from 'react';
 import TicketStatusBadge from './TicketStatusBadge';
 import CategoryIcon from './CategoryIcon';
+import { TicketCarouselCardButtons } from './TicketCarouselCardButtons';
 
 export interface TicketInfoRow {
   children: ReactNode;
@@ -26,6 +27,7 @@ export function TicketInfoRow({ children, className }: TicketInfoRow) {
 }
 
 export interface ITicketCarouselCard {
+  id?: string;
   title?: string;
   description?: string;
   category: ETicketCategory;
@@ -35,6 +37,7 @@ export interface ITicketCarouselCard {
 }
 
 export default function TicketCarouselCard({
+  id,
   title,
   description,
   category,
@@ -63,6 +66,7 @@ export default function TicketCarouselCard({
           </div>
           <CardTitle>{title}</CardTitle>
           <CardDescription className="line-clamp-2 text-neutral-400">{description}</CardDescription>
+          <TicketCarouselCardButtons ticketId={id ?? ''} ticketStatus={status} />
         </CardHeader>
       </CardContent>
     </Card>

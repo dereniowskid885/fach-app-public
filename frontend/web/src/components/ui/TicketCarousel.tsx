@@ -37,11 +37,13 @@ export default function TicketCarousel() {
     <div className="flex flex-col gap-2">
       <Typography variant="h3">Twoje sprawy: {userTickets.length}</Typography>
       <div className="flex justify-between">
-        <CategorySelect
-          selectedCategory={categoryFilter}
-          setSelectedCategory={setCategoryFilter}
-          resetSelectedCategory={() => setCategoryFilter(null)}
-        />
+        {userTickets.length > 0 ? (
+          <CategorySelect
+            selectedCategory={categoryFilter}
+            setSelectedCategory={setCategoryFilter}
+            resetSelectedCategory={() => setCategoryFilter(null)}
+          />
+        ) : null}
         {categoryFilter ? (
           <Typography variant="small" className="self-end text-neutral-50">
             Ilość: {ticketList.length}
@@ -56,6 +58,7 @@ export default function TicketCarousel() {
               className="select-none pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 [&:not(:first-of-type)]:pl-2"
             >
               <TicketCarouselCard
+                id={ticket._id}
                 title={ticket.title}
                 description={ticket.description}
                 assignee={ticket.assignee}
