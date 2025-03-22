@@ -18,7 +18,6 @@ import { MdOutlineLogout } from 'react-icons/md';
 import { Typography } from '@/components/common/Typography';
 import { usePostAuthLogoutMutation } from '@/api/authApi';
 import { useToast } from '@/hooks/use-toast';
-import { Toaster } from '../shadcn/toaster';
 import { parseQueryError } from '@/lib/helpers';
 import LoadingOverlay from '../common/LoadingOverlay';
 
