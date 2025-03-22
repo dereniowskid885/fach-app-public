@@ -28,6 +28,13 @@ export const getLastPathSegment = (path: string) => {
   return splittedPath[splittedPath.length - 1];
 };
 
-export const getQueryErrorMessage = (error: FetchBaseQueryError | SerializedError) => {
-  return 'data' in error ? (error.data as { message: string }).message : 'Unknown error';
+export const parseQueryError = (error: FetchBaseQueryError | SerializedError) => {
+  const message =
+    'data' in error ? (error.data as { message: string }).message : 'Server is unavailable';
+  const status = 'status' in error && typeof error.status === 'number' ? error.status : null;
+
+  return {
+    message,
+    status
+  };
 };
