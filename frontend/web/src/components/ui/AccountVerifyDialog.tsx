@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import DialogComponent from './DialogComponent';
-import { accountVerifyRequestHandler } from '@/lib/auth';
+import {
+  PostAuthRequestEmailVerificationApiArg,
+  usePostAuthRequestEmailVerificationMutation
+} from '@/api/authApi';
+import { parseQueryError } from '@/lib/helpers';
 
 export interface IAccountVerifyDialog {
   open: boolean;
@@ -21,9 +25,10 @@ export default function AccountVerifyDialog({
   emailSentDescription,
   closeDialogHandler
 }: IAccountVerifyDialog) {
-  const [isLoading, setLoading] = useState<boolean>(false);
   const [isEmailSent, setEmailSent] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const [triggerVerifyRequest, { isLoading }] = usePostAuthRequestEmailVerificationMutation();
 
   useEffect(() => {
     // states reset on dialog open
@@ -34,17 +39,23 @@ export default function AccountVerifyDialog({
   }, [open]);
 
   const accountVerifyRequest = async () => {
-    setLoading(true);
-    const result = await accountVerifyRequestHandler({ email });
+    const payload: PostAuthRequestEmailVerificationApiArg = {
+      body: {
+        email
+      }
+    };
 
-    if (result.success) {
+    const result = await triggerVerifyRequest(payload);
+    const isMutationSuccess = !result.error;
+
+    if (isMutationSuccess) {
       setEmailSent(true);
       setErrorMessage('');
     } else {
-      setErrorMessage(result.error ?? '');
-    }
+      const { message } = parseQueryError(result.error);
 
-    setLoading(false);
+      setErrorMessage(message);
+    }
   };
 
   return (
@@ -53,7 +64,7 @@ export default function AccountVerifyDialog({
       title={isEmailSent ? (emailSentTitle ?? title) : title}
       description={isEmailSent ? (emailSentDescription ?? description) : description}
       cancelButtonText="Zamknij"
-      confirmButtonText={isEmailSent ? '' : 'Wyślij link'}
+      confirmButtonText={isEmailSent ? undefined : 'Wyślij link'}
       cancelButtonHandler={closeDialogHandler}
       confirmButtonHandler={isEmailSent ? undefined : accountVerifyRequest}
       errorMessage={errorMessage}
