@@ -6,7 +6,7 @@ export interface ILoadingOverlay {
   isLoading: boolean;
 }
 
-export const LoadingOverlay = ({ isLoading }: ILoadingOverlay) => {
+export default function LoadingOverlay({ isLoading }: ILoadingOverlay) {
   return (
     <AlertDialog open={isLoading}>
       <AlertDialogContent className="justify-center border-none bg-transparent outline-none">
@@ -15,4 +15,4 @@ export const LoadingOverlay = ({ isLoading }: ILoadingOverlay) => {
       </AlertDialogContent>
     </AlertDialog>
   );
-};
+}

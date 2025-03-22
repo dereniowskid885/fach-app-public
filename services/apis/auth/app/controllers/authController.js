@@ -121,12 +121,11 @@ const refreshToken = async (req, res) => {
     if (tokenIndex === -1) {
       return res.status(401).json({ message: 'Invalid refresh token' });
     }
-
-    generateAccessToken(user);
+    const accessToken = generateAccessToken(req, res, user);
     await user.save();
     await removeExpiredTokens(user._id);
 
-    return res.status(200).json({ message: 'Access token refreshed' });
+    return res.status(200).json({ message: 'Access token refreshed', accessToken: accessToken });
   } catch (err) {
     if (err instanceof jwt.TokenExpiredError) {
       return res.status(401).json({ message: 'Refresh token expired' });
@@ -199,10 +198,10 @@ const verifyEmail = async (req, res) => {
 
     if (!user) return res.status(400).json({ message: 'Invalid link' });
 
+    if (user.isVerified) return res.status(409).send({ message: 'User is already verified' });
+
     const { refreshTokenData } = generateTokens(req, res, user);
     await addTokenToDB(user._id, refreshTokenData);
-
-    if (user.isVerified) return res.status(409).send({ message: 'User is already verified' });
     await User.findByIdAndUpdate(user._id, { isVerified: true });
 
     return res.status(200).json({ message: 'User has been verified' });

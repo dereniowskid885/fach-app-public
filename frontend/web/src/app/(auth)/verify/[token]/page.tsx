@@ -1,9 +1,9 @@
 'use client';
 
 import { Card, CardHeader, CardTitle } from '@/components/shadcn/card';
-import { Typography } from '@/components/ui/Typography';
+import { Typography } from '@/components/common/Typography';
 import { usePathname, useRouter } from 'next/navigation';
-import { AsyncCountdown } from '@/components/ui/AsyncCountdown';
+import AsyncCountdown from '@/components/ui/AsyncCountdown';
 import { useEffect, useState } from 'react';
 import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
 import {

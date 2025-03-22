@@ -11,8 +11,8 @@ import {
 } from '@/components/shadcn/card';
 import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
-import PasswordInput from '@/components/ui/PasswordInput';
-import { Typography } from '@/components/ui/Typography';
+import PasswordInput from '@/components/common/PasswordInput';
+import { Typography } from '@/components/common/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
 import { getLastPathSegment, parseQueryError } from '@/lib/helpers';
 import { getTokenPayload, isTokenExpired } from '@/lib/token';

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import DialogComponent from './DialogComponent';
+import DialogComponent from '../common/DialogComponent';
 import {
   PostAuthRequestEmailVerificationApiArg,
   usePostAuthRequestEmailVerificationMutation

@@ -3,7 +3,7 @@
 import { Carousel, CarouselContent, CarouselItem } from '@/components/shadcn/carousel';
 import TicketCarouselCard from './TicketCarouselCard';
 import { Button } from '@/components/shadcn/button';
-import { Typography } from './Typography';
+import { Typography } from '../common/Typography';
 import { useState } from 'react';
 import { ETicketCategory, ETicketStatus } from '@/constants/ticket';
 import TicketCreateDialog from './TicketCreateDialog';

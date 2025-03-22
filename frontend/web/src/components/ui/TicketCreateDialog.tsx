@@ -1,16 +1,15 @@
 import { useForm } from 'react-hook-form';
-import DialogComponent from './DialogComponent';
+import DialogComponent from '../common/DialogComponent';
 import { Label } from '../shadcn/label';
 import { Input } from '../shadcn/input';
 import { Textarea } from '../shadcn/textarea';
 import CategorySelect from './CategorySelect';
 import { useEffect, useState } from 'react';
 import { ETicketCategory } from '@/constants/ticket';
-import { Typography } from './Typography';
+import { Typography } from '../common/Typography';
 import { PostTicketsApiArg, usePostTicketsMutation } from '@/api/ticketingApi';
 import { parseQueryError } from '@/lib/helpers';
 import { useToast } from '@/hooks/use-toast';
-import { Toaster } from '../shadcn/toaster';
 
 interface ITicketCreateForm {
   category: ETicketCategory;
@@ -136,19 +135,16 @@ export default function TicketCreateDialog({
   );
 
   return (
-    <>
-      <DialogComponent
-        open={open}
-        title="Utwórz sprawę"
-        cancelButtonText="Anuluj"
-        confirmButtonText="Potwierdź"
-        confirmButtonHandler={handleSubmit(submitHandler)}
-        isLoadingConfirmButton={isLoading}
-        cancelButtonHandler={closeDialog}
-        content={ticketCreateForm}
-        errorMessage={errorMessage}
-      />
-      <Toaster />
-    </>
+    <DialogComponent
+      open={open}
+      title="Utwórz sprawę"
+      cancelButtonText="Anuluj"
+      confirmButtonText="Potwierdź"
+      confirmButtonHandler={handleSubmit(submitHandler)}
+      isLoadingConfirmButton={isLoading}
+      cancelButtonHandler={closeDialog}
+      content={ticketCreateForm}
+      errorMessage={errorMessage}
+    />
   );
 }
