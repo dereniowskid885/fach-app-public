@@ -1,10 +1,44 @@
 const Ticket = require('../models/Ticket');
 
+const getTicketByID = async (req, res) => {
+  try {
+    const ticketID = req.params.id;
+
+    const ticket = await Ticket.findOne(ticketID);
+
+    if (!ticket) {
+      return res.status(404).json({ message: 'Ticket not found' });
+    }
+
+    return res.status(200).json(ticket);
+  } catch (err) {
+    return res.status(500).json({
+      message: 'Server error during retrieval of ticket',
+      error: err.message,
+    });
+  }
+};
+
+const getTicketsByCategoryID = async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+
+    const tickets = await Ticket.find({ category: categoryId });
+
+    return res.status(200).json(tickets);
+  } catch (err) {
+    return res.status(500).json({
+      message: 'Server error during retrieval of tickets',
+      error: err.message,
+    });
+  }
+};
+
 const getUserTickets = async (req, res) => {
   try {
     const user = req.user;
 
-    const tickets = await Ticket.find({ assignee: user.email });
+    const tickets = await Ticket.find({ assignee: user.email }).populate('category', 'name');
 
     return res.status(200).json(tickets);
   } catch (err) {
@@ -19,7 +53,7 @@ const getAvailableTickets = async (req, res) => {
   try {
     const { city } = req.user;
 
-    const tickets = await Ticket.find({ city });
+    const tickets = await Ticket.find({ city }).populate('category', 'name');
 
     return res.status(200).json(tickets);
   } catch (err) {
@@ -95,4 +129,6 @@ module.exports = {
   deleteTicket,
   getUserTickets,
   getAvailableTickets,
+  getTicketByID,
+  getTicketsByCategoryID,
 };

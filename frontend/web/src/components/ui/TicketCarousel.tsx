@@ -2,7 +2,7 @@
 
 import { Carousel, CarouselContent, CarouselItem } from '@/components/shadcn/carousel';
 import TicketCarouselCard from './TicketCarouselCard';
-import { ETicketCategory, ETicketStatus } from '@/constants/ticket';
+import { ETicketStatus } from '@/constants/ticket';
 import { EFallbackKey, EUserRole } from '@/constants/enums';
 import { GetTicketsApiResponse } from '@/api/ticketingApi';
 import { useAppSelector } from '@/redux/hooks';
@@ -30,7 +30,7 @@ export default function TicketCarousel({ tickets }: ITicketCarousel) {
               description={ticket.description}
               assignee={ticket.assignee}
               status={ticket.status as ETicketStatus}
-              category={ticket.category as ETicketCategory}
+              category={ticket.category}
               price={ticket.price}
             />
           </CarouselItem>

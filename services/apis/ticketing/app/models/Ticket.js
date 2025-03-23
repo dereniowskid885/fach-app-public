@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const ticketSchema = new mongoose.Schema({
   category: {
-    type: String,
-    enum: ['Mechanika pojazdowa', 'Elektronika', 'Dom'],
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
     required: true,
   },
   city: {

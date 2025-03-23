@@ -5,7 +5,7 @@ import {
   CardDescription,
   CardHeader
 } from '@/components/shadcn/card';
-import { ETicketCategory, ETicketStatus } from '@/constants/ticket';
+import { ETicketStatus } from '@/constants/ticket';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar';
 import TicketStatusBadge from './TicketStatusBadge';
 import CategoryIcon from './CategoryIcon';
@@ -13,13 +13,14 @@ import { UserTicketCarouselCardButtons } from './UserTicketCarouselCardButtons';
 import { TicketInfoRow } from './TicketInfoRow';
 import { EUserRole } from '@/constants/enums';
 import { SpecialistTicketCarouselCardButtons } from './SpecialistTicketCarouselCardButtons';
+import { GetTicketsByIdApiResponse } from '@/api/ticketingApi';
 
 export interface ITicketCarouselCard {
   role: EUserRole;
   id?: string;
   title?: string;
   description?: string;
-  category: ETicketCategory;
+  category?: GetTicketsByIdApiResponse['category'];
   status: ETicketStatus;
   assignee?: string;
   price?: string;
@@ -44,11 +45,11 @@ export default function TicketCarouselCard({
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>Avatar</AvatarFallback>
             </Avatar>
-            <CategoryIcon category={category} />
+            <CategoryIcon category={category?.name} />
           </div>
           <div className="flex flex-col">
             <TicketInfoRow>Przypisany: {assignee}</TicketInfoRow>
-            <TicketInfoRow>Kategoria: {category}</TicketInfoRow>
+            <TicketInfoRow>Kategoria: {category?.name}</TicketInfoRow>
             <TicketInfoRow>Kwota: {price}</TicketInfoRow>
             <TicketInfoRow>
               Status: <TicketStatusBadge status={status} />

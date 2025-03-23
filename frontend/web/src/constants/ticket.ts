@@ -1,10 +1,4 @@
-export enum ETicketCategory {
-  AUTOMOTIVE = 'Mechanika pojazdowa',
-  ELECTRONICS = 'Elektronika',
-  HOME = 'Dom'
-}
-
-export const ticketCategories = Object.values(ETicketCategory);
+import { GetTicketsByIdApiResponse } from '@/api/ticketingApi';
 
 export enum ETicketStatus {
   PRICE_EVALUATION = 'Wycena',
@@ -18,7 +12,7 @@ export enum ETicketStatus {
 
 export interface ITicket {
   _id: string;
-  category: ETicketCategory;
+  category: GetTicketsByIdApiResponse['category'];
   status: ETicketStatus;
   assignee: string;
   createdBy: string;
