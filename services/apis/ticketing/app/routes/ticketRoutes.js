@@ -347,7 +347,7 @@ router.delete('/:id', deleteTicket);
 
 /**
  * @swagger
- * /tickets/{id}:
+ * /tickets/by-id/{id}:
  *   get:
  *     summary: Retrieve a ticket by ID
  *     description: Fetches a single ticket from the database using its unique ID.
@@ -449,11 +449,11 @@ router.delete('/:id', deleteTicket);
  *                   type: string
  *                   example: Server error during ticket retrieval
  */
-router.get('/:id', getTicketByID);
+router.get('/by-id/:id', getTicketByID);
 
 /**
  * @swagger
- * /tickets/{categoryId}:
+ * /tickets/by-categoryid/{categoryId}:
  *   get:
  *     summary: Retrieve tickets by categoryId
  *     description: Retrieve all tickets found by categoryId
@@ -547,6 +547,6 @@ router.get('/:id', getTicketByID);
  *                   type: string
  *                   example: Server error during retrieval of tickets
  */
-router.get('/:categoryId', getTicketsByCategoryID);
+router.get('/by-categoryid/:categoryId', getTicketsByCategoryID);
 
 module.exports = router;
