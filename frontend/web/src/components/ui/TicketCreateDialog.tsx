@@ -5,14 +5,17 @@ import { Input } from '../shadcn/input';
 import { Textarea } from '../shadcn/textarea';
 import CategorySelect from './CategorySelect';
 import { useEffect, useState } from 'react';
-import { ETicketCategory } from '@/constants/ticket';
 import { Typography } from '../common/Typography';
-import { PostTicketsApiArg, usePostTicketsMutation } from '@/api/ticketingApi';
+import {
+  GetTicketsByIdApiResponse,
+  PostTicketsApiArg,
+  usePostTicketsMutation
+} from '@/api/ticketingApi';
 import { parseQueryError } from '@/lib/helpers';
 import { useToast } from '@/hooks/use-toast';
 
 interface ITicketCreateForm {
-  category: ETicketCategory;
+  category: GetTicketsByIdApiResponse['category'];
   title: string;
   description: string;
 }
@@ -31,7 +34,9 @@ export default function TicketCreateDialog({
   const { register, handleSubmit, reset: resetForm, formState } = useForm<ITicketCreateForm>();
   const [errorMessage, setErrorMessage] = useState<string | undefined>('');
 
-  const [ticketCategory, setTicketCategory] = useState<ETicketCategory | null>(null);
+  const [ticketCategory, setTicketCategory] = useState<
+    GetTicketsByIdApiResponse['category'] | null
+  >(null);
   const descriptionMaxLength = 3000;
   const [descriptionCharsLeft, setDescriptionCharsLeft] = useState<number>(descriptionMaxLength);
 

@@ -3,19 +3,20 @@
 import { Button } from '@/components/shadcn/button';
 import { Typography } from '../common/Typography';
 import { useState } from 'react';
-import { ETicketCategory } from '@/constants/ticket';
 import TicketCreateDialog from './TicketCreateDialog';
 import CategorySelect from './CategorySelect';
-import { useGetTicketsQuery } from '@/api/ticketingApi';
+import { GetTicketsByIdApiResponse, useGetTicketsQuery } from '@/api/ticketingApi';
 import { LoadingSpinner } from '../shadcn/loading-spinner';
-import { EPageView, EUserRole } from '@/constants/enums';
+import { EUserRole } from '@/constants/enums';
 import { notFound } from 'next/navigation';
 import { useAppSelector } from '@/redux/hooks';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import TicketCarousel from './TicketCarousel';
 
 export default function DashboardTickets() {
-  const [categoryFilter, setCategoryFilter] = useState<ETicketCategory | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState<
+    GetTicketsByIdApiResponse['category'] | null
+  >(null);
   const [ticketCreateDialog, setTicketCreateDialog] = useState<boolean>(false);
 
   const { role } = useAppSelector(selectUserData);
@@ -28,7 +29,7 @@ export default function DashboardTickets() {
     refetch
   } = useGetTicketsQuery(undefined, { refetchOnMountOrArgChange: true });
   const filteredTickets = categoryFilter
-    ? userTickets.filter(ticket => ticket.category === categoryFilter)
+    ? userTickets.filter(ticket => ticket.category?._id === categoryFilter._id)
     : userTickets;
 
   // TODO: error page component to be created

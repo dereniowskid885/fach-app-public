@@ -5,7 +5,8 @@ export const enum EUserRole {
 }
 
 export const enum EFallbackKey {
-  TICKET_CAROUSEL = 'ticket-carousel'
+  TICKET_CAROUSEL = 'ticket-carousel',
+  TICKET_CATEGORY = 'ticket-category'
 }
 
 export const enum EAccountVerificationResult {
