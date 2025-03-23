@@ -8,15 +8,16 @@ const generateTokens = (req, res, user) => {
 };
 
 const generateAccessToken = (req, res, user) => {
-  const { _id, role, email, firstName, lastName, city } = user;
-  const fullName = `${firstName} ${lastName}`;
+  const { _id, role, email, name, surname, city } = user;
+  const fullName = `${name} ${surname}`;
   const accessToken = jwt.sign(
-    { userId: _id, role, email, name: firstName, surname: lastName, fullName, city },
+    { userId: _id, role, email, name, surname, fullName, city },
     process.env.ACCESS_TOKEN_SECRET,
     {
       expiresIn: '15m',
     },
   );
+
   const expirationTime = 900000; // 15 minutes - 15 * 60 * 1000
 
   res.cookie('accessToken', accessToken, {
@@ -38,7 +39,7 @@ const generateRefreshToken = (req, res, user) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    maxAge: 2592000000, // 30 days - 30 * 24 * 60 * 60 * 1000,
+    maxAge: expirationTime,
     expirationTime: expirationTime,
   });
 

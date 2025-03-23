@@ -117,12 +117,15 @@ export type PostAuthRegisterApiArg = {
     email: string;
     /** User's password */
     password: string;
+    role?: 'user' | 'specialist' | 'admin';
+    /** Specialist category name */
+    categoryName?: string;
     /** User's first name */
     name?: string;
     /** User's last name */
     surname?: string;
     /** User's city */
-    city?: string;
+    city: string;
   };
 };
 export type PostAuthLoginApiResponse = /** status 200 Successfully authenticated user */ {
