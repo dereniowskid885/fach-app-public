@@ -49,7 +49,7 @@ router.get('/', getCategories);
 
 /**
  * @swagger
- * /categories/{id}:
+ * /categories/by-id/{id}:
  *   get:
  *     summary: Get category by id
  *     description: Returns category by id
@@ -89,11 +89,11 @@ router.get('/', getCategories);
  *                   type: string
  *                   example: Server error during retrieval of category
  */
-router.get('/:id', getCategoryById);
+router.get('/by-id/:id', getCategoryById);
 
 /**
  * @swagger
- * /categories/{name}:
+ * /categories/by-name/{name}:
  *   get:
  *     summary: Get category by name or create one
  *     description: Returns category by name and creates one if it doesn't exist
@@ -133,7 +133,7 @@ router.get('/:id', getCategoryById);
  *                   type: string
  *                   example: Server error during retrieval of category
  */
-router.get('/:name', getOrCreateCategory);
+router.get('/by-name/:name', getOrCreateCategory);
 
 /**
  * @swagger

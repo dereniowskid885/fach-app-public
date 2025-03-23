@@ -45,7 +45,7 @@ const register = async (req, res) => {
       // get category id by name for specialist assignment
       try {
         const { data } = await axios.get(
-          `${process.env.TICKETING_SERVICE_BASE_URL}/api/categories/name/${category.name}`,
+          `${process.env.TICKETING_SERVICE_BASE_URL}/api/categories/by-name/${category.name}`,
         );
 
         category.id = data._id;

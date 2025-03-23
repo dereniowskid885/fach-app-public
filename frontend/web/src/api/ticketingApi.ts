@@ -4,11 +4,17 @@ const injectedRtkApi = api.injectEndpoints({
     getCategories: build.query<GetCategoriesApiResponse, GetCategoriesApiArg>({
       query: () => ({ url: `/categories` })
     }),
-    getCategoriesById: build.query<GetCategoriesByIdApiResponse, GetCategoriesByIdApiArg>({
-      query: queryArg => ({ url: `/categories/${queryArg.id}` })
+    getCategoriesByIdById: build.query<
+      GetCategoriesByIdByIdApiResponse,
+      GetCategoriesByIdByIdApiArg
+    >({
+      query: queryArg => ({ url: `/categories/by-id/${queryArg.id}` })
     }),
-    getCategoriesByName: build.query<GetCategoriesByNameApiResponse, GetCategoriesByNameApiArg>({
-      query: queryArg => ({ url: `/categories/${queryArg.name}` })
+    getCategoriesByNameByName: build.query<
+      GetCategoriesByNameByNameApiResponse,
+      GetCategoriesByNameByNameApiArg
+    >({
+      query: queryArg => ({ url: `/categories/by-name/${queryArg.name}` })
     }),
     patchCategoriesByIdSpecialistAssign: build.mutation<
       PatchCategoriesByIdSpecialistAssignApiResponse,
@@ -62,23 +68,23 @@ export type GetCategoriesApiResponse = /** status 200 Categories */ {
   name?: string;
 }[];
 export type GetCategoriesApiArg = void;
-export type GetCategoriesByIdApiResponse = /** status 200 Category */ {
+export type GetCategoriesByIdByIdApiResponse = /** status 200 Category */ {
   /** Unique category ID */
   _id?: string;
   /** Unique category name */
   name?: string;
 };
-export type GetCategoriesByIdApiArg = {
+export type GetCategoriesByIdByIdApiArg = {
   /** Category id */
   id: string;
 };
-export type GetCategoriesByNameApiResponse = /** status 200 Category */ {
+export type GetCategoriesByNameByNameApiResponse = /** status 200 Category */ {
   /** Unique category ID */
   _id?: string;
   /** Unique category name */
   name?: string;
 };
-export type GetCategoriesByNameApiArg = {
+export type GetCategoriesByNameByNameApiArg = {
   /** Category name */
   name: string;
 };
@@ -298,8 +304,8 @@ export type GetTicketsByCategoryIdApiArg = {
 };
 export const {
   useGetCategoriesQuery,
-  useGetCategoriesByIdQuery,
-  useGetCategoriesByNameQuery,
+  useGetCategoriesByIdByIdQuery,
+  useGetCategoriesByNameByNameQuery,
   usePatchCategoriesByIdSpecialistAssignMutation,
   usePatchCategoriesByIdSpecialistRemoveMutation,
   usePostTicketsMutation,
