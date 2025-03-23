@@ -2,7 +2,14 @@ const createMiddleware = require('@helpers/createMiddleware');
 const { checkUserRole } = require('@middlewares/authMiddleware');
 const checkSpecialistRole = createMiddleware(checkUserRole, ['specialist']);
 
-const { createTicket, getUserTickets, deleteTicket, getAvailableTickets } = require('../controllers/ticketController');
+const {
+  createTicket,
+  getUserTickets,
+  deleteTicket,
+  getAvailableTickets,
+  getTicketByID,
+  getTicketsByCategoryID,
+} = require('../controllers/ticketController');
 const express = require('express');
 const router = express.Router();
 
@@ -26,14 +33,18 @@ const router = express.Router();
  *             properties:
  *               city:
  *                 type: string
- *                 example: "katowice"
+ *                 example: "Katowice"
  *               category:
- *                 type: string
- *                 enum:
- *                  - "Mechanika pojazdowa"
- *                  - "Elektronika"
- *                  - "Dom"
- *                 description: Ticket category
+ *                 type: object
+ *                 properties:
+ *                     _id:
+ *                       type: string
+ *                       description: Unique category ID
+ *                       example: "66df7gh8sasd6f66767rt6"
+ *                     name:
+ *                       type: string
+ *                       description: Category name
+ *                       example: "Elektronika"
  *               status:
  *                 type: string
  *                 enum:
@@ -80,20 +91,6 @@ const router = express.Router();
  *                 message:
  *                   type: string
  *                   example: Ticket created successfully
- *       400:
- *         description: Ticket validation error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Ticket validation error
- *                 errors:
- *                   type: array
- *                   items:
- *                     type: string
  *       500:
  *         description: Server error during ticket creation
  *         content:
@@ -133,13 +130,16 @@ router.post('/', createTicket);
  *                     type: string
  *                     example: "katowice"
  *                   category:
- *                     type: string
- *                     enum:
- *                      - "Mechanika pojazdowa"
- *                      - "Elektronika"
- *                      - "Dom"
- *                     description: Ticket category
- *                     example: "Elektronika"
+ *                     type: object
+ *                     properties:
+ *                         _id:
+ *                           type: string
+ *                           description: Unique category ID
+ *                           example: "66df7gh8sasd6f66767rt6"
+ *                         name:
+ *                           type: string
+ *                           description: Category name
+ *                           example: "Elektronika"
  *                   status:
  *                     type: string
  *                     enum:
@@ -219,15 +219,18 @@ router.get('/', getUserTickets);
  *                     example: "66df7gh8sasd6f66767rt6"
  *                   city:
  *                     type: string
- *                     example: "katowice"
+ *                     example: "Katowice"
  *                   category:
- *                     type: string
- *                     enum:
- *                      - "Mechanika pojazdowa"
- *                      - "Elektronika"
- *                      - "Dom"
- *                     description: Ticket category
- *                     example: "Elektronika"
+ *                     type: object
+ *                     properties:
+ *                         _id:
+ *                           type: string
+ *                           description: Unique category ID
+ *                           example: "66df7gh8sasd6f66767rt6"
+ *                         name:
+ *                           type: string
+ *                           description: Category name
+ *                           example: "Elektronika"
  *                   status:
  *                     type: string
  *                     enum:
@@ -341,5 +344,209 @@ router.get('/specialist', checkSpecialistRole, getAvailableTickets);
  *                   example: Server error during ticket deletion
  */
 router.delete('/:id', deleteTicket);
+
+/**
+ * @swagger
+ * /tickets/{id}:
+ *   get:
+ *     summary: Retrieve a ticket by ID
+ *     description: Fetches a single ticket from the database using its unique ID.
+ *     tags:
+ *       - Ticketing
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique id of the ticket
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the ticket
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                   _id:
+ *                     type: string
+ *                     description: Unique ticket ID
+ *                     example: "66df7gh8sasd6f66767rt6"
+ *                   city:
+ *                     type: string
+ *                     example: "Katowice"
+ *                   category:
+ *                     type: object
+ *                     properties:
+ *                         _id:
+ *                           type: string
+ *                           description: Unique category ID
+ *                           example: "66df7gh8sasd6f66767rt6"
+ *                         name:
+ *                           type: string
+ *                           description: Category name
+ *                           example: "Elektronika"
+ *                   status:
+ *                     type: string
+ *                     enum:
+ *                      - "Wycena"
+ *                      - "Akceptacja wyceny"
+ *                      - "Oczekiwanie na płatność"
+ *                      - "W trakcie"
+ *                      - "Akceptacja rozwiązania"
+ *                      - "Badanie przez moderatora"
+ *                      - "Ukończony"
+ *                     description: Ticket status
+ *                     example: "Wycena"
+ *                   assignee:
+ *                     type: string
+ *                     description: Currently assigned user
+ *                     example: "jan.kowalski@onet.pl"
+ *                   createdBy:
+ *                     type: string
+ *                     description: Author of the ticket
+ *                     example: "jan.kowalski@onet.pl"
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     description: Date of ticket creation
+ *                     example: "December 25, 2023, at 10:00 AM"
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
+ *                     description: Date of ticket last update
+ *                     example: "December 25, 2023, at 10:00 AM"
+ *                   price:
+ *                     type: string
+ *                     description: Price set by specialist and accepted by ticket author
+ *                     example: "5 PLN"
+ *                   title:
+ *                     type: string
+ *                     description: Title of the ticket
+ *                     example: "Ticket with some problem"
+ *                   description:
+ *                     type: string
+ *                     description: Description of the ticket
+ *                     example: "Example ticket description"
+ *       404:
+ *         description: Ticket with provided id does not exist
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ticket with provided id does not exist
+ *       500:
+ *         description: Server error during ticket retrieval
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Server error during ticket retrieval
+ */
+router.get('/:id', getTicketByID);
+
+/**
+ * @swagger
+ * /tickets/{categoryId}:
+ *   get:
+ *     summary: Retrieve tickets by categoryId
+ *     description: Retrieve all tickets found by categoryId
+ *     tags:
+ *       - Ticketing
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         description: Unique categoryId
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Tickets found by provided categoryId
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     description: Unique ticket ID
+ *                     example: "66df7gh8sasd6f66767rt6"
+ *                   city:
+ *                     type: string
+ *                     example: "katowice"
+ *                   category:
+ *                     type: object
+ *                     properties:
+ *                         _id:
+ *                           type: string
+ *                           description: Unique category ID
+ *                           example: "66df7gh8sasd6f66767rt6"
+ *                         name:
+ *                           type: string
+ *                           description: Category name
+ *                           example: "Elektronika"
+ *                   status:
+ *                     type: string
+ *                     enum:
+ *                      - "Wycena"
+ *                      - "Akceptacja wyceny"
+ *                      - "Oczekiwanie na płatność"
+ *                      - "W trakcie"
+ *                      - "Akceptacja rozwiązania"
+ *                      - "Badanie przez moderatora"
+ *                      - "Ukończony"
+ *                     description: Ticket status
+ *                     example: "Wycena"
+ *                   assignee:
+ *                     type: string
+ *                     description: Currently assigned user
+ *                     example: "jan.kowalski@onet.pl"
+ *                   createdBy:
+ *                     type: string
+ *                     description: Author of the ticket
+ *                     example: "jan.kowalski@onet.pl"
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     description: Date of ticket creation
+ *                     example: "December 25, 2023, at 10:00 AM"
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
+ *                     description: Date of ticket last update
+ *                     example: "December 25, 2023, at 10:00 AM"
+ *                   price:
+ *                     type: string
+ *                     description: Price set by specialist and accepted by ticket author
+ *                     example: "5 PLN"
+ *                   title:
+ *                     type: string
+ *                     description: Title of the ticket
+ *                     example: "Ticket with some problem"
+ *                   description:
+ *                     type: string
+ *                     description: Description of the ticket
+ *                     example: "Example ticket description"
+ *       500:
+ *         description: Server error during retrieval of tickets
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Server error during retrieval of tickets
+ */
+router.get('/:categoryId', getTicketsByCategoryID);
 
 module.exports = router;
