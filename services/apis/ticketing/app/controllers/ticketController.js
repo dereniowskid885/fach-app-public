@@ -4,7 +4,7 @@ const getTicketByID = async (req, res) => {
   try {
     const ticketID = req.params.id;
 
-    const ticket = await Ticket.findOne(ticketID);
+    const ticket = await Ticket.findOne({ _id: ticketID });
 
     if (!ticket) {
       return res.status(404).json({ message: 'Ticket not found' });
@@ -21,7 +21,7 @@ const getTicketByID = async (req, res) => {
 
 const getTicketsByCategoryID = async (req, res) => {
   try {
-    const categoryId = req.params.id;
+    const categoryId = req.params.categoryId;
 
     const tickets = await Ticket.find({ category: categoryId });
 
