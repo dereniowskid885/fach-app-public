@@ -12,14 +12,15 @@ import {
   CommandItem,
   CommandList
 } from '@/components/shadcn/command';
-import { ETicketCategory, ticketCategories } from '@/constants/ticket';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Dispatch, SetStateAction, useState } from 'react';
+import { GetTicketsByIdApiResponse, useGetCategoriesQuery } from '@/api/ticketingApi';
+import { EFallbackKey } from '@/constants/enums';
 
 export interface ICategorySelect {
-  selectedCategory: ETicketCategory | null;
-  setSelectedCategory: Dispatch<SetStateAction<ETicketCategory | null>>;
+  selectedCategory: GetTicketsByIdApiResponse['category'] | null;
+  setSelectedCategory: Dispatch<SetStateAction<GetTicketsByIdApiResponse['category'] | null>>;
   resetSelectedCategory?: () => void;
 }
 
@@ -30,8 +31,10 @@ export default function CategorySelect({
 }: ICategorySelect) {
   const [open, setOpen] = useState<boolean>(false);
 
-  const selectCategoryHandler = (newCategory: ETicketCategory) => {
-    const isCategoryChange = newCategory !== selectedCategory;
+  const { data: ticketCategories = [] } = useGetCategoriesQuery();
+
+  const selectCategoryHandler = (newCategory: GetTicketsByIdApiResponse['category']) => {
+    const isCategoryChange = newCategory?._id !== selectedCategory?._id;
 
     if (isCategoryChange) {
       setSelectedCategory(newCategory);
@@ -46,8 +49,8 @@ export default function CategorySelect({
         <Button variant="outline" role="combobox" aria-expanded={open}>
           {selectedCategory ? (
             <>
-              <CategoryIcon category={selectedCategory} />
-              {selectedCategory}
+              <CategoryIcon category={selectedCategory.name} />
+              {selectedCategory.name}
             </>
           ) : (
             'Wyszukaj kategorie'
@@ -71,14 +74,14 @@ export default function CategorySelect({
                   Wszystkie
                 </CommandItem>
               ) : null}
-              {ticketCategories.map((category, i) => (
+              {ticketCategories.map((category, index) => (
                 <CommandItem
-                  key={i}
-                  value={category}
-                  onSelect={category => selectCategoryHandler(category as ETicketCategory)}
+                  key={category._id ?? `${EFallbackKey.TICKET_CATEGORY}-${index}`}
+                  value={category.name}
+                  onSelect={() => selectCategoryHandler(category)}
                 >
-                  <CategoryIcon category={category} />
-                  {category}
+                  <CategoryIcon category={category.name} />
+                  {category.name}
                   <Check
                     className={cn(
                       'ml-auto',
