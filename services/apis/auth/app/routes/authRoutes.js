@@ -16,6 +16,7 @@ const router = express.Router();
  * /auth/register:
  *   post:
  *     summary: Register a new user
+ *     description: Default role is "user", to register a specialist categoryName must be provided and role must be "specialist".
  *     tags:
  *       - Authentication
  *     requestBody:
@@ -27,6 +28,7 @@ const router = express.Router();
  *             required:
  *               - email
  *               - password
+ *               - city
  *             properties:
  *               email:
  *                 type: string
@@ -36,6 +38,15 @@ const router = express.Router();
  *                 type: string
  *                 format: password
  *                 description: User's password
+ *               role:
+ *                 type: string
+ *                 enum:
+ *                  - "user"
+ *                  - "specialist"
+ *                  - "admin"
+ *               categoryName:
+ *                 type: string
+ *                 description: Specialist category name
  *               name:
  *                 type: string
  *                 description: User's first name
@@ -67,7 +78,7 @@ const router = express.Router();
  *                   type: string
  *                   example: Server error while sending email verification link
  *       400:
- *         description: Invalid input data or user already exists
+ *         description: Invalid body data or user already exists
  *         content:
  *           application/json:
  *             schema:
@@ -75,7 +86,7 @@ const router = express.Router();
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Email and password are required
+ *                   example: Email, password and city are required
  *                 errors:
  *                   type: array
  *                   items:

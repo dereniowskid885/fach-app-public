@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const axios = require('axios');
+require('dotenv').config();
 
 const userSchema = new mongoose.Schema(
   {
@@ -24,13 +26,14 @@ const userSchema = new mongoose.Schema(
       enum: ['user', 'specialist', 'admin'],
       default: 'user',
     },
-    firstName: {
+    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
+    name: {
       type: String,
       required: true,
       minlength: 2,
       maxlength: 20,
     },
-    lastName: {
+    surname: {
       type: String,
       required: true,
       minlength: 3,
@@ -67,5 +70,29 @@ userSchema.pre('save', async function (next) {
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
+
+userSchema.pre('deleteOne', { document: true, query: false }, async function (next) {
+  const user = this;
+
+  if (user.role !== 'specialist') {
+    next();
+  }
+
+  // remove specialist from category
+  if (user.category) {
+    try {
+      await axios.patch(`${process.env.TICKETING_SERVICE_BASE_URL}/api/categories/${user.category}/specialist/remove`, {
+        userId: user._id,
+      });
+    } catch (err) {
+      return res.status(500).json({
+        message: 'Error occured while removing specialist from category',
+        error: err.message,
+      });
+    }
+  }
+
+  next();
+});
 
 module.exports = mongoose.model('User', userSchema);

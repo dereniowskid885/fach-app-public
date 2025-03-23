@@ -3,6 +3,7 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const Logger = require('../utils/Logger');
 const nodemailer = require('nodemailer');
+const axios = require('axios');
 require('dotenv').config();
 
 const transporter = nodemailer.createTransport({
@@ -17,10 +18,10 @@ const transporter = nodemailer.createTransport({
 
 const register = async (req, res) => {
   try {
-    const { email, password, surname, name, city } = req.body;
+    const { email, password, surname, name, city, role, categoryName } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password are required' });
+    if (!email || !password || !city) {
+      return res.status(400).json({ message: 'Email, password and city are required' });
     }
 
     const userExists = await User.findOne({ email });
@@ -29,10 +30,63 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'Email already registered' });
     }
 
-    const user = new User({ email, password, role: 'user', firstName: name, lastName: surname, city });
+    const isSpecialistCreation = role === 'specialist';
+
+    if (isSpecialistCreation && !categoryName) {
+      return res.status(400).json({ message: 'categoryName must be provided on specialist register' });
+    }
+
+    const category = {
+      id: null,
+      name: categoryName,
+    };
+
+    if (isSpecialistCreation) {
+      // get category id by name for specialist assignment
+      try {
+        const { data } = await axios.get(
+          `${process.env.TICKETING_SERVICE_BASE_URL}/api/categories/name/${category.name}`,
+        );
+
+        category.id = data._id;
+      } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+          message: 'Error occured on category endpoint',
+          error: err.message,
+        });
+      }
+    }
+
+    const user = new User({
+      email,
+      password,
+      role,
+      name,
+      surname,
+      city,
+      category: category.id,
+    });
 
     try {
       await user.save();
+
+      if (isSpecialistCreation && category.id) {
+        // assign userId (specialist) to category
+        try {
+          await axios.patch(
+            `${process.env.TICKETING_SERVICE_BASE_URL}/api/categories/${category.id}/specialist/assign`,
+            {
+              userId: user._id,
+            },
+          );
+        } catch (err) {
+          return res.status(500).json({
+            message: 'Error occured on specialist category assignment',
+            error: err.message,
+          });
+        }
+      }
 
       const emailResult = await sendEmailVerificationLink(email);
 
