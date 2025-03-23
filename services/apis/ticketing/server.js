@@ -12,6 +12,7 @@ const jwt = require('jsonwebtoken');
 const ROUTES = require('./app/constants/routeConstants');
 const ROUTES_SWAGGER = require('@constants/swaggerConstants');
 const ticketRoutes = require('./app/routes/ticketRoutes');
+const categoryRoutes = require('./app/routes/categoryRoutes');
 const swaggerRoutes = require('./app/routes/swaggerRoutes');
 
 // services common envs
@@ -37,6 +38,7 @@ app.use(tokenVerifyMiddleware);
 
 // routes
 app.use(ROUTES.TICKETS.BASE, ticketRoutes);
+app.use(ROUTES.CATEGORY.BASE, categoryRoutes);
 app.use(ROUTES_SWAGGER.BASE, swaggerRoutes);
 
 app.listen(process.env.TICKETING_SERVICE_PORT, () => {

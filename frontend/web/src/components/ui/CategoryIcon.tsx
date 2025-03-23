@@ -1,19 +1,22 @@
-import { ETicketCategory } from '@/constants/ticket';
 import { GiMechanicGarage } from 'react-icons/gi';
 import { MdDevices } from 'react-icons/md';
 import { IoHome } from 'react-icons/io5';
+import { TbCategory } from 'react-icons/tb';
 
 export interface ICategoryIcon {
-  category: ETicketCategory;
+  category?: string;
 }
 
 export default function CategoryIcon({ category }: ICategoryIcon) {
+  // TODO: categories icon approach to be changed
   switch (category) {
-    case ETicketCategory.AUTOMOTIVE:
+    case 'Mechanika pojazdowa':
       return <GiMechanicGarage size={40} />;
-    case ETicketCategory.ELECTRONICS:
+    case 'Elektronika':
       return <MdDevices size={40} />;
-    case ETicketCategory.HOME:
+    case 'Dom':
       return <IoHome size={40} />;
+    default:
+      return <TbCategory size={40} />;
   }
 }
