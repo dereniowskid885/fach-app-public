@@ -48,14 +48,14 @@ const injectedRtkApi = api.injectEndpoints({
     deleteTicketsById: build.mutation<DeleteTicketsByIdApiResponse, DeleteTicketsByIdApiArg>({
       query: queryArg => ({ url: `/tickets/${queryArg.id}`, method: 'DELETE' })
     }),
-    getTicketsById: build.query<GetTicketsByIdApiResponse, GetTicketsByIdApiArg>({
-      query: queryArg => ({ url: `/tickets/${queryArg.id}` })
+    getTicketsByIdById: build.query<GetTicketsByIdByIdApiResponse, GetTicketsByIdByIdApiArg>({
+      query: queryArg => ({ url: `/tickets/by-id/${queryArg.id}` })
     }),
-    getTicketsByCategoryId: build.query<
-      GetTicketsByCategoryIdApiResponse,
-      GetTicketsByCategoryIdApiArg
+    getTicketsByCategoryidByCategoryId: build.query<
+      GetTicketsByCategoryidByCategoryIdApiResponse,
+      GetTicketsByCategoryidByCategoryIdApiArg
     >({
-      query: queryArg => ({ url: `/tickets/${queryArg.categoryId}` })
+      query: queryArg => ({ url: `/tickets/by-categoryid/${queryArg.categoryId}` })
     })
   }),
   overrideExisting: false
@@ -225,7 +225,7 @@ export type DeleteTicketsByIdApiArg = {
   /** Ticket ID */
   id: string;
 };
-export type GetTicketsByIdApiResponse = /** status 200 Successfully retrieved the ticket */ {
+export type GetTicketsByIdByIdApiResponse = /** status 200 Successfully retrieved the ticket */ {
   /** Unique ticket ID */
   _id?: string;
   city?: string;
@@ -259,11 +259,11 @@ export type GetTicketsByIdApiResponse = /** status 200 Successfully retrieved th
   /** Description of the ticket */
   description?: string;
 };
-export type GetTicketsByIdApiArg = {
+export type GetTicketsByIdByIdApiArg = {
   /** Unique id of the ticket */
   id: string;
 };
-export type GetTicketsByCategoryIdApiResponse =
+export type GetTicketsByCategoryidByCategoryIdApiResponse =
   /** status 200 Tickets found by provided categoryId */ {
     /** Unique ticket ID */
     _id?: string;
@@ -298,7 +298,7 @@ export type GetTicketsByCategoryIdApiResponse =
     /** Description of the ticket */
     description?: string;
   }[];
-export type GetTicketsByCategoryIdApiArg = {
+export type GetTicketsByCategoryidByCategoryIdApiArg = {
   /** Unique categoryId */
   categoryId: string;
 };
@@ -312,6 +312,6 @@ export const {
   useGetTicketsQuery,
   useGetTicketsSpecialistQuery,
   useDeleteTicketsByIdMutation,
-  useGetTicketsByIdQuery,
-  useGetTicketsByCategoryIdQuery
+  useGetTicketsByIdByIdQuery,
+  useGetTicketsByCategoryidByCategoryIdQuery
 } = injectedRtkApi;
