@@ -5,7 +5,7 @@ import { Typography } from '../common/Typography';
 import { useState } from 'react';
 import TicketCreateDialog from './TicketCreateDialog';
 import CategorySelect from './CategorySelect';
-import { GetTicketsByIdApiResponse, useGetTicketsQuery } from '@/api/ticketingApi';
+import { GetTicketsByIdByIdApiResponse, useGetTicketsQuery } from '@/api/ticketingApi';
 import { LoadingSpinner } from '../shadcn/loading-spinner';
 import { EUserRole } from '@/constants/enums';
 import { notFound } from 'next/navigation';
@@ -15,7 +15,7 @@ import TicketCarousel from './TicketCarousel';
 
 export default function DashboardTickets() {
   const [categoryFilter, setCategoryFilter] = useState<
-    GetTicketsByIdApiResponse['category'] | null
+    GetTicketsByIdByIdApiResponse['category'] | null
   >(null);
   const [ticketCreateDialog, setTicketCreateDialog] = useState<boolean>(false);
 

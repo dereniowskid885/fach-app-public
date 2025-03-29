@@ -13,14 +13,15 @@ import { UserTicketCarouselCardButtons } from './UserTicketCarouselCardButtons';
 import { TicketInfoRow } from './TicketInfoRow';
 import { EUserRole } from '@/constants/enums';
 import { SpecialistTicketCarouselCardButtons } from './SpecialistTicketCarouselCardButtons';
-import { GetTicketsByIdApiResponse } from '@/api/ticketingApi';
+import { GetTicketsByIdByIdApiResponse } from '@/api/ticketingApi';
 
 export interface ITicketCarouselCard {
   role: EUserRole;
   id?: string;
   title?: string;
   description?: string;
-  category?: GetTicketsByIdApiResponse['category'];
+  city?: string;
+  category?: GetTicketsByIdByIdApiResponse['category'];
   status: ETicketStatus;
   assignee?: string;
   price?: string;
@@ -31,6 +32,7 @@ export default function TicketCarouselCard({
   id,
   title,
   description,
+  city,
   category,
   status,
   assignee,
@@ -50,6 +52,7 @@ export default function TicketCarouselCard({
           <div className="flex flex-col">
             <TicketInfoRow>Przypisany: {assignee}</TicketInfoRow>
             <TicketInfoRow>Kategoria: {category?.name}</TicketInfoRow>
+            <TicketInfoRow>Miasto: {city}</TicketInfoRow>
             <TicketInfoRow>Kwota: {price}</TicketInfoRow>
             <TicketInfoRow>
               Status: <TicketStatusBadge status={status} />
