@@ -1,33 +1,43 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import TicketCarousel from './TicketCarousel';
-import { useGetTicketsSpecialistQuery } from '@/api/ticketingApi';
+import { useGetTicketsSpecialistByCityQuery } from '@/api/ticketingApi';
 import { LoadingSpinner } from '../shadcn/loading-spinner';
 import { Typography } from '../common/Typography';
 import { useAppSelector } from '@/redux/hooks';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { useForm } from 'react-hook-form';
+import CitySelect from './CitySelect';
 
 export default function SpecialistPendingTickets() {
   const { city } = useAppSelector(selectUserData);
+  const { register, watch } = useForm();
+  const selectedCity = watch('city') ?? city;
 
   const {
     data: tickets = [],
     isLoading,
     isFetching
-  } = useGetTicketsSpecialistQuery(undefined, { refetchOnMountOrArgChange: true });
+  } = useGetTicketsSpecialistByCityQuery(
+    { city: selectedCity },
+    { refetchOnMountOrArgChange: true }
+  );
 
-  return isLoading || isFetching ? (
-    // TODO: skeleton loader to be added
-    <div className="flex h-[420px] items-center justify-center">
-      <LoadingSpinner />
-    </div>
-  ) : (
+  return (
     <div className="flex flex-col gap-2">
       <Typography variant="h3">
-        Sprawy z miasta {city}: {tickets.length}
+        Sprawy z miasta {selectedCity}: {tickets.length}
       </Typography>
-      <TicketCarousel tickets={tickets} />
+      <CitySelect register={register('city')} defaultValue={selectedCity} id="city" />
+      {isLoading || isFetching ? (
+        // TODO: skeleton loader to be added
+        <div className="flex h-[420px] items-center justify-center">
+          <LoadingSpinner />
+        </div>
+      ) : (
+        <TicketCarousel tickets={tickets} />
+      )}
     </div>
   );
 }
