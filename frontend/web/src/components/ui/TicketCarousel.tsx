@@ -28,6 +28,7 @@ export default function TicketCarousel({ tickets }: ITicketCarousel) {
               id={ticket._id}
               title={ticket.title}
               description={ticket.description}
+              city={ticket.city}
               assignee={ticket.assignee}
               status={ticket.status as ETicketStatus}
               category={ticket.category}

@@ -9,10 +9,11 @@ import { UseFormRegisterReturn } from 'react-hook-form';
 
 export interface ICitySelect {
   register: UseFormRegisterReturn;
+  defaultValue?: string;
   id: string;
 }
 
-export default function CitySelect({ register, id }: ICitySelect) {
+export default function CitySelect({ register, defaultValue, id }: ICitySelect) {
   const cities = [
     'Warszawa',
     'Kraków',
@@ -35,7 +36,7 @@ export default function CitySelect({ register, id }: ICitySelect) {
   return (
     <Select
       onValueChange={value => register.onChange({ target: { name: register.name, value } })}
-      defaultValue=""
+      defaultValue={defaultValue}
       required
     >
       <SelectTrigger id={id}>
