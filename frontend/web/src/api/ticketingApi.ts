@@ -42,8 +42,11 @@ const injectedRtkApi = api.injectEndpoints({
     getTickets: build.query<GetTicketsApiResponse, GetTicketsApiArg>({
       query: () => ({ url: `/tickets` })
     }),
-    getTicketsSpecialist: build.query<GetTicketsSpecialistApiResponse, GetTicketsSpecialistApiArg>({
-      query: () => ({ url: `/tickets/specialist` })
+    getTicketsSpecialistByCity: build.query<
+      GetTicketsSpecialistByCityApiResponse,
+      GetTicketsSpecialistByCityApiArg
+    >({
+      query: queryArg => ({ url: `/tickets/specialist/${queryArg.city}` })
     }),
     deleteTicketsById: build.mutation<DeleteTicketsByIdApiResponse, DeleteTicketsByIdApiArg>({
       query: queryArg => ({ url: `/tickets/${queryArg.id}`, method: 'DELETE' })
@@ -182,7 +185,7 @@ export type GetTicketsApiResponse = /** status 200 Tickets created by logged use
   description?: string;
 }[];
 export type GetTicketsApiArg = void;
-export type GetTicketsSpecialistApiResponse =
+export type GetTicketsSpecialistByCityApiResponse =
   /** status 200 Pending tickets - ready to be taken by specialist */ {
     /** Unique ticket ID */
     _id?: string;
@@ -217,7 +220,10 @@ export type GetTicketsSpecialistApiResponse =
     /** Description of the ticket */
     description?: string;
   }[];
-export type GetTicketsSpecialistApiArg = void;
+export type GetTicketsSpecialistByCityApiArg = {
+  /** City ​​by which the returned tickets will be filtered */
+  city?: string;
+};
 export type DeleteTicketsByIdApiResponse = /** status 200 Ticket deletion ended with success */ {
   message?: string;
 };
@@ -310,7 +316,7 @@ export const {
   usePatchCategoriesByIdSpecialistRemoveMutation,
   usePostTicketsMutation,
   useGetTicketsQuery,
-  useGetTicketsSpecialistQuery,
+  useGetTicketsSpecialistByCityQuery,
   useDeleteTicketsByIdMutation,
   useGetTicketsByIdByIdQuery,
   useGetTicketsByCategoryidByCategoryIdQuery

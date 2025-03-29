@@ -15,12 +15,12 @@ import {
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { GetTicketsByIdApiResponse, useGetCategoriesQuery } from '@/api/ticketingApi';
+import { GetTicketsByIdByIdApiResponse, useGetCategoriesQuery } from '@/api/ticketingApi';
 import { EFallbackKey } from '@/constants/enums';
 
 export interface ICategorySelect {
-  selectedCategory: GetTicketsByIdApiResponse['category'] | null;
-  setSelectedCategory: Dispatch<SetStateAction<GetTicketsByIdApiResponse['category'] | null>>;
+  selectedCategory: GetTicketsByIdByIdApiResponse['category'] | null;
+  setSelectedCategory: Dispatch<SetStateAction<GetTicketsByIdByIdApiResponse['category'] | null>>;
   resetSelectedCategory?: () => void;
 }
 
@@ -33,7 +33,7 @@ export default function CategorySelect({
 
   const { data: ticketCategories = [] } = useGetCategoriesQuery();
 
-  const selectCategoryHandler = (newCategory: GetTicketsByIdApiResponse['category']) => {
+  const selectCategoryHandler = (newCategory: GetTicketsByIdByIdApiResponse['category']) => {
     const isCategoryChange = newCategory?._id !== selectedCategory?._id;
 
     if (isCategoryChange) {

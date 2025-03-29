@@ -49,9 +49,13 @@ const getUserTickets = async (req, res) => {
   }
 };
 
-const getAvailableTickets = async (req, res) => {
+const getSpecialistAvailableTickets = async (req, res) => {
   try {
-    const { city } = req.user;
+    let city = req.params.city;
+
+    if (!city) {
+      city = req.user.city;
+    }
 
     const tickets = await Ticket.find({ city }).populate('category', 'name');
 
@@ -128,7 +132,7 @@ module.exports = {
   createTicket,
   deleteTicket,
   getUserTickets,
-  getAvailableTickets,
+  getSpecialistAvailableTickets,
   getTicketByID,
   getTicketsByCategoryID,
 };
