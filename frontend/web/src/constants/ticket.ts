@@ -1,4 +1,4 @@
-import { GetTicketsByIdApiResponse } from '@/api/ticketingApi';
+import { GetTicketsByIdByIdApiResponse } from '@/api/ticketingApi';
 
 export enum ETicketStatus {
   PRICE_EVALUATION = 'Wycena',
@@ -12,7 +12,7 @@ export enum ETicketStatus {
 
 export interface ITicket {
   _id: string;
-  category: GetTicketsByIdApiResponse['category'];
+  category: GetTicketsByIdByIdApiResponse['category'];
   status: ETicketStatus;
   assignee: string;
   createdBy: string;

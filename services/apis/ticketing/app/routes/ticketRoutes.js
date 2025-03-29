@@ -6,7 +6,7 @@ const {
   createTicket,
   getUserTickets,
   deleteTicket,
-  getAvailableTickets,
+  getSpecialistAvailableTickets,
   getTicketByID,
   getTicketsByCategoryID,
 } = require('../controllers/ticketController');
@@ -108,7 +108,7 @@ router.post('/', createTicket);
  * @swagger
  * /tickets:
  *   get:
- *     summary: Retrieve all tickets
+ *     summary: Retrieve all tickets created by logged user
  *     description: Returns all tickets created by logged user
  *     tags:
  *       - Ticketing
@@ -197,12 +197,19 @@ router.get('/', getUserTickets);
 
 /**
  * @swagger
- * /tickets/specialist:
+ * /tickets/specialist/{city}:
  *   get:
  *     summary: Retrieve pending tickets for specialist (ready to be taken)
- *     description: Returns tickets filtered by specialist category and that are created by users from the same city as specialist
+ *     description: Returns tickets filtered by specialist category and that are created by users from the same city as specialist (or by city provided in parameter)
  *     tags:
  *       - Ticketing
+ *     parameters:
+ *       - in: path
+ *         name: city
+ *         required: false
+ *         description: City ​​by which the returned tickets will be filtered
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Pending tickets - ready to be taken by specialist
@@ -284,7 +291,7 @@ router.get('/', getUserTickets);
  *                   type: string
  *                   example: Server error during retrieval of tickets
  */
-router.get('/specialist', checkSpecialistRole, getAvailableTickets);
+router.get('/specialist/:city', checkSpecialistRole, getSpecialistAvailableTickets);
 
 /**
  * @swagger
