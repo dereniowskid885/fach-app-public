@@ -7,7 +7,7 @@ import CategorySelect from './CategorySelect';
 import { useEffect, useState } from 'react';
 import { Typography } from '../common/Typography';
 import {
-  GetTicketsByIdApiResponse,
+  GetTicketsByIdByIdApiResponse,
   PostTicketsApiArg,
   usePostTicketsMutation
 } from '@/api/ticketingApi';
@@ -15,7 +15,7 @@ import { parseQueryError } from '@/lib/helpers';
 import { useToast } from '@/hooks/use-toast';
 
 interface ITicketCreateForm {
-  category: GetTicketsByIdApiResponse['category'];
+  category: GetTicketsByIdByIdApiResponse['category'];
   title: string;
   description: string;
 }
@@ -35,7 +35,7 @@ export default function TicketCreateDialog({
   const [errorMessage, setErrorMessage] = useState<string | undefined>('');
 
   const [ticketCategory, setTicketCategory] = useState<
-    GetTicketsByIdApiResponse['category'] | null
+    GetTicketsByIdByIdApiResponse['category'] | null
   >(null);
   const descriptionMaxLength = 3000;
   const [descriptionCharsLeft, setDescriptionCharsLeft] = useState<number>(descriptionMaxLength);
