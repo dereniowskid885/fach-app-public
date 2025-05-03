@@ -41,7 +41,9 @@ export default function DialogComponent({
       <AlertDialogContent>
         <AlertDialogHeader className="items-center">
           <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
+          <AlertDialogDescription className={`${description ? '' : 'hidden'}`}>
+            {description}
+          </AlertDialogDescription>
         </AlertDialogHeader>
         {content ? content : null}
         {errorMessage ? (
