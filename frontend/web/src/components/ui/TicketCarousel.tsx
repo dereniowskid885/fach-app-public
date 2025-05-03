@@ -2,21 +2,26 @@
 
 import { Carousel, CarouselContent, CarouselItem } from '@/components/shadcn/carousel';
 import TicketCarouselCard from './TicketCarouselCard';
-import { ETicketStatus } from '@/constants/ticket';
-import { EFallbackKey, EUserRole } from '@/constants/enums';
-import { GetTicketsApiResponse } from '@/api/ticketingApi';
+import { ETicketStatus } from '@/constants/ticketStatus';
+import { EFallbackKey } from '@/constants/enums';
+import { EUserRole } from '@/constants/userRole';
+import { GetTicketsApiResponse } from '@/api/accountApi';
 import { useAppSelector } from '@/redux/hooks';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 
 export interface ITicketCarousel {
   tickets: GetTicketsApiResponse;
+  disableKeyboardHandler?: boolean;
 }
 
-export default function TicketCarousel({ tickets }: ITicketCarousel) {
-  const { role } = useAppSelector(selectUserData);
+export default function TicketCarousel({ tickets, disableKeyboardHandler }: ITicketCarousel) {
+  const { role, email } = useAppSelector(selectUserData);
 
   return (
-    <Carousel className="w-full cursor-pointer overflow-visible">
+    <Carousel
+      className="w-full cursor-pointer overflow-visible"
+      disableKeyboardHandler={disableKeyboardHandler}
+    >
       <CarouselContent overflowHidden={false}>
         {tickets.map((ticket, index) => (
           <CarouselItem
@@ -24,15 +29,17 @@ export default function TicketCarousel({ tickets }: ITicketCarousel) {
             className="select-none pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 [&:not(:first-of-type)]:pl-2"
           >
             <TicketCarouselCard
+              email={email}
               role={role as EUserRole}
               id={ticket._id}
               title={ticket.title}
               description={ticket.description}
               city={ticket.city}
-              assignee={ticket.assignee}
+              assignee={ticket.assignee?.email}
+              author={ticket.createdBy?.email}
               status={ticket.status as ETicketStatus}
-              category={ticket.category}
-              price={ticket.price}
+              category={ticket.category?.name}
+              updatedBy={ticket.updatedBy?.email}
             />
           </CarouselItem>
         ))}

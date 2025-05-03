@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import TicketCarousel from './TicketCarousel';
-import { useGetTicketsSpecialistByCityQuery } from '@/api/ticketingApi';
+import { useGetTicketsSpecialistByCityQuery } from '@/api/accountApi';
 import { LoadingSpinner } from '../shadcn/loading-spinner';
 import { Typography } from '../common/Typography';
 import { useAppSelector } from '@/redux/hooks';
@@ -36,7 +36,7 @@ export default function SpecialistPendingTickets() {
           <LoadingSpinner />
         </div>
       ) : (
-        <TicketCarousel tickets={tickets} />
+        <TicketCarousel tickets={tickets} disableKeyboardHandler />
       )}
     </div>
   );

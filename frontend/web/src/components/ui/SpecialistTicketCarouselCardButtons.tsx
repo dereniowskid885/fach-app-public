@@ -1,16 +1,22 @@
 'use client';
 
 import { Button } from '../shadcn/button';
-import { ETicketStatus } from '@/constants/ticket';
 import { TStatusActionButton } from './UserTicketCarouselCardButtons';
+import { useState } from 'react';
+import SpecialistTicketEvaluationDialog from './SpecialistTicketEvaluationDialog';
+import { ETicketStatus } from '@/constants/ticketStatus';
 
 export interface ISpecialistTicketCarouselCardButtons {
+  ticketId: string;
   ticketStatus: ETicketStatus;
 }
 
 export const SpecialistTicketCarouselCardButtons = ({
+  ticketId,
   ticketStatus
 }: ISpecialistTicketCarouselCardButtons) => {
+  const [priceEvaluationDialog, setPriceEvaluationDialog] = useState<boolean>(false);
+
   const statusActionButton: TStatusActionButton = {
     [ETicketStatus.IN_PROGRESS]: {
       title: 'Odpowiedz',
@@ -18,17 +24,28 @@ export const SpecialistTicketCarouselCardButtons = ({
     },
     [ETicketStatus.PRICE_EVALUATION]: {
       title: 'Wyceń',
-      handler: () => null
+      handler: () => setPriceEvaluationDialog(true)
+    },
+    [ETicketStatus.PRICE_USER_ACCEPTATION]: {
+      title: 'Edytuj wycenę',
+      handler: () => setPriceEvaluationDialog(false)
     }
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      {statusActionButton[ticketStatus] ? (
-        <Button variant="default" onClick={statusActionButton[ticketStatus].handler}>
-          {statusActionButton[ticketStatus].title}
-        </Button>
-      ) : null}
-    </div>
+    <>
+      <div className="flex flex-col gap-2">
+        {statusActionButton[ticketStatus] ? (
+          <Button variant="default" onClick={statusActionButton[ticketStatus].handler}>
+            {statusActionButton[ticketStatus].title}
+          </Button>
+        ) : null}
+      </div>
+      <SpecialistTicketEvaluationDialog
+        open={priceEvaluationDialog}
+        ticketId={ticketId}
+        closeDialog={() => setPriceEvaluationDialog(false)}
+      />
+    </>
   );
 };
