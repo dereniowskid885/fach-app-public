@@ -16,3 +16,9 @@ export const enum EAccountVerificationResult {
   SUCCESS = 'SUCCESS',
   ERROR = 'ERROR'
 }
+
+export const enum ETimePickerType {
+  DAYS = 'DAYS',
+  HOURS = 'HOURS',
+  MINUTES = 'MINUTES'
+}

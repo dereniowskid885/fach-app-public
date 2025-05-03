@@ -1,6 +1,6 @@
 'use client';
 
-import { ITokenPayload } from '@/constants/const';
+import { ITokenPayload } from '@/constants/interfaces';
 import { useAppDispatch } from '@/redux/hooks';
 import { setUserData } from '@/redux/slices/UserDataSlice';
 import { ReactNode } from 'react';
