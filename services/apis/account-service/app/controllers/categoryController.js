@@ -1,4 +1,6 @@
+const { EUserRole } = require('@constants/userRole');
 const Category = require('../models/Category');
+const User = require('../models/User');
 
 const getOrCreateCategory = async (req, res) => {
   try {
@@ -8,8 +10,10 @@ const getOrCreateCategory = async (req, res) => {
 
     if (!category) {
       category = new Category({ name: categoryName });
-      await category.save();
     }
+
+    category.populate('specialists', 'email');
+    await category.save();
 
     return res.status(200).json(category);
   } catch (err) {
@@ -24,7 +28,7 @@ const getCategoryById = async (req, res) => {
   try {
     const categoryId = req.params.id;
 
-    let category = await Category.findOne({ _id: categoryId });
+    let category = await Category.findOne({ _id: categoryId }).populate('specialists', 'email');
 
     if (!category) {
       return res.status(400).json({ message: 'Category with provided id does not exist' });
@@ -41,7 +45,7 @@ const getCategoryById = async (req, res) => {
 
 const getCategories = async (req, res) => {
   try {
-    let categories = await Category.find();
+    let categories = await Category.find().populate('specialists', 'email');
 
     return res.status(200).json(categories);
   } catch (err) {
@@ -61,6 +65,16 @@ const assignSpecialistToCategory = async (req, res) => {
 
     if (!category) {
       return res.status(400).json({ message: 'Category with provided id does not exist' });
+    }
+
+    const user = await User.findOne({ _id: userId });
+
+    if (user.role !== EUserRole.SPECIALIST) {
+      return res.status(400).json({ message: 'User is not a specialist' });
+    }
+
+    if (user.category) {
+      return res.status(400).json({ message: 'User has category assigned' });
     }
 
     category.specialists.push(userId);

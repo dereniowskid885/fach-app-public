@@ -1,19 +1,18 @@
 const swaggerJsDoc = require('swagger-jsdoc');
 const ROUTES = require('../constants/routeConstants');
 const ROUTES_SWAGGER = require('@constants/swaggerConstants');
-require('dotenv').config({ path: require.resolve('@root/.env.shared') });
 
 const swaggerConfig = {
   swaggerDefinition: {
     openapi: '3.0.0',
     info: {
-      title: 'Issue solver - Auth Service',
+      title: 'Issue solver - Account Service',
       version: '1.0.0',
-      description: `<h5>API documentation</h5><a href="${process.env.AUTH_SERVICE_BASE_URL + ROUTES_SWAGGER.EXPORT}" download="auth_service_schema"><button>Download Swagger JSON</button></a>`,
+      description: `<h5>API documentation</h5><a href="${process.env.ACCOUNT_SERVICE_BASE_URL + ROUTES_SWAGGER.EXPORT}" download="account_service_schema"><button>Download Swagger JSON</button></a>`,
     },
     servers: [
       {
-        url: process.env.AUTH_SERVICE_BASE_URL + ROUTES.BASE,
+        url: process.env.ACCOUNT_SERVICE_BASE_URL + ROUTES.BASE,
       },
     ],
   },

@@ -1,4 +1,3 @@
-const express = require('express');
 const {
   getOrCreateCategory,
   getCategories,
@@ -6,7 +5,16 @@ const {
   removeSpecialistFromCategory,
   getCategoryById,
 } = require('../controllers/categoryController');
+
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const createMiddleware = require('@helpers/createMiddleware');
+const { checkAndParseToken } = require('@middlewares/authMiddleware');
+
+// Auth middleware
+const tokenVerifyMiddleware = createMiddleware(checkAndParseToken, jwt, process.env.ACCESS_TOKEN_SECRET);
 const router = express.Router();
+router.use(tokenVerifyMiddleware);
 
 /**
  * @swagger
@@ -34,6 +42,19 @@ const router = express.Router();
  *                     type: string
  *                     description: Unique category name
  *                     example: "Elektronika"
+ *                   specialists:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                          _id:
+ *                            type: string
+ *                            description: User ID
+ *                            example: "66df7gh8sasd6f66767rt6"
+ *                          email:
+ *                            type: string
+ *                            description: User email
+ *                            example: "jan@kowalski.pl"
  *       500:
  *         description: Server error during retrieval of categories
  *         content:
@@ -78,6 +99,19 @@ router.get('/', getCategories);
  *                   type: string
  *                   description: Unique category name
  *                   example: "Elektronika"
+ *                 specialists:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                          _id:
+ *                            type: string
+ *                            description: User ID
+ *                            example: "66df7gh8sasd6f66767rt6"
+ *                          email:
+ *                            type: string
+ *                            description: User email
+ *                            example: "jan@kowalski.pl"
  *       500:
  *         description: Server error during retrieval of category
  *         content:
@@ -122,6 +156,19 @@ router.get('/by-id/:id', getCategoryById);
  *                   type: string
  *                   description: Unique category name
  *                   example: "Elektronika"
+ *                 specialists:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                          _id:
+ *                            type: string
+ *                            description: User ID
+ *                            example: "66df7gh8sasd6f66767rt6"
+ *                          email:
+ *                            type: string
+ *                            description: User email
+ *                            example: "jan@kowalski.pl"
  *       500:
  *         description: Server error during retrieval of category
  *         content:

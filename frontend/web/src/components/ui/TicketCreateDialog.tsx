@@ -10,7 +10,7 @@ import {
   GetTicketsByIdByIdApiResponse,
   PostTicketsApiArg,
   usePostTicketsMutation
-} from '@/api/ticketingApi';
+} from '@/api/accountApi';
 import { parseQueryError } from '@/lib/helpers';
 import { useToast } from '@/hooks/use-toast';
 

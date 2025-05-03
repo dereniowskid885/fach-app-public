@@ -1,4 +1,3 @@
-const express = require('express');
 const {
   register,
   login,
@@ -9,7 +8,15 @@ const {
   verifyEmail,
   passwordReset,
 } = require('../controllers/authController');
+
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const createMiddleware = require('@helpers/createMiddleware');
+const { checkAndParseToken } = require('@middlewares/authMiddleware');
 const router = express.Router();
+
+// Auth middleware
+const tokenVerifyMiddleware = createMiddleware(checkAndParseToken, jwt, process.env.ACCESS_TOKEN_SECRET);
 
 /**
  * @swagger
@@ -229,7 +236,7 @@ router.post(`/login`, login);
  *                 error:
  *                   type: string
  */
-router.post(`/refresh-token`, refreshToken);
+router.post(`/refresh-token`, tokenVerifyMiddleware, refreshToken);
 
 /**
  * @swagger
@@ -295,7 +302,7 @@ router.post(`/refresh-token`, refreshToken);
  *                 error:
  *                   type: string
  */
-router.post(`/logout`, logout);
+router.post(`/logout`, tokenVerifyMiddleware, logout);
 
 /**
  * @swagger

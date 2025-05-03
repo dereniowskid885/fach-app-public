@@ -11,9 +11,8 @@ import TicketStatusBadge from './TicketStatusBadge';
 import CategoryIcon from './CategoryIcon';
 import { UserTicketCarouselCardButtons } from './UserTicketCarouselCardButtons';
 import { TicketInfoRow } from './TicketInfoRow';
-import { EUserRole } from '@/constants/enums';
+import { EUserRole } from '@/constants/userRole';
 import { SpecialistTicketCarouselCardButtons } from './SpecialistTicketCarouselCardButtons';
-import { GetTicketsByIdByIdApiResponse } from '@/api/ticketingApi';
 import { Alert, AlertDescription } from '../shadcn/alert';
 import { AlertCircle } from 'lucide-react';
 
@@ -24,15 +23,10 @@ export interface ITicketCarouselCard {
   title?: string;
   description?: string;
   city?: string;
-  category?: GetTicketsByIdByIdApiResponse['category'];
+  category?: string;
   status: ETicketStatus;
   assignee?: string;
   author?: string;
-  price?: {
-    value?: number;
-    currency?: string;
-  };
-  dateOfResponse?: string;
   updatedBy?: string;
 }
 
@@ -47,20 +41,12 @@ export default function TicketCarouselCard({
   status,
   assignee,
   author,
-  price,
-  dateOfResponse,
   updatedBy
 }: ITicketCarouselCard) {
   const isEvaluatedByLoggedSpecialist =
     role === EUserRole.SPECIALIST &&
     email === updatedBy &&
     status === ETicketStatus.PRICE_USER_ACCEPTATION;
-
-  // trzeba chyba stworzyc osobna tabele w bazie do wycen aby je wszystkie wyswietlac (moze uzyc Date Table)
-  const ticketEvaluation = {
-    price: price?.value ? `${price.value} ${price.currency}` : '-',
-    dateOfResponse: dateOfResponse ?? '-'
-  };
 
   return (
     <Card className="bg-info-50">
@@ -71,7 +57,7 @@ export default function TicketCarouselCard({
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>Avatar</AvatarFallback>
             </Avatar>
-            <CategoryIcon category={category?.name} />
+            <CategoryIcon category={category} />
           </div>
           <div className="flex flex-col">
             <TicketInfoRow>
@@ -87,7 +73,7 @@ export default function TicketCarouselCard({
               </b>
             </TicketInfoRow>
             <TicketInfoRow>
-              Kategoria: <b>{category?.name}</b>
+              Kategoria: <b>{category}</b>
             </TicketInfoRow>
             <TicketInfoRow>
               Miasto: <b>{city}</b>
@@ -105,17 +91,9 @@ export default function TicketCarouselCard({
           <CardTitle>{title}</CardTitle>
           <CardDescription className="line-clamp-2 text-neutral-400">{description}</CardDescription>
           {role === EUserRole.USER ? (
-            <UserTicketCarouselCardButtons
-              ticketId={id ?? ''}
-              ticketStatus={status}
-              ticketEvaluation={ticketEvaluation}
-            />
+            <UserTicketCarouselCardButtons ticketId={id ?? ''} ticketStatus={status} />
           ) : role === EUserRole.SPECIALIST ? (
-            <SpecialistTicketCarouselCardButtons
-              ticketId={id ?? ''}
-              ticketStatus={status}
-              ticketEvaluation={ticketEvaluation}
-            />
+            <SpecialistTicketCarouselCardButtons ticketId={id ?? ''} ticketStatus={status} />
           ) : null}
         </CardHeader>
       </CardContent>

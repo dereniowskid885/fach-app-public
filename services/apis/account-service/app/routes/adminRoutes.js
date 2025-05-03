@@ -1,7 +1,14 @@
-const express = require('express');
 const { updateUserRole, deleteUser, getAllUsers, getUser } = require('../controllers/adminController');
 
+const jwt = require('jsonwebtoken');
+const createMiddleware = require('@helpers/createMiddleware');
+const { checkAndParseToken } = require('@middlewares/authMiddleware');
+const express = require('express');
 const router = express.Router();
+
+// Auth middleware
+const tokenVerifyMiddleware = createMiddleware(checkAndParseToken, jwt, process.env.ACCESS_TOKEN_SECRET);
+router.use(tokenVerifyMiddleware);
 
 /**
  * @swagger

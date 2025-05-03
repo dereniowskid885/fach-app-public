@@ -3,7 +3,7 @@ import DialogComponent from '../common/DialogComponent';
 import {
   PostAuthRequestEmailVerificationApiArg,
   usePostAuthRequestEmailVerificationMutation
-} from '@/api/authApi';
+} from '@/api/accountApi';
 import { parseQueryError } from '@/lib/helpers';
 
 export interface IAccountVerifyDialog {

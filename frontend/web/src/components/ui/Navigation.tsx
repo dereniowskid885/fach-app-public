@@ -16,7 +16,7 @@ import { MdOutlineFavorite } from 'react-icons/md';
 import { FaUser } from 'react-icons/fa';
 import { MdOutlineLogout } from 'react-icons/md';
 import { Typography } from '@/components/common/Typography';
-import { usePostAuthLogoutMutation } from '@/api/authApi';
+import { usePostAuthLogoutMutation } from '@/api/accountApi';
 import { useToast } from '@/hooks/use-toast';
 import { parseQueryError } from '@/lib/helpers';
 import LoadingOverlay from '../common/LoadingOverlay';

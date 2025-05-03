@@ -1,9 +1,10 @@
 const { generateTokens, generateAccessToken } = require('../helpers/tokenHelpers');
 const User = require('../models/User');
+const Category = require('../models/Category');
 const jwt = require('jsonwebtoken');
 const Logger = require('../utils/Logger');
 const nodemailer = require('nodemailer');
-const axios = require('axios');
+const { EUserRole } = require('@constants/userRole');
 require('dotenv').config();
 
 const transporter = nodemailer.createTransport({
@@ -30,32 +31,16 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'Email already registered' });
     }
 
-    const isSpecialistCreation = role === 'specialist';
+    const isSpecialistCreation = role === EUserRole.SPECIALIST;
 
     if (isSpecialistCreation && !categoryName) {
-      return res.status(400).json({ message: 'categoryName must be provided on specialist register' });
+      return res.status(400).json({ message: 'categoryName must be provided while creating specialist' });
     }
 
-    const category = {
-      id: null,
-      name: categoryName,
-    };
+    let category = await Category.findOne({ name: categoryName });
 
-    if (isSpecialistCreation) {
-      // get category id by name for specialist assignment
-      try {
-        const { data } = await axios.get(
-          `${process.env.TICKETING_SERVICE_BASE_URL}/api/categories/by-name/${category.name}`,
-        );
-
-        category.id = data._id;
-      } catch (err) {
-        console.log(err);
-        return res.status(500).json({
-          message: 'Error occured on category endpoint',
-          error: err.message,
-        });
-      }
+    if (!category) {
+      category = new Category({ name: categoryName });
     }
 
     const user = new User({
@@ -71,21 +56,10 @@ const register = async (req, res) => {
     try {
       await user.save();
 
-      if (isSpecialistCreation && category.id) {
+      if (isSpecialistCreation) {
         // assign userId (specialist) to category
-        try {
-          await axios.patch(
-            `${process.env.TICKETING_SERVICE_BASE_URL}/api/categories/${category.id}/specialist/assign`,
-            {
-              userId: user._id,
-            },
-          );
-        } catch (err) {
-          return res.status(500).json({
-            message: 'Error occured on specialist category assignment',
-            error: err.message,
-          });
-        }
+        category.specialists.push(user.id);
+        await category.save();
       }
 
       const emailResult = await sendEmailVerificationLink(email);

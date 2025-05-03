@@ -2,7 +2,7 @@
 
 import React from 'react';
 import TicketCarousel from './TicketCarousel';
-import { useGetTicketsSpecialistByCityQuery } from '@/api/ticketingApi';
+import { useGetTicketsSpecialistByCityQuery } from '@/api/accountApi';
 import { LoadingSpinner } from '../shadcn/loading-spinner';
 import { Typography } from '../common/Typography';
 import { useAppSelector } from '@/redux/hooks';

@@ -3,7 +3,7 @@
 import {
   PostAuthRequestPasswordResetApiArg,
   usePostAuthRequestPasswordResetMutation
-} from '@/api/authApi';
+} from '@/api/accountApi';
 import { Button } from '@/components/shadcn/button';
 import {
   Card,

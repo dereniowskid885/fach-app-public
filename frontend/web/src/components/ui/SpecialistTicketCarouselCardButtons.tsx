@@ -9,16 +9,11 @@ import { ETicketStatus } from '@/constants/ticketStatus';
 export interface ISpecialistTicketCarouselCardButtons {
   ticketId: string;
   ticketStatus: ETicketStatus;
-  ticketEvaluation: {
-    price: string;
-    dateOfResponse: string;
-  };
 }
 
 export const SpecialistTicketCarouselCardButtons = ({
   ticketId,
-  ticketStatus,
-  ticketEvaluation
+  ticketStatus
 }: ISpecialistTicketCarouselCardButtons) => {
   const [priceEvaluationDialog, setPriceEvaluationDialog] = useState<boolean>(false);
 

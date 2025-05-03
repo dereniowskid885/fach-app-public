@@ -9,8 +9,7 @@ The repository is organized into the following directories:
   \web
 \services
   \apis
-    \auth
-    \ticketing
+    \account-service
   ...
 \shared
   ...
@@ -23,9 +22,7 @@ Use `Ctrl+Shift+P` and select `Tasks:Run Task`
 | Task | Result |
 | ------ | ------ |
 | Start App | Runs all services and frontend in seperated terminals |
-| Start Auth Service | Runs auth service |
-| Start Ticketing Service | Runs ticketing service |
+| Start Account Service | Runs account service |
 
 - Frontend will be available at http://localhost:3000.
-- Auth service will be available at http://localhost:4000.
-- Ticketing service will be available at http://localhost:4001.
+- Account service will be available at http://localhost:4000.

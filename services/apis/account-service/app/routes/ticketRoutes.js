@@ -1,7 +1,3 @@
-const createMiddleware = require('@helpers/createMiddleware');
-const { checkUserRole } = require('@middlewares/authMiddleware');
-const checkSpecialistRole = createMiddleware(checkUserRole, ['specialist']);
-
 const {
   createTicket,
   getUserTickets,
@@ -11,8 +7,20 @@ const {
   getTicketsByCategoryID,
   ticketEvaluationHandler,
 } = require('../controllers/ticketController');
+
+const jwt = require('jsonwebtoken');
 const express = require('express');
+const createMiddleware = require('@helpers/createMiddleware');
+const { checkAndParseToken, checkUserRole } = require('@middlewares/authMiddleware');
+const { EUserRole } = require('@constants/userRole');
+
+// Role middleware
+const checkSpecialistRole = createMiddleware(checkUserRole, [EUserRole.SPECIALIST]);
+
+// Auth middleware
+const tokenVerifyMiddleware = createMiddleware(checkAndParseToken, jwt, process.env.ACCESS_TOKEN_SECRET);
 const router = express.Router();
+router.use(tokenVerifyMiddleware);
 
 /**
  * @swagger
@@ -58,15 +66,27 @@ const router = express.Router();
  *                  - "Ukończony"
  *                 description: Ticket status
  *               assignee:
- *                 type: string
- *                 format: objectId
- *                 description: Currently assigned userId
- *                 example: "66df7gh8sasd6f66767rt6"
+ *                 type: object
+ *                 properties:
+ *                     _id:
+ *                       type: string
+ *                       description: User ID
+ *                       example: "66df7gh8sasd6f66767rt6"
+ *                     email:
+ *                       type: string
+ *                       description: User email
+ *                       example: "jan@kowalski.pl"
  *               createdBy:
- *                 type: string
- *                 format: objectId
- *                 description: Ticket authors userId
- *                 example: "66df7gh8sasd6f66767rt6"
+ *                 type: object
+ *                 properties:
+ *                     _id:
+ *                       type: string
+ *                       description: User ID
+ *                       example: "66df7gh8sasd6f66767rt6"
+ *                     email:
+ *                       type: string
+ *                       description: User email
+ *                       example: "jan@kowalski.pl"
  *               createdAt:
  *                 type: string
  *                 format: date-time
@@ -76,10 +96,17 @@ const router = express.Router();
  *                 format: date-time
  *                 description: Date of ticket last update
  *               updatedBy:
- *                 type: string
- *                 format: objectId
- *                 description: Users userId which have updated the ticket lately
- *                 example: "66df7gh8sasd6f66767rt6"
+ *                 type: object
+ *                 description: User which updated the ticket lately
+ *                 properties:
+ *                     _id:
+ *                       type: string
+ *                       description: User ID
+ *                       example: "66df7gh8sasd6f66767rt6"
+ *                     email:
+ *                       type: string
+ *                       description: User email
+ *                       example: "jan@kowalski.pl"
  *               title:
  *                 type: string
  *                 description: Title of the ticket
@@ -160,15 +187,27 @@ router.post('/', createTicket);
  *                     description: Ticket status
  *                     example: "Wycena"
  *                   assignee:
- *                     type: string
- *                     format: objectId
- *                     description: Currently assigned userId
- *                     example: "66df7gh8sasd6f66767rt6"
+ *                    type: object
+ *                    properties:
+ *                        _id:
+ *                          type: string
+ *                          description: User ID
+ *                          example: "66df7gh8sasd6f66767rt6"
+ *                        email:
+ *                          type: string
+ *                          description: User email
+ *                          example: "jan@kowalski.pl"
  *                   createdBy:
- *                     type: string
- *                     format: objectId
- *                     description: Ticket authors userId
- *                     example: "66df7gh8sasd6f66767rt6"
+ *                    type: object
+ *                    properties:
+ *                        _id:
+ *                          type: string
+ *                          description: User ID
+ *                          example: "66df7gh8sasd6f66767rt6"
+ *                        email:
+ *                          type: string
+ *                          description: User email
+ *                          example: "jan@kowalski.pl"
  *                   createdAt:
  *                     type: string
  *                     format: date-time
@@ -180,10 +219,17 @@ router.post('/', createTicket);
  *                     description: Date of ticket last update
  *                     example: "December 25, 2023, at 10:00 AM"
  *                   updatedBy:
- *                     type: string
- *                     format: objectId
- *                     description: Users userId which have updated the ticket lately
- *                     example: "66df7gh8sasd6f66767rt6"
+ *                    type: object
+ *                    description: User which updated the ticket lately
+ *                    properties:
+ *                        _id:
+ *                          type: string
+ *                          description: User ID
+ *                          example: "66df7gh8sasd6f66767rt6"
+ *                        email:
+ *                          type: string
+ *                          description: User email
+ *                          example: "jan@kowalski.pl"
  *                   title:
  *                     type: string
  *                     description: Title of the ticket
@@ -199,10 +245,16 @@ router.post('/', createTicket);
  *                        type: object
  *                        properties:
  *                          user:
- *                            type: string
- *                            format: uuid
- *                            description: "userId of specialist"
- *                            example: "66df7gh8sasd6f66767rt6"
+ *                            type: object
+ *                            properties:
+ *                              _id:
+ *                                type: string
+ *                                description: User ID
+ *                                example: "66df7gh8sasd6f66767rt6"
+ *                              email:
+ *                                type: string
+ *                                description: User email
+ *                                example: "jan@kowalski.pl"
  *                          dateOfResponse:
  *                            type: string
  *                            format: date-time
@@ -284,15 +336,27 @@ router.get('/', getUserTickets);
  *                     description: Ticket status
  *                     example: "Wycena"
  *                   assignee:
- *                     type: string
- *                     format: objectId
- *                     description: Currently assigned userId
- *                     example: "66df7gh8sasd6f66767rt6"
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: User ID
+ *                         example: "66df7gh8sasd6f66767rt6"
+ *                       email:
+ *                         type: string
+ *                         description: User email
+ *                         example: "jan@kowalski.pl"
  *                   createdBy:
- *                     type: string
- *                     format: objectId
- *                     description: Ticket authors userId
- *                     example: "66df7gh8sasd6f66767rt6"
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: User ID
+ *                         example: "66df7gh8sasd6f66767rt6"
+ *                       email:
+ *                         type: string
+ *                         description: User email
+ *                         example: "jan@kowalski.pl"
  *                   createdAt:
  *                     type: string
  *                     format: date-time
@@ -304,10 +368,16 @@ router.get('/', getUserTickets);
  *                     description: Date of ticket last update
  *                     example: "December 25, 2023, at 10:00 AM"
  *                   updatedBy:
- *                     type: string
- *                     format: objectId
- *                     description: Users userId which have updated the ticket lately
- *                     example: "66df7gh8sasd6f66767rt6"
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: User ID
+ *                         example: "66df7gh8sasd6f66767rt6"
+ *                       email:
+ *                         type: string
+ *                         description: User email
+ *                         example: "jan@kowalski.pl"
  *                   title:
  *                     type: string
  *                     description: Title of the ticket
@@ -442,15 +512,27 @@ router.delete('/:id', deleteTicket);
  *                     description: Ticket status
  *                     example: "Wycena"
  *                   assignee:
- *                     type: string
- *                     format: objectId
- *                     description: Currently assigned userId
- *                     example: "66df7gh8sasd6f66767rt6"
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: User ID
+ *                         example: "66df7gh8sasd6f66767rt6"
+ *                       email:
+ *                         type: string
+ *                         description: User email
+ *                         example: "jan@kowalski.pl"
  *                   createdBy:
- *                     type: string
- *                     format: objectId
- *                     description: Ticket authors userId
- *                     example: "66df7gh8sasd6f66767rt6"
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: User ID
+ *                         example: "66df7gh8sasd6f66767rt6"
+ *                       email:
+ *                         type: string
+ *                         description: User email
+ *                         example: "jan@kowalski.pl"
  *                   createdAt:
  *                     type: string
  *                     format: date-time
@@ -462,10 +544,16 @@ router.delete('/:id', deleteTicket);
  *                     description: Date of ticket last update
  *                     example: "December 25, 2023, at 10:00 AM"
  *                   updatedBy:
- *                     type: string
- *                     format: objectId
- *                     description: Users userId which have updated the ticket lately
- *                     example: "66df7gh8sasd6f66767rt6"
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: User ID
+ *                         example: "66df7gh8sasd6f66767rt6"
+ *                       email:
+ *                         type: string
+ *                         description: User email
+ *                         example: "jan@kowalski.pl"
  *                   title:
  *                     type: string
  *                     description: Title of the ticket
@@ -474,6 +562,35 @@ router.delete('/:id', deleteTicket);
  *                     type: string
  *                     description: Description of the ticket
  *                     example: "Example ticket description"
+ *                   evaluations:
+ *                      type: array
+ *                      description: "List of evaluations made by specialists"
+ *                      items:
+ *                        type: object
+ *                        properties:
+ *                          user:
+ *                            type: object
+ *                            properties:
+ *                              _id:
+ *                                type: string
+ *                                description: User ID
+ *                                example: "66df7gh8sasd6f66767rt6"
+ *                              email:
+ *                                type: string
+ *                                description: User email
+ *                                example: "jan@kowalski.pl"
+ *                          dateOfResponse:
+ *                            type: string
+ *                            format: date-time
+ *                          price:
+ *                            type: object
+ *                            properties:
+ *                              value:
+ *                                type: number
+ *                                format: float
+ *                              currency:
+ *                                type: string
+ *                                enum: [PLN]
  *       404:
  *         description: Ticket with provided id does not exist
  *         content:
@@ -553,15 +670,27 @@ router.get('/by-id/:id', getTicketByID);
  *                     description: Ticket status
  *                     example: "Wycena"
  *                   assignee:
- *                     type: string
- *                     format: objectId
- *                     description: Currently assigned userId
- *                     example: "66df7gh8sasd6f66767rt6"
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: User ID
+ *                         example: "66df7gh8sasd6f66767rt6"
+ *                       email:
+ *                         type: string
+ *                         description: User email
+ *                         example: "jan@kowalski.pl"
  *                   createdBy:
- *                     type: string
- *                     format: objectId
- *                     description: Ticket authors userId
- *                     example: "66df7gh8sasd6f66767rt6"
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: User ID
+ *                         example: "66df7gh8sasd6f66767rt6"
+ *                       email:
+ *                         type: string
+ *                         description: User email
+ *                         example: "jan@kowalski.pl"
  *                   createdAt:
  *                     type: string
  *                     format: date-time
@@ -573,10 +702,16 @@ router.get('/by-id/:id', getTicketByID);
  *                     description: Date of ticket last update
  *                     example: "December 25, 2023, at 10:00 AM"
  *                   updatedBy:
- *                     type: string
- *                     format: objectId
- *                     description: Users userId which have updated the ticket lately
- *                     example: "66df7gh8sasd6f66767rt6"
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         description: User ID
+ *                         example: "66df7gh8sasd6f66767rt6"
+ *                       email:
+ *                         type: string
+ *                         description: User email
+ *                         example: "jan@kowalski.pl"
  *                   title:
  *                     type: string
  *                     description: Title of the ticket

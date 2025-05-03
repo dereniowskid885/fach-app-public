@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { PostAuthRegisterApiArg, usePostAuthRegisterMutation } from '@/api/authApi';
+import { PostAuthRegisterApiArg, usePostAuthRegisterMutation } from '@/api/accountApi';
 import { parseQueryError } from '@/lib/helpers';
 
 interface IRegisterForm {
