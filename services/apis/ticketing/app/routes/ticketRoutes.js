@@ -9,6 +9,7 @@ const {
   getSpecialistAvailableTickets,
   getTicketByID,
   getTicketsByCategoryID,
+  ticketEvaluationHandler,
 } = require('../controllers/ticketController');
 const express = require('express');
 const router = express.Router();
@@ -58,10 +59,14 @@ const router = express.Router();
  *                 description: Ticket status
  *               assignee:
  *                 type: string
- *                 description: Currently assigned user
+ *                 format: objectId
+ *                 description: Currently assigned userId
+ *                 example: "66df7gh8sasd6f66767rt6"
  *               createdBy:
  *                 type: string
- *                 description: Author of the ticket
+ *                 format: objectId
+ *                 description: Ticket authors userId
+ *                 example: "66df7gh8sasd6f66767rt6"
  *               createdAt:
  *                 type: string
  *                 format: date-time
@@ -70,9 +75,11 @@ const router = express.Router();
  *                 type: string
  *                 format: date-time
  *                 description: Date of ticket last update
- *               price:
+ *               updatedBy:
  *                 type: string
- *                 description: Price set by specialist and accepted by ticket author
+ *                 format: objectId
+ *                 description: Users userId which have updated the ticket lately
+ *                 example: "66df7gh8sasd6f66767rt6"
  *               title:
  *                 type: string
  *                 description: Title of the ticket
@@ -154,12 +161,14 @@ router.post('/', createTicket);
  *                     example: "Wycena"
  *                   assignee:
  *                     type: string
- *                     description: Currently assigned user
- *                     example: "jan.kowalski@onet.pl"
+ *                     format: objectId
+ *                     description: Currently assigned userId
+ *                     example: "66df7gh8sasd6f66767rt6"
  *                   createdBy:
  *                     type: string
- *                     description: Author of the ticket
- *                     example: "jan.kowalski@onet.pl"
+ *                     format: objectId
+ *                     description: Ticket authors userId
+ *                     example: "66df7gh8sasd6f66767rt6"
  *                   createdAt:
  *                     type: string
  *                     format: date-time
@@ -170,10 +179,11 @@ router.post('/', createTicket);
  *                     format: date-time
  *                     description: Date of ticket last update
  *                     example: "December 25, 2023, at 10:00 AM"
- *                   price:
+ *                   updatedBy:
  *                     type: string
- *                     description: Price set by specialist and accepted by ticket author
- *                     example: "5 PLN"
+ *                     format: objectId
+ *                     description: Users userId which have updated the ticket lately
+ *                     example: "66df7gh8sasd6f66767rt6"
  *                   title:
  *                     type: string
  *                     description: Title of the ticket
@@ -182,6 +192,29 @@ router.post('/', createTicket);
  *                     type: string
  *                     description: Description of the ticket
  *                     example: "Example ticket description"
+ *                   evaluations:
+ *                      type: array
+ *                      description: "List of evaluations made by specialists"
+ *                      items:
+ *                        type: object
+ *                        properties:
+ *                          user:
+ *                            type: string
+ *                            format: uuid
+ *                            description: "userId of specialist"
+ *                            example: "66df7gh8sasd6f66767rt6"
+ *                          dateOfResponse:
+ *                            type: string
+ *                            format: date-time
+ *                          price:
+ *                            type: object
+ *                            properties:
+ *                              value:
+ *                                type: number
+ *                                format: float
+ *                              currency:
+ *                                type: string
+ *                                enum: [PLN]
  *       500:
  *         description: Server error during retrieval of tickets
  *         content:
@@ -252,12 +285,14 @@ router.get('/', getUserTickets);
  *                     example: "Wycena"
  *                   assignee:
  *                     type: string
- *                     description: Currently assigned user
- *                     example: "jan.kowalski@onet.pl"
+ *                     format: objectId
+ *                     description: Currently assigned userId
+ *                     example: "66df7gh8sasd6f66767rt6"
  *                   createdBy:
  *                     type: string
- *                     description: Author of the ticket
- *                     example: "jan.kowalski@onet.pl"
+ *                     format: objectId
+ *                     description: Ticket authors userId
+ *                     example: "66df7gh8sasd6f66767rt6"
  *                   createdAt:
  *                     type: string
  *                     format: date-time
@@ -268,10 +303,11 @@ router.get('/', getUserTickets);
  *                     format: date-time
  *                     description: Date of ticket last update
  *                     example: "December 25, 2023, at 10:00 AM"
- *                   price:
+ *                   updatedBy:
  *                     type: string
- *                     description: Price set by specialist and accepted by ticket author
- *                     example: "5 PLN"
+ *                     format: objectId
+ *                     description: Users userId which have updated the ticket lately
+ *                     example: "66df7gh8sasd6f66767rt6"
  *                   title:
  *                     type: string
  *                     description: Title of the ticket
@@ -407,12 +443,14 @@ router.delete('/:id', deleteTicket);
  *                     example: "Wycena"
  *                   assignee:
  *                     type: string
- *                     description: Currently assigned user
- *                     example: "jan.kowalski@onet.pl"
+ *                     format: objectId
+ *                     description: Currently assigned userId
+ *                     example: "66df7gh8sasd6f66767rt6"
  *                   createdBy:
  *                     type: string
- *                     description: Author of the ticket
- *                     example: "jan.kowalski@onet.pl"
+ *                     format: objectId
+ *                     description: Ticket authors userId
+ *                     example: "66df7gh8sasd6f66767rt6"
  *                   createdAt:
  *                     type: string
  *                     format: date-time
@@ -423,10 +461,11 @@ router.delete('/:id', deleteTicket);
  *                     format: date-time
  *                     description: Date of ticket last update
  *                     example: "December 25, 2023, at 10:00 AM"
- *                   price:
+ *                   updatedBy:
  *                     type: string
- *                     description: Price set by specialist and accepted by ticket author
- *                     example: "5 PLN"
+ *                     format: objectId
+ *                     description: Users userId which have updated the ticket lately
+ *                     example: "66df7gh8sasd6f66767rt6"
  *                   title:
  *                     type: string
  *                     description: Title of the ticket
@@ -515,12 +554,14 @@ router.get('/by-id/:id', getTicketByID);
  *                     example: "Wycena"
  *                   assignee:
  *                     type: string
- *                     description: Currently assigned user
- *                     example: "jan.kowalski@onet.pl"
+ *                     format: objectId
+ *                     description: Currently assigned userId
+ *                     example: "66df7gh8sasd6f66767rt6"
  *                   createdBy:
  *                     type: string
- *                     description: Author of the ticket
- *                     example: "jan.kowalski@onet.pl"
+ *                     format: objectId
+ *                     description: Ticket authors userId
+ *                     example: "66df7gh8sasd6f66767rt6"
  *                   createdAt:
  *                     type: string
  *                     format: date-time
@@ -531,10 +572,11 @@ router.get('/by-id/:id', getTicketByID);
  *                     format: date-time
  *                     description: Date of ticket last update
  *                     example: "December 25, 2023, at 10:00 AM"
- *                   price:
+ *                   updatedBy:
  *                     type: string
- *                     description: Price set by specialist and accepted by ticket author
- *                     example: "5 PLN"
+ *                     format: objectId
+ *                     description: Users userId which have updated the ticket lately
+ *                     example: "66df7gh8sasd6f66767rt6"
  *                   title:
  *                     type: string
  *                     description: Title of the ticket
@@ -555,5 +597,98 @@ router.get('/by-id/:id', getTicketByID);
  *                   example: Server error during retrieval of tickets
  */
 router.get('/by-categoryid/:categoryId', getTicketsByCategoryID);
+
+/**
+ * @swagger
+ * /tickets/{id}/evaluation:
+ *   patch:
+ *     summary: Ticket price and dateOfResponse evaluation
+ *     description: Ticket evaluation for specialists
+ *     tags:
+ *       - Ticketing
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Ticket ID
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - price
+ *               - minutes
+ *             properties:
+ *               price:
+ *                  type: object
+ *                  description: Price set by specialist and accepted by ticket author
+ *                  properties:
+ *                    value:
+ *                      type: number
+ *                      description: The numeric value of the price
+ *                    currency:
+ *                      type: string
+ *                      description: Currency code (e.g., PLN, USD, EUR)
+ *               minutes:
+ *                 type: number
+ *                 description: Evaluated minutes as time of first response
+ *                 example: "60"
+ *     responses:
+ *       200:
+ *         description: Ticket evaluated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ticket evaluated successfully
+ *       400:
+ *         description: Ticket does not have proper status for evaluation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ticket does not have proper status for evaluation
+ *       403:
+ *         description: Missing permissions to evaluate a ticket
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Missing permissions to evaluate a ticket
+ *       404:
+ *         description: Ticket with provided id does not exist
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ticket with provided id does not exist
+ *       500:
+ *         description: Server error during ticket evaluation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Server error during ticket evaluation
+ */
+router.patch('/:id/evaluation', ticketEvaluationHandler);
 
 module.exports = router;

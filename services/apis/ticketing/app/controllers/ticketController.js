@@ -1,4 +1,6 @@
 const Ticket = require('../models/Ticket');
+const { ETicketStatus } = require('@constants/ticketStatus');
+const User = require('@apis/auth/app/models/User.js');
 
 const getTicketByID = async (req, res) => {
   try {
@@ -38,7 +40,7 @@ const getUserTickets = async (req, res) => {
   try {
     const user = req.user;
 
-    const tickets = await Ticket.find({ assignee: user.email }).populate('category', 'name');
+    const tickets = await Ticket.find({ assignee: user.userId }).populate('assignee', '', 'User');
 
     return res.status(200).json(tickets);
   } catch (err) {
@@ -74,8 +76,8 @@ const createTicket = async (req, res) => {
     const { title, description, category } = req.body;
 
     const ticket = new Ticket({
-      createdBy: user.email,
-      assignee: user.email,
+      createdBy: user.userId,
+      assignee: user.userId,
       city: user.city,
       title,
       description,
@@ -111,7 +113,7 @@ const deleteTicket = async (req, res) => {
 
     const user = req.user;
     const isAdmin = user.role === 'admin';
-    const isOwner = ticket.createdBy === user.email;
+    const isOwner = ticket.createdBy === user.userId;
 
     if (!isAdmin && !isOwner) {
       return res.status(403).json({ message: 'Missing permissions to delete the ticket' });
@@ -128,6 +130,51 @@ const deleteTicket = async (req, res) => {
   }
 };
 
+const ticketEvaluationHandler = async (req, res) => {
+  try {
+    const ticketId = req.params.id;
+
+    const ticket = await Ticket.findById(ticketId);
+
+    if (!ticket) {
+      return res.status(404).json({ message: 'Ticket with provided id does not exist' });
+    }
+
+    if (ticket.status !== ETicketStatus.PRICE_EVALUATION) {
+      return res.status(400).json({ message: 'Ticket does not have proper status for evaluation' });
+    }
+
+    const user = req.user;
+    const isAdmin = user.role === 'admin';
+    const isSpecialist = user.role === 'specialist';
+
+    if (!isAdmin && !isSpecialist) {
+      return res.status(403).json({ message: 'Missing permissions to evaluate a ticket' });
+    }
+
+    const { price, minutes } = req.body;
+
+    const currentDate = new Date();
+    // create date of response by adding minutes (as miliseconds) to current date
+    const dateOfResponse = new Date(currentDate.getTime() + minutes * 60000);
+
+    ticket.updatedBy = user.userId;
+    ticket.updatedAt = currentDate;
+    ticket.status = ETicketStatus.PRICE_USER_ACCEPTATION;
+    ticket.price = price;
+    ticket.dateOfResponse = dateOfResponse;
+
+    await ticket.save();
+
+    return res.status(200).json({ message: 'Ticket evaluated successfully' });
+  } catch (err) {
+    return res.status(500).json({
+      message: 'Server error during ticket evaluation',
+      error: err.message,
+    });
+  }
+};
+
 module.exports = {
   createTicket,
   deleteTicket,
@@ -135,4 +182,5 @@ module.exports = {
   getSpecialistAvailableTickets,
   getTicketByID,
   getTicketsByCategoryID,
+  ticketEvaluationHandler,
 };
