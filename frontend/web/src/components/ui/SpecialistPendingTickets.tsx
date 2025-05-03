@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import TicketCarousel from './TicketCarousel';
 import { useGetTicketsSpecialistByCityQuery } from '@/api/ticketingApi';
 import { LoadingSpinner } from '../shadcn/loading-spinner';
@@ -36,7 +36,7 @@ export default function SpecialistPendingTickets() {
           <LoadingSpinner />
         </div>
       ) : (
-        <TicketCarousel tickets={tickets} />
+        <TicketCarousel tickets={tickets} disableKeyboardHandler />
       )}
     </div>
   );
