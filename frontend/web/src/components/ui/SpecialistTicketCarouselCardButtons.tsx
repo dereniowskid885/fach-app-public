@@ -27,8 +27,8 @@ export const SpecialistTicketCarouselCardButtons = ({
       handler: () => setPriceEvaluationDialog(true)
     },
     [ETicketStatus.PRICE_USER_ACCEPTATION]: {
-      title: 'Wyceń',
-      handler: () => setPriceEvaluationDialog(true)
+      title: 'Edytuj wycenę',
+      handler: () => setPriceEvaluationDialog(false)
     }
   };
 

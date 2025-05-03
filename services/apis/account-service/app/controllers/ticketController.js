@@ -181,8 +181,11 @@ const ticketEvaluationHandler = async (req, res) => {
     ticket.updatedBy = user.userId;
     ticket.updatedAt = currentDate;
     ticket.status = ETicketStatus.PRICE_USER_ACCEPTATION;
-    ticket.price = price;
-    ticket.dateOfResponse = dateOfResponse;
+    ticket.evaluations.push({
+      user: user.userId,
+      price,
+      dateOfResponse,
+    });
 
     await ticket.save();
 
