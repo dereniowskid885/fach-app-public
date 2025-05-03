@@ -1,4 +1,4 @@
-import { ITokenPayload } from '@/constants/const';
+import { ITokenPayload } from '@/constants/interfaces';
 
 export const getTokenPayload = (token: string): ITokenPayload | null => {
   const tokenInvalid = isTokenInvalid(token);
