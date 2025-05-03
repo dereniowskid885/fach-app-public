@@ -1,5 +1,5 @@
 import SpecialistPendingTickets from '@/components/ui/SpecialistPendingTickets';
-import { EUserRole } from '@/constants/enums';
+import { EUserRole } from '@/constants/userRole';
 import { getUserData } from '@/lib/getUserData';
 import React from 'react';
 

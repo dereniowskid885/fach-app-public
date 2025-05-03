@@ -1,4 +1,4 @@
-import { GetTicketsByIdByIdApiResponse } from '@/api/ticketingApi';
+import { GetTicketsByIdByIdApiResponse } from '@/api/accountApi';
 import { ETicketStatus } from './ticketStatus';
 
 export interface ITicket {

@@ -1,12 +1,17 @@
 const Ticket = require('../models/Ticket');
+const { EUserRole } = require('@constants/userRole');
 const { ETicketStatus } = require('@constants/ticketStatus');
-const User = require('@apis/auth/app/models/User.js');
 
 const getTicketByID = async (req, res) => {
   try {
     const ticketID = req.params.id;
 
-    const ticket = await Ticket.findOne({ _id: ticketID });
+    const ticket = await Ticket.findOne({ _id: ticketID }).populate([
+      { path: 'category', select: 'name' },
+      { path: 'assignee', select: 'email' },
+      { path: 'createdBy', select: 'email' },
+      { path: 'updatedBy', select: 'email' },
+    ]);
 
     if (!ticket) {
       return res.status(404).json({ message: 'Ticket not found' });
@@ -25,7 +30,12 @@ const getTicketsByCategoryID = async (req, res) => {
   try {
     const categoryId = req.params.categoryId;
 
-    const tickets = await Ticket.find({ category: categoryId });
+    const tickets = await Ticket.find({ category: categoryId }).populate([
+      { path: 'category', select: 'name' },
+      { path: 'assignee', select: 'email' },
+      { path: 'createdBy', select: 'email' },
+      { path: 'updatedBy', select: 'email' },
+    ]);
 
     return res.status(200).json(tickets);
   } catch (err) {
@@ -40,7 +50,12 @@ const getUserTickets = async (req, res) => {
   try {
     const user = req.user;
 
-    const tickets = await Ticket.find({ assignee: user.userId }).populate('assignee', '', 'User');
+    const tickets = await Ticket.find({ assignee: user.userId }).populate([
+      { path: 'category', select: 'name' },
+      { path: 'assignee', select: 'email' },
+      { path: 'createdBy', select: 'email' },
+      { path: 'updatedBy', select: 'email' },
+    ]);
 
     return res.status(200).json(tickets);
   } catch (err) {
@@ -59,7 +74,12 @@ const getSpecialistAvailableTickets = async (req, res) => {
       city = req.user.city;
     }
 
-    const tickets = await Ticket.find({ city }).populate('category', 'name');
+    const tickets = await Ticket.find({ city }).populate([
+      { path: 'category', select: 'name' },
+      { path: 'assignee', select: 'email' },
+      { path: 'createdBy', select: 'email' },
+      { path: 'updatedBy', select: 'email' },
+    ]);
 
     return res.status(200).json(tickets);
   } catch (err) {
@@ -112,8 +132,8 @@ const deleteTicket = async (req, res) => {
     }
 
     const user = req.user;
-    const isAdmin = user.role === 'admin';
-    const isOwner = ticket.createdBy === user.userId;
+    const isAdmin = user.role === EUserRole.ADMIN;
+    const isOwner = ticket.createdBy.toString() === user.userId;
 
     if (!isAdmin && !isOwner) {
       return res.status(403).json({ message: 'Missing permissions to delete the ticket' });
@@ -145,8 +165,8 @@ const ticketEvaluationHandler = async (req, res) => {
     }
 
     const user = req.user;
-    const isAdmin = user.role === 'admin';
-    const isSpecialist = user.role === 'specialist';
+    const isAdmin = user.role === EUserRole.ADMIN;
+    const isSpecialist = user.role === EUserRole.SPECIALIST;
 
     if (!isAdmin && !isSpecialist) {
       return res.status(403).json({ message: 'Missing permissions to evaluate a ticket' });

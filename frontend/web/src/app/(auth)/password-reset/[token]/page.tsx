@@ -21,7 +21,7 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { notFound } from 'next/navigation';
-import { PostAuthPasswordResetApiArg, usePostAuthPasswordResetMutation } from '@/api/authApi';
+import { PostAuthPasswordResetApiArg, usePostAuthPasswordResetMutation } from '@/api/accountApi';
 
 interface IPasswordResetForm {
   newPassword: string;

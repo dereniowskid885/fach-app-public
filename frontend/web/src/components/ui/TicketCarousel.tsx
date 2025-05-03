@@ -3,8 +3,9 @@
 import { Carousel, CarouselContent, CarouselItem } from '@/components/shadcn/carousel';
 import TicketCarouselCard from './TicketCarouselCard';
 import { ETicketStatus } from '@/constants/ticketStatus';
-import { EFallbackKey, EUserRole } from '@/constants/enums';
-import { GetTicketsApiResponse } from '@/api/ticketingApi';
+import { EFallbackKey } from '@/constants/enums';
+import { EUserRole } from '@/constants/userRole';
+import { GetTicketsApiResponse } from '@/api/accountApi';
 import { useAppSelector } from '@/redux/hooks';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 
@@ -34,13 +35,11 @@ export default function TicketCarousel({ tickets, disableKeyboardHandler }: ITic
               title={ticket.title}
               description={ticket.description}
               city={ticket.city}
-              assignee={ticket.assignee}
-              author={ticket.createdBy}
+              assignee={ticket.assignee?.email}
+              author={ticket.createdBy?.email}
               status={ticket.status as ETicketStatus}
-              category={ticket.category}
-              price={ticket.price}
-              dateOfResponse={ticket.dateOfResponse}
-              updatedBy={ticket.updatedBy}
+              category={ticket.category?.name}
+              updatedBy={ticket.updatedBy?.email}
             />
           </CarouselItem>
         ))}

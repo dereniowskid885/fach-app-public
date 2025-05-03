@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const { ETicketStatus } = require('@constants/ticketStatus');
 const { ESupportedCurrency } = require('@constants/supportedCurrency');
-require('@apis/auth/app/models/User');
 
 const Evaluation = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },

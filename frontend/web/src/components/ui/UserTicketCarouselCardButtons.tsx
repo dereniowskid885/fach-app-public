@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '../shadcn/button';
-import { useDeleteTicketsByIdMutation, useGetTicketsQuery } from '@/api/ticketingApi';
+import { useDeleteTicketsByIdMutation, useGetTicketsQuery } from '@/api/accountApi';
 import { useToast } from '@/hooks/use-toast';
 import DialogComponent from '../common/DialogComponent';
 import { ETicketStatus } from '@/constants/ticketStatus';
@@ -18,16 +18,11 @@ export type TStatusActionButton = Partial<{
 export interface IUserTicketCarouselCardButtons {
   ticketId: string;
   ticketStatus: ETicketStatus;
-  ticketEvaluation: {
-    price: string;
-    dateOfResponse: string;
-  };
 }
 
 export const UserTicketCarouselCardButtons = ({
   ticketId,
-  ticketStatus,
-  ticketEvaluation
+  ticketStatus
 }: IUserTicketCarouselCardButtons) => {
   const { toast } = useToast();
   const [errorMessage, setErrorMessage] = useState<string>('');

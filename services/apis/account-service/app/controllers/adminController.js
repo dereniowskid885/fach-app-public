@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const { EUserRole } = require('@constants/userRole');
 
 const getAllUsers = async (req, res) => {
   try {
@@ -41,7 +42,7 @@ const getUser = async (req, res) => {
 const updateUserRole = async (req, res) => {
   const { userId, newRole } = req.body;
 
-  if (!['user', 'specialist', 'admin'].includes(newRole)) {
+  if (!Object.values(EUserRole).includes(newRole)) {
     return res.status(400).json({ message: 'Invalid role provided' });
   }
 

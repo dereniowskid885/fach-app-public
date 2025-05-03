@@ -7,9 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "api-auth-generate": "npx @rtk-query/codegen-openapi src/api/config/auth-service-openapi-config.ts",
-    "api-ticketing-generate": "npx @rtk-query/codegen-openapi src/api/config/ticketing-service-openapi-config.ts",
-    "apis-generate": "npm run api-auth-generate && npm run api-ticketing-generate"
+    "api-account-generate": "npx @rtk-query/codegen-openapi src/api/config/account-service-openapi-config.ts",
+    "apis-generate": "npm run api-account-generate"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

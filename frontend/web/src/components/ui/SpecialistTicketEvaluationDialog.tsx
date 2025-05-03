@@ -7,7 +7,7 @@ import { Slider } from '../shadcn/slider';
 import { ETimePickerType } from '@/constants/enums';
 import PriceInput from '../common/PriceInput';
 import { ESupportedCurrency } from '@/constants/supportedCurrency';
-import { usePatchTicketsByIdEvaluationMutation } from '@/api/ticketingApi';
+import { usePatchTicketsByIdEvaluationMutation } from '@/api/accountApi';
 import { parseQueryError } from '@/lib/helpers';
 
 export interface ISpecialistTicketEvaluationDialog {

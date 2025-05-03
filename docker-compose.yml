@@ -1,11 +1,11 @@
 services:
-  auth:
-    image: auth
+  account-service:
+    image: account-service
     build:
       context: services
-      dockerfile: auth.Dockerfile
+      dockerfile: accountService.Dockerfile
     env_file:
-      - ./services/apis/auth/.env
+      - ./services/apis/account-service/.env
     environment:
       NODE_ENV: production
     ports:

@@ -2,15 +2,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Start Auth Service",
+      "label": "Start Account Service",
       "type": "shell",
-      "command": "cd services/apis/auth ; npm run dev",
-      "problemMatcher": []
-    },
-    {
-      "label": "Start Ticketing Service",
-      "type": "shell",
-      "command": "cd services/apis/ticketing ; npm run dev",
+      "command": "cd services/apis/account-service ; npm run dev",
       "problemMatcher": []
     },
     {
@@ -21,7 +15,7 @@
     },
     {
       "label": "Start App",
-      "dependsOn": ["Start Auth Service", "Start Ticketing Service", "Start Frontend"],
+      "dependsOn": ["Start Account Service", "Start Frontend"],
       "problemMatcher": [],
       "presentation": {
           "reveal": "always",

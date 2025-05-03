@@ -1,4 +1,4 @@
-import { EUserRole } from './enums';
+import { EUserRole } from './userRole';
 
 export interface IResult {
   success: boolean;

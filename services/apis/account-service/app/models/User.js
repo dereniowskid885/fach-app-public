@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const axios = require('axios');
+const { EUserRole } = require('@constants/userRole');
+const Category = require('./Category');
 require('dotenv').config();
 
 const userSchema = new mongoose.Schema(
@@ -23,8 +24,8 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['user', 'specialist', 'admin'],
-      default: 'user',
+      enum: [EUserRole.USER, EUserRole.SPECIALIST, EUserRole.ADMIN],
+      default: EUserRole.USER,
     },
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
     name: {
@@ -74,21 +75,27 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 userSchema.pre('deleteOne', { document: true, query: false }, async function (next) {
   const user = this;
 
-  if (user.role !== 'specialist') {
+  if (user.role !== EUserRole.SPECIALIST) {
     next();
   }
 
   // remove specialist from category
   if (user.category) {
-    try {
-      await axios.patch(`${process.env.TICKETING_SERVICE_BASE_URL}/api/categories/${user.category}/specialist/remove`, {
-        userId: user._id,
-      });
-    } catch (err) {
-      return res.status(500).json({
-        message: 'Error occured while removing specialist from category',
-        error: err.message,
-      });
+    let category = await Category.findOne({ _id: user.category });
+
+    if (category) {
+      const indexToRemove = category.specialists.findIndex((id) => id.equals(user._id));
+      const userIdFound = indexToRemove !== -1;
+
+      if (userIdFound && category.specialists.length === 1) {
+        await category.deleteOne();
+        next();
+      }
+
+      if (userIdFound) {
+        category.specialists.splice(indexToRemove, 1);
+        await category.save();
+      }
     }
   }
 
