@@ -15,7 +15,7 @@ import {
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { GetTicketsByIdByIdApiResponse, useGetCategoriesQuery } from '@/api/ticketingApi';
+import { GetTicketsByIdByIdApiResponse, useGetCategoriesQuery } from '@/api/accountApi';
 import { EFallbackKey } from '@/constants/enums';
 
 export interface ICategorySelect {

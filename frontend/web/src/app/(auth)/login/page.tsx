@@ -1,6 +1,6 @@
 'use client';
 
-import { PostAuthLoginApiArg, usePostAuthLoginMutation } from '@/api/authApi';
+import { PostAuthLoginApiArg, usePostAuthLoginMutation } from '@/api/accountApi';
 import { Button } from '@/components/shadcn/button';
 import {
   Card,

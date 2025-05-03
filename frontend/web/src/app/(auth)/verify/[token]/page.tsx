@@ -9,7 +9,7 @@ import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
 import {
   PostAuthEmailVerificationApiArg,
   usePostAuthEmailVerificationMutation
-} from '@/api/authApi';
+} from '@/api/accountApi';
 import { HOME_PATH, LOGIN_PATH } from '@/constants/routes';
 import { parseQueryError } from '@/lib/helpers';
 import { EAccountVerificationResult } from '@/constants/enums';

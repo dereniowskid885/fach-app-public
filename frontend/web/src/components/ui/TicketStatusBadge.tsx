@@ -1,5 +1,5 @@
 import { Badge } from '@/components/shadcn/badge';
-import { ETicketStatus } from '@/constants/ticket';
+import { ETicketStatus } from '@/constants/ticketStatus';
 
 const getStatusBgColor = (status: ETicketStatus): string => {
   switch (status) {

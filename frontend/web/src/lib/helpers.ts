@@ -1,4 +1,4 @@
-import { IResult } from '@/constants/const';
+import { IResult } from '@/constants/interfaces';
 import { SerializedError } from '@reduxjs/toolkit';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import axios from 'axios';
@@ -37,4 +37,19 @@ export const parseQueryError = (error: FetchBaseQueryError | SerializedError) =>
     message,
     status
   };
+};
+
+export const getFormattedDate = (isoString?: string) => {
+  if (!isoString) return '-';
+
+  const date = new Date(isoString);
+
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+
+  return `${day}.${month}.${year} ${hours}:${minutes}`;
 };

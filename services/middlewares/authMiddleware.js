@@ -1,12 +1,5 @@
-const EXCEPTION_ROUTES = require('../helpers/authMiddlewareExceptions');
-
-// checks if request has valid cookie with token and saves it for further use in endpoints
+// checks if request has valid cookie with token and saves it on req.user for further use in endpoints
 const checkAndParseToken = (req, jwt, ACCESS_TOKEN_SECRET) => {
-  // skip token check on excepted routes
-  if (EXCEPTION_ROUTES.find((route) => req.path.startsWith(route))) {
-    return;
-  }
-
   const accessToken = req.cookies.accessToken;
 
   if (!accessToken) {

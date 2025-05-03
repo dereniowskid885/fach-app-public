@@ -13,7 +13,7 @@ import { notifications } from '@/mocks/notifications';
 import AmountIcon from './AmountIcon';
 import HeaderNotificationList from './HeaderNotificationList';
 import { Avatar, AvatarFallback, AvatarImage } from '../shadcn/avatar';
-import { EUserRole } from '@/constants/enums';
+import { EUserRole } from '@/constants/userRole';
 
 export interface IHeader {
   userName: string;
