@@ -19,9 +19,11 @@ export interface IDialogComponent {
   cancelButtonHandler?: () => void;
   confirmButtonText?: string;
   confirmButtonHandler?: () => void;
+  confirmButtonDisabled?: boolean;
   isLoadingConfirmButton?: boolean;
   errorMessage?: string;
   content?: ReactNode;
+  contentClass?: string;
 }
 
 export default function DialogComponent({
@@ -32,13 +34,15 @@ export default function DialogComponent({
   cancelButtonHandler,
   confirmButtonText,
   confirmButtonHandler,
+  confirmButtonDisabled,
   isLoadingConfirmButton,
   errorMessage,
-  content
+  content,
+  contentClass
 }: IDialogComponent) {
   return (
     <AlertDialog open={open}>
-      <AlertDialogContent>
+      <AlertDialogContent className={contentClass}>
         <AlertDialogHeader className="items-center">
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription className={`${description ? '' : 'hidden'}`}>
@@ -58,7 +62,11 @@ export default function DialogComponent({
             </AlertDialogCancel>
           ) : null}
           {confirmButtonHandler && confirmButtonText ? (
-            <Button loading={isLoadingConfirmButton} onClick={confirmButtonHandler}>
+            <Button
+              loading={isLoadingConfirmButton}
+              onClick={confirmButtonHandler}
+              disabled={confirmButtonDisabled}
+            >
               {confirmButtonText}
             </Button>
           ) : null}

@@ -2,7 +2,6 @@
 
 import { Carousel, CarouselContent, CarouselItem } from '@/components/shadcn/carousel';
 import TicketCarouselCard from './TicketCarouselCard';
-import { ETicketStatus } from '@/constants/ticketStatus';
 import { EFallbackKey } from '@/constants/enums';
 import { EUserRole } from '@/constants/userRole';
 import { GetTicketsApiResponse } from '@/api/accountApi';
@@ -28,19 +27,7 @@ export default function TicketCarousel({ tickets, disableKeyboardHandler }: ITic
             key={ticket._id ?? `${EFallbackKey.TICKET_CAROUSEL}-${index}`}
             className="select-none pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 [&:not(:first-of-type)]:pl-2"
           >
-            <TicketCarouselCard
-              email={email}
-              role={role as EUserRole}
-              id={ticket._id}
-              title={ticket.title}
-              description={ticket.description}
-              city={ticket.city}
-              assignee={ticket.assignee?.email}
-              author={ticket.createdBy?.email}
-              status={ticket.status as ETicketStatus}
-              category={ticket.category?.name}
-              updatedBy={ticket.updatedBy?.email}
-            />
+            <TicketCarouselCard {...ticket} email={email} role={role as EUserRole} />
           </CarouselItem>
         ))}
       </CarouselContent>
