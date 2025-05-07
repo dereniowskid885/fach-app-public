@@ -30,6 +30,11 @@ export const UserTicketCarouselCardButtons = ({
   const [ticketDeleteDialog, setTicketDeleteDialog] = useState<boolean>(false);
   const [evaluationListDialog, setEvaluationListDialog] = useState<boolean>(false);
 
+  const isEligibleForEdit = [
+    ETicketStatus.PRICE_EVALUATION,
+    ETicketStatus.PRICE_USER_ACCEPTATION
+  ].includes(ticketStatus);
+
   const { refetch } = useGetTicketsQuery();
 
   const statusActionButton: TStatusActionButton = {
@@ -53,9 +58,11 @@ export const UserTicketCarouselCardButtons = ({
     <>
       <div className="flex flex-col gap-2">
         <div className="flex gap-3">
-          <Button variant="outline" className="w-full bg-primary-200">
-            Edytuj
-          </Button>
+          {isEligibleForEdit ? (
+            <Button variant="outline" className="w-full bg-primary-200">
+              Edytuj
+            </Button>
+          ) : null}
           <Button
             variant="destructive"
             className="w-full"
@@ -81,6 +88,7 @@ export const UserTicketCarouselCardButtons = ({
         open={evaluationListDialog}
         refetchTickets={refetch}
         closeDialog={() => setEvaluationListDialog(false)}
+        ticketId={ticketId}
         ticketEvaluations={ticketEvaluations}
       />
     </>

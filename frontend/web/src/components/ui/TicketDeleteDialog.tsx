@@ -33,7 +33,7 @@ export const TicketDeleteDialog = ({
       refetchTickets();
       toast({
         title: 'Sprawa anulowana pomyślnie',
-        duration: 2000
+        duration: 3000
       });
     } else {
       const { message } = parseQueryError(result.error);

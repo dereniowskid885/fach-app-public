@@ -15,7 +15,7 @@ export default async function MainLayout({ children }: IMainLayout) {
   return (
     <AuthWrapper userData={userData}>
       <main className="h-full w-full overflow-hidden">
-        <Header userName={name} role={role} />
+        <Header userName={name} userRole={role} />
         {children}
         <Navigation />
       </main>
