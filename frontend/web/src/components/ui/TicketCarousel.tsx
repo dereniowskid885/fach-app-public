@@ -27,7 +27,7 @@ export default function TicketCarousel({ tickets, disableKeyboardHandler }: ITic
             key={ticket._id ?? `${EFallbackKey.TICKET_CAROUSEL}-${index}`}
             className="select-none pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 [&:not(:first-of-type)]:pl-2"
           >
-            <TicketCarouselCard {...ticket} email={email} role={role as EUserRole} />
+            <TicketCarouselCard {...ticket} userEmail={email} userRole={role as EUserRole} />
           </CarouselItem>
         ))}
       </CarouselContent>

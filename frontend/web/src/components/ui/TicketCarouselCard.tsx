@@ -18,28 +18,29 @@ import { AlertCircle } from 'lucide-react';
 import { GetTicketsByIdByIdApiResponse } from '@/api/accountApi';
 
 export interface ITicketCarouselCard extends GetTicketsByIdByIdApiResponse {
-  email: string;
-  role: EUserRole;
+  userEmail: string;
+  userRole: EUserRole;
 }
 
 export default function TicketCarouselCard({
-  email,
-  role,
+  userEmail,
+  userRole,
   _id,
   city,
   category,
   status,
   assignee,
   createdBy,
-  updatedBy,
   title,
   description,
   evaluations
 }: ITicketCarouselCard) {
   const isEvaluatedByLoggedSpecialist =
-    role === EUserRole.SPECIALIST &&
-    email === updatedBy?.email &&
-    status === ETicketStatus.PRICE_USER_ACCEPTATION;
+    userRole === EUserRole.SPECIALIST &&
+    status === ETicketStatus.PRICE_USER_ACCEPTATION &&
+    evaluations
+      ? evaluations.some(evaluation => evaluation.user?.email === userEmail)
+      : false;
 
   return (
     <Card className="bg-info-50">
@@ -56,13 +57,13 @@ export default function TicketCarouselCard({
             <TicketInfoRow>
               Przypisany:{' '}
               <b className="text-info">
-                {assignee?.email} {email === assignee?.email ? '(Ty)' : ''}
+                {assignee?.email} {userEmail === assignee?.email ? '(Ty)' : ''}
               </b>
             </TicketInfoRow>
             <TicketInfoRow>
               Autor:{' '}
               <b>
-                {createdBy?.email} {email === createdBy?.email ? '(Ty)' : ''}
+                {createdBy?.email} {userEmail === createdBy?.email ? '(Ty)' : ''}
               </b>
             </TicketInfoRow>
             <TicketInfoRow>
@@ -83,13 +84,13 @@ export default function TicketCarouselCard({
           ) : null}
           <CardTitle>{title}</CardTitle>
           <CardDescription className="line-clamp-2 text-neutral-400">{description}</CardDescription>
-          {role === EUserRole.USER ? (
+          {userRole === EUserRole.USER ? (
             <UserTicketCarouselCardButtons
               ticketId={_id}
               ticketStatus={status as ETicketStatus}
               ticketEvaluations={evaluations}
             />
-          ) : role === EUserRole.SPECIALIST ? (
+          ) : userRole === EUserRole.SPECIALIST ? (
             <SpecialistTicketCarouselCardButtons
               ticketId={_id}
               ticketCity={city}

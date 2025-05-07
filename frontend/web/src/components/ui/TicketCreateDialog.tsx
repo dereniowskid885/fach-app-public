@@ -83,7 +83,7 @@ export default function TicketCreateDialog({
       refetchTickets();
       toast({
         title: 'Sprawa utworzona pomyślnie',
-        duration: 2000
+        duration: 3000
       });
     }
   };

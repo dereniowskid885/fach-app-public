@@ -128,6 +128,16 @@ const injectedRtkApi = api.injectEndpoints({
         method: 'PATCH',
         body: queryArg.body
       })
+    }),
+    patchTicketsByIdAcceptEvaluation: build.mutation<
+      PatchTicketsByIdAcceptEvaluationApiResponse,
+      PatchTicketsByIdAcceptEvaluationApiArg
+    >({
+      query: queryArg => ({
+        url: `/tickets/${queryArg.id}/accept-evaluation`,
+        method: 'PATCH',
+        body: queryArg.body
+      })
     })
   }),
   overrideExisting: false
@@ -264,6 +274,12 @@ export type GetCategoriesApiResponse = /** status 200 Categories */ {
   _id?: string;
   /** Unique category name */
   name?: string;
+  specialists?: {
+    /** User ID */
+    _id?: string;
+    /** User email */
+    email?: string;
+  }[];
 }[];
 export type GetCategoriesApiArg = void;
 export type GetCategoriesByIdByIdApiResponse = /** status 200 Category */ {
@@ -271,6 +287,12 @@ export type GetCategoriesByIdByIdApiResponse = /** status 200 Category */ {
   _id?: string;
   /** Unique category name */
   name?: string;
+  specialists?: {
+    /** User ID */
+    _id?: string;
+    /** User email */
+    email?: string;
+  }[];
 };
 export type GetCategoriesByIdByIdApiArg = {
   /** Category id */
@@ -281,6 +303,12 @@ export type GetCategoriesByNameByNameApiResponse = /** status 200 Category */ {
   _id?: string;
   /** Unique category name */
   name?: string;
+  specialists?: {
+    /** User ID */
+    _id?: string;
+    /** User email */
+    email?: string;
+  }[];
 };
 export type GetCategoriesByNameByNameApiArg = {
   /** Category name */
@@ -406,11 +434,19 @@ export type GetTicketsApiResponse = /** status 200 Tickets created by logged use
   description?: string;
   /** List of evaluations made by specialists */
   evaluations?: {
+    /** User ID */
+    _id?: string;
     user?: {
-      /** User ID */
+      /** Specialist userId */
       _id?: string;
-      /** User email */
+      /** Specialist email */
       email?: string;
+      /** Specialist name */
+      name?: string;
+      /** Specialist surname */
+      surname?: string;
+      /** Specialist city */
+      city?: string;
     };
     dateOfResponse?: string;
     price?: {
@@ -418,6 +454,23 @@ export type GetTicketsApiResponse = /** status 200 Tickets created by logged use
       currency?: 'PLN';
     };
   }[];
+  acceptedEvaluation?: {
+    user?: {
+      /** Specialist userId */
+      _id?: string;
+      /** Specialist email */
+      email?: string;
+      /** Specialist name */
+      name?: string;
+      /** Specialist surname */
+      surname?: string;
+    };
+    dateOfResponse?: string;
+    price?: {
+      value?: number;
+      currency?: 'PLN';
+    };
+  };
 }[];
 export type GetTicketsApiArg = void;
 export type GetTicketsSpecialistByCityApiResponse =
@@ -525,11 +578,19 @@ export type GetTicketsByIdByIdApiResponse = /** status 200 Successfully retrieve
   description?: string;
   /** List of evaluations made by specialists */
   evaluations?: {
+    /** User ID */
+    _id?: string;
     user?: {
       /** User ID */
       _id?: string;
       /** User email */
       email?: string;
+      /** Specialist name */
+      name?: string;
+      /** Specialist surname */
+      surname?: string;
+      /** Specialist city */
+      city?: string;
     };
     dateOfResponse?: string;
     price?: {
@@ -537,6 +598,23 @@ export type GetTicketsByIdByIdApiResponse = /** status 200 Successfully retrieve
       currency?: 'PLN';
     };
   }[];
+  acceptedEvaluation?: {
+    user?: {
+      /** Specialist userId */
+      _id?: string;
+      /** Specialist email */
+      email?: string;
+      /** Specialist name */
+      name?: string;
+      /** Specialist surname */
+      surname?: string;
+    };
+    dateOfResponse?: string;
+    price?: {
+      value?: number;
+      currency?: 'PLN';
+    };
+  };
 };
 export type GetTicketsByIdByIdApiArg = {
   /** Unique id of the ticket */
@@ -612,6 +690,17 @@ export type PatchTicketsByIdEvaluationApiArg = {
     minutes: number;
   };
 };
+export type PatchTicketsByIdAcceptEvaluationApiResponse =
+  /** status 200 Ticket evaluation accepted successfully */ {
+    message?: string;
+  };
+export type PatchTicketsByIdAcceptEvaluationApiArg = {
+  /** Ticket ID */
+  id: string;
+  body: {
+    evaluationId: string;
+  };
+};
 export const {
   useGetUsersQuery,
   useGetUsersByUserIdQuery,
@@ -636,5 +725,6 @@ export const {
   useDeleteTicketsByIdMutation,
   useGetTicketsByIdByIdQuery,
   useGetTicketsByCategoryidByCategoryIdQuery,
-  usePatchTicketsByIdEvaluationMutation
+  usePatchTicketsByIdEvaluationMutation,
+  usePatchTicketsByIdAcceptEvaluationMutation
 } = injectedRtkApi;

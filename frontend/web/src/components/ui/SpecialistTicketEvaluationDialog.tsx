@@ -60,7 +60,7 @@ export default function SpecialistTicketEvaluationDialog({
       refetch({ city: ticketCity });
       toast({
         title: 'Twoja wycena została wysłana do autora',
-        duration: 2000
+        duration: 3000
       });
     } else {
       const { message } = parseQueryError(result.error);
