@@ -15,37 +15,30 @@ import { EUserRole } from '@/constants/userRole';
 import { SpecialistTicketCarouselCardButtons } from './SpecialistTicketCarouselCardButtons';
 import { Alert, AlertDescription } from '../shadcn/alert';
 import { AlertCircle } from 'lucide-react';
+import { GetTicketsByIdByIdApiResponse } from '@/api/accountApi';
 
-export interface ITicketCarouselCard {
+export interface ITicketCarouselCard extends GetTicketsByIdByIdApiResponse {
   email: string;
   role: EUserRole;
-  id?: string;
-  title?: string;
-  description?: string;
-  city?: string;
-  category?: string;
-  status: ETicketStatus;
-  assignee?: string;
-  author?: string;
-  updatedBy?: string;
 }
 
 export default function TicketCarouselCard({
   email,
   role,
-  id,
-  title,
-  description,
+  _id,
   city,
   category,
   status,
   assignee,
-  author,
-  updatedBy
+  createdBy,
+  updatedBy,
+  title,
+  description,
+  evaluations
 }: ITicketCarouselCard) {
   const isEvaluatedByLoggedSpecialist =
     role === EUserRole.SPECIALIST &&
-    email === updatedBy &&
+    email === updatedBy?.email &&
     status === ETicketStatus.PRICE_USER_ACCEPTATION;
 
   return (
@@ -57,29 +50,29 @@ export default function TicketCarouselCard({
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>Avatar</AvatarFallback>
             </Avatar>
-            <CategoryIcon category={category} />
+            <CategoryIcon category={category?.name} />
           </div>
           <div className="flex flex-col">
             <TicketInfoRow>
               Przypisany:{' '}
               <b className="text-info">
-                {assignee} {email === assignee ? '(Ty)' : ''}
+                {assignee?.email} {email === assignee?.email ? '(Ty)' : ''}
               </b>
             </TicketInfoRow>
             <TicketInfoRow>
               Autor:{' '}
               <b>
-                {author} {email === assignee ? '(Ty)' : ''}
+                {createdBy?.email} {email === createdBy?.email ? '(Ty)' : ''}
               </b>
             </TicketInfoRow>
             <TicketInfoRow>
-              Kategoria: <b>{category}</b>
+              Kategoria: <b>{category?.name}</b>
             </TicketInfoRow>
             <TicketInfoRow>
               Miasto: <b>{city}</b>
             </TicketInfoRow>
             <TicketInfoRow>
-              Status: <TicketStatusBadge status={status} />
+              Status: <TicketStatusBadge status={status as ETicketStatus} />
             </TicketInfoRow>
           </div>
           {isEvaluatedByLoggedSpecialist ? (
@@ -91,9 +84,18 @@ export default function TicketCarouselCard({
           <CardTitle>{title}</CardTitle>
           <CardDescription className="line-clamp-2 text-neutral-400">{description}</CardDescription>
           {role === EUserRole.USER ? (
-            <UserTicketCarouselCardButtons ticketId={id ?? ''} ticketStatus={status} />
+            <UserTicketCarouselCardButtons
+              ticketId={_id}
+              ticketStatus={status as ETicketStatus}
+              ticketEvaluations={evaluations}
+            />
           ) : role === EUserRole.SPECIALIST ? (
-            <SpecialistTicketCarouselCardButtons ticketId={id ?? ''} ticketStatus={status} />
+            <SpecialistTicketCarouselCardButtons
+              ticketId={_id}
+              ticketCity={city}
+              ticketStatus={status as ETicketStatus}
+              isEvaluatedByLoggedSpecialist={isEvaluatedByLoggedSpecialist}
+            />
           ) : null}
         </CardHeader>
       </CardContent>

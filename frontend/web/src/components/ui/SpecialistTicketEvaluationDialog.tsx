@@ -7,25 +7,21 @@ import { Slider } from '../shadcn/slider';
 import { ETimePickerType } from '@/constants/enums';
 import PriceInput from '../common/PriceInput';
 import { ESupportedCurrency } from '@/constants/supportedCurrency';
-import {
-  useGetTicketsSpecialistByCityQuery,
-  usePatchTicketsByIdEvaluationMutation
-} from '@/api/accountApi';
+import { usePatchTicketsByIdEvaluationMutation, accountApi } from '@/api/accountApi';
 import { parseQueryError } from '@/lib/helpers';
 import { useToast } from '@/hooks/use-toast';
-import { useAppSelector } from '@/redux/hooks';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
-import { useForm } from 'react-hook-form';
 
 export interface ISpecialistTicketEvaluationDialog {
   open: boolean;
-  ticketId: string;
+  ticketId?: string;
+  ticketCity?: string;
   closeDialog: () => void;
 }
 
 export default function SpecialistTicketEvaluationDialog({
   open,
   ticketId,
+  ticketCity,
   closeDialog
 }: ISpecialistTicketEvaluationDialog) {
   const [price, setPrice] = useState<number>(0);
@@ -42,12 +38,11 @@ export default function SpecialistTicketEvaluationDialog({
   const [trigger, { isLoading }] = usePatchTicketsByIdEvaluationMutation();
 
   // Specialist pending tickets refetch
-  const { city } = useAppSelector(selectUserData);
-  const { watch } = useForm();
-  const selectedCity = watch('city') ?? city;
-  const { refetch } = useGetTicketsSpecialistByCityQuery({ city: selectedCity });
+  const [refetch] = accountApi.endpoints.getTicketsSpecialistByCity.useLazyQuery();
 
   const submitHandler = async () => {
+    if (!ticketId) return;
+
     const result = await trigger({
       id: ticketId,
       body: {
@@ -62,7 +57,7 @@ export default function SpecialistTicketEvaluationDialog({
 
     if (isSuccess) {
       closeDialog();
-      refetch();
+      refetch({ city: ticketCity });
       toast({
         title: 'Twoja wycena została wysłana do autora',
         duration: 2000

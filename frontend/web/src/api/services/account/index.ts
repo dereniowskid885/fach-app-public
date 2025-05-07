@@ -6,7 +6,7 @@ const authBaseQuery = fetchBaseQuery({
 });
 
 export const api = createApi({
-  reducerPath: 'authApi',
+  reducerPath: 'accountApi',
   baseQuery: authBaseQuery,
   endpoints: () => ({})
 });
