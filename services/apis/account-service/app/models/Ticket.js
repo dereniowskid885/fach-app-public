@@ -76,6 +76,7 @@ const ticketSchema = new Schema({
     required: true,
   },
   evaluations: [Evaluation],
+  acceptedEvaluation: Evaluation,
 });
 
 module.exports = mongoose.model('Ticket', ticketSchema);
