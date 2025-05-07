@@ -11,6 +11,7 @@ const getTicketByID = async (req, res) => {
       { path: 'assignee', select: 'email' },
       { path: 'createdBy', select: 'email' },
       { path: 'updatedBy', select: 'email' },
+      { path: 'evaluations.user', select: 'email name surname city' },
     ]);
 
     if (!ticket) {
@@ -55,6 +56,7 @@ const getUserTickets = async (req, res) => {
       { path: 'assignee', select: 'email' },
       { path: 'createdBy', select: 'email' },
       { path: 'updatedBy', select: 'email' },
+      { path: 'evaluations.user', select: 'email name surname city' },
     ]);
 
     return res.status(200).json(tickets);
@@ -74,11 +76,18 @@ const getSpecialistAvailableTickets = async (req, res) => {
       city = req.user.city;
     }
 
-    const tickets = await Ticket.find({ city }).populate([
+    const allowedStatuses = [ETicketStatus.PRICE_EVALUATION, ETicketStatus.PRICE_USER_ACCEPTATION];
+    const tickets = await Ticket.find({
+      city,
+      status: {
+        $in: allowedStatuses,
+      },
+    }).populate([
       { path: 'category', select: 'name' },
       { path: 'assignee', select: 'email' },
       { path: 'createdBy', select: 'email' },
       { path: 'updatedBy', select: 'email' },
+      { path: 'evaluations.user', select: 'email name surname city' },
     ]);
 
     return res.status(200).json(tickets);
@@ -160,7 +169,11 @@ const ticketEvaluationHandler = async (req, res) => {
       return res.status(404).json({ message: 'Ticket with provided id does not exist' });
     }
 
-    if (ticket.status !== ETicketStatus.PRICE_EVALUATION) {
+    // PRICE_USER_ACCEPTATION status is also here to allow other specialists to evaluate a ticket
+    const isEligibleForEvaluation = [ETicketStatus.PRICE_EVALUATION, ETicketStatus.PRICE_USER_ACCEPTATION].includes(
+      ticket.status,
+    );
+    if (!isEligibleForEvaluation) {
       return res.status(400).json({ message: 'Ticket does not have proper status for evaluation' });
     }
 
@@ -178,9 +191,12 @@ const ticketEvaluationHandler = async (req, res) => {
     // create date of response by adding minutes (as miliseconds) to current date
     const dateOfResponse = new Date(currentDate.getTime() + minutes * 60000);
 
+    if (ticket.status === ETicketStatus.PRICE_EVALUATION) {
+      ticket.status = ETicketStatus.PRICE_USER_ACCEPTATION;
+    }
+
     ticket.updatedBy = user.userId;
     ticket.updatedAt = currentDate;
-    ticket.status = ETicketStatus.PRICE_USER_ACCEPTATION;
     ticket.evaluations.push({
       user: user.userId,
       price,
@@ -198,6 +214,50 @@ const ticketEvaluationHandler = async (req, res) => {
   }
 };
 
+const ticketEvaluationAccept = async (req, res) => {
+  try {
+    const ticketId = req.params.id;
+
+    const ticket = await Ticket.findById(ticketId);
+
+    if (!ticket) {
+      return res.status(404).json({ message: 'Ticket with provided id does not exist' });
+    }
+
+    const isEligibleForEvaluation = ticket.status === ETicketStatus.PRICE_USER_ACCEPTATION;
+    if (!isEligibleForEvaluation) {
+      return res.status(400).json({ message: 'Ticket does not have proper status for evaluation accept' });
+    }
+
+    const user = req.user;
+    const isAdmin = user.role === EUserRole.ADMIN;
+    const isOwner = user.userId === ticket.createdBy.toString();
+
+    if (!isAdmin && !isOwner) {
+      return res.status(403).json({ message: 'Missing permissions to accept ticket evaluation' });
+    }
+
+    const { evaluationId } = req.body;
+    const acceptedEvaluation = ticket.evaluations.find((evaluation) => evaluation.id === evaluationId);
+
+    if (!acceptedEvaluation) {
+      return res.status(404).json({ message: 'Evaluation with provided id does not exist' });
+    }
+
+    ticket.acceptedEvaluation = acceptedEvaluation;
+    ticket.updatedBy = user.userId;
+    ticket.status = ETicketStatus.PENDING_PAYMENT;
+    await ticket.save();
+
+    return res.status(200).json({ message: 'Ticket evaluation accepted successfully' });
+  } catch (err) {
+    return res.status(500).json({
+      message: 'Server error during ticket evaluation accept',
+      error: err.message,
+    });
+  }
+};
+
 module.exports = {
   createTicket,
   deleteTicket,
@@ -206,4 +266,5 @@ module.exports = {
   getTicketByID,
   getTicketsByCategoryID,
   ticketEvaluationHandler,
+  ticketEvaluationAccept,
 };
