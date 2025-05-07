@@ -11,6 +11,7 @@ const getTicketByID = async (req, res) => {
       { path: 'assignee', select: 'email' },
       { path: 'createdBy', select: 'email' },
       { path: 'updatedBy', select: 'email' },
+      { path: 'evaluations.user', select: 'email name surname' },
     ]);
 
     if (!ticket) {
@@ -55,6 +56,7 @@ const getUserTickets = async (req, res) => {
       { path: 'assignee', select: 'email' },
       { path: 'createdBy', select: 'email' },
       { path: 'updatedBy', select: 'email' },
+      { path: 'evaluations.user', select: 'email name surname' },
     ]);
 
     return res.status(200).json(tickets);
@@ -160,7 +162,10 @@ const ticketEvaluationHandler = async (req, res) => {
       return res.status(404).json({ message: 'Ticket with provided id does not exist' });
     }
 
-    if (ticket.status !== ETicketStatus.PRICE_EVALUATION) {
+    const isEligibleForEvaluation = [ETicketStatus.PRICE_EVALUATION, ETicketStatus.PRICE_USER_ACCEPTATION].includes(
+      ticket.status,
+    );
+    if (!isEligibleForEvaluation) {
       return res.status(400).json({ message: 'Ticket does not have proper status for evaluation' });
     }
 
@@ -178,9 +183,12 @@ const ticketEvaluationHandler = async (req, res) => {
     // create date of response by adding minutes (as miliseconds) to current date
     const dateOfResponse = new Date(currentDate.getTime() + minutes * 60000);
 
+    if (ticket.status === ETicketStatus.PRICE_EVALUATION) {
+      ticket.status = ETicketStatus.PRICE_USER_ACCEPTATION;
+    }
+
     ticket.updatedBy = user.userId;
     ticket.updatedAt = currentDate;
-    ticket.status = ETicketStatus.PRICE_USER_ACCEPTATION;
     ticket.evaluations.push({
       user: user.userId,
       price,
