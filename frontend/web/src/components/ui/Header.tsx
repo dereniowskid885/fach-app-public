@@ -17,10 +17,10 @@ import { EUserRole } from '@/constants/userRole';
 
 export interface IHeader {
   userName: string;
-  role: EUserRole;
+  userRole: EUserRole;
 }
 
-export default function Header({ userName, role }: IHeader) {
+export default function Header({ userName, userRole }: IHeader) {
   return (
     <header className="absolute z-10 m-2 w-[calc(100%-1rem)] rounded-md bg-neutral-800 p-4 text-white">
       <Accordion type="single" collapsible>
@@ -31,7 +31,7 @@ export default function Header({ userName, role }: IHeader) {
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>Avatar</AvatarFallback>
               </Avatar>
-              {role === EUserRole.SPECIALIST ? (
+              {userRole === EUserRole.SPECIALIST ? (
                 <FaWrench className="absolute left-1 top-1" />
               ) : null}
               <Typography variant="p">{`Witaj, ${userName}!`}</Typography>
