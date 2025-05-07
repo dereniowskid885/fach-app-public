@@ -6,6 +6,7 @@ const {
   getTicketByID,
   getTicketsByCategoryID,
   ticketEvaluationHandler,
+  ticketEvaluationAccept,
 } = require('../controllers/ticketController');
 
 const jwt = require('jsonwebtoken');
@@ -244,6 +245,10 @@ router.post('/', createTicket);
  *                      items:
  *                        type: object
  *                        properties:
+ *                          _id:
+ *                            type: string
+ *                            description: User ID
+ *                            example: "66df7gh8sasd6f66767rt6"
  *                          user:
  *                            type: object
  *                            properties:
@@ -263,6 +268,10 @@ router.post('/', createTicket);
  *                                type: string
  *                                description: Specialist surname
  *                                example: "Fachowiec"
+ *                              city:
+ *                                type: string
+ *                                description: Specialist city
+ *                                example: "Lublin"
  *                          dateOfResponse:
  *                            type: string
  *                            format: date-time
@@ -275,6 +284,40 @@ router.post('/', createTicket);
  *                              currency:
  *                                type: string
  *                                enum: [PLN]
+ *                   acceptedEvaluation:
+ *                      type: object
+ *                      properties:
+ *                        user:
+ *                            type: object
+ *                            properties:
+ *                              _id:
+ *                                type: string
+ *                                description: Specialist userId
+ *                                example: "66df7gh8sasd6f66767rt6"
+ *                              email:
+ *                                type: string
+ *                                description: Specialist email
+ *                                example: "jan@kowalski.pl"
+ *                              name:
+ *                                type: string
+ *                                description: Specialist name
+ *                                example: "Jan"
+ *                              surname:
+ *                                type: string
+ *                                description: Specialist surname
+ *                                example: "Fachowiec"
+ *                        dateOfResponse:
+ *                          type: string
+ *                          format: date-time
+ *                        price:
+ *                          type: object
+ *                          properties:
+ *                            value:
+ *                              type: number
+ *                              format: float
+ *                            currency:
+ *                              type: string
+ *                              enum: [PLN]
  *       500:
  *         description: Server error during retrieval of tickets
  *         content:
@@ -576,6 +619,10 @@ router.delete('/:id', deleteTicket);
  *                      items:
  *                        type: object
  *                        properties:
+ *                          _id:
+ *                            type: string
+ *                            description: User ID
+ *                            example: "66df7gh8sasd6f66767rt6"
  *                          user:
  *                            type: object
  *                            properties:
@@ -595,6 +642,10 @@ router.delete('/:id', deleteTicket);
  *                                type: string
  *                                description: Specialist surname
  *                                example: "Fachowiec"
+ *                              city:
+ *                                type: string
+ *                                description: Specialist city
+ *                                example: "Lublin"
  *                          dateOfResponse:
  *                            type: string
  *                            format: date-time
@@ -607,6 +658,40 @@ router.delete('/:id', deleteTicket);
  *                              currency:
  *                                type: string
  *                                enum: [PLN]
+ *                   acceptedEvaluation:
+ *                      type: object
+ *                      properties:
+ *                        user:
+ *                            type: object
+ *                            properties:
+ *                              _id:
+ *                                type: string
+ *                                description: Specialist userId
+ *                                example: "66df7gh8sasd6f66767rt6"
+ *                              email:
+ *                                type: string
+ *                                description: Specialist email
+ *                                example: "jan@kowalski.pl"
+ *                              name:
+ *                                type: string
+ *                                description: Specialist name
+ *                                example: "Jan"
+ *                              surname:
+ *                                type: string
+ *                                description: Specialist surname
+ *                                example: "Fachowiec"
+ *                        dateOfResponse:
+ *                          type: string
+ *                          format: date-time
+ *                        price:
+ *                          type: object
+ *                          properties:
+ *                            value:
+ *                              type: number
+ *                              format: float
+ *                            currency:
+ *                              type: string
+ *                              enum: [PLN]
  *       404:
  *         description: Ticket with provided id does not exist
  *         content:
@@ -841,5 +926,86 @@ router.get('/by-categoryid/:categoryId', getTicketsByCategoryID);
  *                   example: Server error during ticket evaluation
  */
 router.patch('/:id/evaluation', ticketEvaluationHandler);
+
+/**
+ * @swagger
+ * /tickets/{id}/accept-evaluation:
+ *   patch:
+ *     summary: Ticket evaluation accept
+ *     description: Ticket evaluation accept for ticket owner
+ *     tags:
+ *       - Ticketing
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Ticket ID
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - evaluationId
+ *             properties:
+ *               evaluationId:
+ *                 type: string
+ *                 example: "67c48e3fd50f0e2e0050381d"
+ *     responses:
+ *       200:
+ *         description: Ticket evaluation accepted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ticket evaluation accepted successfully
+ *       400:
+ *         description: Ticket does not have proper status for evaluation accept
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Ticket does not have proper status for evaluation accept
+ *       403:
+ *         description: Missing permissions to accept ticket evaluation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Missing permissions to accept ticket evaluation
+ *       404:
+ *         description: Evaluation with provided id does not exist
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Evaluation with provided id does not exist
+ *       500:
+ *         description: Server error during ticket evaluation accept
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Server error during ticket evaluation accept
+ */
+router.patch('/:id/accept-evaluation', ticketEvaluationAccept);
 
 module.exports = router;
