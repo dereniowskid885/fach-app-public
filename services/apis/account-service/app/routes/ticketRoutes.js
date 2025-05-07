@@ -249,12 +249,20 @@ router.post('/', createTicket);
  *                            properties:
  *                              _id:
  *                                type: string
- *                                description: User ID
+ *                                description: Specialist userId
  *                                example: "66df7gh8sasd6f66767rt6"
  *                              email:
  *                                type: string
- *                                description: User email
+ *                                description: Specialist email
  *                                example: "jan@kowalski.pl"
+ *                              name:
+ *                                type: string
+ *                                description: Specialist name
+ *                                example: "Jan"
+ *                              surname:
+ *                                type: string
+ *                                description: Specialist surname
+ *                                example: "Fachowiec"
  *                          dateOfResponse:
  *                            type: string
  *                            format: date-time
@@ -579,6 +587,14 @@ router.delete('/:id', deleteTicket);
  *                                type: string
  *                                description: User email
  *                                example: "jan@kowalski.pl"
+ *                              name:
+ *                                type: string
+ *                                description: Specialist name
+ *                                example: "Jan"
+ *                              surname:
+ *                                type: string
+ *                                description: Specialist surname
+ *                                example: "Fachowiec"
  *                          dateOfResponse:
  *                            type: string
  *                            format: date-time

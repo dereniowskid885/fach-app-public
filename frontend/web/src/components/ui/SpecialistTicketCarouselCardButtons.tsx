@@ -7,13 +7,17 @@ import SpecialistTicketEvaluationDialog from './SpecialistTicketEvaluationDialog
 import { ETicketStatus } from '@/constants/ticketStatus';
 
 export interface ISpecialistTicketCarouselCardButtons {
-  ticketId: string;
+  ticketId?: string;
+  ticketCity?: string;
   ticketStatus: ETicketStatus;
+  isEvaluatedByLoggedSpecialist: boolean;
 }
 
 export const SpecialistTicketCarouselCardButtons = ({
   ticketId,
-  ticketStatus
+  ticketCity,
+  ticketStatus,
+  isEvaluatedByLoggedSpecialist
 }: ISpecialistTicketCarouselCardButtons) => {
   const [priceEvaluationDialog, setPriceEvaluationDialog] = useState<boolean>(false);
 
@@ -26,10 +30,15 @@ export const SpecialistTicketCarouselCardButtons = ({
       title: 'Wyceń',
       handler: () => setPriceEvaluationDialog(true)
     },
-    [ETicketStatus.PRICE_USER_ACCEPTATION]: {
-      title: 'Edytuj wycenę',
-      handler: () => setPriceEvaluationDialog(false)
-    }
+    [ETicketStatus.PRICE_USER_ACCEPTATION]: isEvaluatedByLoggedSpecialist
+      ? {
+          title: 'Edytuj wycenę',
+          handler: () => setPriceEvaluationDialog(false)
+        }
+      : {
+          title: 'Wyceń',
+          handler: () => setPriceEvaluationDialog(true)
+        }
   };
 
   return (
@@ -44,6 +53,7 @@ export const SpecialistTicketCarouselCardButtons = ({
       <SpecialistTicketEvaluationDialog
         open={priceEvaluationDialog}
         ticketId={ticketId}
+        ticketCity={ticketCity}
         closeDialog={() => setPriceEvaluationDialog(false)}
       />
     </>
