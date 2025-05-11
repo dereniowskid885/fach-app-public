@@ -20,6 +20,7 @@ export default function DashboardTickets() {
   const [ticketCreateDialog, setTicketCreateDialog] = useState<boolean>(false);
 
   const { role } = useAppSelector(selectUserData);
+  const isUser = role === EUserRole.USER;
 
   const {
     data: userTickets = [],
@@ -46,7 +47,7 @@ export default function DashboardTickets() {
     <div className="flex flex-col gap-2">
       <Typography variant="h3">Twoje sprawy: {userTickets.length}</Typography>
       <div className="flex justify-between">
-        {userTickets.length > 0 ? (
+        {userTickets.length > 0 && isUser ? (
           <CategorySelect
             selectedCategory={categoryFilter}
             setSelectedCategory={setCategoryFilter}
@@ -60,7 +61,7 @@ export default function DashboardTickets() {
         ) : null}
       </div>
       <TicketCarousel tickets={filteredTickets} />
-      {role === EUserRole.USER ? (
+      {isUser ? (
         <>
           <Button
             variant="secondary"

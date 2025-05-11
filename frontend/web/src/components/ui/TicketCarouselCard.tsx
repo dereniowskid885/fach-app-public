@@ -16,6 +16,8 @@ import { SpecialistTicketCarouselCardButtons } from './SpecialistTicketCarouselC
 import { Alert, AlertDescription } from '../shadcn/alert';
 import { AlertCircle } from 'lucide-react';
 import { GetTicketsByIdByIdApiResponse } from '@/api/accountApi';
+import { getFormattedDate } from '@/lib/helpers';
+import { Typography } from '../common/Typography';
 
 export interface ITicketCarouselCard extends GetTicketsByIdByIdApiResponse {
   userEmail: string;
@@ -33,7 +35,8 @@ export default function TicketCarouselCard({
   createdBy,
   title,
   description,
-  evaluations
+  evaluations,
+  acceptedEvaluation
 }: ITicketCarouselCard) {
   const isEvaluatedByLoggedSpecialist =
     userRole === EUserRole.SPECIALIST &&
@@ -80,6 +83,19 @@ export default function TicketCarouselCard({
             <Alert variant="destructive" className="border-primary-950 text-primary-950">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>Twoja wycena czeka na akceptację przez autora.</AlertDescription>
+            </Alert>
+          ) : acceptedEvaluation ? (
+            <Alert variant="default" className="mt-3 bg-info-100">
+              <AlertDescription className="flex flex-col">
+                <Typography variant="muted">
+                  Termin odpowiedzi:{' '}
+                  <b className="text-info">{getFormattedDate(acceptedEvaluation.dateOfResponse)}</b>
+                </Typography>
+                <Typography variant="muted">
+                  Cena:{' '}
+                  <b className="text-info">{`${acceptedEvaluation.price?.value} ${acceptedEvaluation.price?.currency}`}</b>
+                </Typography>
+              </AlertDescription>
             </Alert>
           ) : null}
           <CardTitle>{title}</CardTitle>
