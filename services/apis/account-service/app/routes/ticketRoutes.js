@@ -143,8 +143,8 @@ router.post('/', createTicket);
  * @swagger
  * /tickets:
  *   get:
- *     summary: Retrieve all tickets created by logged user
- *     description: Returns all tickets created by logged user
+ *     summary: Get tickets related to user
+ *     description: Returns all tickets created by user (normal user), or related to specialist (tickets which have an accepted evaluation)
  *     tags:
  *       - Ticketing
  *     responses:
