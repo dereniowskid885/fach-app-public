@@ -1,6 +1,7 @@
 const Ticket = require('../models/Ticket');
 const { EUserRole } = require('@constants/userRole');
 const { ETicketStatus } = require('@constants/ticketStatus');
+const ObjectId = require('mongodb').ObjectId;
 
 const getTicketByID = async (req, res) => {
   try {
@@ -51,13 +52,28 @@ const getUserTickets = async (req, res) => {
   try {
     const user = req.user;
 
-    const tickets = await Ticket.find({ assignee: user.userId }).populate([
-      { path: 'category', select: 'name' },
-      { path: 'assignee', select: 'email' },
-      { path: 'createdBy', select: 'email' },
-      { path: 'updatedBy', select: 'email' },
-      { path: 'evaluations.user', select: 'email name surname city' },
-    ]);
+    let tickets = [];
+    const isSpecialist = user.role === EUserRole.SPECIALIST;
+
+    if (isSpecialist) {
+      const specialistId = ObjectId.createFromHexString(user.userId);
+
+      // find tickets which have accepted evaluation made by specialist
+      tickets = await Ticket.find({ 'acceptedEvaluation.user': specialistId }).populate([
+        { path: 'category', select: 'name' },
+        { path: 'assignee', select: 'email' },
+        { path: 'createdBy', select: 'email' },
+        { path: 'updatedBy', select: 'email' },
+      ]);
+    } else {
+      tickets = await Ticket.find({ assignee: user.userId }).populate([
+        { path: 'category', select: 'name' },
+        { path: 'assignee', select: 'email' },
+        { path: 'createdBy', select: 'email' },
+        { path: 'updatedBy', select: 'email' },
+        { path: 'evaluations.user', select: 'email name surname city' },
+      ]);
+    }
 
     return res.status(200).json(tickets);
   } catch (err) {
