@@ -9,12 +9,11 @@ const {
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const createMiddleware = require('@helpers/createMiddleware');
-const { checkAndParseToken } = require('@middlewares/authMiddleware');
+const { checkAndParseAccessToken } = require('@middlewares/authMiddleware');
 
-// Auth middleware
-const tokenVerifyMiddleware = createMiddleware(checkAndParseToken, jwt, process.env.ACCESS_TOKEN_SECRET);
+const accessTokenMiddleware = createMiddleware(checkAndParseAccessToken, jwt, process.env.ACCESS_TOKEN_SECRET);
 const router = express.Router();
-router.use(tokenVerifyMiddleware);
+router.use(accessTokenMiddleware);
 
 /**
  * @swagger

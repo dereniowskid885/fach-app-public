@@ -12,16 +12,16 @@ const {
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const createMiddleware = require('@helpers/createMiddleware');
-const { checkAndParseToken, checkUserRole } = require('@middlewares/authMiddleware');
+const { checkAndParseAccessToken, checkUserRole } = require('@middlewares/authMiddleware');
 const { EUserRole } = require('@constants/userRole');
 
 // Role middleware
 const checkSpecialistRole = createMiddleware(checkUserRole, [EUserRole.SPECIALIST]);
 
 // Auth middleware
-const tokenVerifyMiddleware = createMiddleware(checkAndParseToken, jwt, process.env.ACCESS_TOKEN_SECRET);
+const accessTokenMiddleware = createMiddleware(checkAndParseAccessToken, jwt, process.env.ACCESS_TOKEN_SECRET);
 const router = express.Router();
-router.use(tokenVerifyMiddleware);
+router.use(accessTokenMiddleware);
 
 /**
  * @swagger
