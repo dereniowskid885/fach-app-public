@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import DialogComponent from '@/components/common/DialogComponent';
 import { Label } from '@/components/shadcn/label';
 import { TimePickerInput } from '../common/TimePicker';
@@ -37,11 +37,25 @@ export default function SpecialistTicketEvaluationDialog({
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [trigger, { isLoading }] = usePatchTicketsByIdEvaluationMutation();
 
+  useEffect(() => {
+    setErrorMessage('');
+  }, [minutes, price]);
+
   // Specialist pending tickets refetch
   const [refetch] = accountApi.endpoints.getTicketsSpecialistByCity.useLazyQuery();
 
   const submitHandler = async () => {
     if (!ticketId) return;
+
+    if (minutes < 30) {
+      setErrorMessage('Czas odpowiedzi nie może być krótszy niż 30 min');
+      return;
+    }
+
+    if (price < 1) {
+      setErrorMessage(`Cena nie może być mniejsza niż 1 ${ESupportedCurrency.PLN}`);
+      return;
+    }
 
     const result = await trigger({
       id: ticketId,
