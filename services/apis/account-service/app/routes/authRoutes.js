@@ -12,11 +12,11 @@ const {
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const createMiddleware = require('@helpers/createMiddleware');
-const { checkAndParseToken } = require('@middlewares/authMiddleware');
+const { checkAndParseAccessToken, checkRefreshToken } = require('@middlewares/authMiddleware');
 const router = express.Router();
 
-// Auth middleware
-const tokenVerifyMiddleware = createMiddleware(checkAndParseToken, jwt, process.env.ACCESS_TOKEN_SECRET);
+const accessTokenMiddleware = createMiddleware(checkAndParseAccessToken, jwt, process.env.ACCESS_TOKEN_SECRET);
+const refreshTokenMiddleware = createMiddleware(checkRefreshToken, jwt, process.env.REFRESH_TOKEN_SECRET);
 
 /**
  * @swagger
@@ -236,7 +236,7 @@ router.post(`/login`, login);
  *                 error:
  *                   type: string
  */
-router.post(`/refresh-token`, tokenVerifyMiddleware, refreshToken);
+router.post(`/refresh-token`, refreshTokenMiddleware, refreshToken);
 
 /**
  * @swagger
@@ -302,7 +302,7 @@ router.post(`/refresh-token`, tokenVerifyMiddleware, refreshToken);
  *                 error:
  *                   type: string
  */
-router.post(`/logout`, tokenVerifyMiddleware, logout);
+router.post(`/logout`, accessTokenMiddleware, logout);
 
 /**
  * @swagger
