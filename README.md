@@ -1,4 +1,6 @@
-# Issue Solver Prototype
+# FachApp
+
+Web-based platform designed to manage and streamline the process of reporting, tracking, and resolving user issues. It connects regular users, who can submit support requests (“tickets”), with specialists or support agents who are responsible for resolving those requests.
 
 ## Repository Structure
 
