@@ -1,5 +1,5 @@
 const moduleAlias = require('module-alias');
-require('../../helpers/registerAliases')(moduleAlias);
+require('../common/helpers/registerAliases')(moduleAlias);
 
 const dbConnect = require('@helpers/dbConnect');
 const express = require('express');
