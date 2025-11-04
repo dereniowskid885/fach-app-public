@@ -10,8 +10,8 @@ The repository is organized into the following directories:
 \frontend
   \web
 \services
-  \apis
-    \account-service
+  \account-service
+  \common
   ...
 \shared
   ...
@@ -23,8 +23,17 @@ Use `Ctrl+Shift+P` and select `Tasks:Run Task`
 
 | Task | Result |
 | ------ | ------ |
+| Install All Dependencies | Install necessary dependencies in every application |
 | Start App | Runs all services and frontend in seperated terminals |
+| Start Frontend | Runs frontend web app |
 | Start Account Service | Runs account service |
+
+## First usage
+
+1. Use `Ctrl+Shift+P` and select `Tasks:Run Task`.
+2. Select `Install All Dependencies`.
+3. Use `Ctrl+Shift+P` and select `Tasks:Run Task`.
+4. Select `Start App`.
 
 - Frontend will be available at http://localhost:3000.
 - Account service will be available at http://localhost:4000.
