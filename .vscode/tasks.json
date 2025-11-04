@@ -21,6 +21,12 @@
         "reveal": "always",
         "panel": "shared"
       }
+    },
+    {
+      "label": "Install All Dependencies",
+      "type": "shell",
+      "command": "npm install --prefix services/account-service ; npm install --prefix frontend/web",
+      "problemMatcher": []
     }
   ]
 }
