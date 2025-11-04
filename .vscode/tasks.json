@@ -4,7 +4,7 @@
     {
       "label": "Start Account Service",
       "type": "shell",
-      "command": "cd services/apis/account-service ; npm run dev",
+      "command": "cd services/account-service ; npm run dev",
       "problemMatcher": []
     },
     {
@@ -18,9 +18,9 @@
       "dependsOn": ["Start Account Service", "Start Frontend"],
       "problemMatcher": [],
       "presentation": {
-          "reveal": "always",
-          "panel": "shared"
+        "reveal": "always",
+        "panel": "shared"
       }
-  }
+    }
   ]
 }

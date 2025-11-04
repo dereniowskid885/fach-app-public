@@ -1,6 +1,6 @@
 FROM node:lts-alpine
-ARG SERVICE_NAME=auth
-ARG SERVICE_PATH=apis/${SERVICE_NAME}
+ARG SERVICE_NAME=account-service
+ARG SERVICE_PATH=./${SERVICE_NAME}
 
 ENV NODE_ENV=production
 ENV PREFIX=${SERVICE_PATH}
@@ -13,9 +13,9 @@ COPY ./${SERVICE_PATH}/package-lock.json ./${SERVICE_PATH}/package-lock.json
 RUN npm install --production --silent --prefix ./${SERVICE_PATH}
 
 COPY ./${SERVICE_PATH}/ ./${SERVICE_PATH}
-COPY ./helpers ./helpers
-COPY ./middlewares ./middlewares
-COPY ./constants ./constants
+COPY ./common/helpers ./common/helpers
+COPY ./common/middlewares ./common/middlewares
+COPY ./common/constants ./common/constants
 COPY ./alias.config.js ./alias.config.js
 COPY ./.env.shared ./.env.shared
 

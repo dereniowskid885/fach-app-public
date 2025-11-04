@@ -1,5 +1,5 @@
 const path = require('path');
-const aliases = require('../alias.config');
+const aliases = require('../../alias.config');
 
 // applying common services aliases from alias.config
 module.exports = (moduleAlias) => {
