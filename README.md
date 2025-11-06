@@ -9,9 +9,9 @@ The repository is organized into the following directories:
 ```
 \frontend
   \web
+  ...
 \services
   \account-service
-  \common
   ...
 \shared
   ...
