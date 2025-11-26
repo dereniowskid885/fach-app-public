@@ -49,7 +49,7 @@ export default async function middleware(request: NextRequest) {
       });
 
       return response;
-    } catch (error) {
+    } catch {
       const loginURL = new URL(LOGIN_PATH, request.nextUrl);
       const response = NextResponse.redirect(loginURL);
 

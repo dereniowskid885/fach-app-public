@@ -1,10 +1,5 @@
 import type { NextConfig } from 'next';
 
-const nextConfig: NextConfig = {
-  devIndicators: {
-    // hides nextjs-toast that shows static/dynamic route message
-    appIsrStatus: false
-  }
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;
