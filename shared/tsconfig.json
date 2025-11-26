@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "rootDir": "../",
+    "baseUrl": "./",
+    "paths": {
+      "@accountService/*": ["../services/account-service/app/*"]
+    }
+  },
+  "typeRoots": ["./types", "./node_modules/@types"]
+}
