@@ -106,17 +106,19 @@ export const TokenManager = {
 
     return { accessToken, refreshToken, refreshTokenData };
   },
-  addTokenToDB: async (req: Request, res: Response, user: IUserModel) => {
+  addRefreshTokenToDB: async (req: Request, res: Response, user: IUserModel) => {
     try {
       const { refreshTokenData } = TokenManager.generateTokens(req, res, user);
 
       user.refreshTokens.push(refreshTokenData);
 
-      Logger.info('Token successfully added');
-    } catch (err) {
-      Logger.warn('User not found or token not added');
+      await user.save();
 
-      throw new AppError(`Error occured while adding token to database: ${err}`, 500);
+      Logger.info('Refresh token successfully added');
+    } catch (err) {
+      Logger.warn('User not found or refresh token not added');
+
+      throw new AppError(`Error occured while adding refresh token to database: ${err}`, 500);
     }
   },
   clearAllTokens: (res: Response) => {
