@@ -3,16 +3,14 @@ import { EUserRole } from '@shared/constants/enums';
 import { IAppError } from '@shared/constants/interfaces';
 import { AppError } from '@shared/helpers/AppError';
 
-const USER_KEYS = 'email role firstName lastName city';
-
 export const UserManager = {
   getAllUsers: async () => {
-    const users = await UserModel.find({}).select(USER_KEYS);
+    const users = await UserModel.find({});
 
     return users;
   },
   getUserById: async (userId: string) => {
-    const user = await UserModel.findById(userId).select(USER_KEYS);
+    const user = await UserModel.findById(userId);
 
     if (!user) {
       throw new AppError('User with provided id not found', 404);

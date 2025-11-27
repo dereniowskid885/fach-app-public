@@ -59,7 +59,7 @@ export const AuthManager = {
         throw new AppError('User is already verified', 409);
       }
 
-      await TokenManager.addTokenToDB(req, res, user);
+      await TokenManager.addRefreshTokenToDB(req, res, user);
       await UserManager.updateUserAsVerified(user.id);
     } catch (err) {
       const error = err as IAppError;
