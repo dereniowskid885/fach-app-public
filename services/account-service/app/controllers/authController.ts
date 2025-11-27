@@ -19,7 +19,7 @@ export const login = async (req: Request, res: Response) => {
   try {
     const user = await AuthManager.login(req.body);
 
-    await TokenManager.addTokenToDB(req, res, user);
+    await TokenManager.addRefreshTokenToDB(req, res, user);
 
     return res.status(200).json({ message: 'User logged in succesfully' });
   } catch (err) {
