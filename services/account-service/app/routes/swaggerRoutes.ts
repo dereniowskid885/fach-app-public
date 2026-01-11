@@ -2,7 +2,7 @@ import express from 'express';
 const router = express.Router();
 
 import swaggerUi from 'swagger-ui-express';
-import swaggerConfig from '@utils/swaggerConfig';
+import swaggerConfig from '@helpers/swaggerConfig';
 
 router.use('/', swaggerUi.serve);
 router.get('/', swaggerUi.setup(swaggerConfig));
