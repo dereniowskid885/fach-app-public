@@ -1,38 +1,32 @@
-import {
-  register,
-  login,
-  refreshToken,
-  logout,
-  requestPasswordResetLink,
-  requestEmailVerificationLink,
-  verifyEmail,
-  passwordReset,
-} from '@controllers/authController';
+import { createUser, deleteUser, getUsers, getUserById, updateUser, updateUserRole } from '@controllers/userController';
 
 import express from 'express';
 const router = express.Router();
 
 import { createMiddleware } from '@shared/helpers/createMiddleware';
-import { checkAndParseAccessToken, checkRefreshToken } from '@shared/middlewares/authMiddleware';
+import { checkAndParseAccessToken, checkUserRole } from '@shared/middlewares/authMiddleware';
 import {
-  validateUserRegisterMiddleware,
-  validateUserLoginMiddleware,
-  validateEmailVerificationMiddleware,
-  validatePasswordResetMiddleware,
-} from 'middlewares/authValidationMiddleware';
-import { validateSendEmailMiddleware } from '@middlewares/sendEmailValidationMiddleware';
+  validateCreateUserMiddleware,
+  validateUserRoleUpdateMiddleware,
+  validateUserUpdateMiddleware,
+} from 'middlewares/userValidationMiddleware';
+import { EUserRole } from '@shared/constants/enums';
 
+// Role middleware
+const checkAdminRole = createMiddleware(checkUserRole, [EUserRole.ADMIN]);
+
+// Auth middleware
 const accessTokenMiddleware = createMiddleware(checkAndParseAccessToken, process.env.ACCESS_TOKEN_SECRET);
-const refreshTokenMiddleware = createMiddleware(checkRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+router.use(accessTokenMiddleware, checkAdminRole);
 
 /**
  * @swagger
- * /auth/register:
+ * /users:
  *   post:
- *     summary: Register new user
- *     description: Registers new user and sends email verification link.
+ *     summary: Create user
+ *     description: Default role is "user", to create a specialist categoryName must be provided and role must be "specialist".
  *     tags:
- *       - Authentication
+ *       - Users
  *     requestBody:
  *       required: true
  *       content:
@@ -54,6 +48,15 @@ const refreshTokenMiddleware = createMiddleware(checkRefreshToken, process.env.R
  *                 type: string
  *                 format: password
  *                 description: User's password
+ *               role:
+ *                 type: string
+ *                 enum:
+ *                  - "user"
+ *                  - "specialist"
+ *                  - "admin"
+ *               categoryName:
+ *                 type: string
+ *                 description: Specialist category name
  *               name:
  *                 type: string
  *                 description: User's first name
@@ -65,7 +68,7 @@ const refreshTokenMiddleware = createMiddleware(checkRefreshToken, process.env.R
  *                 description: User's city
  *     responses:
  *       201:
- *         description: User registered successfully
+ *         description: User created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -76,7 +79,7 @@ const refreshTokenMiddleware = createMiddleware(checkRefreshToken, process.env.R
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: User registered successfully
+ *                   example: User created successfully
  *                 data:
  *                  type: object
  *                  properties:
@@ -113,7 +116,23 @@ const refreshTokenMiddleware = createMiddleware(checkRefreshToken, process.env.R
  *                   example: "ERROR_INVALID_DATA"
  *                 message:
  *                   type: string
- *                   example: "Password field must have minimum 7 characters."
+ *                   example: "Field categoryName is required while creating specialist"
+ *       403:
+ *         description: Forbidden - Attempt to register with admin role
+ *         content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_INVALID_DATA"
+ *                 message:
+ *                   type: string
+ *                   example: "Cannot register user with admin role"
  *       409:
  *        description: Conflict - User with this email already exists
  *        content:
@@ -147,32 +166,46 @@ const refreshTokenMiddleware = createMiddleware(checkRefreshToken, process.env.R
  *                   type: string
  *                   example: "Server error"
  */
-router.post('/register', validateUserRegisterMiddleware, register);
+router.post('/', validateCreateUserMiddleware, createUser);
 
 /**
  * @swagger
- * /auth/login:
- *   post:
- *     summary: User login
- *     description: Authenticates a user with email and password
+ * /users:
+ *   get:
+ *     summary: Get all users with filtering options
+ *     description: Returns a list of users based on provided filtering criteria.
  *     tags:
- *       - Authentication
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 description: User's email address
- *               password:
- *                 type: string
- *                 description: User's password
+ *       - Users
+ *     parameters:
+ *       - in: query
+ *         name: email
+ *         schema:
+ *           type: string
+ *         description: Filter by user email
+ *       - in: query
+ *         name: role
+ *         schema:
+ *           type: string
+ *         description: Filter by user role (e.g., admin, specialist, user)
+ *         example: "user"
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Filter by user category ID
+ *       - in: query
+ *         name: city
+ *         schema:
+ *           type: string
+ *         description: Filter by user city
+ *       - in: query
+ *         name: verified
+ *         schema:
+ *           type: boolean
+ *         description: Filter by verification status
  *     responses:
  *       200:
- *         description: User logged in succesfully
+ *         description: Fetched users.
  *         content:
  *           application/json:
  *             schema:
@@ -181,173 +214,40 @@ router.post('/register', validateUserRegisterMiddleware, register);
  *                 success:
  *                   type: boolean
  *                   example: true
- *                 message:
- *                   type: string
- *                   example: User logged in succesfully
+ *                 dataLength:
+ *                   type: number
+ *                   example: 24
  *                 data:
- *                   type: object
- *                   properties:
- *                     accessToken:
- *                       type: string
- *                     refreshToken:
- *                       type: string
- *       400:
- *         description: Invalid credentials
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_INVALID_CREDENTIALS"
- *                 message:
- *                   type: string
- *                   example: Invalid credentials
- *       403:
- *         description: Email not verified
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_USER_NOT_VERIFIED"
- *                 message:
- *                   type: string
- *                   example: Email is not verified
- *       500:
- *         description: Server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "SERVER_ERROR"
- *                 message:
- *                   type: string
- *                   example: "Server error"
- */
-router.post('/login', validateUserLoginMiddleware, login);
-
-/**
- * @swagger
- * /auth/refresh-token:
- *   post:
- *     summary: Refresh access token
- *     description: Generates a new access token using a valid refresh token from cookies
- *     tags:
- *       - Authentication
- *     responses:
- *       200:
- *         description: Access token refreshed succesfully.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: Access token refreshed succesfully.
- *                 data:
- *                   type: object
- *                   properties:
- *                     accessToken:
- *                       type: string
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         example: "64f3b12a6f4c1e9d3a7b1234"
+ *                       email:
+ *                         type: string
+ *                         example: "user@example.com"
+ *                       role:
+ *                         type: string
+ *                         example: "user"
+ *                       name:
+ *                         type: string
+ *                         example: "Jan"
+ *                       surname:
+ *                         type: string
+ *                         example: "Nowak"
+ *                       category:
+ *                         type: string
+ *                         example: "Elektronika"
+ *                       city:
+ *                         type: string
+ *                         example: "Warsaw"
+ *                       isVerified:
+ *                         type: boolean
+ *                         example: true
  *       401:
- *         description: Unauthorized request
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Refresh token not provided or Invalid refresh token
- *       404:
- *         description: User not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: User not found
- *       500:
- *         description: Server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "SERVER_ERROR"
- *                 message:
- *                   type: string
- *                   example: "Server error"
- */
-router.post('/refresh-token', refreshTokenMiddleware, refreshToken);
-
-/**
- * @swagger
- * /auth/logout:
- *   post:
- *     summary: Logout user
- *     description: Logs out the user by invalidating the refresh token
- *     tags:
- *       - Authentication
- *     responses:
- *       200:
- *         description: User logged out succesfully.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: User logged out succesfully.
- *       403:
- *         description: Invalid refresh token
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_INVALID_TOKEN"
- *                 message:
- *                   type: string
- *                   example: "Forbidden: Invalid refresh token"
- *       401:
- *         description: No refresh token provided
+ *         description: Unauthorized
  *         content:
  *           application/json:
  *             schema:
@@ -361,7 +261,283 @@ router.post('/refresh-token', refreshTokenMiddleware, refreshToken);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Forbidden: No refresh token provided"
+ *                   example: "Unauthorized: No access token provided"
+ *       403:
+ *         description: Invalid role
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_INVALID_ROLE"
+ *                 message:
+ *                   type: string
+ *                   example: "Forbidden: Required role is missing"
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: "Server error"
+ */
+router.get('/', getUsers);
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Get user by id
+ *     description: Returns user by id.
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the user
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Single user object.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: "64f3b12a6f4c1e9d3a7b1234"
+ *                     email:
+ *                       type: string
+ *                       example: "user@example.com"
+ *                     role:
+ *                       type: string
+ *                       example: "admin"
+ *                     name:
+ *                       type: string
+ *                       example: "Jan"
+ *                     surname:
+ *                       type: string
+ *                       example: "Nowak"
+ *                     category:
+ *                       type: string
+ *                       example: "Elektronika"
+ *                     city:
+ *                       type: string
+ *                       example: "Warsaw"
+ *                     isVerified:
+ *                       type: boolean
+ *                       example: true
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: "User with provided id not found"
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TOKEN_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized: No access token provided"
+ *       403:
+ *         description: Invalid role
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_INVALID_ROLE"
+ *                 message:
+ *                   type: string
+ *                   example: "Forbidden: Required role is missing"
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: "Server error"
+ */
+router.get('/:id', getUserById);
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   patch:
+ *     summary: Update user
+ *     description: Updates user information based on the provided user id.
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the user
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                 email:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *                 category:
+ *                   type: string
+ *                 city:
+ *                   type: string
+ *                 isVerified:
+ *                   type: boolean
+ *     responses:
+ *       200:
+ *         description: Successfully updated the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "User updated successfully."
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: "64f3b12a6f4c1e9d3a7b1234"
+ *                     email:
+ *                       type: string
+ *                       example: "jan@kowalski.pl"
+ *                     role:
+ *                       type: string
+ *                       example: "specialist"
+ *                     name:
+ *                       type: string
+ *                       example: "Jan"
+ *                     surname:
+ *                       type: string
+ *                       example: "Nowak"
+ *                     category:
+ *                       type: string
+ *                       example: "Elektronika"
+ *                     city:
+ *                       type: string
+ *                       example: "Warsaw"
+ *                     isVerified:
+ *                       type: boolean
+ *                       example: true
+ *       400:
+ *         description: No data provided for update.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_INVALID_DATA"
+ *                 message:
+ *                   type: string
+ *                   example: "No data provided for update."
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TOKEN_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized: No access token provided"
+ *       403:
+ *         description: Required role that allows this action is missing
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_INVALID_ROLE"
+ *                 message:
+ *                   type: string
+ *                   example: "Forbidden: Required role that allows this action is missing"
  *       404:
  *         description: User not found
  *         content:
@@ -395,29 +571,29 @@ router.post('/refresh-token', refreshTokenMiddleware, refreshToken);
  *                   type: string
  *                   example: "Server error"
  */
-router.post('/logout', accessTokenMiddleware, logout);
+router.patch('/:id', validateUserUpdateMiddleware, updateUser);
+
+// TODO: create a comment while working on superadmin role addition
+router.patch('/:id/role', validateUserRoleUpdateMiddleware, updateUserRole);
 
 /**
  * @swagger
- * /auth/request-email-verification:
- *   post:
- *     summary: Request email verification link
- *     description: Sends an email verification link to the user's email address
+ * /users/{id}:
+ *   delete:
+ *     summary: Delete user by id
+ *     description: Deletes the user from the system based on the provided user ID.
  *     tags:
- *       - Authentication
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 description: User's email address
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the user
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
- *         description: If this email is registered, a verification link has been sent.
+ *         description: Successfully deleted the user
  *         content:
  *           application/json:
  *             schema:
@@ -428,9 +604,9 @@ router.post('/logout', accessTokenMiddleware, logout);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: If this email is registered, a verification link has been sent.
- *       400:
- *         description: Email not provided
+ *                   example: "User deleted successfully."
+ *       401:
+ *         description: Unauthorized
  *         content:
  *           application/json:
  *             schema:
@@ -441,12 +617,12 @@ router.post('/logout', accessTokenMiddleware, logout);
  *                   example: false
  *                 status:
  *                   type: string
- *                   example: "ERROR_INVALID_DATA"
+ *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Email is not provided"
- *       500:
- *         description: Server error
+ *                   example: "Unauthorized: No access token provided"
+ *       403:
+ *         description: Invalid role
  *         content:
  *           application/json:
  *             schema:
@@ -457,47 +633,12 @@ router.post('/logout', accessTokenMiddleware, logout);
  *                   example: false
  *                 status:
  *                   type: string
- *                   example: "ERROR_EMAIL_SEND_FAILED"
+ *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: "Error occured while sending the email, please try again later."
- */
-router.post('/request-email-verification', validateSendEmailMiddleware, requestEmailVerificationLink);
-
-/**
- * @swagger
- * /auth/email-verification:
- *   post:
- *     summary: Email verification
- *     description: Verifies a user's email using a token sent to their email
- *     tags:
- *       - Authentication
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               token:
- *                 type: string
- *                 description: Verification token sent via email
- *     responses:
- *       200:
- *         description: User has been verified successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: User verified successfully.
- *       400:
- *         description: User not found - invalid verification link
+ *                   example: "Forbidden: Required role is missing"
+ *       404:
+ *         description: User not found
  *         content:
  *           application/json:
  *             schema:
@@ -508,10 +649,10 @@ router.post('/request-email-verification', validateSendEmailMiddleware, requestE
  *                   example: false
  *                 status:
  *                   type: string
- *                   example: "ERROR_INVALID_LINK"
+ *                   example: "ERROR_USER_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: User not found - invalid verification link
+ *                   example: "User with provided id not found."
  *       500:
  *         description: Server error
  *         content:
@@ -529,143 +670,6 @@ router.post('/request-email-verification', validateSendEmailMiddleware, requestE
  *                   type: string
  *                   example: "Server error"
  */
-router.post('/email-verification', validateEmailVerificationMiddleware, verifyEmail);
-
-/**
- * @swagger
- * /auth/request-password-reset:
- *   post:
- *     summary: Request password reset
- *     description: Sends a password reset link to the user's email.
- *     tags:
- *       - Authentication
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 description: User's email address
- *     responses:
- *       200:
- *         description: If this email is registered, a password reset link has been sent.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: If this email is registered, a password reset link has been sent.
- *       400:
- *         description: Email not provided
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_INVALID_DATA"
- *                 message:
- *                   type: string
- *                   example: "Email is not provided"
- *       500:
- *         description: Server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_EMAIL_SEND_FAILED"
- *                 message:
- *                   type: string
- *                   example: "Error occured while sending the email, please try again later."
- */
-router.post('/request-password-reset', validateSendEmailMiddleware, requestPasswordResetLink);
-
-/**
- * @swagger
- * /auth/password-reset:
- *   post:
- *     summary: Reset user password
- *     description: Resets the user's password using a valid reset token
- *     tags:
- *       - Authentication
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               token:
- *                 type: string
- *                 description: Password reset token
- *               newPassword:
- *                 type: string
- *                 description: New password for the user
- *     responses:
- *       200:
- *         description: Password reset successful
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: Password reset successful
- *       400:
- *         description: User not found - invalid password reset link
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_MISSING_REQUIRED_FIELDS"
- *                 message:
- *                   type: string
- *                   example: User not found - invalid password reset link
- *       500:
- *         description: Server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "SERVER_ERROR"
- *                 message:
- *                   type: string
- *                   example: "Server error"
- */
-router.post('/password-reset', validatePasswordResetMiddleware, passwordReset);
+router.delete('/:id', deleteUser);
 
 export default router;

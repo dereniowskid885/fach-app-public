@@ -1,28 +1,29 @@
 import User, { IUserModel } from '@models/User';
 import { EEnvironmentType } from '@shared/constants/enums';
 import { Request, Response } from 'express';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt, { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 import crypto from 'crypto';
-import Logger from '@shared/helpers/Logger';
-import { AppError } from '@shared/helpers/AppError';
+import Logger from '@shared/utils/Logger';
+import { AppError } from '@shared/utils/AppError';
 import { Types } from 'mongoose';
 import { UserManager } from './userManager';
-import { IAppError } from '@shared/constants/interfaces';
+import { EResponseStatus } from '@shared/constants/responseStatus';
+import { handleRefreshTokenError } from '@shared/helpers/handleJwtError';
 
 export const TokenManager = {
   handleTokenRefresh: async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken || req.headers['refresh-token'];
 
-    if (!refreshToken) {
-      throw new AppError('Refresh token not provided', 401);
-    }
-
     try {
       const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET ?? '') as JwtPayload;
-      const user = await UserManager.getUserById(payload.userId);
+      const user = await UserManager.getUserById(payload.userId, false);
 
       if (!user) {
-        throw new AppError('User not found', 404);
+        throw new AppError(404, EResponseStatus.ERROR_USER_NOT_FOUND, 'User not found');
+      }
+
+      if (!user.refreshTokens || user.refreshTokens.length === 0) {
+        throw new AppError(401, EResponseStatus.ERROR_INVALID_TOKEN, 'No refresh tokens found for user');
       }
 
       // For Next.js purposes it checks for custom header first
@@ -30,7 +31,7 @@ export const TokenManager = {
       const tokenIndex = user.refreshTokens.findIndex((t) => t.token === refreshToken && t.deviceInfo === deviceInfo);
 
       if (tokenIndex === -1) {
-        throw new AppError('Invalid refresh token', 401);
+        throw new AppError(401, EResponseStatus.ERROR_INVALID_TOKEN, 'Invalid refresh token');
       }
 
       const accessToken = TokenManager.generateAccessToken(req, res, user);
@@ -40,17 +41,11 @@ export const TokenManager = {
 
       return accessToken;
     } catch (err) {
-      const error = err as IAppError;
-
-      if (error instanceof jwt.TokenExpiredError) {
-        throw new AppError('Refresh token expired', 401);
+      if (err instanceof JsonWebTokenError) {
+        handleRefreshTokenError(err);
       }
 
-      if (error instanceof jwt.JsonWebTokenError) {
-        throw new AppError('Invalid refresh token', 401);
-      }
-
-      throw new AppError(`Error occured on token refresh: ${err}`, 500);
+      throw err;
     }
   },
   generateRandomToken: () => {
@@ -106,19 +101,24 @@ export const TokenManager = {
 
     return { accessToken, refreshToken, refreshTokenData };
   },
-  addRefreshTokenToDB: async (req: Request, res: Response, user: IUserModel) => {
+  handleUserTokens: async (req: Request, res: Response, user: IUserModel) => {
     try {
-      const { refreshTokenData } = TokenManager.generateTokens(req, res, user);
+      const { refreshTokenData, accessToken, refreshToken } = TokenManager.generateTokens(req, res, user);
 
-      user.refreshTokens.push(refreshTokenData);
+      user.refreshTokens = [refreshTokenData];
 
       await user.save();
 
       Logger.info('Refresh token successfully added');
+
+      return {
+        accessToken,
+        refreshToken,
+      };
     } catch (err) {
       Logger.warn('User not found or refresh token not added');
 
-      throw new AppError(`Error occured while adding refresh token to database: ${err}`, 500);
+      throw err;
     }
   },
   clearAllTokens: (res: Response) => {
