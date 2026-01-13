@@ -15,12 +15,12 @@ import {
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { GetTicketsByIdByIdApiResponse, useGetCategoriesQuery } from '@/api/accountApi';
+import { Category, useGetCategoriesQuery } from '@/api/accountApi';
 import { EFallbackKey } from '@/constants/enums';
 
 export interface ICategorySelect {
-  selectedCategory: GetTicketsByIdByIdApiResponse['category'] | null;
-  setSelectedCategory: Dispatch<SetStateAction<GetTicketsByIdByIdApiResponse['category'] | null>>;
+  selectedCategory: Category | null;
+  setSelectedCategory: Dispatch<SetStateAction<Category | null>>;
   resetSelectedCategory?: () => void;
 }
 
@@ -31,10 +31,10 @@ export default function CategorySelect({
 }: ICategorySelect) {
   const [open, setOpen] = useState<boolean>(false);
 
-  const { data: ticketCategories = [] } = useGetCategoriesQuery();
+  const { data: getCategoriesResponse } = useGetCategoriesQuery({});
 
-  const selectCategoryHandler = (newCategory: GetTicketsByIdByIdApiResponse['category']) => {
-    const isCategoryChange = newCategory?._id !== selectedCategory?._id;
+  const selectCategoryHandler = (newCategory: Category) => {
+    const isCategoryChange = newCategory._id !== selectedCategory?._id;
 
     if (isCategoryChange) {
       setSelectedCategory(newCategory);
@@ -49,7 +49,8 @@ export default function CategorySelect({
         <Button variant="outline" role="combobox" aria-expanded={open}>
           {selectedCategory ? (
             <>
-              <CategoryIcon category={selectedCategory.name} />
+              <CategoryIcon categoryName={selectedCategory.name} />
+
               {selectedCategory.name}
             </>
           ) : (
@@ -74,22 +75,25 @@ export default function CategorySelect({
                   Wszystkie
                 </CommandItem>
               ) : null}
-              {ticketCategories.map((category, index) => (
-                <CommandItem
-                  key={category._id ?? `${EFallbackKey.TICKET_CATEGORY}-${index}`}
-                  value={category.name}
-                  onSelect={() => selectCategoryHandler(category)}
-                >
-                  <CategoryIcon category={category.name} />
-                  {category.name}
-                  <Check
-                    className={cn(
-                      'ml-auto',
-                      category === selectedCategory ? 'opacity-100' : 'opacity-0'
-                    )}
-                  />
-                </CommandItem>
-              ))}
+              {getCategoriesResponse?.success &&
+                getCategoriesResponse?.data?.map((category, index) => (
+                  <CommandItem
+                    key={category._id ?? `${EFallbackKey.TICKET_CATEGORY}-${index}`}
+                    value={category.name}
+                    onSelect={() => selectCategoryHandler(category)}
+                  >
+                    <CategoryIcon categoryName={category.name} />
+
+                    {category.name}
+
+                    <Check
+                      className={cn(
+                        'ml-auto',
+                        category === selectedCategory ? 'opacity-100' : 'opacity-0'
+                      )}
+                    />
+                  </CommandItem>
+                ))}
             </CommandGroup>
           </CommandList>
         </Command>

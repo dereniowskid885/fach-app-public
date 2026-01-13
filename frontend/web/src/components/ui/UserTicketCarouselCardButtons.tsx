@@ -2,11 +2,14 @@
 
 import { ReactElement, useState } from 'react';
 import { Button } from '../shadcn/button';
-import { GetTicketsByIdByIdApiResponse, useGetTicketsQuery } from '@/api/accountApi';
+import { Evaluation, useGetTicketsQuery } from '@/api/accountApi';
 import { ETicketStatus } from '@/constants/ticketStatus';
 import AmountIcon from './AmountIcon';
 import { TicketDeleteDialog } from './TicketDeleteDialog';
 import { EvaluationsListDialog } from './EvaluationsListDialog';
+import { buildDashboardTicketsQueryFilters } from '@/helpers/buildDashboardTicketsQueryFilters';
+import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { useAppSelector } from '@/redux/hooks';
 
 export type TStatusActionButton = Partial<{
   [key in ETicketStatus]: {
@@ -19,13 +22,13 @@ export type TStatusActionButton = Partial<{
 export interface IUserTicketCarouselCardButtons {
   ticketId?: string;
   ticketStatus: ETicketStatus;
-  ticketEvaluations?: GetTicketsByIdByIdApiResponse['evaluations'];
+  ticketEvaluations?: Evaluation[];
 }
 
 export const UserTicketCarouselCardButtons = ({
   ticketId,
   ticketStatus,
-  ticketEvaluations
+  ticketEvaluations = []
 }: IUserTicketCarouselCardButtons) => {
   const [ticketDeleteDialog, setTicketDeleteDialog] = useState<boolean>(false);
   const [evaluationListDialog, setEvaluationListDialog] = useState<boolean>(false);
@@ -35,7 +38,9 @@ export const UserTicketCarouselCardButtons = ({
     ETicketStatus.PRICE_USER_ACCEPTATION
   ].includes(ticketStatus);
 
-  const { refetch } = useGetTicketsQuery();
+  const { role, userId } = useAppSelector(selectUserData);
+  const filters = buildDashboardTicketsQueryFilters(role, userId);
+  const { refetch } = useGetTicketsQuery(filters);
 
   const statusActionButton: TStatusActionButton = {
     [ETicketStatus.PENDING_PAYMENT]: {
@@ -78,12 +83,14 @@ export const UserTicketCarouselCardButtons = ({
           </Button>
         ) : null}
       </div>
+
       <TicketDeleteDialog
         open={ticketDeleteDialog}
         refetchTickets={refetch}
         closeDialog={() => setTicketDeleteDialog(false)}
         ticketId={ticketId}
       />
+
       <EvaluationsListDialog
         open={evaluationListDialog}
         refetchTickets={refetch}

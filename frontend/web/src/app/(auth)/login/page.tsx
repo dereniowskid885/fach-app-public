@@ -101,6 +101,7 @@ export default function Login() {
           </Typography>
         </CardDescription>
       </CardHeader>
+
       <form onSubmit={handleSubmit(submitHandler)}>
         <CardContent>
           <div className="flex w-full flex-col gap-4">
@@ -132,6 +133,7 @@ export default function Login() {
             )}
           </div>
         </CardContent>
+
         <CardFooter className="flex justify-between">
           <Button loading={isLoading} type="submit">
             Zaloguj
@@ -141,6 +143,7 @@ export default function Login() {
           </Link>
         </CardFooter>
       </form>
+
       <AccountVerifyDialog
         open={accountVerifyDialog}
         email={getValues('email')}
