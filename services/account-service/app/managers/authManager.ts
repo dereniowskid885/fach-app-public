@@ -1,224 +1,167 @@
 import User from '@models/User';
-import { CategoryManager } from './categoryManager';
-import { AppError } from '@shared/helpers/AppError';
+import { AppError } from '@shared/utils/AppError';
 import { UserManager } from './userManager';
-import { EUserRole } from '@shared/constants/enums';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { sendMail } from '@utils/sendMail';
-import { IAppError } from '@shared/constants/interfaces';
-import { Request, Response } from 'express';
-import { TokenManager } from './tokenManager';
-import Logger from '@shared/helpers/Logger';
+import jwt, { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
+import { sendMail } from '@helpers/sendMail';
+import { EResponseStatus } from '@shared/constants/responseStatus';
+import { printMongooseValidationErrors } from '@helpers/printMongooseValidationErrors';
+import { Error as MongooseError } from 'mongoose';
+import { handleAccessTokenError, handleRefreshTokenError } from '@shared/helpers/handleJwtError';
 
 export const AuthManager = {
   handlePasswordReset: async (accessToken: string, newPassword: string) => {
-    if (!accessToken || !newPassword) {
-      throw new AppError('Access token or new password not provided', 400);
-    }
-
     try {
       const payload = jwt.verify(accessToken, process.env.RESET_PASSWORD_TOKEN_SECRET ?? '') as JwtPayload;
       const user = await UserManager.getUserByEmail(payload.email);
 
       if (!user) {
-        throw new AppError('User not found - invalid password reset link', 400);
+        throw new AppError(400, EResponseStatus.ERROR_INVALID_LINK, 'User not found - invalid password reset link');
       }
 
       user.password = newPassword;
       await user.save();
     } catch (err) {
-      const error = err as IAppError;
-
-      if (error instanceof jwt.TokenExpiredError) {
-        throw new AppError('Access token expired', 401);
+      if (err instanceof JsonWebTokenError) {
+        handleAccessTokenError(err);
       }
 
-      if (error instanceof jwt.JsonWebTokenError) {
-        throw new AppError('Invalid access token', 401);
-      }
-
-      throw new AppError(`Error occured on password reset: ${err}`, 500);
+      throw err;
     }
   },
-  handleUserVerification: async (req: Request, res: Response) => {
-    const { token } = req.body;
-
-    if (!token) {
-      throw new AppError('Access token not provided', 404);
-    }
-
+  handleUserVerification: async (accessToken: string) => {
     try {
-      const payload = jwt.verify(token, process.env.VERIFY_EMAIL_TOKEN_SECRET ?? '') as JwtPayload;
+      const payload = jwt.verify(accessToken, process.env.VERIFY_EMAIL_TOKEN_SECRET ?? '') as JwtPayload;
       const user = await UserManager.getUserByEmail(payload.email);
 
       if (!user) {
-        throw new AppError('User not found - invalid verification link', 400);
+        throw new AppError(400, EResponseStatus.ERROR_INVALID_LINK, 'User not found - invalid verification link');
       }
 
-      if (user.isVerified) {
-        throw new AppError('User is already verified', 409);
+      if (!user.isVerified) {
+        await UserManager.updateUser(user.id, { isVerified: true });
+
+        return {
+          message: 'User verified successfully.',
+        };
       }
 
-      await TokenManager.addRefreshTokenToDB(req, res, user);
-      await UserManager.updateUserAsVerified(user.id);
+      return {
+        status: EResponseStatus.USER_ALREADY_VERIFIED,
+        message: 'User is already verified',
+      };
     } catch (err) {
-      const error = err as IAppError;
-
-      if (error instanceof jwt.TokenExpiredError) {
-        throw new AppError('Access token expired', 401);
+      if (err instanceof JsonWebTokenError) {
+        handleAccessTokenError(err);
       }
 
-      if (error instanceof jwt.JsonWebTokenError) {
-        throw new AppError('Invalid access token', 401);
-      }
-
-      throw new AppError(`Error occured on user verification: ${err}`, 500);
+      throw err;
     }
   },
   sendPasswordResetLink: async (email: string) => {
-    if (!email) {
-      throw new AppError('Email not provided', 400);
+    const user = await UserManager.getUserByEmail(email);
+
+    if (!user) {
+      return;
     }
 
-    try {
-      const user = await UserManager.getUserByEmail(email);
+    const resetToken = jwt.sign(
+      {
+        email: email,
+      },
+      process.env.RESET_PASSWORD_TOKEN_SECRET ?? '',
+      { expiresIn: '30m' },
+    );
 
-      if (!user) {
-        throw new AppError('Account with the given email address does not exist', 404);
-      }
+    const appBaseUrl = process.env.FRONTEND_BASE_URL;
+    const resetLink = `${appBaseUrl}/password-reset/${resetToken}`;
 
-      const resetToken = jwt.sign(
-        {
-          email: email,
-        },
-        process.env.RESET_PASSWORD_TOKEN_SECRET ?? '',
-        { expiresIn: '30m' },
-      );
-
-      const appBaseUrl = process.env.FRONTEND_BASE_URL;
-      const resetLink = `${appBaseUrl}/password-reset/${resetToken}`;
-
-      await sendMail({
-        email,
-        subject: `${process.env.APP_NAME} - Password Reset`,
-        html: `<div>Here is your password reset link: <a href="${resetLink}">CLICK</a></div>`,
-      });
-    } catch (err) {
-      Logger.error('Error occured while sending password reset link: ' + err);
-
-      throw new AppError(`Error occured while sending password reset link: ${err}`, 500);
-    }
+    await sendMail({
+      email,
+      subject: `${process.env.APP_NAME} - Password Reset`,
+      html: `<div>Here is your password reset link: <a href="${resetLink}">CLICK</a></div>`,
+    });
   },
   sendEmailVerificationLink: async (email: string) => {
-    if (!email) {
-      throw new AppError('Email not provided', 400);
+    const user = await UserManager.getUserByEmail(email);
+
+    if (!user || user.isVerified) {
+      return;
     }
 
-    try {
-      const verificationToken = jwt.sign(
-        {
-          email,
-        },
-        process.env.VERIFY_EMAIL_TOKEN_SECRET ?? '',
-        { expiresIn: '24h' },
-      );
-
-      const baseUrl = process.env.FRONTEND_BASE_URL;
-      const verificationLink = `${baseUrl}/verify/${verificationToken}`;
-
-      const result = await sendMail({
+    const verificationToken = jwt.sign(
+      {
         email,
-        subject: `${process.env.APP_NAME} - Email Verification`,
-        html: `<div>Here is your verification link: <a href="${verificationLink}">CLICK</a></div>`,
-      });
+      },
+      process.env.VERIFY_EMAIL_TOKEN_SECRET ?? '',
+      { expiresIn: '24h' },
+    );
 
-      return result;
-    } catch (err) {
-      Logger.error('Error occured while sending email verification link: ' + err);
+    const baseUrl = process.env.FRONTEND_BASE_URL;
+    const verificationLink = `${baseUrl}/verify/${verificationToken}`;
 
-      throw new AppError(`Error occured while sending email verification link: ${err}`, 500);
-    }
+    await sendMail({
+      email,
+      subject: `${process.env.APP_NAME} - Email Verification`,
+      html: `<div>Here is your verification link: <a href="${verificationLink}">CLICK</a></div>`,
+    });
   },
   register: async ({
     email,
     password,
-    role,
     name,
     surname,
     city,
-    categoryName,
   }: {
     email: string;
     password: string;
-    role?: EUserRole;
     name: string;
     surname: string;
     city: string;
-    categoryName?: string;
   }) => {
-    if (!email || !password || !city || !name || !surname) {
-      throw new AppError('Email, password, name, surname and city are required', 400);
-    }
-
     const userExists = await UserManager.getUserByEmail(email);
 
     if (userExists) {
-      throw new AppError('Email already registered', 400);
-    }
-
-    const isSpecialistCreation = role === EUserRole.SPECIALIST;
-
-    if (isSpecialistCreation && !categoryName) {
-      throw new AppError('categoryName must be provided while creating specialist', 400);
+      throw new AppError(409, EResponseStatus.ERROR_USER_ALREADY_EXIST, 'User with this email already exists');
     }
 
     try {
       const user = new User({
         email,
         password,
-        role,
         name,
         surname,
         city,
       });
 
-      if (isSpecialistCreation && categoryName) {
-        const category = await CategoryManager.getOrCreateNewCategory(categoryName);
-
-        user.category = category.id;
-
-        // assign new specialist to the category
-        category.specialists.push(user.id);
-        await category.save();
-      }
-
       await user.save();
+
+      return user.toSafeObject();
     } catch (err) {
-      throw new AppError(`User registration failed: ${err}`, 500);
+      throw new AppError(
+        400,
+        EResponseStatus.ERROR_INVALID_DATA,
+        printMongooseValidationErrors(err as MongooseError.ValidationError),
+      );
     }
   },
   login: async ({ email, password }: { email: string; password: string }) => {
-    try {
-      const user = await UserManager.getUserByEmail(email);
+    const user = await UserManager.getUserByEmail(email);
 
-      if (!user) {
-        throw new AppError('User with provided e-mail does not exist', 404);
-      }
-
-      if (!user.isVerified) {
-        throw new AppError('Email not verified', 403);
-      }
-
-      const isPasswordMatch = await user.comparePassword(password);
-
-      if (!isPasswordMatch) {
-        throw new AppError('Invalid credentials', 400);
-      }
-
-      return user;
-    } catch (err) {
-      throw new AppError(`User login failed: ${err}`, 500);
+    if (!user) {
+      throw new AppError(404, EResponseStatus.ERROR_USER_NOT_FOUND, 'User with provided e-mail does not exist');
     }
+
+    if (!user.isVerified) {
+      throw new AppError(403, EResponseStatus.ERROR_USER_NOT_VERIFIED, 'Email is not verified');
+    }
+
+    const isPasswordMatch = await user.comparePassword(password);
+
+    if (!isPasswordMatch) {
+      throw new AppError(400, EResponseStatus.ERROR_INVALID_CREDENTIALS, 'Invalid credentials');
+    }
+
+    return user;
   },
   logout: async (refreshToken: string) => {
     try {
@@ -226,17 +169,11 @@ export const AuthManager = {
 
       await UserManager.updateUserRefreshToken(payload.userId, refreshToken);
     } catch (err) {
-      const error = err as IAppError;
-
-      if (error instanceof jwt.TokenExpiredError) {
-        throw new AppError('Refresh token expired', 401);
+      if (err instanceof JsonWebTokenError) {
+        handleRefreshTokenError(err);
       }
 
-      if (error instanceof jwt.JsonWebTokenError) {
-        throw new AppError('Invalid refresh token', 400);
-      }
-
-      throw new AppError('Error occured on logout', 500);
+      throw err;
     }
   },
 };

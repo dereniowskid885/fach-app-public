@@ -1,5 +1,7 @@
-import Logger from '@shared/helpers/Logger';
+import Logger from '@shared/utils/Logger';
 import { transporter } from './transporter';
+import { AppError } from '@shared/utils/AppError';
+import { EResponseStatus } from '@shared/constants/responseStatus';
 
 export interface IEmailOptions {
   email: string;
@@ -21,8 +23,12 @@ export const sendMail = async (options: IEmailOptions) => {
       Logger.info(`Email successfully sent to: ${email}`);
     })
     .catch((err: string) => {
-      console.error('Error occured while sending the email: ' + err);
+      Logger.error('Error occured while sending the email - ' + err);
 
-      throw err;
+      throw new AppError(
+        500,
+        EResponseStatus.ERROR_EMAIL_SEND_FAILED,
+        'Error occured while sending the email, please try again later.',
+      );
     });
 };

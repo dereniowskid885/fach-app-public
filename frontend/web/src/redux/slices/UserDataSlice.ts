@@ -4,6 +4,8 @@ import { RootState } from '../store';
 
 const initialState = {
   user: {
+    userId: '',
+    categoryId: '',
     email: '',
     role: '',
     city: '',

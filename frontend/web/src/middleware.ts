@@ -37,10 +37,11 @@ export default async function middleware(request: NextRequest) {
           withCredentials: true
         }
       );
+      const axiosResponseData = axiosResponse.data;
 
       const expirationTime = 900; // 15 minutes - 15 * 60
       const response = NextResponse.next();
-      response.cookies.set('accessToken', axiosResponse.data.accessToken, {
+      response.cookies.set('accessToken', axiosResponseData.data.accessToken, {
         httpOnly: true,
         secure: process.env.NEXT_PUBLIC_NODE_ENV === 'production',
         sameSite: 'strict',

@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { IAppError } from "../constants/interfaces";
+import { IAppError } from "../utils/AppError";
 import { handleAppError } from "./handleAppError";
 
 // method for using common middleware functions across services

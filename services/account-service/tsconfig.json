@@ -17,7 +17,9 @@
       "@managers/*": ["./managers/*"],
       "@models/*": ["./models/*"],
       "@routes/*": ["./routes/*"],
-      "@utils/*": ["./utils/*"]
+      "@utils/*": ["./utils/*"],
+      "@interfaces/*": ["./interfaces/*"],
+      "@middlewares/*": ["./middlewares/*"]
     },
     "typeRoots": ["../../shared/types", "./node_modules/@types"]
   },
