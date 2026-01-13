@@ -56,6 +56,8 @@ export const UserManager = {
     return user;
   },
   updateUserRole: async (userId: string, role: EUserRole) => {
+    // TODO: to be changed in superadmin role addition ticket
+    // https://github.com/dereniowskid885/fach-app/issues/7
     const user = await UserManager.getUserById(userId);
 
     if (user.role === role) {
@@ -113,6 +115,7 @@ export const UserManager = {
     }
 
     // TODO: to be changed in superadmin role addition ticket
+    // https://github.com/dereniowskid885/fach-app/issues/7
     if (role === EUserRole.ADMIN) {
       throw new AppError(403, EResponseStatus.ERROR_INVALID_DATA, 'Cannot register user with admin role');
     }
@@ -148,6 +151,7 @@ export const UserManager = {
         await category.save();
       }
 
+      user.populate({ path: 'category', select: 'name' });
       await user.save();
 
       return user.toSafeObject();
