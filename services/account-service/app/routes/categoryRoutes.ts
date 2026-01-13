@@ -58,19 +58,7 @@ router.use(accessTokenMiddleware);
  *                   type: string
  *                   example: Category successfully created.
  *                 data:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                       description: Unique category ID
- *                       example: "66df7gh8sasd6f66767rt6"
- *                     name:
- *                       type: string
- *                       description: Unique category name
- *                       example: "Elektronika"
- *                     specialists:
- *                      type: array
- *                      example: []
+ *                   $ref: '#/components/schemas/Category'
  *       400:
  *         description: Bad request
  *         content:
@@ -185,42 +173,7 @@ router.post('/', checkAdminRole, validateCategoryBodyMiddleware, createCategory)
  *                 data:
  *                   type: array
  *                   items:
- *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                         description: Unique category ID
- *                         example: "66df7gh8sasd6f66767rt6"
- *                       name:
- *                         type: string
- *                         description: Unique category name
- *                         example: "Elektronika"
- *                       specialists:
- *                         type: array
- *                         items:
- *                           type: object
- *                           properties:
- *                             _id:
- *                               type: string
- *                               example: "64f3b12a6f4c1e9d3a7b1234"
- *                             email:
- *                               type: string
- *                               example: "user@example.com"
- *                             role:
- *                               type: string
- *                               example: "specialist"
- *                             name:
- *                               type: string
- *                               example: "Jan"
- *                             surname:
- *                               type: string
- *                               example: "Nowak"
- *                             city:
- *                               type: string
- *                               example: "Warsaw"
- *                             isVerified:
- *                               type: boolean
- *                               example: true
+ *                     $ref: '#/components/schemas/Category'
  *       401:
  *         description: Unauthorized
  *         content:
@@ -283,42 +236,7 @@ router.get('/', getCategories);
  *                   type: boolean
  *                   example: true
  *                 data:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                       description: Unique category ID
- *                       example: "66df7gh8sasd6f66767rt6"
- *                     name:
- *                       type: string
- *                       description: Unique category name
- *                       example: "Elektronika"
- *                     specialists:
- *                       type: array
- *                       items:
- *                         type: object
- *                         properties:
- *                             _id:
- *                               type: string
- *                               example: "64f3b12a6f4c1e9d3a7b1234"
- *                             email:
- *                               type: string
- *                               example: "user@example.com"
- *                             role:
- *                               type: string
- *                               example: "specialist"
- *                             name:
- *                               type: string
- *                               example: "Jan"
- *                             surname:
- *                               type: string
- *                               example: "Nowak"
- *                             city:
- *                               type: string
- *                               example: "Warsaw"
- *                             isVerified:
- *                               type: boolean
- *                               example: true
+ *                   $ref: '#/components/schemas/Category'
  *       401:
  *         description: Unauthorized
  *         content:
@@ -503,42 +421,7 @@ router.delete('/:id', checkAdminRole, deleteCategory);
  *                   type: boolean
  *                   example: true
  *                 data:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                       description: Unique category ID
- *                       example: "66df7gh8sasd6f66767rt6"
- *                     name:
- *                       type: string
- *                       description: Unique category name
- *                       example: "Elektronika"
- *                     specialists:
- *                       type: array
- *                       items:
- *                         type: object
- *                         properties:
- *                           _id:
- *                             type: string
- *                             example: "64f3b12a6f4c1e9d3a7b1234"
- *                           email:
- *                             type: string
- *                             example: "user@example.com"
- *                           role:
- *                             type: string
- *                             example: "specialist"
- *                           name:
- *                             type: string
- *                             example: "Jan"
- *                           surname:
- *                             type: string
- *                             example: "Nowak"
- *                           city:
- *                             type: string
- *                             example: "Warsaw"
- *                           isVerified:
- *                             type: boolean
- *                             example: true
+ *                   $ref: '#/components/schemas/Category'
  *       401:
  *         description: Unauthorized
  *         content:
@@ -648,39 +531,7 @@ router.patch('/:id', checkAdminRole, validateCategoryBodyMiddleware, updateCateg
  *                   type: string
  *                   example: Specialist successfully assigned to a category
  *                 data:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                       description: Unique category ID
- *                       example: "66df7gh8sasd6f66767rt6"
- *                     name:
- *                       type: string
- *                       description: Unique category name
- *                       example: "Elektronika"
- *                     specialists:
- *                       type: array
- *                       items:
- *                         type: object
- *                         properties:
- *                           _id:
- *                             type: string
- *                             example: "64f3b12a6f4c1e9d3a7b1234"
- *                           email:
- *                             type: string
- *                             example: "jan@fachowiec.pl"
- *                           role:
- *                             type: string
- *                             example: "specialist"
- *                           name:
- *                             type: string
- *                             example: "Jan"
- *                           surname:
- *                             type: string
- *                             example: "Nowak"
- *                           city:
- *                             type: string
- *                             example: "Warsaw"
+ *                   $ref: '#/components/schemas/Category'
  *       400:
  *         description: User is not a specialist
  *         content:
@@ -769,7 +620,7 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  * /categories/{id}/specialist/remove:
  *   patch:
  *     summary: Remove specialist from category
- *     description: Remove specialist from category
+ *     description: Removes a specialist from the specified category.
  *     tags:
  *       - Categories
  *     parameters:
@@ -790,6 +641,7 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  *             properties:
  *               userId:
  *                 type: string
+ *                 description: Specialist user ID to remove from category
  *                 example: "67c48e3fd50f0e2e0050381d"
  *     responses:
  *       200:
@@ -804,23 +656,11 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Specialist successfully removed from category
+ *                   example: "Specialist successfully removed from category"
  *                 data:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                       description: Unique category ID
- *                       example: "66df7gh8sasd6f66767rt6"
- *                     name:
- *                       type: string
- *                       description: Unique category name
- *                       example: "Elektronika"
- *                     specialists:
- *                       type: array
- *                       example: []
+ *                   $ref: '#/components/schemas/Category'
  *       400:
- *         description: User is not assigned to provided category
+ *         description: User is not assigned to the provided category
  *         content:
  *           application/json:
  *             schema:
@@ -834,7 +674,7 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  *                   example: "ERROR_USER_NOT_ASSIGNED_TO_CATEGORY"
  *                 message:
  *                   type: string
- *                   example: User is not assigned to provided category
+ *                   example: "User is not assigned to provided category"
  *       401:
  *         description: Unauthorized
  *         content:
@@ -868,7 +708,7 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  *                   type: string
  *                   example: "Forbidden: Required role is missing"
  *       404:
- *         description: Category with provided id does not exist
+ *         description: Category with provided ID does not exist
  *         content:
  *           application/json:
  *             schema:
@@ -882,7 +722,7 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  *                   example: "ERROR_CATEGORY_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Category with provided id does not exist
+ *                   example: "Category with provided id does not exist"
  *       500:
  *         description: Server error
  *         content:
@@ -898,7 +738,7 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: Server error
+ *                   example: "Server error"
  */
 router.patch('/:id/specialist/remove', checkAdminRole, removeSpecialistFromCategory);
 
