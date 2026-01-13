@@ -1,0 +1,11 @@
+{
+  "name": "fach-app",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "workspaces": [
+    "fach-app-web",
+    "account-service",
+    "shared"
+  ]
+}

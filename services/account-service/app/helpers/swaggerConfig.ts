@@ -16,7 +16,7 @@ const swaggerConfig = {
       },
     ],
   },
-  apis: [__dirname + '/../routes/*.ts'],
+  apis: [__dirname + '/../routes/*.ts', __dirname + '/../swagger/*.ts'],
 };
 
 export default swaggerJsDoc(swaggerConfig);
