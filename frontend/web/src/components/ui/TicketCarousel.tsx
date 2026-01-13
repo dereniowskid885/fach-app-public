@@ -4,17 +4,17 @@ import { Carousel, CarouselContent, CarouselItem } from '@/components/shadcn/car
 import TicketCarouselCard from './TicketCarouselCard';
 import { EFallbackKey } from '@/constants/enums';
 import { EUserRole } from '@/constants/userRole';
-import { GetTicketsApiResponse } from '@/api/accountApi';
 import { useAppSelector } from '@/redux/hooks';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { Ticket } from '@/api/accountApi';
 
 export interface ITicketCarousel {
-  tickets: GetTicketsApiResponse;
+  tickets?: Ticket[];
   disableKeyboardHandler?: boolean;
 }
 
-export default function TicketCarousel({ tickets, disableKeyboardHandler }: ITicketCarousel) {
-  const { role, email } = useAppSelector(selectUserData);
+export default function TicketCarousel({ tickets = [], disableKeyboardHandler }: ITicketCarousel) {
+  const { role, userId } = useAppSelector(selectUserData);
 
   return (
     <Carousel
@@ -27,7 +27,7 @@ export default function TicketCarousel({ tickets, disableKeyboardHandler }: ITic
             key={ticket._id ?? `${EFallbackKey.TICKET_CAROUSEL}-${index}`}
             className="select-none pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 [&:not(:first-of-type)]:pl-2"
           >
-            <TicketCarouselCard {...ticket} userEmail={email} userRole={role as EUserRole} />
+            <TicketCarouselCard {...ticket} userId={userId} userRole={role as EUserRole} />
           </CarouselItem>
         ))}
       </CarouselContent>

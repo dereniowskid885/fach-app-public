@@ -1,23 +1,24 @@
 import {
   createTicket,
-  getUserTickets,
+  getTickets,
   deleteTicket,
-  getSpecialistAvailableTickets,
   getTicketByID,
-  getTicketsByCategoryID,
   ticketEvaluationHandler,
   ticketEvaluationAccept,
+  updateTicket,
 } from '@controllers/ticketController';
 
 import express from 'express';
 const router = express.Router();
 
 import { createMiddleware } from '@shared/helpers/createMiddleware';
-import { checkAndParseAccessToken, checkUserRole } from '@shared/middlewares/authMiddleware';
-import { EUserRole } from '@shared/constants/enums';
-
-// Role middleware
-const checkSpecialistRole = createMiddleware(checkUserRole, [EUserRole.SPECIALIST]);
+import { checkAndParseAccessToken } from '@shared/middlewares/authMiddleware';
+import {
+  validateCreateTicketMiddleware,
+  validateTicketEvaluationAcceptMiddleware,
+  validateTicketEvaluationMiddleware,
+  validateTicketUpdateMiddleware,
+} from '@middlewares/ticketValidationMiddleware';
 
 // Auth middleware
 const accessTokenMiddleware = createMiddleware(checkAndParseAccessToken, process.env.ACCESS_TOKEN_SECRET);
@@ -27,7 +28,7 @@ router.use(accessTokenMiddleware);
  * @swagger
  * /tickets:
  *   post:
- *     summary: Create new ticket
+ *     summary: Create ticket
  *     tags:
  *       - Ticketing
  *     requestBody:
@@ -39,480 +40,179 @@ router.use(accessTokenMiddleware);
  *             required:
  *               - title
  *               - description
- *               - category
+ *               - categoryId
  *             properties:
- *               city:
- *                 type: string
- *                 example: "Katowice"
- *               category:
- *                 type: object
- *                 properties:
- *                     _id:
- *                       type: string
- *                       description: Unique category ID
- *                       example: "66df7gh8sasd6f66767rt6"
- *                     name:
- *                       type: string
- *                       description: Category name
- *                       example: "Elektronika"
- *               status:
- *                 type: string
- *                 enum:
- *                  - "Wycena"
- *                  - "Akceptacja wyceny"
- *                  - "Oczekiwanie na płatność"
- *                  - "W trakcie"
- *                  - "Akceptacja rozwiązania"
- *                  - "Badanie przez moderatora"
- *                  - "Ukończony"
- *                 description: Ticket status
- *               assignee:
- *                 type: object
- *                 properties:
- *                     _id:
- *                       type: string
- *                       description: User ID
- *                       example: "66df7gh8sasd6f66767rt6"
- *                     email:
- *                       type: string
- *                       description: User email
- *                       example: "jan@kowalski.pl"
- *               createdBy:
- *                 type: object
- *                 properties:
- *                     _id:
- *                       type: string
- *                       description: User ID
- *                       example: "66df7gh8sasd6f66767rt6"
- *                     email:
- *                       type: string
- *                       description: User email
- *                       example: "jan@kowalski.pl"
- *               createdAt:
- *                 type: string
- *                 format: date-time
- *                 description: Date of ticket creation
- *               updatedAt:
- *                 type: string
- *                 format: date-time
- *                 description: Date of ticket last update
- *               updatedBy:
- *                 type: object
- *                 description: User which updated the ticket lately
- *                 properties:
- *                     _id:
- *                       type: string
- *                       description: User ID
- *                       example: "66df7gh8sasd6f66767rt6"
- *                     email:
- *                       type: string
- *                       description: User email
- *                       example: "jan@kowalski.pl"
  *               title:
  *                 type: string
  *                 description: Title of the ticket
+ *                 example: "Ticket with some problem"
  *               description:
  *                 type: string
  *                 description: Description of the ticket
- *
+ *                 example: "Example ticket description"
+ *               categoryId:
+ *                 type: string
+ *                 description: Unique ID of the category
+ *                 example: "66df7gh8sasd6f66767rt6"
  *     responses:
  *       200:
- *         description: Ticket creation ended with success
+ *         description: Ticket created successfully
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  *                 message:
  *                   type: string
- *                   example: Ticket created successfully
+ *                   example: "Ticket created successfully"
+ *                 data:
+ *                   $ref: '#/components/schemas/Ticket'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_INVALID_DATA"
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid data provided."
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: "Missing user data"
  *       500:
- *         description: Server error during ticket creation
+ *         description: Server error
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: Server error during ticket creation
+ *                   example: "Server error"
  */
-router.post('/', createTicket);
+router.post('/', validateCreateTicketMiddleware, createTicket);
 
 /**
  * @swagger
  * /tickets:
  *   get:
- *     summary: Get tickets related to user
+ *     summary: Get tickets with filtering options
  *     description: Returns all tickets created by user (normal user), or related to specialist (tickets which have an accepted evaluation)
  *     tags:
  *       - Ticketing
- *     responses:
- *       200:
- *         description: Tickets created by logged user
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                     description: Unique ticket ID
- *                     example: "66df7gh8sasd6f66767rt6"
- *                   city:
- *                     type: string
- *                     example: "katowice"
- *                   category:
- *                     type: object
- *                     properties:
- *                         _id:
- *                           type: string
- *                           description: Unique category ID
- *                           example: "66df7gh8sasd6f66767rt6"
- *                         name:
- *                           type: string
- *                           description: Category name
- *                           example: "Elektronika"
- *                   status:
- *                     type: string
- *                     enum:
- *                      - "Wycena"
- *                      - "Akceptacja wyceny"
- *                      - "Oczekiwanie na płatność"
- *                      - "W trakcie"
- *                      - "Akceptacja rozwiązania"
- *                      - "Badanie przez moderatora"
- *                      - "Ukończony"
- *                     description: Ticket status
- *                     example: "Wycena"
- *                   assignee:
- *                    type: object
- *                    properties:
- *                        _id:
- *                          type: string
- *                          description: User ID
- *                          example: "66df7gh8sasd6f66767rt6"
- *                        email:
- *                          type: string
- *                          description: User email
- *                          example: "jan@kowalski.pl"
- *                   createdBy:
- *                    type: object
- *                    properties:
- *                        _id:
- *                          type: string
- *                          description: User ID
- *                          example: "66df7gh8sasd6f66767rt6"
- *                        email:
- *                          type: string
- *                          description: User email
- *                          example: "jan@kowalski.pl"
- *                   createdAt:
- *                     type: string
- *                     format: date-time
- *                     description: Date of ticket creation
- *                     example: "December 25, 2023, at 10:00 AM"
- *                   updatedAt:
- *                     type: string
- *                     format: date-time
- *                     description: Date of ticket last update
- *                     example: "December 25, 2023, at 10:00 AM"
- *                   updatedBy:
- *                    type: object
- *                    description: User which updated the ticket lately
- *                    properties:
- *                        _id:
- *                          type: string
- *                          description: User ID
- *                          example: "66df7gh8sasd6f66767rt6"
- *                        email:
- *                          type: string
- *                          description: User email
- *                          example: "jan@kowalski.pl"
- *                   title:
- *                     type: string
- *                     description: Title of the ticket
- *                     example: "Ticket with some problem"
- *                   description:
- *                     type: string
- *                     description: Description of the ticket
- *                     example: "Example ticket description"
- *                   evaluations:
- *                      type: array
- *                      description: "List of evaluations made by specialists"
- *                      items:
- *                        type: object
- *                        properties:
- *                          _id:
- *                            type: string
- *                            description: User ID
- *                            example: "66df7gh8sasd6f66767rt6"
- *                          user:
- *                            type: object
- *                            properties:
- *                              _id:
- *                                type: string
- *                                description: Specialist userId
- *                                example: "66df7gh8sasd6f66767rt6"
- *                              email:
- *                                type: string
- *                                description: Specialist email
- *                                example: "jan@kowalski.pl"
- *                              name:
- *                                type: string
- *                                description: Specialist name
- *                                example: "Jan"
- *                              surname:
- *                                type: string
- *                                description: Specialist surname
- *                                example: "Fachowiec"
- *                              city:
- *                                type: string
- *                                description: Specialist city
- *                                example: "Lublin"
- *                          dateOfResponse:
- *                            type: string
- *                            format: date-time
- *                          price:
- *                            type: object
- *                            properties:
- *                              value:
- *                                type: number
- *                                format: float
- *                              currency:
- *                                type: string
- *                                enum: [PLN]
- *                   acceptedEvaluation:
- *                      type: object
- *                      properties:
- *                        user:
- *                            type: object
- *                            properties:
- *                              _id:
- *                                type: string
- *                                description: Specialist userId
- *                                example: "66df7gh8sasd6f66767rt6"
- *                              email:
- *                                type: string
- *                                description: Specialist email
- *                                example: "jan@kowalski.pl"
- *                              name:
- *                                type: string
- *                                description: Specialist name
- *                                example: "Jan"
- *                              surname:
- *                                type: string
- *                                description: Specialist surname
- *                                example: "Fachowiec"
- *                        dateOfResponse:
- *                          type: string
- *                          format: date-time
- *                        price:
- *                          type: object
- *                          properties:
- *                            value:
- *                              type: number
- *                              format: float
- *                            currency:
- *                              type: string
- *                              enum: [PLN]
- *       500:
- *         description: Server error during retrieval of tickets
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Server error during retrieval of tickets
- */
-router.get('/', getUserTickets);
-
-/**
- * @swagger
- * /tickets/specialist/{city}:
- *   get:
- *     summary: Retrieve pending tickets for specialist (ready to be taken)
- *     description: Returns tickets filtered by specialist category and that are created by users from the same city as specialist (or by city provided in parameter)
- *     tags:
- *       - Ticketing
  *     parameters:
- *       - in: path
- *         name: city
- *         required: false
+ *       - in: query
+ *         name: categoryId
  *         schema:
  *           type: string
+ *         description: Filter by categoryId
+ *         example: "66df7gh8sasd6f66767rt6"
+ *       - in: query
+ *         name: city
+ *         schema:
+ *           type: string
+ *         description: Filter by city
+ *         example: "Warszawa"
+ *       - $ref: '#/components/parameters/TicketStatusQuery'
+ *       - in: query
+ *         name: assignee
+ *         schema:
+ *           type: string
+ *         description: Filter by assignee (userId)
+ *         example: "66df7gh8sasd6f66767rt6"
+ *       - in: query
+ *         name: createdBy
+ *         schema:
+ *           type: string
+ *         description: Filter by author (userId)
+ *         example: "66df7gh8sasd6f66767rt6"
  *     responses:
  *       200:
- *         description: Pending tickets - ready to be taken by specialist
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                     description: Unique ticket ID
- *                     example: "66df7gh8sasd6f66767rt6"
- *                   city:
- *                     type: string
- *                     example: "Katowice"
- *                   category:
- *                     type: object
- *                     properties:
- *                         _id:
- *                           type: string
- *                           description: Unique category ID
- *                           example: "66df7gh8sasd6f66767rt6"
- *                         name:
- *                           type: string
- *                           description: Category name
- *                           example: "Elektronika"
- *                   status:
- *                     type: string
- *                     enum:
- *                      - "Wycena"
- *                      - "Akceptacja wyceny"
- *                      - "Oczekiwanie na płatność"
- *                      - "W trakcie"
- *                      - "Akceptacja rozwiązania"
- *                      - "Badanie przez moderatora"
- *                      - "Ukończony"
- *                     description: Ticket status
- *                     example: "Wycena"
- *                   assignee:
- *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                         description: User ID
- *                         example: "66df7gh8sasd6f66767rt6"
- *                       email:
- *                         type: string
- *                         description: User email
- *                         example: "jan@kowalski.pl"
- *                   createdBy:
- *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                         description: User ID
- *                         example: "66df7gh8sasd6f66767rt6"
- *                       email:
- *                         type: string
- *                         description: User email
- *                         example: "jan@kowalski.pl"
- *                   createdAt:
- *                     type: string
- *                     format: date-time
- *                     description: Date of ticket creation
- *                     example: "December 25, 2023, at 10:00 AM"
- *                   updatedAt:
- *                     type: string
- *                     format: date-time
- *                     description: Date of ticket last update
- *                     example: "December 25, 2023, at 10:00 AM"
- *                   updatedBy:
- *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                         description: User ID
- *                         example: "66df7gh8sasd6f66767rt6"
- *                       email:
- *                         type: string
- *                         description: User email
- *                         example: "jan@kowalski.pl"
- *                   title:
- *                     type: string
- *                     description: Title of the ticket
- *                     example: "Ticket with some problem"
- *                   description:
- *                     type: string
- *                     description: Description of the ticket
- *                     example: "Example ticket description"
- *       500:
- *         description: Server error during retrieval of tickets
+ *         description: Array of tickets
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 dataLength:
+ *                   type: number
+ *                   example: 24
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Ticket'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Server error during retrieval of tickets
+ *                   example: "Missing user data"
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: "Server error"
  */
-router.get('/specialist/:city', checkSpecialistRole, getSpecialistAvailableTickets);
+router.get('/', getTickets);
 
 /**
  * @swagger
  * /tickets/{id}:
- *   delete:
- *     summary: Delete ticket
- *     description: Delete ticket with provided id
- *     tags:
- *       - Ticketing
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: Ticket ID
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Ticket deletion ended with success
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Ticket deleted successfully
- *       403:
- *         description: Missing permissions to delete the ticket
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Missing permissions to delete the ticket
- *       404:
- *         description: Ticket with provided id does not exist
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Ticket with provided id does not exist
- *       500:
- *         description: Server error during ticket deletion
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Server error during ticket deletion
- */
-router.delete('/:id', deleteTicket);
-
-/**
- * @swagger
- * /tickets/by-id/{id}:
  *   get:
- *     summary: Retrieve a ticket by ID
+ *     summary: Get ticket by ID
  *     description: Fetches a single ticket from the database using its unique ID.
  *     tags:
  *       - Ticketing
@@ -520,7 +220,7 @@ router.delete('/:id', deleteTicket);
  *       - in: path
  *         name: id
  *         required: true
- *         description: Unique id of the ticket
+ *         description: Unique ID of the ticket
  *         schema:
  *           type: string
  *     responses:
@@ -531,321 +231,282 @@ router.delete('/:id', deleteTicket);
  *             schema:
  *               type: object
  *               properties:
- *                   _id:
- *                     type: string
- *                     description: Unique ticket ID
- *                     example: "66df7gh8sasd6f66767rt6"
- *                   city:
- *                     type: string
- *                     example: "Katowice"
- *                   category:
- *                     type: object
- *                     properties:
- *                         _id:
- *                           type: string
- *                           description: Unique category ID
- *                           example: "66df7gh8sasd6f66767rt6"
- *                         name:
- *                           type: string
- *                           description: Category name
- *                           example: "Elektronika"
- *                   status:
- *                     type: string
- *                     enum:
- *                      - "Wycena"
- *                      - "Akceptacja wyceny"
- *                      - "Oczekiwanie na płatność"
- *                      - "W trakcie"
- *                      - "Akceptacja rozwiązania"
- *                      - "Badanie przez moderatora"
- *                      - "Ukończony"
- *                     description: Ticket status
- *                     example: "Wycena"
- *                   assignee:
- *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                         description: User ID
- *                         example: "66df7gh8sasd6f66767rt6"
- *                       email:
- *                         type: string
- *                         description: User email
- *                         example: "jan@kowalski.pl"
- *                   createdBy:
- *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                         description: User ID
- *                         example: "66df7gh8sasd6f66767rt6"
- *                       email:
- *                         type: string
- *                         description: User email
- *                         example: "jan@kowalski.pl"
- *                   createdAt:
- *                     type: string
- *                     format: date-time
- *                     description: Date of ticket creation
- *                     example: "December 25, 2023, at 10:00 AM"
- *                   updatedAt:
- *                     type: string
- *                     format: date-time
- *                     description: Date of ticket last update
- *                     example: "December 25, 2023, at 10:00 AM"
- *                   updatedBy:
- *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                         description: User ID
- *                         example: "66df7gh8sasd6f66767rt6"
- *                       email:
- *                         type: string
- *                         description: User email
- *                         example: "jan@kowalski.pl"
- *                   title:
- *                     type: string
- *                     description: Title of the ticket
- *                     example: "Ticket with some problem"
- *                   description:
- *                     type: string
- *                     description: Description of the ticket
- *                     example: "Example ticket description"
- *                   evaluations:
- *                      type: array
- *                      description: "List of evaluations made by specialists"
- *                      items:
- *                        type: object
- *                        properties:
- *                          _id:
- *                            type: string
- *                            description: User ID
- *                            example: "66df7gh8sasd6f66767rt6"
- *                          user:
- *                            type: object
- *                            properties:
- *                              _id:
- *                                type: string
- *                                description: User ID
- *                                example: "66df7gh8sasd6f66767rt6"
- *                              email:
- *                                type: string
- *                                description: User email
- *                                example: "jan@kowalski.pl"
- *                              name:
- *                                type: string
- *                                description: Specialist name
- *                                example: "Jan"
- *                              surname:
- *                                type: string
- *                                description: Specialist surname
- *                                example: "Fachowiec"
- *                              city:
- *                                type: string
- *                                description: Specialist city
- *                                example: "Lublin"
- *                          dateOfResponse:
- *                            type: string
- *                            format: date-time
- *                          price:
- *                            type: object
- *                            properties:
- *                              value:
- *                                type: number
- *                                format: float
- *                              currency:
- *                                type: string
- *                                enum: [PLN]
- *                   acceptedEvaluation:
- *                      type: object
- *                      properties:
- *                        user:
- *                            type: object
- *                            properties:
- *                              _id:
- *                                type: string
- *                                description: Specialist userId
- *                                example: "66df7gh8sasd6f66767rt6"
- *                              email:
- *                                type: string
- *                                description: Specialist email
- *                                example: "jan@kowalski.pl"
- *                              name:
- *                                type: string
- *                                description: Specialist name
- *                                example: "Jan"
- *                              surname:
- *                                type: string
- *                                description: Specialist surname
- *                                example: "Fachowiec"
- *                        dateOfResponse:
- *                          type: string
- *                          format: date-time
- *                        price:
- *                          type: object
- *                          properties:
- *                            value:
- *                              type: number
- *                              format: float
- *                            currency:
- *                              type: string
- *                              enum: [PLN]
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/Ticket'
  *       404:
- *         description: Ticket with provided id does not exist
+ *         description: Ticket with provided ID not found
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TICKET_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Ticket with provided id does not exist
+ *                   example: "Ticket with provided id not found"
  *       500:
- *         description: Server error during ticket retrieval
+ *         description: Server error
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: Server error during ticket retrieval
+ *                   example: "Server error"
  */
-router.get('/by-id/:id', getTicketByID);
+router.get('/:id', getTicketByID);
 
 /**
  * @swagger
- * /tickets/by-categoryid/{categoryId}:
- *   get:
- *     summary: Retrieve tickets by categoryId
- *     description: Retrieve all tickets found by categoryId
- *     tags:
- *       - Ticketing
- *     parameters:
- *       - in: path
- *         name: categoryId
- *         required: true
- *         description: Unique categoryId
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Tickets found by provided categoryId
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                     description: Unique ticket ID
- *                     example: "66df7gh8sasd6f66767rt6"
- *                   city:
- *                     type: string
- *                     example: "katowice"
- *                   category:
- *                     type: object
- *                     properties:
- *                         _id:
- *                           type: string
- *                           description: Unique category ID
- *                           example: "66df7gh8sasd6f66767rt6"
- *                         name:
- *                           type: string
- *                           description: Category name
- *                           example: "Elektronika"
- *                   status:
- *                     type: string
- *                     enum:
- *                      - "Wycena"
- *                      - "Akceptacja wyceny"
- *                      - "Oczekiwanie na płatność"
- *                      - "W trakcie"
- *                      - "Akceptacja rozwiązania"
- *                      - "Badanie przez moderatora"
- *                      - "Ukończony"
- *                     description: Ticket status
- *                     example: "Wycena"
- *                   assignee:
- *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                         description: User ID
- *                         example: "66df7gh8sasd6f66767rt6"
- *                       email:
- *                         type: string
- *                         description: User email
- *                         example: "jan@kowalski.pl"
- *                   createdBy:
- *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                         description: User ID
- *                         example: "66df7gh8sasd6f66767rt6"
- *                       email:
- *                         type: string
- *                         description: User email
- *                         example: "jan@kowalski.pl"
- *                   createdAt:
- *                     type: string
- *                     format: date-time
- *                     description: Date of ticket creation
- *                     example: "December 25, 2023, at 10:00 AM"
- *                   updatedAt:
- *                     type: string
- *                     format: date-time
- *                     description: Date of ticket last update
- *                     example: "December 25, 2023, at 10:00 AM"
- *                   updatedBy:
- *                     type: object
- *                     properties:
- *                       _id:
- *                         type: string
- *                         description: User ID
- *                         example: "66df7gh8sasd6f66767rt6"
- *                       email:
- *                         type: string
- *                         description: User email
- *                         example: "jan@kowalski.pl"
- *                   title:
- *                     type: string
- *                     description: Title of the ticket
- *                     example: "Ticket with some problem"
- *                   description:
- *                     type: string
- *                     description: Description of the ticket
- *                     example: "Example ticket description"
- *       500:
- *         description: Server error during retrieval of tickets
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Server error during retrieval of tickets
- */
-router.get('/by-categoryid/:categoryId', getTicketsByCategoryID);
-
-/**
- * @swagger
- * /tickets/{id}/evaluation:
- *   patch:
- *     summary: Ticket price and dateOfResponse evaluation
- *     description: Ticket evaluation for specialists
+ * /tickets/{id}:
+ *   delete:
+ *     summary: Delete ticket by ID
+ *     description: Deletes a ticket with the provided unique ID.
  *     tags:
  *       - Ticketing
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: Ticket ID
+ *         description: Unique ID of the ticket
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Ticket deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Ticket deleted successfully."
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TOKEN_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized: No access token provided"
+ *       403:
+ *         description: Forbidden due to invalid role
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_INVALID_ROLE"
+ *                 message:
+ *                   type: string
+ *                   example: "Forbidden: Required role is missing"
+ *       404:
+ *         description: Ticket not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TICKET_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: "Ticket with provided ID not found."
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: "Server error"
+ */
+router.delete('/:id', deleteTicket);
+
+/**
+ * @swagger
+ * /tickets/{id}:
+ *   patch:
+ *     summary: Update ticket
+ *     description: Updates a ticket with the provided unique ID.
+ *     tags:
+ *       - Ticketing
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the ticket
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: Updated title of the ticket
+ *                 example: "Updated ticket title"
+ *               description:
+ *                 type: string
+ *                 description: Updated description of the ticket
+ *                 example: "Updated ticket description"
+ *               categoryId:
+ *                 type: string
+ *                 description: Unique ID of the category
+ *                 example: "66df7gh8sasd6f66767rt6"
+ *               city:
+ *                 type: string
+ *                 description: City associated with the ticket
+ *                 example: "Warszawa"
+ *               status:
+ *                 $ref: '#/components/schemas/TicketStatus'
+ *               assigneeId:
+ *                 type: string
+ *                 description: User ID of the assignee
+ *                 example: "66df7gh8sasd6f66767rt6"
+ *     responses:
+ *       200:
+ *         description: Ticket updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Ticket updated successfully."
+ *                 data:
+ *                   $ref: '#/components/schemas/Ticket'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_INVALID_DATA"
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid data provided."
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: "Missing user data"
+ *       404:
+ *         description: Ticket not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TICKET_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: "Ticket with provided ID not found."
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: "Server error"
+ */
+router.patch('/:id', validateTicketUpdateMiddleware, updateTicket);
+
+/**
+ * @swagger
+ * /tickets/{id}/evaluation:
+ *   patch:
+ *     summary: Ticket evaluation (used by specialist)
+ *     description: Allows a specialist to evaluate a ticket by providing a price and response time (minutes).
+ *     tags:
+ *       - Ticketing
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the ticket
  *         schema:
  *           type: string
  *     requestBody:
@@ -859,19 +520,21 @@ router.get('/by-categoryid/:categoryId', getTicketsByCategoryID);
  *               - minutes
  *             properties:
  *               price:
- *                  type: object
- *                  description: Price set by specialist and accepted by ticket author
- *                  properties:
- *                    value:
- *                      type: number
- *                      description: The numeric value of the price
- *                    currency:
- *                      type: string
- *                      description: Currency code (e.g., PLN, USD, EUR)
+ *                 type: object
+ *                 description: Price set by the specialist
+ *                 properties:
+ *                   value:
+ *                     type: number
+ *                     description: Numeric value of the price
+ *                     example: 250.5
+ *                   currency:
+ *                     type: string
+ *                     description: Currency code (e.g., PLN)
+ *                     example: "PLN"
  *               minutes:
  *                 type: number
- *                 description: Evaluated minutes as time of first response
- *                 example: "60"
+ *                 description: Evaluated minutes as the time of first response
+ *                 example: 60
  *     responses:
  *       200:
  *         description: Ticket evaluated successfully
@@ -880,9 +543,14 @@ router.get('/by-categoryid/:categoryId', getTicketsByCategoryID);
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  *                 message:
  *                   type: string
- *                   example: Ticket evaluated successfully
+ *                   example: "Ticket evaluated successfully"
+ *                 data:
+ *                   $ref: '#/components/schemas/Ticket'
  *       400:
  *         description: Ticket does not have proper status for evaluation
  *         content:
@@ -890,9 +558,15 @@ router.get('/by-categoryid/:categoryId', getTicketsByCategoryID);
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TICKET_INVALID_STATUS"
  *                 message:
  *                   type: string
- *                   example: Ticket does not have proper status for evaluation
+ *                   example: "Ticket does not have proper status for evaluation."
  *       403:
  *         description: Missing permissions to evaluate a ticket
  *         content:
@@ -900,37 +574,55 @@ router.get('/by-categoryid/:categoryId', getTicketsByCategoryID);
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: Missing permissions to evaluate a ticket
+ *                   example: "Missing permissions to evaluate a ticket."
  *       404:
- *         description: Ticket with provided id does not exist
+ *         description: Ticket not found
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TICKET_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Ticket with provided id does not exist
+ *                   example: "Ticket with provided id not found."
  *       500:
- *         description: Server error during ticket evaluation
+ *         description: Server error
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: Server error during ticket evaluation
+ *                   example: "Server error"
  */
-router.patch('/:id/evaluation', ticketEvaluationHandler);
+router.patch('/:id/evaluation', validateTicketEvaluationMiddleware, ticketEvaluationHandler);
 
 /**
  * @swagger
  * /tickets/{id}/accept-evaluation:
  *   patch:
- *     summary: Ticket evaluation accept
+ *     summary: Ticket evaluation accept (used by ticket owner)
  *     description: Ticket evaluation accept for ticket owner
  *     tags:
  *       - Ticketing
@@ -938,7 +630,7 @@ router.patch('/:id/evaluation', ticketEvaluationHandler);
  *       - in: path
  *         name: id
  *         required: true
- *         description: Ticket ID
+ *         description: Unique ID of the ticket
  *         schema:
  *           type: string
  *     requestBody:
@@ -961,9 +653,14 @@ router.patch('/:id/evaluation', ticketEvaluationHandler);
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  *                 message:
  *                   type: string
- *                   example: Ticket evaluation accepted successfully
+ *                   example: "Ticket evaluation accepted successfully."
+ *                 data:
+ *                   $ref: '#/components/schemas/Ticket'
  *       400:
  *         description: Ticket does not have proper status for evaluation accept
  *         content:
@@ -971,9 +668,15 @@ router.patch('/:id/evaluation', ticketEvaluationHandler);
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TICKET_INVALID_STATUS"
  *                 message:
  *                   type: string
- *                   example: Ticket does not have proper status for evaluation accept
+ *                   example: "Ticket does not have proper status for evaluation accept."
  *       403:
  *         description: Missing permissions to accept ticket evaluation
  *         content:
@@ -981,9 +684,15 @@ router.patch('/:id/evaluation', ticketEvaluationHandler);
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: Missing permissions to accept ticket evaluation
+ *                   example: "Missing permissions to accept ticket evaluation."
  *       404:
  *         description: Evaluation with provided id does not exist
  *         content:
@@ -991,20 +700,32 @@ router.patch('/:id/evaluation', ticketEvaluationHandler);
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_EVALUATION_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Evaluation with provided id does not exist
+ *                   example: "Evaluation with provided id does not exist."
  *       500:
- *         description: Server error during ticket evaluation accept
+ *         description: Server error
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: Server error during ticket evaluation accept
+ *                   example: "Server error"
  */
-router.patch('/:id/accept-evaluation', ticketEvaluationAccept);
+router.patch('/:id/accept-evaluation', validateTicketEvaluationAcceptMiddleware, ticketEvaluationAccept);
 
 export default router;

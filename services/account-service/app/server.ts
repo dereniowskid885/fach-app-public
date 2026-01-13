@@ -1,7 +1,7 @@
 import { SWAGGER_ROUTES } from '@shared/constants/routes';
 import { dbConnect } from '@shared/helpers/dbConnect';
 import authRoutes from './routes/authRoutes';
-import adminRoutes from './routes/adminRoutes';
+import userRoutes from './routes/userRoutes';
 import ticketRoutes from './routes/ticketRoutes';
 import categoryRoutes from './routes/categoryRoutes';
 import swaggerRoutes from './routes/swaggerRoutes';
@@ -33,7 +33,7 @@ app.use(cookieParser());
 
 // API Routes
 app.use(ROUTES.AUTH.BASE, authRoutes);
-app.use(ROUTES.USERS.BASE, adminRoutes);
+app.use(ROUTES.USERS.BASE, userRoutes);
 app.use(ROUTES.TICKETS.BASE, ticketRoutes);
 app.use(ROUTES.CATEGORY.BASE, categoryRoutes);
 app.use(SWAGGER_ROUTES.BASE, swaggerRoutes);

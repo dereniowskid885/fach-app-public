@@ -15,17 +15,17 @@ import { EUserRole } from '@/constants/userRole';
 import { SpecialistTicketCarouselCardButtons } from './SpecialistTicketCarouselCardButtons';
 import { Alert, AlertDescription } from '../shadcn/alert';
 import { AlertCircle } from 'lucide-react';
-import { GetTicketsByIdByIdApiResponse } from '@/api/accountApi';
 import { getFormattedDate } from '@/lib/helpers';
 import { Typography } from '../common/Typography';
+import { Ticket } from '@/api/accountApi';
 
-export interface ITicketCarouselCard extends GetTicketsByIdByIdApiResponse {
-  userEmail: string;
+export interface ITicketCarouselCard extends Ticket {
+  userId: string;
   userRole: EUserRole;
 }
 
 export default function TicketCarouselCard({
-  userEmail,
+  userId,
   userRole,
   _id,
   city,
@@ -42,7 +42,7 @@ export default function TicketCarouselCard({
     userRole === EUserRole.SPECIALIST &&
     status === ETicketStatus.PRICE_USER_ACCEPTATION &&
     evaluations
-      ? evaluations.some(evaluation => evaluation.user?.email === userEmail)
+      ? evaluations.some(evaluation => evaluation.user?._id === userId)
       : false;
 
   return (
@@ -54,19 +54,20 @@ export default function TicketCarouselCard({
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>Avatar</AvatarFallback>
             </Avatar>
-            <CategoryIcon category={category?.name} />
+
+            <CategoryIcon categoryName={category?.name} />
           </div>
           <div className="flex flex-col">
             <TicketInfoRow>
               Przypisany:{' '}
               <b className="text-info">
-                {assignee?.email} {userEmail === assignee?.email ? '(Ty)' : ''}
+                {assignee?.email} {userId === assignee?._id ? '(Ty)' : ''}
               </b>
             </TicketInfoRow>
             <TicketInfoRow>
               Autor:{' '}
               <b>
-                {createdBy?.email} {userEmail === createdBy?.email ? '(Ty)' : ''}
+                {createdBy?.email} {userId === createdBy?._id ? '(Ty)' : ''}
               </b>
             </TicketInfoRow>
             <TicketInfoRow>
@@ -79,6 +80,8 @@ export default function TicketCarouselCard({
               Status: <TicketStatusBadge status={status as ETicketStatus} />
             </TicketInfoRow>
           </div>
+          {/* TODO */}
+          {/* add info about evaluation which is waiting */}
           {isEvaluatedByLoggedSpecialist ? (
             <Alert variant="destructive" className="border-primary-950 text-primary-950">
               <AlertCircle className="h-4 w-4" />

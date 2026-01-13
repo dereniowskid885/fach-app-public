@@ -5,32 +5,36 @@ import { Typography } from '../common/Typography';
 import { useState } from 'react';
 import TicketCreateDialog from './TicketCreateDialog';
 import CategorySelect from './CategorySelect';
-import { GetTicketsByIdByIdApiResponse, useGetTicketsQuery } from '@/api/accountApi';
+import { Category, useGetTicketsQuery } from '@/api/accountApi';
 import { LoadingSpinner } from '../shadcn/loading-spinner';
 import { EUserRole } from '@/constants/userRole';
 import { notFound } from 'next/navigation';
 import { useAppSelector } from '@/redux/hooks';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import TicketCarousel from './TicketCarousel';
+import { buildDashboardTicketsQueryFilters } from '@/helpers/buildDashboardTicketsQueryFilters';
 
 export default function DashboardTickets() {
-  const [categoryFilter, setCategoryFilter] = useState<
-    GetTicketsByIdByIdApiResponse['category'] | null
-  >(null);
+  const [categoryFilter, setCategoryFilter] = useState<Category | null>(null);
   const [ticketCreateDialog, setTicketCreateDialog] = useState<boolean>(false);
 
-  const { role } = useAppSelector(selectUserData);
+  const { role, userId } = useAppSelector(selectUserData);
   const isUser = role === EUserRole.USER;
 
+  const filters = buildDashboardTicketsQueryFilters(role, userId);
+
   const {
-    data: userTickets = [],
+    data: getTicketsResponse,
     isLoading,
     isFetching,
     isError,
     refetch
-  } = useGetTicketsQuery(undefined, { refetchOnMountOrArgChange: true });
+  } = useGetTicketsQuery(filters, { refetchOnMountOrArgChange: true });
+  const userTickets = getTicketsResponse?.data ?? [];
+  const userTicketsLength = getTicketsResponse?.dataLength ?? 0;
+
   const filteredTickets = categoryFilter
-    ? userTickets.filter(ticket => ticket.category?._id === categoryFilter._id)
+    ? userTickets.filter(ticket => ticket.category === categoryFilter)
     : userTickets;
 
   // TODO: error page component to be created
@@ -45,22 +49,26 @@ export default function DashboardTickets() {
     </div>
   ) : (
     <div className="flex flex-col gap-2">
-      <Typography variant="h3">Twoje sprawy: {userTickets.length}</Typography>
+      <Typography variant="h3">Twoje sprawy: {getTicketsResponse?.dataLength}</Typography>
+
       <div className="flex justify-between">
-        {userTickets.length > 0 && isUser ? (
+        {userTicketsLength > 0 && isUser ? (
           <CategorySelect
             selectedCategory={categoryFilter}
             setSelectedCategory={setCategoryFilter}
             resetSelectedCategory={() => setCategoryFilter(null)}
           />
         ) : null}
+
         {categoryFilter ? (
           <Typography variant="small" className="self-end text-neutral-50">
             Ilość: {filteredTickets.length}
           </Typography>
         ) : null}
       </div>
+
       <TicketCarousel tickets={filteredTickets} />
+
       {isUser ? (
         <>
           <Button
@@ -70,6 +78,7 @@ export default function DashboardTickets() {
           >
             Utwórz sprawę
           </Button>
+
           <TicketCreateDialog
             open={ticketCreateDialog}
             refetchTickets={refetch}

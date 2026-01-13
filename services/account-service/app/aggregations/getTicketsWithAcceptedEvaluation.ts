@@ -1,6 +1,8 @@
 import Ticket from '@models/Ticket';
 import { ObjectId } from 'mongodb';
 
+// TODO:
+// (INFO) currently not used, but saved for the future
 export const getTicketsWithAcceptedEvaluation = async (specialistUserId: string) => {
   const specialistId = ObjectId.createFromHexString(specialistUserId);
 

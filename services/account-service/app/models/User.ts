@@ -2,6 +2,7 @@ import { Types, Document, Schema, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { EUserRole } from '@shared/constants/enums';
 import { CategoryManager } from '@managers/categoryManager';
+import { ISafeUserObject } from '@interfaces/user';
 
 export interface IUserModel extends IUserDocument {
   _id: Types.ObjectId;
@@ -23,6 +24,7 @@ export interface IUserModel extends IUserDocument {
 
 interface IUserDocument extends Document {
   comparePassword: (candidatePassword: string) => Promise<boolean>;
+  toSafeObject: () => ISafeUserObject;
 }
 
 const userSchema = new Schema<IUserModel>(
@@ -119,6 +121,21 @@ userSchema.methods.comparePassword = async function (candidatePassword: string) 
   const result = await bcrypt.compare(candidatePassword, this.password);
 
   return result;
+};
+
+userSchema.methods.toSafeObject = function () {
+  return {
+    _id: this._id,
+    email: this.email,
+    role: this.role,
+    name: this.name,
+    surname: this.surname,
+    category: this.category,
+    city: this.city,
+    isVerified: this.isVerified,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt,
+  };
 };
 
 export default model('User', userSchema);

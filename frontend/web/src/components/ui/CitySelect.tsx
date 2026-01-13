@@ -5,6 +5,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/shadcn/select';
+import { cities } from '@shared/constants/mocks';
 import { UseFormRegisterReturn } from 'react-hook-form';
 
 export interface ICitySelect {
@@ -14,25 +15,6 @@ export interface ICitySelect {
 }
 
 export default function CitySelect({ register, defaultValue, id }: ICitySelect) {
-  const cities = [
-    'Warszawa',
-    'Kraków',
-    'Katowice',
-    'Wrocław',
-    'Poznań',
-    'Gdańsk',
-    'Szczecin',
-    'Bydgoszcz',
-    'Lublin',
-    'Łódź',
-    'Rzeszów',
-    'Białystok',
-    'Kielce',
-    'Olsztyn',
-    'Opole',
-    'Zielona Góra'
-  ];
-
   return (
     <Select
       onValueChange={value => register.onChange({ target: { name: register.name, value } })}

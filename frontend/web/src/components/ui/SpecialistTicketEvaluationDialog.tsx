@@ -10,6 +10,8 @@ import { ESupportedCurrency } from '@/constants/supportedCurrency';
 import { usePatchTicketsByIdEvaluationMutation, accountApi } from '@/api/accountApi';
 import { parseQueryError } from '@/lib/helpers';
 import { useToast } from '@/hooks/use-toast';
+import { useSelector } from 'react-redux';
+import { selectUserData } from '@/redux/slices/UserDataSlice';
 
 export interface ISpecialistTicketEvaluationDialog {
   open: boolean;
@@ -41,8 +43,9 @@ export default function SpecialistTicketEvaluationDialog({
     setErrorMessage('');
   }, [minutes, price]);
 
+  const { categoryId } = useSelector(selectUserData);
   // Specialist pending tickets refetch
-  const [refetch] = accountApi.endpoints.getTicketsSpecialistByCity.useLazyQuery();
+  const [refetch] = accountApi.endpoints.getTickets.useLazyQuery({});
 
   const submitHandler = async () => {
     if (!ticketId) return;
@@ -71,7 +74,7 @@ export default function SpecialistTicketEvaluationDialog({
 
     if (isSuccess) {
       closeDialog();
-      refetch({ city: ticketCity });
+      refetch({ city: ticketCity, categoryId });
       toast({
         title: 'Twoja wycena została wysłana do autora',
         duration: 3000
@@ -165,6 +168,7 @@ export default function SpecialistTicketEvaluationDialog({
       cancelButtonHandler={closeDialog}
       content={ticketEvaluationForm}
       errorMessage={errorMessage}
+      confirmButtonDisabled={!!errorMessage}
     />
   );
 }
