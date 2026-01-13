@@ -144,7 +144,8 @@ export default function TicketCreateDialog({
       cancelButtonHandler={closeDialog}
       content={ticketCreateForm}
       errorMessage={errorMessage}
-      confirmButtonDisabled={!!errorMessage}
+      // TODO: fix disabled confirm button
+      // confirmButtonDisabled={!!errorMessage}
     />
   );
 }

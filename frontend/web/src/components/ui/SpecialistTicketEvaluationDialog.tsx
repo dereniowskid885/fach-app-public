@@ -168,7 +168,8 @@ export default function SpecialistTicketEvaluationDialog({
       cancelButtonHandler={closeDialog}
       content={ticketEvaluationForm}
       errorMessage={errorMessage}
-      confirmButtonDisabled={!!errorMessage}
+      // TODO: fix disabled confirm button
+      // confirmButtonDisabled={!!errorMessage}
     />
   );
 }
