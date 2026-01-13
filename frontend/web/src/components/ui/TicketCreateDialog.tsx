@@ -6,16 +6,12 @@ import { Textarea } from '../shadcn/textarea';
 import CategorySelect from './CategorySelect';
 import { useEffect, useState } from 'react';
 import { Typography } from '../common/Typography';
-import {
-  GetTicketsByIdByIdApiResponse,
-  PostTicketsApiArg,
-  usePostTicketsMutation
-} from '@/api/accountApi';
+import { Category, PostTicketsApiArg, usePostTicketsMutation } from '@/api/accountApi';
 import { parseQueryError } from '@/lib/helpers';
 import { useToast } from '@/hooks/use-toast';
 
 interface ITicketCreateForm {
-  category: GetTicketsByIdByIdApiResponse['category'];
+  category: Category;
   title: string;
   description: string;
 }
@@ -34,9 +30,7 @@ export default function TicketCreateDialog({
   const { register, handleSubmit, reset: resetForm, formState } = useForm<ITicketCreateForm>();
   const [errorMessage, setErrorMessage] = useState<string | undefined>('');
 
-  const [ticketCategory, setTicketCategory] = useState<
-    GetTicketsByIdByIdApiResponse['category'] | null
-  >(null);
+  const [ticketCategory, setTicketCategory] = useState<Category | null>(null);
   const descriptionMaxLength = 3000;
   const [descriptionCharsLeft, setDescriptionCharsLeft] = useState<number>(descriptionMaxLength);
 
@@ -60,17 +54,17 @@ export default function TicketCreateDialog({
     }
 
     setErrorMessage(errorMessage);
-  }, [formState]);
+  }, [formState, mutationError, ticketCategory]);
 
   const submitHandler = async (formData: ITicketCreateForm) => {
-    if (!ticketCategory) {
+    if (!ticketCategory?._id) {
       return;
     }
 
     const payload: PostTicketsApiArg = {
       body: {
         ...formData,
-        category: ticketCategory
+        categoryId: ticketCategory._id
       }
     };
 
@@ -150,6 +144,7 @@ export default function TicketCreateDialog({
       cancelButtonHandler={closeDialog}
       content={ticketCreateForm}
       errorMessage={errorMessage}
+      confirmButtonDisabled={!!errorMessage}
     />
   );
 }

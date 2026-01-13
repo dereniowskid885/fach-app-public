@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import DialogComponent from '../common/DialogComponent';
 import { DataTable } from '../common/DataTable';
 import {
-  GetTicketsByIdByIdApiResponse,
+  Evaluation,
   PatchTicketsByIdAcceptEvaluationApiArg,
   usePatchTicketsByIdAcceptEvaluationMutation
 } from '@/api/accountApi';
@@ -15,7 +15,7 @@ export interface IEvaluationsListDialog {
   refetchTickets: () => void;
   closeDialog: () => void;
   ticketId?: string;
-  ticketEvaluations: GetTicketsByIdByIdApiResponse['evaluations'];
+  ticketEvaluations: Evaluation[];
 }
 
 export const EvaluationsListDialog = ({
@@ -25,13 +25,14 @@ export const EvaluationsListDialog = ({
   ticketId,
   ticketEvaluations
 }: IEvaluationsListDialog) => {
-  if (!ticketEvaluations) return;
-
   const { toast } = useToast();
+
   const [selectedEvaluationRow, setSelectedEvaluationRow] = useState<RowSelectionState>({});
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const [triggerEvaluationAccept, { isLoading }] = usePatchTicketsByIdAcceptEvaluationMutation();
+
+  if (!ticketEvaluations) return;
 
   const isEvaluationSelected = Object.keys(selectedEvaluationRow).length > 0;
 
