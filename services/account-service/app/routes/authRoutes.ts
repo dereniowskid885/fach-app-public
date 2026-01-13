@@ -78,26 +78,7 @@ const refreshTokenMiddleware = createMiddleware(checkRefreshToken, process.env.R
  *                   type: string
  *                   example: User registered successfully
  *                 data:
- *                  type: object
- *                  properties:
- *                    id:
- *                      type: string
- *                      example: "64a7b2f5c9e77e6f4d2e8b9a"
- *                    email:
- *                      type: string
- *                      example: "jan@kowalski.pl"
- *                    role:
- *                      type: string
- *                      example: "user"
- *                    name:
- *                      type: string
- *                      example: "Jan"
- *                    surname:
- *                      type: string
- *                      example: "Kowalski"
- *                    city:
- *                      type: string
- *                      example: "Warsaw"
+ *                   $ref: '#/components/schemas/User'
  *       400:
  *         description: Bad Request
  *         content:
