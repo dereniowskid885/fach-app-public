@@ -1,7 +1,7 @@
 import { ETicketStatus } from '@shared/constants/enums';
 
 export interface IGetTicketsFilter {
-  categoryId?: string;
+  category?: string;
   city?: string;
   status?: ETicketStatus;
   assignee?: string;

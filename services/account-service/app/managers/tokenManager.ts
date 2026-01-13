@@ -52,10 +52,10 @@ export const TokenManager = {
     return crypto.randomBytes(32).toString('hex');
   },
   generateAccessToken: (req: Request, res: Response, user: IUserModel) => {
-    const { _id, role, email, name, surname, city } = user;
+    const { _id, role, email, name, surname, city, category } = user;
     const fullName = `${name} ${surname}`;
     const accessToken = jwt.sign(
-      { userId: _id, role, email, name, surname, fullName, city },
+      { userId: _id, role, email, name, surname, fullName, city, categoryId: category },
       process.env.ACCESS_TOKEN_SECRET ?? '',
       {
         expiresIn: '15m',
