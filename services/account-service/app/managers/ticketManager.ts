@@ -3,7 +3,6 @@ import Ticket from '@models/Ticket';
 import { JwtPayload } from 'jsonwebtoken';
 import { ESupportedCurrency, ETicketStatus, EUserRole } from '@shared/constants/enums';
 import Evaluation from '@models/Evaluation';
-import { getTicketsWithAcceptedEvaluation } from '@aggregations/getTicketsWithAcceptedEvaluation';
 import { EResponseStatus } from '@shared/constants/responseStatus';
 import { IGetTicketsFilter } from '@interfaces/ticket';
 import { CategoryManager } from './categoryManager';
@@ -31,27 +30,20 @@ export const TicketManager = {
       throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data.');
     }
 
-    let tickets = [];
-    const isSpecialist = user.role === EUserRole.SPECIALIST;
-
-    if (isSpecialist) {
-      tickets = await getTicketsWithAcceptedEvaluation(user.userId);
-    } else {
-      tickets = await Ticket.find(filter).populate([
-        { path: 'category', select: 'name' },
-        { path: 'assignee', select: 'email' },
-        { path: 'createdBy', select: 'email' },
-        { path: 'updatedBy', select: 'email' },
-        { path: 'acceptedEvaluation' },
-        {
-          path: 'evaluations',
-          populate: {
-            path: 'user',
-            select: 'email name surname city',
-          },
+    const tickets = await Ticket.find(filter).populate([
+      { path: 'category', select: 'name' },
+      { path: 'assignee', select: 'email' },
+      { path: 'createdBy', select: 'email' },
+      { path: 'updatedBy', select: 'email' },
+      { path: 'acceptedEvaluation' },
+      {
+        path: 'evaluations',
+        populate: {
+          path: 'user',
+          select: 'email name surname city',
         },
-      ]);
-    }
+      },
+    ]);
 
     return tickets;
   },
@@ -92,6 +84,7 @@ export const TicketManager = {
     }
 
     // TODO: modify while doing superadmin role ticket
+    // https://github.com/dereniowskid885/fach-app/issues/7
     const isAdmin = user.role === EUserRole.ADMIN;
     const isOwner = user.userId === ticket.createdBy.id.toString();
 
@@ -169,6 +162,7 @@ export const TicketManager = {
     }
 
     // TODO: modify while doing superadmin role ticket
+    // https://github.com/dereniowskid885/fach-app/issues/7
     const isAdmin = user.role === EUserRole.ADMIN;
     const isOwner = user.userId === ticket.createdBy.id.toString();
 
@@ -216,6 +210,7 @@ export const TicketManager = {
     const ticket = await TicketManager.getTicketByID(ticketId);
 
     // TODO: modify while doing superadmin role ticket
+    // https://github.com/dereniowskid885/fach-app/issues/7
     const isAdmin = user.role === EUserRole.ADMIN;
     const isOwner = user.userId === ticket.createdBy.id.toString();
 

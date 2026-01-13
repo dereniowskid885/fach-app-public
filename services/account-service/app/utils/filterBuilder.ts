@@ -33,13 +33,14 @@ export const FilterBuilder = {
 
     const filterObj: IGetTicketsFilter = {};
 
-    if (categoryId) filterObj.categoryId = categoryId.toString();
+    if (categoryId) filterObj.category = categoryId.toString();
     if (city) filterObj.city = city.toString();
     if (status) filterObj.status = status as ETicketStatus;
     if (assignee) filterObj.assignee = assignee.toString();
     if (createdBy) filterObj.createdBy = createdBy.toString();
 
     // TODO: to be changed while working on superadmin role
+    // https://github.com/dereniowskid885/fach-app/issues/7
     const isUserRole = user.role === EUserRole.USER;
 
     if (isUserRole) filterObj.createdBy = user.userId;
