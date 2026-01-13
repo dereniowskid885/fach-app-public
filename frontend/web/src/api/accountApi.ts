@@ -1,18 +1,6 @@
 import { api } from './services/account/index';
 const injectedRtkApi = api.injectEndpoints({
   endpoints: build => ({
-    getUsers: build.query<GetUsersApiResponse, GetUsersApiArg>({
-      query: () => ({ url: `/users` })
-    }),
-    getUsersByUserId: build.query<GetUsersByUserIdApiResponse, GetUsersByUserIdApiArg>({
-      query: queryArg => ({ url: `/users/${queryArg.userId}` })
-    }),
-    deleteUsersByUserId: build.mutation<DeleteUsersByUserIdApiResponse, DeleteUsersByUserIdApiArg>({
-      query: queryArg => ({ url: `/users/${queryArg.userId}`, method: 'DELETE' })
-    }),
-    putUsersUpdateRole: build.mutation<PutUsersUpdateRoleApiResponse, PutUsersUpdateRoleApiArg>({
-      query: queryArg => ({ url: `/users/update-role`, method: 'PUT', body: queryArg.body })
-    }),
     postAuthRegister: build.mutation<PostAuthRegisterApiResponse, PostAuthRegisterApiArg>({
       query: queryArg => ({ url: `/auth/register`, method: 'POST', body: queryArg.body })
     }),
@@ -60,20 +48,32 @@ const injectedRtkApi = api.injectEndpoints({
     >({
       query: queryArg => ({ url: `/auth/password-reset`, method: 'POST', body: queryArg.body })
     }),
+    postCategories: build.mutation<PostCategoriesApiResponse, PostCategoriesApiArg>({
+      query: queryArg => ({ url: `/categories`, method: 'POST', body: queryArg.body })
+    }),
     getCategories: build.query<GetCategoriesApiResponse, GetCategoriesApiArg>({
-      query: () => ({ url: `/categories` })
+      query: queryArg => ({
+        url: `/categories`,
+        params: {
+          name: queryArg.name
+        }
+      })
     }),
-    getCategoriesByIdById: build.query<
-      GetCategoriesByIdByIdApiResponse,
-      GetCategoriesByIdByIdApiArg
-    >({
-      query: queryArg => ({ url: `/categories/by-id/${queryArg.id}` })
+    getCategoriesById: build.query<GetCategoriesByIdApiResponse, GetCategoriesByIdApiArg>({
+      query: queryArg => ({ url: `/categories/${queryArg.id}` })
     }),
-    getCategoriesByNameByName: build.query<
-      GetCategoriesByNameByNameApiResponse,
-      GetCategoriesByNameByNameApiArg
+    deleteCategoriesById: build.mutation<
+      DeleteCategoriesByIdApiResponse,
+      DeleteCategoriesByIdApiArg
     >({
-      query: queryArg => ({ url: `/categories/by-name/${queryArg.name}` })
+      query: queryArg => ({ url: `/categories/${queryArg.id}`, method: 'DELETE' })
+    }),
+    patchCategoriesById: build.mutation<PatchCategoriesByIdApiResponse, PatchCategoriesByIdApiArg>({
+      query: queryArg => ({
+        url: `/categories/${queryArg.id}`,
+        method: 'PATCH',
+        body: queryArg.body
+      })
     }),
     patchCategoriesByIdSpecialistAssign: build.mutation<
       PatchCategoriesByIdSpecialistAssignApiResponse,
@@ -99,25 +99,25 @@ const injectedRtkApi = api.injectEndpoints({
       query: queryArg => ({ url: `/tickets`, method: 'POST', body: queryArg.body })
     }),
     getTickets: build.query<GetTicketsApiResponse, GetTicketsApiArg>({
-      query: () => ({ url: `/tickets` })
+      query: queryArg => ({
+        url: `/tickets`,
+        params: {
+          categoryId: queryArg.categoryId,
+          city: queryArg.city,
+          status: queryArg.status,
+          assignee: queryArg.assignee,
+          createdBy: queryArg.createdBy
+        }
+      })
     }),
-    getTicketsSpecialistByCity: build.query<
-      GetTicketsSpecialistByCityApiResponse,
-      GetTicketsSpecialistByCityApiArg
-    >({
-      query: queryArg => ({ url: `/tickets/specialist/${queryArg.city}` })
+    getTicketsById: build.query<GetTicketsByIdApiResponse, GetTicketsByIdApiArg>({
+      query: queryArg => ({ url: `/tickets/${queryArg.id}` })
     }),
     deleteTicketsById: build.mutation<DeleteTicketsByIdApiResponse, DeleteTicketsByIdApiArg>({
       query: queryArg => ({ url: `/tickets/${queryArg.id}`, method: 'DELETE' })
     }),
-    getTicketsByIdById: build.query<GetTicketsByIdByIdApiResponse, GetTicketsByIdByIdApiArg>({
-      query: queryArg => ({ url: `/tickets/by-id/${queryArg.id}` })
-    }),
-    getTicketsByCategoryidByCategoryId: build.query<
-      GetTicketsByCategoryidByCategoryIdApiResponse,
-      GetTicketsByCategoryidByCategoryIdApiArg
-    >({
-      query: queryArg => ({ url: `/tickets/by-categoryid/${queryArg.categoryId}` })
+    patchTicketsById: build.mutation<PatchTicketsByIdApiResponse, PatchTicketsByIdApiArg>({
+      query: queryArg => ({ url: `/tickets/${queryArg.id}`, method: 'PATCH', body: queryArg.body })
     }),
     patchTicketsByIdEvaluation: build.mutation<
       PatchTicketsByIdEvaluationApiResponse,
@@ -138,77 +138,68 @@ const injectedRtkApi = api.injectEndpoints({
         method: 'PATCH',
         body: queryArg.body
       })
+    }),
+    postUsers: build.mutation<PostUsersApiResponse, PostUsersApiArg>({
+      query: queryArg => ({ url: `/users`, method: 'POST', body: queryArg.body })
+    }),
+    getUsers: build.query<GetUsersApiResponse, GetUsersApiArg>({
+      query: queryArg => ({
+        url: `/users`,
+        params: {
+          email: queryArg.email,
+          role: queryArg.role,
+          category: queryArg.category,
+          city: queryArg.city,
+          verified: queryArg.verified
+        }
+      })
+    }),
+    getUsersById: build.query<GetUsersByIdApiResponse, GetUsersByIdApiArg>({
+      query: queryArg => ({ url: `/users/${queryArg.id}` })
+    }),
+    patchUsersById: build.mutation<PatchUsersByIdApiResponse, PatchUsersByIdApiArg>({
+      query: queryArg => ({ url: `/users/${queryArg.id}`, method: 'PATCH', body: queryArg.body })
+    }),
+    deleteUsersById: build.mutation<DeleteUsersByIdApiResponse, DeleteUsersByIdApiArg>({
+      query: queryArg => ({ url: `/users/${queryArg.id}`, method: 'DELETE' })
+    }),
+    patchUsersByIdRole: build.mutation<PatchUsersByIdRoleApiResponse, PatchUsersByIdRoleApiArg>({
+      query: queryArg => ({
+        url: `/users/${queryArg.id}/role`,
+        method: 'PATCH',
+        body: queryArg.body
+      })
     })
   }),
   overrideExisting: false
 });
 export { injectedRtkApi as accountApi };
-export type GetUsersApiResponse = /** status 200 A list of users */ {
-  /** The unique identifier of the user */
-  userId?: string;
-  /** The user's email address */
-  email?: string;
-  /** The user's role in the system */
-  role?: string;
-}[];
-export type GetUsersApiArg = void;
-export type GetUsersByUserIdApiResponse = /** status 200 Successfully retrieved user data */ {
-  /** User's unique ID */
-  userId?: string;
-  /** User's email address */
-  email?: string;
-  /** User's role in the system */
-  role?: string;
-};
-export type GetUsersByUserIdApiArg = {
-  /** Unique identifier of the user */
-  userId: string;
-};
-export type DeleteUsersByUserIdApiResponse = /** status 200 Successfully deleted the user */ {
+export type PostAuthRegisterApiResponse = /** status 201 User registered successfully */ {
+  success?: boolean;
   message?: string;
+  data?: User;
 };
-export type DeleteUsersByUserIdApiArg = {
-  /** Unique identifier of the user */
-  userId: string;
-};
-export type PutUsersUpdateRoleApiResponse = /** status 200 Successfully updated user role */ {
-  message?: string;
-};
-export type PutUsersUpdateRoleApiArg = {
-  body: {
-    /** Unique identifier of the user */
-    userId?: string;
-    /** New role to assign to the user */
-    newRole?: 'user' | 'specialist' | 'admin';
-  };
-};
-export type PostAuthRegisterApiResponse =
-  /** status 201 User successfully registered in the database */
-    | {
-        message?: string;
-      }
-    | /** status 207 Server error while sending the email verification link */ {
-        message?: string;
-      };
 export type PostAuthRegisterApiArg = {
   body: {
     /** User's email address */
     email: string;
     /** User's password */
     password: string;
-    role?: 'user' | 'specialist' | 'admin';
-    /** Specialist category name */
-    categoryName?: string;
     /** User's first name */
-    name?: string;
+    name: string;
     /** User's last name */
-    surname?: string;
+    surname: string;
     /** User's city */
     city: string;
   };
 };
-export type PostAuthLoginApiResponse = /** status 200 Successfully authenticated user */ {
+export type PostAuthLoginApiResponse = /** status 200 User logged in succesfully */ {
+  success?: boolean;
   message?: string;
+  data?: {
+    accessToken?: string;
+    refreshToken?: string;
+  };
 };
 export type PostAuthLoginApiArg = {
   body: {
@@ -219,17 +210,22 @@ export type PostAuthLoginApiArg = {
   };
 };
 export type PostAuthRefreshTokenApiResponse =
-  /** status 200 Successfully refreshed access token */ {
+  /** status 200 Access token refreshed succesfully. */ {
+    success?: boolean;
     message?: string;
-    accessToken?: string;
+    data?: {
+      accessToken?: string;
+    };
   };
 export type PostAuthRefreshTokenApiArg = void;
-export type PostAuthLogoutApiResponse = /** status 200 Successfully logged out */ {
+export type PostAuthLogoutApiResponse = /** status 200 User logged out succesfully. */ {
+  success?: boolean;
   message?: string;
 };
 export type PostAuthLogoutApiArg = void;
 export type PostAuthRequestEmailVerificationApiResponse =
-  /** status 200 Email verification link sent successfully */ {
+  /** status 200 If this email is registered, a verification link has been sent. */ {
+    success?: boolean;
     message?: string;
   };
 export type PostAuthRequestEmailVerificationApiArg = {
@@ -240,6 +236,7 @@ export type PostAuthRequestEmailVerificationApiArg = {
 };
 export type PostAuthEmailVerificationApiResponse =
   /** status 200 User has been verified successfully */ {
+    success?: boolean;
     message?: string;
   };
 export type PostAuthEmailVerificationApiArg = {
@@ -249,7 +246,8 @@ export type PostAuthEmailVerificationApiArg = {
   };
 };
 export type PostAuthRequestPasswordResetApiResponse =
-  /** status 200 Password reset link sent successfully */ {
+  /** status 200 If this email is registered, a password reset link has been sent. */ {
+    success?: boolean;
     message?: string;
   };
 export type PostAuthRequestPasswordResetApiArg = {
@@ -259,6 +257,7 @@ export type PostAuthRequestPasswordResetApiArg = {
   };
 };
 export type PostAuthPasswordResetApiResponse = /** status 200 Password reset successful */ {
+  success?: boolean;
   message?: string;
 };
 export type PostAuthPasswordResetApiArg = {
@@ -269,443 +268,315 @@ export type PostAuthPasswordResetApiArg = {
     newPassword?: string;
   };
 };
-export type GetCategoriesApiResponse = /** status 200 Categories */ {
-  /** Unique category ID */
-  _id?: string;
-  /** Unique category name */
-  name?: string;
-  specialists?: {
-    /** User ID */
-    _id?: string;
-    /** User email */
-    email?: string;
-  }[];
-}[];
-export type GetCategoriesApiArg = void;
-export type GetCategoriesByIdByIdApiResponse = /** status 200 Category */ {
-  /** Unique category ID */
-  _id?: string;
-  /** Unique category name */
-  name?: string;
-  specialists?: {
-    /** User ID */
-    _id?: string;
-    /** User email */
-    email?: string;
-  }[];
+export type PostCategoriesApiResponse = /** status 201 Category successfully created */ {
+  success?: boolean;
+  message?: string;
+  data?: Category;
 };
-export type GetCategoriesByIdByIdApiArg = {
-  /** Category id */
+export type PostCategoriesApiArg = {
+  body: {
+    name: string;
+  };
+};
+export type GetCategoriesApiResponse = /** status 200 Array of categories */ {
+  success?: boolean;
+  dataLength?: number;
+  data?: Category[];
+};
+export type GetCategoriesApiArg = {
+  /** Category name to filter by */
+  name?: string;
+};
+export type GetCategoriesByIdApiResponse = /** status 200 Category object */ {
+  success?: boolean;
+  data?: Category;
+};
+export type GetCategoriesByIdApiArg = {
+  /** Unique category ID */
   id: string;
 };
-export type GetCategoriesByNameByNameApiResponse = /** status 200 Category */ {
-  /** Unique category ID */
-  _id?: string;
-  /** Unique category name */
-  name?: string;
-  specialists?: {
-    /** User ID */
-    _id?: string;
-    /** User email */
-    email?: string;
-  }[];
+export type DeleteCategoriesByIdApiResponse = /** status 200 Category successfully removed */ {
+  success?: boolean;
+  message?: string;
 };
-export type GetCategoriesByNameByNameApiArg = {
-  /** Category name */
-  name: string;
+export type DeleteCategoriesByIdApiArg = {
+  /** Unique category ID */
+  id: string;
+};
+export type PatchCategoriesByIdApiResponse = /** status 200 Category name successfully updated */ {
+  success?: boolean;
+  data?: Category;
+};
+export type PatchCategoriesByIdApiArg = {
+  /** Unique category ID */
+  id: string;
+  body: {
+    name?: string;
+  };
 };
 export type PatchCategoriesByIdSpecialistAssignApiResponse =
-  /** status 200 Specialist assigned to category successfully */ {
+  /** status 200 Specialist successfully assigned to a category */ {
+    success?: boolean;
     message?: string;
+    data?: Category;
   };
 export type PatchCategoriesByIdSpecialistAssignApiArg = {
-  /** Category ID */
+  /** Unique category ID */
   id: string;
   body: {
     userId: string;
   };
 };
 export type PatchCategoriesByIdSpecialistRemoveApiResponse =
-  /** status 200 Specialist succesfully removed from category */ {
+  /** status 200 Specialist successfully removed from category */ {
+    success?: boolean;
     message?: string;
+    data?: Category;
   };
 export type PatchCategoriesByIdSpecialistRemoveApiArg = {
-  /** Category ID */
+  /** Unique category ID */
   id: string;
   body: {
+    /** Specialist user ID to remove from category */
     userId: string;
   };
 };
-export type PostTicketsApiResponse = /** status 200 Ticket creation ended with success */ {
+export type PostTicketsApiResponse = /** status 200 Ticket created successfully */ {
+  success?: boolean;
   message?: string;
+  data?: Ticket;
 };
 export type PostTicketsApiArg = {
   body: {
-    city?: string;
-    category: {
-      /** Unique category ID */
-      _id?: string;
-      /** Category name */
-      name?: string;
-    };
-    /** Ticket status */
-    status?:
-      | 'Wycena'
-      | 'Akceptacja wyceny'
-      | 'Oczekiwanie na p\u0142atno\u015B\u0107'
-      | 'W trakcie'
-      | 'Akceptacja rozwi\u0105zania'
-      | 'Badanie przez moderatora'
-      | 'Uko\u0144czony';
-    assignee?: {
-      /** User ID */
-      _id?: string;
-      /** User email */
-      email?: string;
-    };
-    createdBy?: {
-      /** User ID */
-      _id?: string;
-      /** User email */
-      email?: string;
-    };
-    /** Date of ticket creation */
-    createdAt?: string;
-    /** Date of ticket last update */
-    updatedAt?: string;
-    /** User which updated the ticket lately */
-    updatedBy?: {
-      /** User ID */
-      _id?: string;
-      /** User email */
-      email?: string;
-    };
     /** Title of the ticket */
     title: string;
     /** Description of the ticket */
     description: string;
+    /** Unique ID of the category */
+    categoryId: string;
   };
 };
-export type GetTicketsApiResponse = /** status 200 Tickets created by logged user */ {
-  /** Unique ticket ID */
-  _id?: string;
-  city?: string;
-  category?: {
-    /** Unique category ID */
-    _id?: string;
-    /** Category name */
-    name?: string;
-  };
-  /** Ticket status */
-  status?:
-    | 'Wycena'
-    | 'Akceptacja wyceny'
-    | 'Oczekiwanie na p\u0142atno\u015B\u0107'
-    | 'W trakcie'
-    | 'Akceptacja rozwi\u0105zania'
-    | 'Badanie przez moderatora'
-    | 'Uko\u0144czony';
-  assignee?: {
-    /** User ID */
-    _id?: string;
-    /** User email */
-    email?: string;
-  };
-  createdBy?: {
-    /** User ID */
-    _id?: string;
-    /** User email */
-    email?: string;
-  };
-  /** Date of ticket creation */
-  createdAt?: string;
-  /** Date of ticket last update */
-  updatedAt?: string;
-  /** User which updated the ticket lately */
-  updatedBy?: {
-    /** User ID */
-    _id?: string;
-    /** User email */
-    email?: string;
-  };
-  /** Title of the ticket */
-  title?: string;
-  /** Description of the ticket */
-  description?: string;
-  /** List of evaluations made by specialists */
-  evaluations?: {
-    /** User ID */
-    _id?: string;
-    user?: {
-      /** Specialist userId */
-      _id?: string;
-      /** Specialist email */
-      email?: string;
-      /** Specialist name */
-      name?: string;
-      /** Specialist surname */
-      surname?: string;
-      /** Specialist city */
-      city?: string;
-    };
-    dateOfResponse?: string;
-    price?: {
-      value?: number;
-      currency?: 'PLN';
-    };
-  }[];
-  acceptedEvaluation?: {
-    user?: {
-      /** Specialist userId */
-      _id?: string;
-      /** Specialist email */
-      email?: string;
-      /** Specialist name */
-      name?: string;
-      /** Specialist surname */
-      surname?: string;
-    };
-    dateOfResponse?: string;
-    price?: {
-      value?: number;
-      currency?: 'PLN';
-    };
-  };
-}[];
-export type GetTicketsApiArg = void;
-export type GetTicketsSpecialistByCityApiResponse =
-  /** status 200 Pending tickets - ready to be taken by specialist */ {
-    /** Unique ticket ID */
-    _id?: string;
-    city?: string;
-    category?: {
-      /** Unique category ID */
-      _id?: string;
-      /** Category name */
-      name?: string;
-    };
-    /** Ticket status */
-    status?:
-      | 'Wycena'
-      | 'Akceptacja wyceny'
-      | 'Oczekiwanie na p\u0142atno\u015B\u0107'
-      | 'W trakcie'
-      | 'Akceptacja rozwi\u0105zania'
-      | 'Badanie przez moderatora'
-      | 'Uko\u0144czony';
-    assignee?: {
-      /** User ID */
-      _id?: string;
-      /** User email */
-      email?: string;
-    };
-    createdBy?: {
-      /** User ID */
-      _id?: string;
-      /** User email */
-      email?: string;
-    };
-    /** Date of ticket creation */
-    createdAt?: string;
-    /** Date of ticket last update */
-    updatedAt?: string;
-    updatedBy?: {
-      /** User ID */
-      _id?: string;
-      /** User email */
-      email?: string;
-    };
-    /** Title of the ticket */
-    title?: string;
-    /** Description of the ticket */
-    description?: string;
-  }[];
-export type GetTicketsSpecialistByCityApiArg = {
-  /** City ​​by which the returned tickets will be filtered */
-  city?: string;
+export type GetTicketsApiResponse = /** status 200 Array of tickets */ {
+  success?: boolean;
+  dataLength?: number;
+  data?: Ticket[];
 };
-export type DeleteTicketsByIdApiResponse = /** status 200 Ticket deletion ended with success */ {
+export type GetTicketsApiArg = {
+  /** Filter by categoryId */
+  categoryId?: string;
+  /** Filter by city */
+  city?: string;
+  /** Filter by ticket status */
+  status?: TicketStatus;
+  /** Filter by assignee (userId) */
+  assignee?: string;
+  /** Filter by author (userId) */
+  createdBy?: string;
+};
+export type GetTicketsByIdApiResponse = /** status 200 Successfully retrieved the ticket */ {
+  success?: boolean;
+  data?: Ticket;
+};
+export type GetTicketsByIdApiArg = {
+  /** Unique ID of the ticket */
+  id: string;
+};
+export type DeleteTicketsByIdApiResponse = /** status 200 Ticket deleted successfully */ {
+  success?: boolean;
   message?: string;
 };
 export type DeleteTicketsByIdApiArg = {
-  /** Ticket ID */
+  /** Unique ID of the ticket */
   id: string;
 };
-export type GetTicketsByIdByIdApiResponse = /** status 200 Successfully retrieved the ticket */ {
-  /** Unique ticket ID */
-  _id?: string;
-  city?: string;
-  category?: {
-    /** Unique category ID */
-    _id?: string;
-    /** Category name */
-    name?: string;
-  };
-  /** Ticket status */
-  status?:
-    | 'Wycena'
-    | 'Akceptacja wyceny'
-    | 'Oczekiwanie na p\u0142atno\u015B\u0107'
-    | 'W trakcie'
-    | 'Akceptacja rozwi\u0105zania'
-    | 'Badanie przez moderatora'
-    | 'Uko\u0144czony';
-  assignee?: {
-    /** User ID */
-    _id?: string;
-    /** User email */
-    email?: string;
-  };
-  createdBy?: {
-    /** User ID */
-    _id?: string;
-    /** User email */
-    email?: string;
-  };
-  /** Date of ticket creation */
-  createdAt?: string;
-  /** Date of ticket last update */
-  updatedAt?: string;
-  updatedBy?: {
-    /** User ID */
-    _id?: string;
-    /** User email */
-    email?: string;
-  };
-  /** Title of the ticket */
-  title?: string;
-  /** Description of the ticket */
-  description?: string;
-  /** List of evaluations made by specialists */
-  evaluations?: {
-    /** User ID */
-    _id?: string;
-    user?: {
-      /** User ID */
-      _id?: string;
-      /** User email */
-      email?: string;
-      /** Specialist name */
-      name?: string;
-      /** Specialist surname */
-      surname?: string;
-      /** Specialist city */
-      city?: string;
-    };
-    dateOfResponse?: string;
-    price?: {
-      value?: number;
-      currency?: 'PLN';
-    };
-  }[];
-  acceptedEvaluation?: {
-    user?: {
-      /** Specialist userId */
-      _id?: string;
-      /** Specialist email */
-      email?: string;
-      /** Specialist name */
-      name?: string;
-      /** Specialist surname */
-      surname?: string;
-    };
-    dateOfResponse?: string;
-    price?: {
-      value?: number;
-      currency?: 'PLN';
-    };
-  };
+export type PatchTicketsByIdApiResponse = /** status 200 Ticket updated successfully */ {
+  success?: boolean;
+  message?: string;
+  data?: Ticket;
 };
-export type GetTicketsByIdByIdApiArg = {
-  /** Unique id of the ticket */
+export type PatchTicketsByIdApiArg = {
+  /** Unique ID of the ticket */
   id: string;
-};
-export type GetTicketsByCategoryidByCategoryIdApiResponse =
-  /** status 200 Tickets found by provided categoryId */ {
-    /** Unique ticket ID */
-    _id?: string;
-    city?: string;
-    category?: {
-      /** Unique category ID */
-      _id?: string;
-      /** Category name */
-      name?: string;
-    };
-    /** Ticket status */
-    status?:
-      | 'Wycena'
-      | 'Akceptacja wyceny'
-      | 'Oczekiwanie na p\u0142atno\u015B\u0107'
-      | 'W trakcie'
-      | 'Akceptacja rozwi\u0105zania'
-      | 'Badanie przez moderatora'
-      | 'Uko\u0144czony';
-    assignee?: {
-      /** User ID */
-      _id?: string;
-      /** User email */
-      email?: string;
-    };
-    createdBy?: {
-      /** User ID */
-      _id?: string;
-      /** User email */
-      email?: string;
-    };
-    /** Date of ticket creation */
-    createdAt?: string;
-    /** Date of ticket last update */
-    updatedAt?: string;
-    updatedBy?: {
-      /** User ID */
-      _id?: string;
-      /** User email */
-      email?: string;
-    };
-    /** Title of the ticket */
+  body: {
+    /** Updated title of the ticket */
     title?: string;
-    /** Description of the ticket */
+    /** Updated description of the ticket */
     description?: string;
-  }[];
-export type GetTicketsByCategoryidByCategoryIdApiArg = {
-  /** Unique categoryId */
-  categoryId: string;
+    /** Unique ID of the category */
+    categoryId?: string;
+    /** City associated with the ticket */
+    city?: string;
+    status?: TicketStatus;
+    /** User ID of the assignee */
+    assigneeId?: string;
+  };
 };
 export type PatchTicketsByIdEvaluationApiResponse =
   /** status 200 Ticket evaluated successfully */ {
+    success?: boolean;
     message?: string;
+    data?: Ticket;
   };
 export type PatchTicketsByIdEvaluationApiArg = {
-  /** Ticket ID */
+  /** Unique ID of the ticket */
   id: string;
   body: {
-    /** Price set by specialist and accepted by ticket author */
+    /** Price set by the specialist */
     price: {
-      /** The numeric value of the price */
+      /** Numeric value of the price */
       value?: number;
-      /** Currency code (e.g., PLN, USD, EUR) */
+      /** Currency code (e.g., PLN) */
       currency?: string;
     };
-    /** Evaluated minutes as time of first response */
+    /** Evaluated minutes as the time of first response */
     minutes: number;
   };
 };
 export type PatchTicketsByIdAcceptEvaluationApiResponse =
   /** status 200 Ticket evaluation accepted successfully */ {
+    success?: boolean;
     message?: string;
+    data?: Ticket;
   };
 export type PatchTicketsByIdAcceptEvaluationApiArg = {
-  /** Ticket ID */
+  /** Unique ID of the ticket */
   id: string;
   body: {
     evaluationId: string;
   };
 };
+export type PostUsersApiResponse = /** status 201 User created successfully */ {
+  success?: boolean;
+  message?: string;
+  data?: User;
+};
+export type PostUsersApiArg = {
+  body: {
+    /** User's email address */
+    email: string;
+    /** User's password */
+    password: string;
+    role?: UserRole;
+    /** Specialist category name */
+    categoryName?: string;
+    /** User's first name */
+    name: string;
+    /** User's last name */
+    surname: string;
+    /** User's city */
+    city: string;
+  };
+};
+export type GetUsersApiResponse = /** status 200 Fetched users. */ {
+  success?: boolean;
+  dataLength?: number;
+  data?: User[];
+};
+export type GetUsersApiArg = {
+  /** Filter by user email */
+  email?: string;
+  /** Filter by user role (e.g., admin, specialist, user) */
+  role?: string;
+  /** Filter by user category ID */
+  category?: string;
+  /** Filter by user city */
+  city?: string;
+  /** Filter by verification status */
+  verified?: boolean;
+};
+export type GetUsersByIdApiResponse = /** status 200 Single user object. */ {
+  success?: boolean;
+  data?: User;
+};
+export type GetUsersByIdApiArg = {
+  /** Unique ID of the user */
+  id: string;
+};
+export type PatchUsersByIdApiResponse = /** status 200 Successfully updated the user */ {
+  success?: boolean;
+  message?: string;
+  data?: User;
+};
+export type PatchUsersByIdApiArg = {
+  /** Unique ID of the user */
+  id: string;
+  body: {
+    email?: string;
+    role?: string;
+    category?: string;
+    city?: string;
+    isVerified?: boolean;
+  };
+};
+export type DeleteUsersByIdApiResponse = /** status 200 Successfully deleted the user */ {
+  success?: boolean;
+  message?: string;
+};
+export type DeleteUsersByIdApiArg = {
+  /** Unique ID of the user */
+  id: string;
+};
+export type PatchUsersByIdRoleApiResponse = /** status 200 Successfully updated the user role */ {
+  success?: boolean;
+  message?: string;
+  data?: User;
+};
+export type PatchUsersByIdRoleApiArg = {
+  /** Unique ID of the user */
+  id: string;
+  body: {
+    role: UserRole;
+  };
+};
+export type UserRole = 'user' | 'specialist' | 'admin';
+export type Category = {
+  _id?: string;
+  name?: string;
+  specialists?: User[];
+};
+export type User = {
+  _id?: string;
+  email?: string;
+  role?: UserRole;
+  category?: Category;
+  name?: string;
+  surname?: string;
+  city?: string;
+  isVerified?: boolean;
+};
+export type TicketStatus =
+  | 'Wycena'
+  | 'Akceptacja wyceny'
+  | 'Oczekiwanie na p\u0142atno\u015B\u0107'
+  | 'W trakcie'
+  | 'Akceptacja rozwi\u0105zania'
+  | 'Badanie przez moderatora'
+  | 'Uko\u0144czony';
+export type Evaluation = {
+  _id?: string;
+  user?: User;
+  dateOfResponse?: string;
+  price?: {
+    value?: number;
+    currency?: 'PLN';
+  };
+};
+export type Ticket = {
+  _id?: string;
+  category?: Category;
+  city?: string;
+  status?: TicketStatus;
+  assignee?: User;
+  createdBy?: User;
+  createdAt?: string;
+  updatedBy?: User;
+  updatedAt?: string;
+  title?: string;
+  description?: string;
+  evaluations?: Evaluation[];
+  acceptedEvaluation?: Evaluation;
+};
 export const {
-  useGetUsersQuery,
-  useGetUsersByUserIdQuery,
-  useDeleteUsersByUserIdMutation,
-  usePutUsersUpdateRoleMutation,
   usePostAuthRegisterMutation,
   usePostAuthLoginMutation,
   usePostAuthRefreshTokenMutation,
@@ -714,17 +585,24 @@ export const {
   usePostAuthEmailVerificationMutation,
   usePostAuthRequestPasswordResetMutation,
   usePostAuthPasswordResetMutation,
+  usePostCategoriesMutation,
   useGetCategoriesQuery,
-  useGetCategoriesByIdByIdQuery,
-  useGetCategoriesByNameByNameQuery,
+  useGetCategoriesByIdQuery,
+  useDeleteCategoriesByIdMutation,
+  usePatchCategoriesByIdMutation,
   usePatchCategoriesByIdSpecialistAssignMutation,
   usePatchCategoriesByIdSpecialistRemoveMutation,
   usePostTicketsMutation,
   useGetTicketsQuery,
-  useGetTicketsSpecialistByCityQuery,
+  useGetTicketsByIdQuery,
   useDeleteTicketsByIdMutation,
-  useGetTicketsByIdByIdQuery,
-  useGetTicketsByCategoryidByCategoryIdQuery,
+  usePatchTicketsByIdMutation,
   usePatchTicketsByIdEvaluationMutation,
-  usePatchTicketsByIdAcceptEvaluationMutation
+  usePatchTicketsByIdAcceptEvaluationMutation,
+  usePostUsersMutation,
+  useGetUsersQuery,
+  useGetUsersByIdQuery,
+  usePatchUsersByIdMutation,
+  useDeleteUsersByIdMutation,
+  usePatchUsersByIdRoleMutation
 } = injectedRtkApi;
