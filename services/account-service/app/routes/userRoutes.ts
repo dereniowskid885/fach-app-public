@@ -24,7 +24,7 @@ router.use(accessTokenMiddleware, checkAdminRole);
  * /users:
  *   post:
  *     summary: Create user
- *     description: Default role is "user", to create a specialist categoryName must be provided and role must be "specialist".
+ *     description: Default role is "user", to create a specialist categoryName must be provided and role must be "specialist"
  *     tags:
  *       - Users
  *     requestBody:
@@ -93,7 +93,7 @@ router.use(accessTokenMiddleware, checkAdminRole);
  *                   example: "ERROR_INVALID_DATA"
  *                 message:
  *                   type: string
- *                   example: "Field categoryName is required while creating specialist"
+ *                   example: Field categoryName is required while creating specialist
  *       403:
  *         description: Forbidden - Attempt to register with admin role
  *         content:
@@ -109,7 +109,7 @@ router.use(accessTokenMiddleware, checkAdminRole);
  *                   example: "ERROR_INVALID_DATA"
  *                 message:
  *                   type: string
- *                   example: "Cannot register user with admin role"
+ *                   example: Cannot register user with admin role
  *       409:
  *        description: Conflict - User with this email already exists
  *        content:
@@ -125,7 +125,7 @@ router.use(accessTokenMiddleware, checkAdminRole);
  *                   example: "ERROR_USER_ALREADY_EXIST"
  *                 message:
  *                   type: string
- *                   example: "User with this email already exists"
+ *                   example: User with this email already exists
  *       500:
  *         description: Server error
  *         content:
@@ -141,7 +141,7 @@ router.use(accessTokenMiddleware, checkAdminRole);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.post('/', validateCreateUserMiddleware, createUser);
 
@@ -150,7 +150,7 @@ router.post('/', validateCreateUserMiddleware, createUser);
  * /users:
  *   get:
  *     summary: Get all users with filtering options
- *     description: Returns a list of users based on provided filtering criteria.
+ *     description: Returns a list of users based on provided filtering criteria
  *     tags:
  *       - Users
  *     parameters:
@@ -213,7 +213,7 @@ router.post('/', validateCreateUserMiddleware, createUser);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Unauthorized: No access token provided"
+ *                   example: Unauthorized: No access token provided
  *       403:
  *         description: Invalid role
  *         content:
@@ -229,7 +229,7 @@ router.post('/', validateCreateUserMiddleware, createUser);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: "Forbidden: Required role is missing"
+ *                   example: Forbidden: Required role is missing
  *       500:
  *         description: Server error
  *         content:
@@ -245,7 +245,7 @@ router.post('/', validateCreateUserMiddleware, createUser);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.get('/', getUsers);
 
@@ -254,7 +254,7 @@ router.get('/', getUsers);
  * /users/{id}:
  *   get:
  *     summary: Get user by id
- *     description: Returns user by id.
+ *     description: Returns user by id
  *     tags:
  *       - Users
  *     parameters:
@@ -277,22 +277,6 @@ router.get('/', getUsers);
  *                   example: true
  *                 data:
  *                   $ref: '#/components/schemas/User'
- *       404:
- *         description: User not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_USER_NOT_FOUND"
- *                 message:
- *                   type: string
- *                   example: "User with provided id not found"
  *       401:
  *         description: Unauthorized
  *         content:
@@ -308,7 +292,7 @@ router.get('/', getUsers);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Unauthorized: No access token provided"
+ *                   example: Unauthorized: No access token provided
  *       403:
  *         description: Invalid role
  *         content:
@@ -324,7 +308,23 @@ router.get('/', getUsers);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: "Forbidden: Required role is missing"
+ *                   example: Forbidden: Required role is missing
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: User with provided id not found
  *       500:
  *         description: Server error
  *         content:
@@ -340,7 +340,7 @@ router.get('/', getUsers);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.get('/:id', getUserById);
 
@@ -349,7 +349,7 @@ router.get('/:id', getUserById);
  * /users/{id}:
  *   patch:
  *     summary: Update user
- *     description: Updates user information based on the provided user id.
+ *     description: Updates user information based on the provided user id
  *     tags:
  *       - Users
  *     parameters:
@@ -389,7 +389,7 @@ router.get('/:id', getUserById);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "User updated successfully."
+ *                   example: User updated successfully
  *                 data:
  *                   $ref: '#/components/schemas/User'
  *       400:
@@ -407,7 +407,7 @@ router.get('/:id', getUserById);
  *                   example: "ERROR_INVALID_DATA"
  *                 message:
  *                   type: string
- *                   example: "No data provided for update."
+ *                   example: No data provided for update
  *       401:
  *         description: Unauthorized
  *         content:
@@ -423,7 +423,7 @@ router.get('/:id', getUserById);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Unauthorized: No access token provided"
+ *                   example: Unauthorized: No access token provided
  *       403:
  *         description: Required role that allows this action is missing
  *         content:
@@ -439,7 +439,7 @@ router.get('/:id', getUserById);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: "Forbidden: Required role that allows this action is missing"
+ *                   example: Forbidden: Required role that allows this action is missing
  *       404:
  *         description: User not found
  *         content:
@@ -455,7 +455,7 @@ router.get('/:id', getUserById);
  *                   example: "ERROR_USER_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "User with provided id not found."
+ *                   example: User with provided id not found
  *       500:
  *         description: Server error
  *         content:
@@ -471,7 +471,7 @@ router.get('/:id', getUserById);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.patch('/:id', validateUserUpdateMiddleware, updateUser);
 
@@ -480,7 +480,7 @@ router.patch('/:id', validateUserUpdateMiddleware, updateUser);
  * /users/{id}/role:
  *   patch:
  *     summary: Update user role
- *     description: Updates the role of a user based on the provided user ID.
+ *     description: Updates the role of a user based on the provided user ID
  *     tags:
  *       - Users
  *     parameters:
@@ -514,7 +514,7 @@ router.patch('/:id', validateUserUpdateMiddleware, updateUser);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "User role updated successfully."
+ *                   example: User role updated successfully
  *                 data:
  *                   $ref: '#/components/schemas/User'
  *       400:
@@ -532,7 +532,7 @@ router.patch('/:id', validateUserUpdateMiddleware, updateUser);
  *                   example: "ERROR_INVALID_DATA"
  *                 message:
  *                   type: string
- *                   example: "Invalid role provided."
+ *                   example: Invalid role provided
  *       401:
  *         description: Unauthorized
  *         content:
@@ -548,7 +548,7 @@ router.patch('/:id', validateUserUpdateMiddleware, updateUser);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Unauthorized: No access token provided"
+ *                   example: Unauthorized: No access token provided
  *       403:
  *         description: Invalid role
  *         content:
@@ -564,7 +564,7 @@ router.patch('/:id', validateUserUpdateMiddleware, updateUser);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: "Forbidden: Required role is missing"
+ *                   example: Forbidden: Required role is missing
  *       404:
  *         description: User not found
  *         content:
@@ -580,7 +580,7 @@ router.patch('/:id', validateUserUpdateMiddleware, updateUser);
  *                   example: "ERROR_USER_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "User with provided id not found."
+ *                   example: User with provided id not found
  *       500:
  *         description: Server error
  *         content:
@@ -596,7 +596,7 @@ router.patch('/:id', validateUserUpdateMiddleware, updateUser);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.patch('/:id/role', validateUserRoleUpdateMiddleware, updateUserRole);
 
@@ -605,7 +605,7 @@ router.patch('/:id/role', validateUserRoleUpdateMiddleware, updateUserRole);
  * /users/{id}:
  *   delete:
  *     summary: Delete user by id
- *     description: Deletes the user from the system based on the provided user ID.
+ *     description: Deletes the user from the system based on the provided user ID
  *     tags:
  *       - Users
  *     parameters:
@@ -628,7 +628,7 @@ router.patch('/:id/role', validateUserRoleUpdateMiddleware, updateUserRole);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "User deleted successfully."
+ *                   example: User deleted successfully
  *       401:
  *         description: Unauthorized
  *         content:
@@ -644,7 +644,7 @@ router.patch('/:id/role', validateUserRoleUpdateMiddleware, updateUserRole);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Unauthorized: No access token provided"
+ *                   example: Unauthorized: No access token provided
  *       403:
  *         description: Invalid role
  *         content:
@@ -660,7 +660,7 @@ router.patch('/:id/role', validateUserRoleUpdateMiddleware, updateUserRole);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: "Forbidden: Required role is missing"
+ *                   example: Forbidden: Required role is missing
  *       404:
  *         description: User not found
  *         content:
@@ -676,7 +676,7 @@ router.patch('/:id/role', validateUserRoleUpdateMiddleware, updateUserRole);
  *                   example: "ERROR_USER_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "User with provided id not found."
+ *                   example: User with provided id not found
  *       500:
  *         description: Server error
  *         content:
@@ -692,7 +692,7 @@ router.patch('/:id/role', validateUserRoleUpdateMiddleware, updateUserRole);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.delete('/:id', deleteUser);
 

@@ -8,7 +8,7 @@ export const createCategory = async (req: Request, res: Response) => {
   try {
     const category = await CategoryManager.createCategory(req.body.name);
 
-    return res.status(201).json({ success: true, message: 'Category created successfully.', data: category });
+    return res.status(201).json({ success: true, message: 'Category created successfully', data: category });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -39,7 +39,7 @@ export const deleteCategory = async (req: Request, res: Response) => {
   try {
     await CategoryManager.deleteCategory(req.params.id);
 
-    return res.status(200).json({ success: true, message: 'Category successfully removed.' });
+    return res.status(200).json({ success: true, message: 'Category successfully removed' });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -49,7 +49,7 @@ export const updateCategory = async (req: Request, res: Response) => {
   try {
     const category = await CategoryManager.updateCategory(req.params.id, req.body.name);
 
-    return res.status(200).json({ success: true, message: 'Category updated successfully.', data: category });
+    return res.status(200).json({ success: true, message: 'Category updated successfully', data: category });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -61,7 +61,7 @@ export const assignSpecialistToCategory = async (req: Request, res: Response) =>
 
     return res
       .status(200)
-      .json({ success: true, message: 'Specialist successfully assigned to a category.', data: category });
+      .json({ success: true, message: 'Specialist successfully assigned to a category', data: category });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }

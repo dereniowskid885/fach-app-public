@@ -67,7 +67,7 @@ router.use(accessTokenMiddleware);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Ticket created successfully"
+ *                   example: Ticket created successfully
  *                 data:
  *                   $ref: '#/components/schemas/Ticket'
  *       400:
@@ -85,7 +85,7 @@ router.use(accessTokenMiddleware);
  *                   example: "ERROR_INVALID_DATA"
  *                 message:
  *                   type: string
- *                   example: "Invalid data provided."
+ *                   example: Invalid data provided
  *       401:
  *         description: Unauthorized
  *         content:
@@ -101,7 +101,7 @@ router.use(accessTokenMiddleware);
  *                   example: "ERROR_USER_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Missing user data"
+ *                   example: Missing user data
  *       500:
  *         description: Server error
  *         content:
@@ -117,7 +117,7 @@ router.use(accessTokenMiddleware);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.post('/', validateCreateTicketMiddleware, createTicket);
 
@@ -188,7 +188,7 @@ router.post('/', validateCreateTicketMiddleware, createTicket);
  *                   example: "ERROR_USER_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Missing user data"
+ *                   example: Missing user data
  *       500:
  *         description: Server error
  *         content:
@@ -204,7 +204,7 @@ router.post('/', validateCreateTicketMiddleware, createTicket);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.get('/', getTickets);
 
@@ -213,7 +213,7 @@ router.get('/', getTickets);
  * /tickets/{id}:
  *   get:
  *     summary: Get ticket by ID
- *     description: Fetches a single ticket from the database using its unique ID.
+ *     description: Fetches a single ticket from the database using its unique ID
  *     tags:
  *       - Ticketing
  *     parameters:
@@ -251,7 +251,7 @@ router.get('/', getTickets);
  *                   example: "ERROR_TICKET_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Ticket with provided id not found"
+ *                   example: Ticket with provided id not found
  *       500:
  *         description: Server error
  *         content:
@@ -267,7 +267,7 @@ router.get('/', getTickets);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.get('/:id', getTicketByID);
 
@@ -276,7 +276,7 @@ router.get('/:id', getTicketByID);
  * /tickets/{id}:
  *   delete:
  *     summary: Delete ticket by ID
- *     description: Deletes a ticket with the provided unique ID.
+ *     description: Deletes a ticket with the provided unique ID
  *     tags:
  *       - Ticketing
  *     parameters:
@@ -299,7 +299,7 @@ router.get('/:id', getTicketByID);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Ticket deleted successfully."
+ *                   example: Ticket deleted successfully
  *       401:
  *         description: Unauthorized
  *         content:
@@ -315,7 +315,7 @@ router.get('/:id', getTicketByID);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Unauthorized: No access token provided"
+ *                   example: Unauthorized: No access token provided
  *       403:
  *         description: Forbidden due to invalid role
  *         content:
@@ -331,7 +331,7 @@ router.get('/:id', getTicketByID);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: "Forbidden: Required role is missing"
+ *                   example: Forbidden: Required role is missing
  *       404:
  *         description: Ticket not found
  *         content:
@@ -347,7 +347,7 @@ router.get('/:id', getTicketByID);
  *                   example: "ERROR_TICKET_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Ticket with provided ID not found."
+ *                   example: Ticket with provided ID not found
  *       500:
  *         description: Server error
  *         content:
@@ -363,7 +363,7 @@ router.get('/:id', getTicketByID);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.delete('/:id', deleteTicket);
 
@@ -372,7 +372,7 @@ router.delete('/:id', deleteTicket);
  * /tickets/{id}:
  *   patch:
  *     summary: Update ticket
- *     description: Updates a ticket with the provided unique ID.
+ *     description: Updates a ticket with the provided unique ID
  *     tags:
  *       - Ticketing
  *     parameters:
@@ -424,7 +424,7 @@ router.delete('/:id', deleteTicket);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Ticket updated successfully."
+ *                   example: Ticket updated successfully
  *                 data:
  *                   $ref: '#/components/schemas/Ticket'
  *       400:
@@ -442,7 +442,7 @@ router.delete('/:id', deleteTicket);
  *                   example: "ERROR_INVALID_DATA"
  *                 message:
  *                   type: string
- *                   example: "Invalid data provided."
+ *                   example: Invalid data provided
  *       401:
  *         description: Unauthorized
  *         content:
@@ -458,7 +458,7 @@ router.delete('/:id', deleteTicket);
  *                   example: "ERROR_USER_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Missing user data"
+ *                   example: Missing user data
  *       404:
  *         description: Ticket not found
  *         content:
@@ -474,7 +474,7 @@ router.delete('/:id', deleteTicket);
  *                   example: "ERROR_TICKET_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Ticket with provided ID not found."
+ *                   example: Ticket with provided ID not found
  *       500:
  *         description: Server error
  *         content:
@@ -490,7 +490,7 @@ router.delete('/:id', deleteTicket);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.patch('/:id', validateTicketUpdateMiddleware, updateTicket);
 
@@ -499,7 +499,7 @@ router.patch('/:id', validateTicketUpdateMiddleware, updateTicket);
  * /tickets/{id}/evaluation:
  *   patch:
  *     summary: Ticket evaluation (used by specialist)
- *     description: Allows a specialist to evaluate a ticket by providing a price and response time (minutes).
+ *     description: Allows a specialist to evaluate a ticket by providing a price and response time (minutes)
  *     tags:
  *       - Ticketing
  *     parameters:
@@ -548,7 +548,7 @@ router.patch('/:id', validateTicketUpdateMiddleware, updateTicket);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Ticket evaluated successfully"
+ *                   example: Ticket evaluated successfully
  *                 data:
  *                   $ref: '#/components/schemas/Ticket'
  *       400:
@@ -566,7 +566,7 @@ router.patch('/:id', validateTicketUpdateMiddleware, updateTicket);
  *                   example: "ERROR_TICKET_INVALID_STATUS"
  *                 message:
  *                   type: string
- *                   example: "Ticket does not have proper status for evaluation."
+ *                   example: Ticket does not have proper status for evaluation
  *       403:
  *         description: Missing permissions to evaluate a ticket
  *         content:
@@ -582,7 +582,7 @@ router.patch('/:id', validateTicketUpdateMiddleware, updateTicket);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: "Missing permissions to evaluate a ticket."
+ *                   example: Missing permissions to evaluate a ticket
  *       404:
  *         description: Ticket not found
  *         content:
@@ -598,7 +598,7 @@ router.patch('/:id', validateTicketUpdateMiddleware, updateTicket);
  *                   example: "ERROR_TICKET_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Ticket with provided id not found."
+ *                   example: Ticket with provided id not found
  *       500:
  *         description: Server error
  *         content:
@@ -614,7 +614,7 @@ router.patch('/:id', validateTicketUpdateMiddleware, updateTicket);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.patch('/:id/evaluation', validateTicketEvaluationMiddleware, ticketEvaluationHandler);
 
@@ -658,7 +658,7 @@ router.patch('/:id/evaluation', validateTicketEvaluationMiddleware, ticketEvalua
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Ticket evaluation accepted successfully."
+ *                   example: Ticket evaluation accepted successfully
  *                 data:
  *                   $ref: '#/components/schemas/Ticket'
  *       400:
@@ -676,7 +676,7 @@ router.patch('/:id/evaluation', validateTicketEvaluationMiddleware, ticketEvalua
  *                   example: "ERROR_TICKET_INVALID_STATUS"
  *                 message:
  *                   type: string
- *                   example: "Ticket does not have proper status for evaluation accept."
+ *                   example: Ticket does not have proper status for evaluation accept
  *       403:
  *         description: Missing permissions to accept ticket evaluation
  *         content:
@@ -692,7 +692,7 @@ router.patch('/:id/evaluation', validateTicketEvaluationMiddleware, ticketEvalua
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: "Missing permissions to accept ticket evaluation."
+ *                   example: Missing permissions to accept ticket evaluation
  *       404:
  *         description: Evaluation with provided id does not exist
  *         content:
@@ -708,7 +708,7 @@ router.patch('/:id/evaluation', validateTicketEvaluationMiddleware, ticketEvalua
  *                   example: "ERROR_EVALUATION_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Evaluation with provided id does not exist."
+ *                   example: Evaluation with provided id does not exist
  *       500:
  *         description: Server error
  *         content:
@@ -724,7 +724,7 @@ router.patch('/:id/evaluation', validateTicketEvaluationMiddleware, ticketEvalua
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.patch('/:id/accept-evaluation', validateTicketEvaluationAcceptMiddleware, ticketEvaluationAccept);
 

@@ -13,9 +13,9 @@ export const CategoryManager = {
 
     if (category) {
       throw new AppError(
-        409,
+        400,
         EResponseStatus.ERROR_CATEGORY_ALREADY_EXISTS,
-        'Category with provided name already exists.',
+        'Category with provided name already exists',
       );
     }
 
@@ -33,7 +33,7 @@ export const CategoryManager = {
     const category = await Category.findOne({ _id: categoryId }).populate('specialists', USER_KEYS);
 
     if (!category) {
-      throw new AppError(404, EResponseStatus.ERROR_CATEGORY_NOT_FOUND, 'Category with provided id does not exist.');
+      throw new AppError(404, EResponseStatus.ERROR_CATEGORY_NOT_FOUND, 'Category with provided id does not exist');
     }
 
     return category;
@@ -57,7 +57,7 @@ export const CategoryManager = {
       throw new AppError(
         409,
         EResponseStatus.ERROR_CATEGORY_HAS_ASSIGNED_SPECIALISTS,
-        'Cannot remove category with assigned specialists.',
+        'Cannot remove category with assigned specialists',
       );
     }
 

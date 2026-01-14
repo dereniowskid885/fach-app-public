@@ -29,7 +29,7 @@ export const updateUser = async (req: Request, res: Response) => {
   try {
     const user = await UserManager.updateUser(req.params.id, req.body);
 
-    return res.status(200).json({ success: true, message: 'User updated successfully.', data: user });
+    return res.status(200).json({ success: true, message: 'User updated successfully', data: user });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -39,7 +39,7 @@ export const updateUserRole = async (req: Request, res: Response) => {
   try {
     const user = await UserManager.updateUserRole(req.params.id, req.body.role);
 
-    return res.status(200).json({ success: true, message: 'User role updated successfully.', data: user });
+    return res.status(200).json({ success: true, message: 'User role updated successfully', data: user });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -49,7 +49,7 @@ export const deleteUser = async (req: Request, res: Response) => {
   try {
     await UserManager.deleteUser(req.params.id);
 
-    return res.status(200).json({ success: true, message: 'User deleted successfully.' });
+    return res.status(200).json({ success: true, message: 'User deleted successfully' });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -59,7 +59,7 @@ export const createUser = async (req: Request, res: Response) => {
   try {
     const user = await UserManager.createUser(req.body);
 
-    return res.status(200).json({ success: true, message: 'User created successfully.', data: user });
+    return res.status(200).json({ success: true, message: 'User created successfully', data: user });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }

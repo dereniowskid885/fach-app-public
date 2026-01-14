@@ -8,7 +8,7 @@ export const createTicket = async (req: Request, res: Response) => {
   try {
     const ticket = await TicketManager.createTicket(req.body, req.user);
 
-    return res.status(200).json({ success: true, message: 'Ticket created successfully.', data: ticket });
+    return res.status(200).json({ success: true, message: 'Ticket created successfully', data: ticket });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -39,7 +39,7 @@ export const updateTicket = async (req: Request, res: Response) => {
   try {
     const ticket = await TicketManager.updateTicket(req.params.id, req.body, req.user);
 
-    return res.status(200).json({ success: true, message: 'Ticket updated successfully.', data: ticket });
+    return res.status(200).json({ success: true, message: 'Ticket updated successfully', data: ticket });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -49,7 +49,7 @@ export const deleteTicket = async (req: Request, res: Response) => {
   try {
     await TicketManager.deleteTicket(req.params.id, req.user);
 
-    return res.status(200).json({ success: true, message: 'Ticket deleted successfully.' });
+    return res.status(200).json({ success: true, message: 'Ticket deleted successfully' });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -64,7 +64,7 @@ export const ticketEvaluationHandler = async (req: Request, res: Response) => {
       req.user,
     );
 
-    return res.status(200).json({ success: true, message: 'Ticket evaluated successfully.', data: ticket });
+    return res.status(200).json({ success: true, message: 'Ticket evaluated successfully', data: ticket });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -74,7 +74,7 @@ export const ticketEvaluationAccept = async (req: Request, res: Response) => {
   try {
     const ticket = await TicketManager.ticketEvaluationAcceptHandler(req.params.id, req.body.evaluationId, req.user);
 
-    return res.status(200).json({ success: true, message: 'Ticket evaluation accepted successfully.', data: ticket });
+    return res.status(200).json({ success: true, message: 'Ticket evaluation accepted successfully', data: ticket });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }

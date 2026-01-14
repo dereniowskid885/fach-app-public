@@ -20,14 +20,14 @@ export const TicketManager = {
     ]);
 
     if (!ticket) {
-      throw new AppError(404, EResponseStatus.ERROR_TICKET_NOT_FOUND, 'Ticket with provided id not found.');
+      throw new AppError(404, EResponseStatus.ERROR_TICKET_NOT_FOUND, 'Ticket with provided id not found');
     }
 
     return ticket;
   },
   getTickets: async (filter: IGetTicketsFilter, user?: JwtPayload) => {
     if (!user) {
-      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data.');
+      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
     }
 
     const tickets = await Ticket.find(filter).populate([
@@ -56,7 +56,7 @@ export const TicketManager = {
     user?: JwtPayload,
   ) => {
     if (!user) {
-      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data.');
+      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
     }
 
     const ticket = new Ticket({
@@ -74,13 +74,13 @@ export const TicketManager = {
   },
   deleteTicket: async (ticketId: string, user?: JwtPayload) => {
     if (!user) {
-      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data.');
+      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
     }
 
     const ticket = await TicketManager.getTicketByID(ticketId);
 
     if (!ticket) {
-      throw new AppError(404, EResponseStatus.ERROR_TICKET_NOT_FOUND, 'Ticket with provided id not found.');
+      throw new AppError(404, EResponseStatus.ERROR_TICKET_NOT_FOUND, 'Ticket with provided id not found');
     }
 
     // TODO: modify while doing superadmin role ticket
@@ -89,7 +89,7 @@ export const TicketManager = {
     const isOwner = user.userId === ticket.createdBy.id.toString();
 
     if (!isAdmin && !isOwner) {
-      throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'Not enough permissions to delete the ticket.');
+      throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'Not enough permissions to delete the ticket');
     }
 
     await Ticket.deleteOne({ _id: ticketId });
@@ -101,7 +101,7 @@ export const TicketManager = {
     user?: JwtPayload,
   ) => {
     if (!user) {
-      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data.');
+      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
     }
 
     const ticket = await TicketManager.getTicketByID(ticketId);
@@ -112,14 +112,14 @@ export const TicketManager = {
       throw new AppError(
         400,
         EResponseStatus.ERROR_TICKET_INVALID_STATUS,
-        'Ticket does not have proper status for evaluation.',
+        'Ticket does not have proper status for evaluation',
       );
     }
 
     const isUserAllowedToEvaluate = [EUserRole.ADMIN, EUserRole.SPECIALIST].includes(user.role);
 
     if (!isUserAllowedToEvaluate) {
-      throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'Missing permissions to evaluate a ticket.');
+      throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'Missing permissions to evaluate a ticket');
     }
 
     const currentDate = new Date();
@@ -146,7 +146,7 @@ export const TicketManager = {
   },
   ticketEvaluationAcceptHandler: async (ticketId: string, evaluationId: string, user?: JwtPayload) => {
     if (!user) {
-      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data.');
+      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
     }
 
     const ticket = await TicketManager.getTicketByID(ticketId);
@@ -157,7 +157,7 @@ export const TicketManager = {
       throw new AppError(
         400,
         EResponseStatus.ERROR_TICKET_INVALID_STATUS,
-        'Ticket does not have proper status for evaluation accept by user.',
+        'Ticket does not have proper status for evaluation accept by user',
       );
     }
 
@@ -170,18 +170,14 @@ export const TicketManager = {
       throw new AppError(
         403,
         EResponseStatus.ERROR_USER_INVALID_ROLE,
-        'Missing permissions to accept ticket evaluation.',
+        'Missing permissions to accept ticket evaluation',
       );
     }
 
     const evaluation = ticket.evaluations.find((evaluationObjectId) => evaluationObjectId.toString() === evaluationId);
 
     if (!evaluation) {
-      throw new AppError(
-        404,
-        EResponseStatus.ERROR_EVALUATION_NOT_FOUND,
-        'Evaluation with provided id does not exist.',
-      );
+      throw new AppError(404, EResponseStatus.ERROR_EVALUATION_NOT_FOUND, 'Evaluation with provided id does not exist');
     }
 
     ticket.acceptedEvaluation = evaluation;
@@ -204,7 +200,7 @@ export const TicketManager = {
     user?: JwtPayload,
   ) => {
     if (!user) {
-      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data.');
+      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
     }
 
     const ticket = await TicketManager.getTicketByID(ticketId);
@@ -215,11 +211,11 @@ export const TicketManager = {
     const isOwner = user.userId === ticket.createdBy.id.toString();
 
     if (!isAdmin && !isOwner) {
-      throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'Not enough permissions to update ticket.');
+      throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'Not enough permissions to update ticket');
     }
 
     if (!updateData || Object.keys(updateData).length === 0) {
-      throw new AppError(400, EResponseStatus.ERROR_INVALID_DATA, 'No data provided for update.');
+      throw new AppError(400, EResponseStatus.ERROR_INVALID_DATA, 'No data provided for update');
     }
 
     const { categoryId, city, status, assigneeId, title, description } = updateData;
@@ -229,7 +225,7 @@ export const TicketManager = {
         throw new AppError(
           403,
           EResponseStatus.ERROR_USER_INVALID_ROLE,
-          'Not enough permissions to update ticket category, city, status or assignee.',
+          'Not enough permissions to update ticket category, city, status or assignee',
         );
       }
 
@@ -247,7 +243,7 @@ export const TicketManager = {
         const isStatusTransitionAllowed = checkTicketStatusTransition(ticket.status, status);
 
         if (!isStatusTransitionAllowed) {
-          throw new AppError(400, EResponseStatus.ERROR_TICKET_INVALID_STATUS, 'Invalid status transition attempted.');
+          throw new AppError(400, EResponseStatus.ERROR_TICKET_INVALID_STATUS, 'Invalid status transition attempted');
         }
 
         ticket.status = status;

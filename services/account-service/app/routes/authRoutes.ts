@@ -30,7 +30,7 @@ const refreshTokenMiddleware = createMiddleware(checkRefreshToken, process.env.R
  * /auth/register:
  *   post:
  *     summary: Register new user
- *     description: Registers new user and sends email verification link.
+ *     description: Registers new user and sends email verification link
  *     tags:
  *       - Authentication
  *     requestBody:
@@ -80,7 +80,7 @@ const refreshTokenMiddleware = createMiddleware(checkRefreshToken, process.env.R
  *                 data:
  *                   $ref: '#/components/schemas/User'
  *       400:
- *         description: Bad Request
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
@@ -94,23 +94,7 @@ const refreshTokenMiddleware = createMiddleware(checkRefreshToken, process.env.R
  *                   example: "ERROR_INVALID_DATA"
  *                 message:
  *                   type: string
- *                   example: "Password field must have minimum 7 characters."
- *       409:
- *        description: Conflict - User with this email already exists
- *        content:
- *         application/json:
- *           schema:
- *            type: object
- *            properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_USER_ALREADY_EXIST"
- *                 message:
- *                   type: string
- *                   example: "User with this email already exists"
+ *                   example: Invalid data
  *       500:
  *         description: Server error
  *         content:
@@ -126,7 +110,7 @@ const refreshTokenMiddleware = createMiddleware(checkRefreshToken, process.env.R
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.post('/register', validateUserRegisterMiddleware, register);
 
@@ -173,7 +157,7 @@ router.post('/register', validateUserRegisterMiddleware, register);
  *                     refreshToken:
  *                       type: string
  *       400:
- *         description: Invalid credentials
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
@@ -187,23 +171,7 @@ router.post('/register', validateUserRegisterMiddleware, register);
  *                   example: "ERROR_INVALID_CREDENTIALS"
  *                 message:
  *                   type: string
- *                   example: Invalid credentials
- *       403:
- *         description: Email not verified
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_USER_NOT_VERIFIED"
- *                 message:
- *                   type: string
- *                   example: Email is not verified
+ *                   example: Invalid credentials or e-mail not verified
  *       500:
  *         description: Server error
  *         content:
@@ -219,7 +187,7 @@ router.post('/register', validateUserRegisterMiddleware, register);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.post('/login', validateUserLoginMiddleware, login);
 
@@ -233,7 +201,7 @@ router.post('/login', validateUserLoginMiddleware, login);
  *       - Authentication
  *     responses:
  *       200:
- *         description: Access token refreshed succesfully.
+ *         description: Access token refreshed succesfully
  *         content:
  *           application/json:
  *             schema:
@@ -244,7 +212,7 @@ router.post('/login', validateUserLoginMiddleware, login);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Access token refreshed succesfully.
+ *                   example: Access token refreshed succesfully
  *                 data:
  *                   type: object
  *                   properties:
@@ -257,9 +225,15 @@ router.post('/login', validateUserLoginMiddleware, login);
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_INVALID_TOKEN"
  *                 message:
  *                   type: string
- *                   example: Refresh token not provided or Invalid refresh token
+ *                   example: Invalid refresh token
  *       404:
  *         description: User not found
  *         content:
@@ -267,6 +241,12 @@ router.post('/login', validateUserLoginMiddleware, login);
  *             schema:
  *               type: object
  *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
  *                 message:
  *                   type: string
  *                   example: User not found
@@ -285,7 +265,7 @@ router.post('/login', validateUserLoginMiddleware, login);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.post('/refresh-token', refreshTokenMiddleware, refreshToken);
 
@@ -311,38 +291,6 @@ router.post('/refresh-token', refreshTokenMiddleware, refreshToken);
  *                 message:
  *                   type: string
  *                   example: User logged out succesfully.
- *       403:
- *         description: Invalid refresh token
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_INVALID_TOKEN"
- *                 message:
- *                   type: string
- *                   example: "Forbidden: Invalid refresh token"
- *       401:
- *         description: No refresh token provided
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_TOKEN_NOT_FOUND"
- *                 message:
- *                   type: string
- *                   example: "Forbidden: No refresh token provided"
  *       404:
  *         description: User not found
  *         content:
@@ -358,7 +306,7 @@ router.post('/refresh-token', refreshTokenMiddleware, refreshToken);
  *                   example: "ERROR_USER_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "User with provided id not found."
+ *                   example: User with provided id not found
  *       500:
  *         description: Server error
  *         content:
@@ -374,7 +322,7 @@ router.post('/refresh-token', refreshTokenMiddleware, refreshToken);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.post('/logout', accessTokenMiddleware, logout);
 
@@ -398,7 +346,7 @@ router.post('/logout', accessTokenMiddleware, logout);
  *                 description: User's email address
  *     responses:
  *       200:
- *         description: If this email is registered, a verification link has been sent.
+ *         description: If this email is registered, a verification link has been sent
  *         content:
  *           application/json:
  *             schema:
@@ -409,23 +357,7 @@ router.post('/logout', accessTokenMiddleware, logout);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: If this email is registered, a verification link has been sent.
- *       400:
- *         description: Email not provided
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_INVALID_DATA"
- *                 message:
- *                   type: string
- *                   example: "Email is not provided"
+ *                   example: If this email is registered, a verification link has been sent
  *       500:
  *         description: Server error
  *         content:
@@ -476,9 +408,9 @@ router.post('/request-email-verification', validateSendEmailMiddleware, requestE
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: User verified successfully.
+ *                   example: User verified successfully
  *       400:
- *         description: User not found - invalid verification link
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
@@ -492,7 +424,7 @@ router.post('/request-email-verification', validateSendEmailMiddleware, requestE
  *                   example: "ERROR_INVALID_LINK"
  *                 message:
  *                   type: string
- *                   example: User not found - invalid verification link
+ *                   example: Invalid verification link
  *       500:
  *         description: Server error
  *         content:
@@ -508,7 +440,7 @@ router.post('/request-email-verification', validateSendEmailMiddleware, requestE
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.post('/email-verification', validateEmailVerificationMiddleware, verifyEmail);
 
@@ -517,7 +449,7 @@ router.post('/email-verification', validateEmailVerificationMiddleware, verifyEm
  * /auth/request-password-reset:
  *   post:
  *     summary: Request password reset
- *     description: Sends a password reset link to the user's email.
+ *     description: Sends a password reset link to the user's email
  *     tags:
  *       - Authentication
  *     requestBody:
@@ -532,7 +464,7 @@ router.post('/email-verification', validateEmailVerificationMiddleware, verifyEm
  *                 description: User's email address
  *     responses:
  *       200:
- *         description: If this email is registered, a password reset link has been sent.
+ *         description: If this email is registered, a password reset link has been sent
  *         content:
  *           application/json:
  *             schema:
@@ -543,7 +475,7 @@ router.post('/email-verification', validateEmailVerificationMiddleware, verifyEm
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: If this email is registered, a password reset link has been sent.
+ *                   example: If this email is registered, a password reset link has been sent
  *       400:
  *         description: Email not provided
  *         content:
@@ -575,7 +507,7 @@ router.post('/email-verification', validateEmailVerificationMiddleware, verifyEm
  *                   example: "ERROR_EMAIL_SEND_FAILED"
  *                 message:
  *                   type: string
- *                   example: "Error occured while sending the email, please try again later."
+ *                   example: Error occured while sending the email, please try again later
  */
 router.post('/request-password-reset', validateSendEmailMiddleware, requestPasswordResetLink);
 
@@ -615,7 +547,7 @@ router.post('/request-password-reset', validateSendEmailMiddleware, requestPassw
  *                   type: string
  *                   example: Password reset successful
  *       400:
- *         description: User not found - invalid password reset link
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
@@ -626,10 +558,10 @@ router.post('/request-password-reset', validateSendEmailMiddleware, requestPassw
  *                   example: false
  *                 status:
  *                   type: string
- *                   example: "ERROR_MISSING_REQUIRED_FIELDS"
+ *                   example: "ERROR_INVALID_LINK"
  *                 message:
  *                   type: string
- *                   example: User not found - invalid password reset link
+ *                   example: Invalid password reset link
  *       500:
  *         description: Server error
  *         content:
@@ -645,7 +577,7 @@ router.post('/request-password-reset', validateSendEmailMiddleware, requestPassw
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.post('/password-reset', validatePasswordResetMiddleware, passwordReset);
 

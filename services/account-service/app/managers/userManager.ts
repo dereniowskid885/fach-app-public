@@ -20,17 +20,17 @@ export const UserManager = {
       const user = await UserModel.findById(userId, projection ? safeUserProjection : null);
 
       if (!user) {
-        throw new AppError(404, EResponseStatus.ERROR_USER_NOT_FOUND, 'User with provided id not found.');
+        throw new AppError(404, EResponseStatus.ERROR_USER_NOT_FOUND, 'User with provided id not found');
       }
 
       return user;
     } catch {
-      throw new AppError(400, EResponseStatus.ERROR_INVALID_DATA, 'Invalid user id provided.');
+      throw new AppError(400, EResponseStatus.ERROR_INVALID_DATA, 'Invalid user id provided');
     }
   },
   getUserByEmail: async (email: string) => {
     if (!email) {
-      throw new AppError(400, EResponseStatus.ERROR_INVALID_DATA, 'Email is not provided.');
+      throw new AppError(400, EResponseStatus.ERROR_INVALID_DATA, 'Email is not provided');
     }
 
     const user = await UserModel.findOne({ email });
@@ -42,13 +42,13 @@ export const UserManager = {
     updateData: Partial<{ email: string; name: string; surname: string; city: string; isVerified: boolean }>,
   ) => {
     if (!updateData || Object.keys(updateData).length === 0) {
-      throw new AppError(400, EResponseStatus.ERROR_INVALID_DATA, 'No data provided for update.');
+      throw new AppError(400, EResponseStatus.ERROR_INVALID_DATA, 'No data provided for update');
     }
 
     const user = await UserModel.findByIdAndUpdate(userId, updateData, { new: true }).select(safeUserProjection);
 
     if (!user) {
-      throw new AppError(404, EResponseStatus.ERROR_USER_NOT_FOUND, 'User with provided id not found.');
+      throw new AppError(404, EResponseStatus.ERROR_USER_NOT_FOUND, 'User with provided id not found');
     }
 
     await user.save();
