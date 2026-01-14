@@ -315,7 +315,7 @@ router.get('/:id', getTicketByID);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Unauthorized: No access token provided
+ *                   example: No access token provided
  *       403:
  *         description: Forbidden due to invalid role
  *         content:
@@ -331,7 +331,7 @@ router.get('/:id', getTicketByID);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: Forbidden: Required role is missing
+ *                   example: Required role is missing
  *       404:
  *         description: Ticket not found
  *         content:
