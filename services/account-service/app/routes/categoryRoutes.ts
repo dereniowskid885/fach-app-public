@@ -90,7 +90,7 @@ router.use(accessTokenMiddleware);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: Forbidden: Required role is missing
+ *                   example: Required role is missing
  *       500:
  *         description: Server error
  *         content:
@@ -157,7 +157,7 @@ router.post('/', checkAdminRole, validateCategoryBodyMiddleware, createCategory)
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Unauthorized: No access token provided
+ *                   example: No access token provided
  *       500:
  *         description: Server error
  *         content:
@@ -220,7 +220,7 @@ router.get('/', getCategories);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Unauthorized: No access token provided
+ *                   example: No access token provided
  *       404:
  *         description: Category with provided id does not exist
  *         content:
@@ -300,7 +300,7 @@ router.get('/:id', getCategoryById);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Unauthorized: No access token provided
+ *                   example: No access token provided
  *       403:
  *         description: Invalid role
  *         content:
@@ -316,7 +316,7 @@ router.get('/:id', getCategoryById);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: Forbidden: Required role is missing
+ *                   example: Required role is missing
  *       409:
  *         description: Cannot remove category with assigned specialists
  *         content:
@@ -405,7 +405,7 @@ router.delete('/:id', checkAdminRole, deleteCategory);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Unauthorized: No access token provided
+ *                   example: No access token provided
  *       403:
  *         description: Invalid role
  *         content:
@@ -421,7 +421,7 @@ router.delete('/:id', checkAdminRole, deleteCategory);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: Forbidden: Required role is missing
+ *                   example: Required role is missing
  *       404:
  *         description: Category with provided id does not exist
  *         content:
@@ -531,7 +531,7 @@ router.patch('/:id', checkAdminRole, validateCategoryBodyMiddleware, updateCateg
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Unauthorized: No access token provided
+ *                   example: No access token provided
  *       403:
  *         description: Invalid role
  *         content:
@@ -547,7 +547,7 @@ router.patch('/:id', checkAdminRole, validateCategoryBodyMiddleware, updateCateg
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: Forbidden: Required role is missing
+ *                   example: Required role is missing
  *       404:
  *         description: Category with provided id does not exist
  *         content:
@@ -658,7 +658,7 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Unauthorized: No access token provided
+ *                   example: No access token provided
  *       403:
  *         description: Invalid role
  *         content:
@@ -674,7 +674,7 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: Forbidden: Required role is missing
+ *                   example: Required role is missing
  *       404:
  *         description: Category with provided ID does not exist
  *         content:

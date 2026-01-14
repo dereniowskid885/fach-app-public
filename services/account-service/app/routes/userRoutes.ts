@@ -213,7 +213,7 @@ router.post('/', validateCreateUserMiddleware, createUser);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Unauthorized: No access token provided
+ *                   example: No access token provided
  *       403:
  *         description: Invalid role
  *         content:
@@ -229,7 +229,7 @@ router.post('/', validateCreateUserMiddleware, createUser);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: Forbidden: Required role is missing
+ *                   example: Required role is missing
  *       500:
  *         description: Server error
  *         content:
@@ -292,7 +292,7 @@ router.get('/', getUsers);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Unauthorized: No access token provided
+ *                   example: No access token provided
  *       403:
  *         description: Invalid role
  *         content:
@@ -308,7 +308,7 @@ router.get('/', getUsers);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: Forbidden: Required role is missing
+ *                   example: Required role is missing
  *       404:
  *         description: User not found
  *         content:
@@ -423,7 +423,7 @@ router.get('/:id', getUserById);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Unauthorized: No access token provided
+ *                   example: No access token provided
  *       403:
  *         description: Required role that allows this action is missing
  *         content:
@@ -439,7 +439,7 @@ router.get('/:id', getUserById);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: Forbidden: Required role that allows this action is missing
+ *                   example: Required role that allows this action is missing
  *       404:
  *         description: User not found
  *         content:
@@ -548,7 +548,7 @@ router.patch('/:id', validateUserUpdateMiddleware, updateUser);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Unauthorized: No access token provided
+ *                   example: No access token provided
  *       403:
  *         description: Invalid role
  *         content:
@@ -564,7 +564,7 @@ router.patch('/:id', validateUserUpdateMiddleware, updateUser);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: Forbidden: Required role is missing
+ *                   example: Required role is missing
  *       404:
  *         description: User not found
  *         content:
@@ -644,7 +644,7 @@ router.patch('/:id/role', validateUserRoleUpdateMiddleware, updateUserRole);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: Unauthorized: No access token provided
+ *                   example: No access token provided
  *       403:
  *         description: Invalid role
  *         content:
@@ -660,7 +660,7 @@ router.patch('/:id/role', validateUserRoleUpdateMiddleware, updateUserRole);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: Forbidden: Required role is missing
+ *                   example: Required role is missing
  *       404:
  *         description: User not found
  *         content:

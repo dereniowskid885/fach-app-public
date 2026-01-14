@@ -8,18 +8,14 @@ export const checkAndParseAccessToken = async (req: Request, ACCESS_TOKEN_SECRET
   const accessToken = req.cookies.accessToken;
 
   if (!accessToken) {
-    throw new AppError(
-      401,
-      EResponseStatus.ERROR_TOKEN_NOT_FOUND,
-      "Unauthorized: No access token provided"
-    );
+    throw new AppError(401, EResponseStatus.ERROR_TOKEN_NOT_FOUND, "No access token provided");
   }
 
   try {
     const payload = verify(accessToken, ACCESS_TOKEN_SECRET);
     req.user = payload as JwtPayload;
   } catch (err) {
-    throw new AppError(403, EResponseStatus.ERROR_INVALID_TOKEN, "Forbidden: Invalid access token");
+    throw new AppError(403, EResponseStatus.ERROR_INVALID_TOKEN, "Invalid access token");
   }
 };
 
@@ -27,21 +23,13 @@ export const checkRefreshToken = async (req: Request, REFRESH_TOKEN_SECRET: stri
   const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
-    throw new AppError(
-      401,
-      EResponseStatus.ERROR_TOKEN_NOT_FOUND,
-      "Unauthorized: No refresh token provided"
-    );
+    throw new AppError(401, EResponseStatus.ERROR_TOKEN_NOT_FOUND, "No refresh token provided");
   }
 
   try {
     verify(refreshToken, REFRESH_TOKEN_SECRET);
   } catch (err) {
-    throw new AppError(
-      403,
-      EResponseStatus.ERROR_INVALID_TOKEN,
-      "Forbidden: Invalid refresh token"
-    );
+    throw new AppError(403, EResponseStatus.ERROR_INVALID_TOKEN, "Invalid refresh token");
   }
 };
 
@@ -50,7 +38,7 @@ export const checkUserRole = async (req: Request, roles: string[]) => {
     throw new AppError(
       403,
       EResponseStatus.ERROR_USER_INVALID_ROLE,
-      "Forbidden: Required role that allows this action is missing"
+      "Required role that allows this action is missing"
     );
   }
 };
