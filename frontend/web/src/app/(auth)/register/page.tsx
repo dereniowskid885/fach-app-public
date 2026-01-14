@@ -47,7 +47,11 @@ export default function Register() {
 
     const payload: PostAuthRegisterApiArg = {
       body: {
-        ...formData
+        email: formData.email,
+        name: formData.name,
+        surname: formData.surname,
+        password: formData.password,
+        city: formData.city
       }
     };
 
