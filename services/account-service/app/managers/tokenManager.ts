@@ -23,7 +23,7 @@ export const TokenManager = {
       }
 
       if (!user.refreshTokens || user.refreshTokens.length === 0) {
-        throw new AppError(401, EResponseStatus.ERROR_INVALID_TOKEN, 'No refresh tokens found for user');
+        throw new AppError(401, EResponseStatus.ERROR_INVALID_TOKEN, 'Invalid refresh token');
       }
 
       // For Next.js purposes it checks for custom header first

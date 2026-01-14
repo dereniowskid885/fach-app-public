@@ -56,7 +56,7 @@ router.use(accessTokenMiddleware);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Category successfully created.
+ *                   example: Category successfully created
  *                 data:
  *                   $ref: '#/components/schemas/Category'
  *       400:
@@ -71,26 +71,10 @@ router.use(accessTokenMiddleware);
  *                   example: false
  *                 status:
  *                   type: string
- *                   example: "ERROR_INVALID_DATA"
+ *                   example: "ERROR_CATEGORY_ALREADY_EXISTS"
  *                 message:
  *                   type: string
- *                   example: "Invalid category data provided."
- *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_TOKEN_NOT_FOUND"
- *                 message:
- *                   type: string
- *                   example: "Unauthorized: No access token provided"
+ *                   example: Category with provided name already exists
  *       403:
  *         description: Invalid role
  *         content:
@@ -106,23 +90,7 @@ router.use(accessTokenMiddleware);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: "Forbidden: Required role is missing"
- *       409:
- *         description: Category already exists
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_CATEGORY_ALREADY_EXISTS"
- *                 message:
- *                   type: string
- *                   example: "Category with provided name already exists."
+ *                   example: Forbidden: Required role is missing
  *       500:
  *         description: Server error
  *         content:
@@ -138,7 +106,7 @@ router.use(accessTokenMiddleware);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.post('/', checkAdminRole, validateCategoryBodyMiddleware, createCategory);
 
@@ -189,7 +157,7 @@ router.post('/', checkAdminRole, validateCategoryBodyMiddleware, createCategory)
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Unauthorized: No access token provided"
+ *                   example: Unauthorized: No access token provided
  *       500:
  *         description: Server error
  *         content:
@@ -205,7 +173,7 @@ router.post('/', checkAdminRole, validateCategoryBodyMiddleware, createCategory)
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.get('/', getCategories);
 
@@ -252,7 +220,7 @@ router.get('/', getCategories);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Unauthorized: No access token provided"
+ *                   example: Unauthorized: No access token provided
  *       404:
  *         description: Category with provided id does not exist
  *         content:
@@ -268,7 +236,7 @@ router.get('/', getCategories);
  *                example: "ERROR_CATEGORY_NOT_FOUND"
  *              message:
  *                type: string
- *                example: "Category with provided id does not exist."
+ *                example: Category with provided id does not exist
  *       500:
  *         description: Server error
  *         content:
@@ -284,7 +252,7 @@ router.get('/', getCategories);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.get('/:id', getCategoryById);
 
@@ -316,7 +284,7 @@ router.get('/:id', getCategoryById);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Category successfully removed.
+ *                   example: Category successfully removed
  *       401:
  *         description: Unauthorized
  *         content:
@@ -332,7 +300,7 @@ router.get('/:id', getCategoryById);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Unauthorized: No access token provided"
+ *                   example: Unauthorized: No access token provided
  *       403:
  *         description: Invalid role
  *         content:
@@ -348,7 +316,7 @@ router.get('/:id', getCategoryById);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: "Forbidden: Required role is missing"
+ *                   example: Forbidden: Required role is missing
  *       409:
  *         description: Cannot remove category with assigned specialists
  *         content:
@@ -364,7 +332,7 @@ router.get('/:id', getCategoryById);
  *                   example: "ERROR_CATEGORY_HAS_ASSIGNED_SPECIALISTS"
  *                 message:
  *                   type: string
- *                   example: Cannot remove category with assigned specialists.
+ *                   example: Cannot remove category with assigned specialists
  *       500:
  *         description: Server error
  *         content:
@@ -380,7 +348,7 @@ router.get('/:id', getCategoryById);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.delete('/:id', checkAdminRole, deleteCategory);
 
@@ -437,7 +405,7 @@ router.delete('/:id', checkAdminRole, deleteCategory);
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Unauthorized: No access token provided"
+ *                   example: Unauthorized: No access token provided
  *       403:
  *         description: Invalid role
  *         content:
@@ -453,7 +421,7 @@ router.delete('/:id', checkAdminRole, deleteCategory);
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: "Forbidden: Required role is missing"
+ *                   example: Forbidden: Required role is missing
  *       404:
  *         description: Category with provided id does not exist
  *         content:
@@ -469,7 +437,7 @@ router.delete('/:id', checkAdminRole, deleteCategory);
  *                   example: "ERROR_CATEGORY_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Category with provided id does not exist."
+ *                   example: Category with provided id does not exist
  *       500:
  *         description: Server error
  *         content:
@@ -485,7 +453,7 @@ router.delete('/:id', checkAdminRole, deleteCategory);
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.patch('/:id', checkAdminRole, validateCategoryBodyMiddleware, updateCategory);
 
@@ -563,7 +531,7 @@ router.patch('/:id', checkAdminRole, validateCategoryBodyMiddleware, updateCateg
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Unauthorized: No access token provided"
+ *                   example: Unauthorized: No access token provided
  *       403:
  *         description: Invalid role
  *         content:
@@ -579,7 +547,7 @@ router.patch('/:id', checkAdminRole, validateCategoryBodyMiddleware, updateCateg
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: "Forbidden: Required role is missing"
+ *                   example: Forbidden: Required role is missing
  *       404:
  *         description: Category with provided id does not exist
  *         content:
@@ -656,7 +624,7 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Specialist successfully removed from category"
+ *                   example: Specialist successfully removed from category
  *                 data:
  *                   $ref: '#/components/schemas/Category'
  *       400:
@@ -674,7 +642,7 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  *                   example: "ERROR_USER_NOT_ASSIGNED_TO_CATEGORY"
  *                 message:
  *                   type: string
- *                   example: "User is not assigned to provided category"
+ *                   example: User is not assigned to provided category
  *       401:
  *         description: Unauthorized
  *         content:
@@ -690,7 +658,7 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  *                   example: "ERROR_TOKEN_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Unauthorized: No access token provided"
+ *                   example: Unauthorized: No access token provided
  *       403:
  *         description: Invalid role
  *         content:
@@ -706,7 +674,7 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  *                   example: "ERROR_USER_INVALID_ROLE"
  *                 message:
  *                   type: string
- *                   example: "Forbidden: Required role is missing"
+ *                   example: Forbidden: Required role is missing
  *       404:
  *         description: Category with provided ID does not exist
  *         content:
@@ -722,7 +690,7 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  *                   example: "ERROR_CATEGORY_NOT_FOUND"
  *                 message:
  *                   type: string
- *                   example: "Category with provided id does not exist"
+ *                   example: Category with provided id does not exist
  *       500:
  *         description: Server error
  *         content:
@@ -738,7 +706,7 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  *                   example: "SERVER_ERROR"
  *                 message:
  *                   type: string
- *                   example: "Server error"
+ *                   example: Server error
  */
 router.patch('/:id/specialist/remove', checkAdminRole, removeSpecialistFromCategory);
 

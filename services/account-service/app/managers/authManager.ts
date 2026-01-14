@@ -15,7 +15,7 @@ export const AuthManager = {
       const user = await UserManager.getUserByEmail(payload.email);
 
       if (!user) {
-        throw new AppError(400, EResponseStatus.ERROR_INVALID_LINK, 'User not found - invalid password reset link');
+        throw new AppError(400, EResponseStatus.ERROR_INVALID_LINK, 'Invalid password reset link');
       }
 
       user.password = newPassword;
@@ -34,21 +34,14 @@ export const AuthManager = {
       const user = await UserManager.getUserByEmail(payload.email);
 
       if (!user) {
-        throw new AppError(400, EResponseStatus.ERROR_INVALID_LINK, 'User not found - invalid verification link');
+        throw new AppError(400, EResponseStatus.ERROR_INVALID_LINK, 'Invalid verification link');
       }
 
       if (!user.isVerified) {
         await UserManager.updateUser(user.id, { isVerified: true });
-
-        return {
-          message: 'User verified successfully.',
-        };
       }
 
-      return {
-        status: EResponseStatus.USER_ALREADY_VERIFIED,
-        message: 'User is already verified',
-      };
+      return;
     } catch (err) {
       if (err instanceof JsonWebTokenError) {
         handleAccessTokenError(err);
@@ -121,7 +114,11 @@ export const AuthManager = {
     const userExists = await UserManager.getUserByEmail(email);
 
     if (userExists) {
-      throw new AppError(409, EResponseStatus.ERROR_USER_ALREADY_EXIST, 'User with this email already exists');
+      throw new AppError(
+        409,
+        EResponseStatus.ERROR_INVALID_CREDENTIALS,
+        'Unable to create account with provided credentials',
+      );
     }
 
     try {
@@ -147,18 +144,14 @@ export const AuthManager = {
   login: async ({ email, password }: { email: string; password: string }) => {
     const user = await UserManager.getUserByEmail(email);
 
-    if (!user) {
-      throw new AppError(404, EResponseStatus.ERROR_USER_NOT_FOUND, 'User with provided e-mail does not exist');
-    }
-
-    if (!user.isVerified) {
-      throw new AppError(403, EResponseStatus.ERROR_USER_NOT_VERIFIED, 'Email is not verified');
+    if (!user || !user.isVerified) {
+      throw new AppError(400, EResponseStatus.ERROR_INVALID_CREDENTIALS, 'Invalid credentials or e-mail not verified');
     }
 
     const isPasswordMatch = await user.comparePassword(password);
 
     if (!isPasswordMatch) {
-      throw new AppError(400, EResponseStatus.ERROR_INVALID_CREDENTIALS, 'Invalid credentials');
+      throw new AppError(400, EResponseStatus.ERROR_INVALID_CREDENTIALS, 'Invalid credentials or e-mail not verified');
     }
 
     return user;

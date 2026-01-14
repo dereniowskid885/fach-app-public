@@ -12,7 +12,7 @@ export const register = async (req: Request, res: Response) => {
 
     return res.status(201).json({
       success: true,
-      message: 'User registered successfully.',
+      message: 'User registered successfully',
       data: user,
     });
   } catch (err) {
@@ -22,7 +22,7 @@ export const register = async (req: Request, res: Response) => {
       return res.status(201).json({
         success: true,
         status: EResponseStatus.ERROR_EMAIL_SEND_FAILED,
-        message: 'User registered successfully, error occured while sending verification link.',
+        message: 'User registered successfully, error occured while sending verification link',
       });
     }
 
@@ -38,7 +38,7 @@ export const login = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      message: 'User logged in succesfully.',
+      message: 'User logged in succesfully',
       data: {
         accessToken,
         refreshToken,
@@ -55,7 +55,7 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     return res
       .status(200)
-      .json({ success: true, message: 'Access token refreshed succesfully.', data: { accessToken } });
+      .json({ success: true, message: 'Access token refreshed succesfully', data: { accessToken } });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -67,7 +67,7 @@ export const logout = async (req: Request, res: Response) => {
 
     TokenManager.clearAllTokens(res);
 
-    return res.status(200).json({ success: true, message: 'User logged out succesfully.' });
+    return res.status(200).json({ success: true, message: 'User logged out succesfully' });
   } catch (err) {
     TokenManager.clearAllTokens(res);
 
@@ -81,7 +81,7 @@ export const requestEmailVerificationLink = async (req: Request, res: Response) 
 
     return res.status(200).json({
       success: true,
-      message: 'If this email is registered, a verification link has been sent.',
+      message: 'If this email is registered, a verification link has been sent',
     });
   } catch (err) {
     handleAppError(res, err as IAppError);
@@ -94,7 +94,7 @@ export const requestPasswordResetLink = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      message: 'If this email is registered, a password reset link has been sent.',
+      message: 'If this email is registered, a password reset link has been sent',
     });
   } catch (err) {
     handleAppError(res, err as IAppError);
@@ -103,9 +103,9 @@ export const requestPasswordResetLink = async (req: Request, res: Response) => {
 
 export const verifyEmail = async (req: Request, res: Response) => {
   try {
-    const data = await AuthManager.handleUserVerification(req.body.token);
+    await AuthManager.handleUserVerification(req.body.token);
 
-    return res.status(200).json({ success: true, status: data?.status, message: data?.message });
+    return res.status(200).json({ success: true, message: 'User verified successfully' });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -117,7 +117,7 @@ export const passwordReset = async (req: Request, res: Response) => {
   try {
     await AuthManager.handlePasswordReset(token, newPassword);
 
-    return res.status(200).json({ success: true, message: 'Password reset successful.' });
+    return res.status(200).json({ success: true, message: 'Password reset successful' });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
