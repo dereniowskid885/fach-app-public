@@ -62,17 +62,11 @@ export const refreshToken = async (req: Request, res: Response) => {
 };
 
 export const logout = async (req: Request, res: Response) => {
-  try {
-    await AuthManager.logout(req.cookies.refreshToken);
+  TokenManager.clearAllTokens(res);
 
-    TokenManager.clearAllTokens(res);
+  await AuthManager.logout(req.cookies.refreshToken);
 
-    return res.status(200).json({ success: true, message: 'User logged out succesfully' });
-  } catch (err) {
-    TokenManager.clearAllTokens(res);
-
-    handleAppError(res, err as IAppError);
-  }
+  return res.status(200).json({ success: true, message: 'User logged out succesfully' });
 };
 
 export const requestEmailVerificationLink = async (req: Request, res: Response) => {

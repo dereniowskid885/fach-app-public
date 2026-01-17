@@ -13,7 +13,7 @@ import express from 'express';
 const router = express.Router();
 
 import { createMiddleware } from '@shared/helpers/createMiddleware';
-import { checkAndParseAccessToken, checkRefreshToken } from '@shared/middlewares/authMiddleware';
+import { checkRefreshToken } from '@shared/middlewares/authMiddleware';
 import {
   validateUserRegisterMiddleware,
   validateUserLoginMiddleware,
@@ -22,7 +22,6 @@ import {
 } from 'middlewares/authValidationMiddleware';
 import { validateSendEmailMiddleware } from '@middlewares/sendEmailValidationMiddleware';
 
-const accessTokenMiddleware = createMiddleware(checkAndParseAccessToken, process.env.ACCESS_TOKEN_SECRET);
 const refreshTokenMiddleware = createMiddleware(checkRefreshToken, process.env.REFRESH_TOKEN_SECRET);
 
 /**
@@ -291,22 +290,6 @@ router.post('/refresh-token', refreshTokenMiddleware, refreshToken);
  *                 message:
  *                   type: string
  *                   example: User logged out succesfully.
- *       404:
- *         description: User not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_USER_NOT_FOUND"
- *                 message:
- *                   type: string
- *                   example: User with provided id not found
  *       500:
  *         description: Server error
  *         content:
@@ -324,7 +307,7 @@ router.post('/refresh-token', refreshTokenMiddleware, refreshToken);
  *                   type: string
  *                   example: Server error
  */
-router.post('/logout', accessTokenMiddleware, logout);
+router.post('/logout', logout);
 
 /**
  * @swagger

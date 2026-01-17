@@ -70,17 +70,17 @@ export const UserManager = {
     return user.toSafeObject();
   },
   updateUserRefreshToken: async (userId: string, refreshToken: string) => {
-    const user = await UserModel.findOneAndUpdate(
-      { _id: userId },
-      { $pull: { refreshTokens: { token: refreshToken } } },
+    // Find user and delete the specific existing refresh token
+    await UserModel.findOneAndUpdate(
+      {
+        _id: userId,
+        'refreshTokens.token': refreshToken,
+      },
+      {
+        $pull: { refreshTokens: { token: refreshToken } },
+      },
       { new: true },
-    ).select(safeUserProjection);
-
-    if (!user) {
-      throw new AppError(404, EResponseStatus.ERROR_USER_NOT_FOUND, 'User with provided id not found');
-    }
-
-    await user.save();
+    );
   },
   deleteUser: async (userId: string) => {
     const user = await UserManager.getUserById(userId);
