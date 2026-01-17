@@ -13,7 +13,7 @@ import express from 'express';
 const router = express.Router();
 
 import { createMiddleware } from '@shared/helpers/createMiddleware';
-import { checkAndParseAccessToken, checkRefreshToken } from '@shared/middlewares/authMiddleware';
+import { checkRefreshToken } from '@shared/middlewares/authMiddleware';
 import {
   validateUserRegisterMiddleware,
   validateUserLoginMiddleware,
@@ -22,7 +22,6 @@ import {
 } from 'middlewares/authValidationMiddleware';
 import { validateSendEmailMiddleware } from '@middlewares/sendEmailValidationMiddleware';
 
-const accessTokenMiddleware = createMiddleware(checkAndParseAccessToken, process.env.ACCESS_TOKEN_SECRET);
 const refreshTokenMiddleware = createMiddleware(checkRefreshToken, process.env.REFRESH_TOKEN_SECRET);
 
 /**
@@ -324,7 +323,7 @@ router.post('/refresh-token', refreshTokenMiddleware, refreshToken);
  *                   type: string
  *                   example: Server error
  */
-router.post('/logout', accessTokenMiddleware, logout);
+router.post('/logout', logout);
 
 /**
  * @swagger

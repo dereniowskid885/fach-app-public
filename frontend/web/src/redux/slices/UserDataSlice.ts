@@ -22,6 +22,9 @@ const userData = createSlice({
     setUserData(state, action: PayloadAction<ITokenPayload | null>) {
       if (!action.payload) return;
       state.user = action.payload;
+    },
+    clearUserData(state) {
+      state.user = initialState.user;
     }
   }
 });
@@ -30,6 +33,6 @@ const userData = createSlice({
 const selectSelf = (state: RootState) => state.userDataSlice;
 const selectUserData = createSelector(selectSelf, state => state.user);
 
-export const { setUserData } = userData.actions;
+export const { setUserData, clearUserData } = userData.actions;
 export { selectUserData };
 export default userData.reducer;

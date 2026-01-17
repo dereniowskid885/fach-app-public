@@ -2,8 +2,8 @@
 
 import { ITokenPayload } from '@/constants/interfaces';
 import { useAppDispatch } from '@/redux/hooks';
-import { setUserData } from '@/redux/slices/UserDataSlice';
-import { ReactNode } from 'react';
+import { clearUserData, setUserData } from '@/redux/slices/UserDataSlice';
+import { ReactNode, useEffect } from 'react';
 
 export interface IAuthWrapper {
   children: ReactNode;
@@ -11,12 +11,15 @@ export interface IAuthWrapper {
 }
 
 export default function AuthWrapper({ children, userData }: IAuthWrapper) {
-  if (!userData) {
-    return;
-  }
-
   const dispatch = useAppDispatch();
-  dispatch(setUserData(userData));
+
+  useEffect(() => {
+    if (userData) {
+      dispatch(setUserData(userData));
+    } else {
+      dispatch(clearUserData());
+    }
+  }, [dispatch, userData]);
 
   return <>{children}</>;
 }
