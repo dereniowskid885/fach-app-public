@@ -290,22 +290,6 @@ router.post('/refresh-token', refreshTokenMiddleware, refreshToken);
  *                 message:
  *                   type: string
  *                   example: User logged out succesfully.
- *       404:
- *         description: User not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_USER_NOT_FOUND"
- *                 message:
- *                   type: string
- *                   example: User with provided id not found
  *       500:
  *         description: Server error
  *         content:
