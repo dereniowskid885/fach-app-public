@@ -209,14 +209,13 @@ export type PostAuthLoginApiArg = {
     password?: string;
   };
 };
-export type PostAuthRefreshTokenApiResponse =
-  /** status 200 Access token refreshed succesfully. */ {
-    success?: boolean;
-    message?: string;
-    data?: {
-      accessToken?: string;
-    };
+export type PostAuthRefreshTokenApiResponse = /** status 200 Access token refreshed succesfully */ {
+  success?: boolean;
+  message?: string;
+  data?: {
+    accessToken?: string;
   };
+};
 export type PostAuthRefreshTokenApiArg = void;
 export type PostAuthLogoutApiResponse = /** status 200 User logged out succesfully. */ {
   success?: boolean;
@@ -224,7 +223,7 @@ export type PostAuthLogoutApiResponse = /** status 200 User logged out succesful
 };
 export type PostAuthLogoutApiArg = void;
 export type PostAuthRequestEmailVerificationApiResponse =
-  /** status 200 If this email is registered, a verification link has been sent. */ {
+  /** status 200 If this email is registered, a verification link has been sent */ {
     success?: boolean;
     message?: string;
   };
@@ -246,7 +245,7 @@ export type PostAuthEmailVerificationApiArg = {
   };
 };
 export type PostAuthRequestPasswordResetApiResponse =
-  /** status 200 If this email is registered, a password reset link has been sent. */ {
+  /** status 200 If this email is registered, a password reset link has been sent */ {
     success?: boolean;
     message?: string;
   };
