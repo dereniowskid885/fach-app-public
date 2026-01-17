@@ -57,6 +57,7 @@ export default function Navigation() {
       <NavLink href={PROFILE_PATH} title="Profil" className="nav-item">
         <FaUser />
       </NavLink>
+
       <Button
         className="nav-item gap-1 border-0 border-none bg-transparent hover:bg-transparent"
         onClick={handleLogout}
@@ -64,8 +65,10 @@ export default function Navigation() {
         variant="outline"
       >
         <MdOutlineLogout />
+
         <Typography variant="small">Wyloguj</Typography>
       </Button>
+
       <LoadingOverlay isLoading={isLogoutLoading} />
     </nav>
   );
