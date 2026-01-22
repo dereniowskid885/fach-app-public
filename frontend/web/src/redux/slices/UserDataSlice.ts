@@ -6,6 +6,7 @@ const initialState = {
   user: {
     userId: '',
     categoryId: '',
+    categoryName: '',
     email: '',
     role: '',
     city: '',

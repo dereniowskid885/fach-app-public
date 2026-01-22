@@ -61,12 +61,12 @@ export default function Login() {
     }
   };
 
-  const toastClickHandler = (closeToast: () => void) => {
-    router.push(HOME_PATH);
-    closeToast();
-  };
-
   useEffect(() => {
+    const toastClickHandler = (closeToast: () => void) => {
+      router.push(HOME_PATH);
+      closeToast();
+    };
+
     const checkUserSession = async () => {
       const hasRefreshToken = await isCookie('refreshToken');
 
@@ -85,7 +85,7 @@ export default function Login() {
     };
 
     checkUserSession();
-  }, []);
+  }, [toast, router]);
 
   return (
     <Card className="w-screen min-w-[300px] rounded-none border-none bg-primary-800 sm:w-auto">
@@ -95,6 +95,7 @@ export default function Login() {
             Issue solver
           </Typography>
         </CardTitle>
+
         <CardDescription>
           <Typography variant="h3" className="font-normal text-white">
             Zaloguj się na swoje konto
@@ -117,6 +118,7 @@ export default function Login() {
                 required
               />
             </div>
+
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="password">Hasło</Label>
               <PasswordInput register={register('password')} id="password" />
@@ -126,6 +128,7 @@ export default function Login() {
                 </Typography>
               </Link>
             </div>
+
             {formState.errors.root && (
               <Typography variant="p" className="text-center font-bold text-error">
                 {formState.errors.root.message}
@@ -138,6 +141,7 @@ export default function Login() {
           <Button loading={isLoading} type="submit">
             Zaloguj
           </Button>
+
           <Link href={REGISTER_PATH}>
             <Button variant="outline">Rejestracja</Button>
           </Link>
