@@ -9,6 +9,7 @@ export interface IResult {
 export interface ITokenPayload {
   userId: string;
   categoryId: string;
+  categoryName: string;
   role: EUserRole;
   email: string;
   name: string;

@@ -1,20 +1,23 @@
 import { ETicketStatus } from '@shared/constants/enums';
 import { Types, Document, Schema, model } from 'mongoose';
+import { ICategoryModel } from './Category';
+import { IUserModel } from './User';
+import { IEvaluationModel } from './Evaluation';
 
 export interface ITicketModel extends Document {
   _id: Types.ObjectId;
-  category: Types.ObjectId;
+  category: Types.ObjectId | ICategoryModel;
   city: string;
   status: ETicketStatus;
-  assignee: Types.ObjectId;
-  createdBy: Types.ObjectId;
+  assignee: Types.ObjectId | IUserModel;
+  createdBy: Types.ObjectId | IUserModel;
   createdAt: Date;
-  updatedBy: Types.ObjectId;
+  updatedBy: Types.ObjectId | IUserModel;
   updatedAt: Date;
   title: string;
   description: string;
-  evaluations: Types.ObjectId[];
-  acceptedEvaluation: Types.ObjectId;
+  evaluations: (Types.ObjectId | IEvaluationModel)[];
+  acceptedEvaluation: Types.ObjectId | IEvaluationModel;
 }
 
 const ticketSchema = new Schema<ITicketModel>({

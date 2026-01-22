@@ -81,6 +81,15 @@
  *         - Badanie przez moderatora
  *         - Ukończony
  *       example: Wycena
+ *     PaymentStatus:
+ *       type: string
+ *       enum:
+ *         - pending
+ *         - succeeded
+ *         - failed
+ *         - canceled
+ *         - refunded
+ *       example: pending
  *     Ticket:
  *       type: object
  *       properties:
@@ -120,4 +129,31 @@
  *             $ref: '#/components/schemas/Evaluation'
  *         acceptedEvaluation:
  *           $ref: '#/components/schemas/Evaluation'
+ *     Payment:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "64f3b12a6f4c1e9d3a7b5678"
+ *         user:
+ *           $ref: '#/components/schemas/User'
+ *         ticket:
+ *           $ref: '#/components/schemas/Ticket'
+ *         amount:
+ *           type: number
+ *           format: float
+ *           example: 20
+ *         currency:
+ *           type: string
+ *           enum: [PLN]
+ *           example: "PLN"
+ *         paymentMethod:
+ *           type: string
+ *           example: "BLIK"
+ *         status:
+ *           $ref: '#/components/schemas/PaymentStatus'
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2023-12-25T10:00:00Z"
  */

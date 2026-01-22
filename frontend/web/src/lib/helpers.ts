@@ -53,3 +53,6 @@ export const getFormattedDate = (isoString?: string) => {
 
   return `${day}.${month}.${year} ${hours}:${minutes}`;
 };
+
+export const getFormattedPriceAmount = (amountInCents = 0) =>
+  amountInCents ? (amountInCents / 100).toFixed(2) : 0;

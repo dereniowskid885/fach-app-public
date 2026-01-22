@@ -110,6 +110,16 @@ const injectedRtkApi = api.injectEndpoints({
         }
       })
     }),
+    postTicketsByIdPayment: build.mutation<
+      PostTicketsByIdPaymentApiResponse,
+      PostTicketsByIdPaymentApiArg
+    >({
+      query: queryArg => ({
+        url: `/tickets/${queryArg.id}/payment`,
+        method: 'POST',
+        body: queryArg.body
+      })
+    }),
     getTicketsById: build.query<GetTicketsByIdApiResponse, GetTicketsByIdApiArg>({
       query: queryArg => ({ url: `/tickets/${queryArg.id}` })
     }),
@@ -365,12 +375,33 @@ export type GetTicketsApiArg = {
   categoryId?: string;
   /** Filter by city */
   city?: string;
-  /** Filter by ticket status */
-  status?: TicketStatus;
+  /** Filter by one or multiple ticket statuses.
+    You can pass a single value or a comma-separated list.
+    Example: Wycena,Oczekiwanie na płatność
+     */
+  status?: string;
   /** Filter by assignee (userId) */
   assignee?: string;
   /** Filter by author (userId) */
   createdBy?: string;
+};
+export type PostTicketsByIdPaymentApiResponse = /** status 200 Ticket payment successfull */ {
+  success?: boolean;
+  message?: string;
+  data?: {
+    clientSecret?: string;
+    payment?: Payment;
+  };
+};
+export type PostTicketsByIdPaymentApiArg = {
+  /** Unique ID of the ticket */
+  id: string;
+  body: {
+    /** Numeric value of the price */
+    amount: number;
+    /** Currency code (e.g., PLN) */
+    currency: string;
+  };
 };
 export type GetTicketsByIdApiResponse = /** status 200 Successfully retrieved the ticket */ {
   success?: boolean;
@@ -575,6 +606,17 @@ export type Ticket = {
   evaluations?: Evaluation[];
   acceptedEvaluation?: Evaluation;
 };
+export type PaymentStatus = 'pending' | 'succeeded' | 'failed' | 'canceled' | 'refunded';
+export type Payment = {
+  _id?: string;
+  user?: User;
+  ticket?: Ticket;
+  amount?: number;
+  currency?: 'PLN';
+  paymentMethod?: string;
+  status?: PaymentStatus;
+  createdAt?: string;
+};
 export const {
   usePostAuthRegisterMutation,
   usePostAuthLoginMutation,
@@ -593,6 +635,7 @@ export const {
   usePatchCategoriesByIdSpecialistRemoveMutation,
   usePostTicketsMutation,
   useGetTicketsQuery,
+  usePostTicketsByIdPaymentMutation,
   useGetTicketsByIdQuery,
   useDeleteTicketsByIdMutation,
   usePatchTicketsByIdMutation,

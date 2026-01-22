@@ -22,14 +22,13 @@ export default function DashboardTickets() {
   const isUser = role === EUserRole.USER;
 
   const filters = buildDashboardTicketsQueryFilters(role, userId);
-
   const {
     data: getTicketsResponse,
     isLoading,
     isFetching,
     isError,
     refetch
-  } = useGetTicketsQuery(filters, { refetchOnMountOrArgChange: true });
+  } = useGetTicketsQuery(filters ?? {}, { skip: !filters, refetchOnMountOrArgChange: true });
   const userTickets = getTicketsResponse?.data ?? [];
   const userTicketsLength = getTicketsResponse?.dataLength ?? 0;
 
