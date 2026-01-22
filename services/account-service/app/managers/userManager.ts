@@ -1,16 +1,15 @@
-import { IGetUsersFilter } from '@interfaces/user';
 import { safeUserProjection } from '@constants/projections';
-import UserModel from '@models/User';
+import UserModel, { IUserModel } from '@models/User';
 import { EResponseStatus } from '@shared/constants/responseStatus';
 import { AppError } from '@shared/utils/AppError';
 import { EUserRole } from '@shared/constants/enums';
 import { CategoryManager } from './categoryManager';
 import User from '@models/User';
 import { printMongooseValidationErrors } from '@helpers/printMongooseValidationErrors';
-import { Error as MongooseError } from 'mongoose';
+import { FilterQuery, Error as MongooseError } from 'mongoose';
 
 export const UserManager = {
-  getUsers: async (filter: IGetUsersFilter) => {
+  getUsers: async (filter: FilterQuery<IUserModel>) => {
     const users = await UserModel.find(filter, safeUserProjection);
 
     return users;
