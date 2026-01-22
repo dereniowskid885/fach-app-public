@@ -9,6 +9,7 @@ import { Types } from 'mongoose';
 import { UserManager } from './userManager';
 import { EResponseStatus } from '@shared/constants/responseStatus';
 import { handleRefreshTokenError } from '@shared/helpers/handleJwtError';
+import Category, { ICategoryModel } from '@models/Category';
 
 export const TokenManager = {
   handleTokenRefresh: async (req: Request, res: Response) => {
@@ -34,7 +35,7 @@ export const TokenManager = {
         throw new AppError(401, EResponseStatus.ERROR_INVALID_TOKEN, 'Invalid refresh token');
       }
 
-      const accessToken = TokenManager.generateAccessToken(req, res, user);
+      const accessToken = await TokenManager.generateAccessToken(req, res, user);
 
       await user.save();
       await TokenManager.removeExpiredTokens(user._id);
@@ -51,11 +52,25 @@ export const TokenManager = {
   generateRandomToken: () => {
     return crypto.randomBytes(32).toString('hex');
   },
-  generateAccessToken: (req: Request, res: Response, user: IUserModel) => {
+  generateAccessToken: async (req: Request, res: Response, user: IUserModel) => {
     const { _id, role, email, name, surname, city, category } = user;
+
+    let categoryName;
+
+    if (category) {
+      const categoryModel = (await Category.findById(category)) as ICategoryModel;
+
+      if (!categoryModel) {
+        throw new AppError(500, EResponseStatus.ERROR_CATEGORY_NOT_FOUND, 'Specialist category not found');
+      }
+
+      categoryName = categoryModel ? categoryModel.name : '';
+    }
+
     const fullName = `${name} ${surname}`;
+
     const accessToken = jwt.sign(
-      { userId: _id, role, email, name, surname, fullName, city, categoryId: category },
+      { userId: _id, role, email, name, surname, fullName, city, categoryId: category, categoryName },
       process.env.ACCESS_TOKEN_SECRET ?? '',
       {
         expiresIn: '15m',
@@ -95,15 +110,15 @@ export const TokenManager = {
 
     return { refreshToken, refreshTokenData };
   },
-  generateTokens: (req: Request, res: Response, user: IUserModel) => {
-    const accessToken = TokenManager.generateAccessToken(req, res, user);
+  generateTokens: async (req: Request, res: Response, user: IUserModel) => {
+    const accessToken = await TokenManager.generateAccessToken(req, res, user);
     const { refreshToken, refreshTokenData } = TokenManager.generateRefreshToken(req, res, user);
 
     return { accessToken, refreshToken, refreshTokenData };
   },
   handleUserTokens: async (req: Request, res: Response, user: IUserModel) => {
     try {
-      const { refreshTokenData, accessToken, refreshToken } = TokenManager.generateTokens(req, res, user);
+      const { refreshTokenData, accessToken, refreshToken } = await TokenManager.generateTokens(req, res, user);
 
       user.refreshTokens = [refreshTokenData];
 
