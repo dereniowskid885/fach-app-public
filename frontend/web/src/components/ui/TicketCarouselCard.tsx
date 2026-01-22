@@ -15,29 +15,29 @@ import { EUserRole } from '@/constants/userRole';
 import { SpecialistTicketCarouselCardButtons } from './SpecialistTicketCarouselCardButtons';
 import { Alert, AlertDescription } from '../shadcn/alert';
 import { AlertCircle } from 'lucide-react';
-import { getFormattedDate } from '@/lib/helpers';
+import { getFormattedDate, getFormattedPriceAmount } from '@/lib/helpers';
 import { Typography } from '../common/Typography';
 import { Ticket } from '@/api/accountApi';
 
-export interface ITicketCarouselCard extends Ticket {
+export interface ITicketCarouselCard {
   userId: string;
   userRole: EUserRole;
+  ticket: Ticket;
 }
 
-export default function TicketCarouselCard({
-  userId,
-  userRole,
-  _id,
-  city,
-  category,
-  status,
-  assignee,
-  createdBy,
-  title,
-  description,
-  evaluations,
-  acceptedEvaluation
-}: ITicketCarouselCard) {
+export default function TicketCarouselCard({ userId, userRole, ticket }: ITicketCarouselCard) {
+  const {
+    status,
+    evaluations,
+    category,
+    assignee,
+    createdBy,
+    city,
+    acceptedEvaluation,
+    title,
+    description
+  } = ticket;
+
   const isEvaluatedByLoggedSpecialist =
     userRole === EUserRole.SPECIALIST &&
     status === ETicketStatus.PRICE_USER_ACCEPTATION &&
@@ -57,6 +57,7 @@ export default function TicketCarouselCard({
 
             <CategoryIcon categoryName={category?.name} />
           </div>
+
           <div className="flex flex-col">
             <TicketInfoRow>
               Przypisany:{' '}
@@ -64,22 +65,27 @@ export default function TicketCarouselCard({
                 {assignee?.email} {userId === assignee?._id ? '(Ty)' : ''}
               </b>
             </TicketInfoRow>
+
             <TicketInfoRow>
               Autor:{' '}
               <b>
                 {createdBy?.email} {userId === createdBy?._id ? '(Ty)' : ''}
               </b>
             </TicketInfoRow>
+
             <TicketInfoRow>
               Kategoria: <b>{category?.name}</b>
             </TicketInfoRow>
+
             <TicketInfoRow>
               Miasto: <b>{city}</b>
             </TicketInfoRow>
+
             <TicketInfoRow>
               Status: <TicketStatusBadge status={status as ETicketStatus} />
             </TicketInfoRow>
           </div>
+
           {/* TODO */}
           {/* add info about evaluation which is waiting */}
           {isEvaluatedByLoggedSpecialist ? (
@@ -94,24 +100,23 @@ export default function TicketCarouselCard({
                   Termin odpowiedzi:{' '}
                   <b className="text-info">{getFormattedDate(acceptedEvaluation.dateOfResponse)}</b>
                 </Typography>
+
                 <Typography variant="muted">
                   Cena:{' '}
-                  <b className="text-info">{`${acceptedEvaluation.price?.value} ${acceptedEvaluation.price?.currency}`}</b>
+                  <b className="text-info">{`${getFormattedPriceAmount(acceptedEvaluation.price?.value)} ${acceptedEvaluation.price?.currency}`}</b>
                 </Typography>
               </AlertDescription>
             </Alert>
           ) : null}
+
           <CardTitle>{title}</CardTitle>
           <CardDescription className="line-clamp-2 text-neutral-400">{description}</CardDescription>
+
           {userRole === EUserRole.USER ? (
-            <UserTicketCarouselCardButtons
-              ticketId={_id}
-              ticketStatus={status as ETicketStatus}
-              ticketEvaluations={evaluations}
-            />
+            <UserTicketCarouselCardButtons ticket={ticket} />
           ) : userRole === EUserRole.SPECIALIST ? (
             <SpecialistTicketCarouselCardButtons
-              ticketId={_id}
+              ticketId={ticket._id}
               ticketCity={city}
               ticketStatus={status as ETicketStatus}
               isEvaluatedByLoggedSpecialist={isEvaluatedByLoggedSpecialist}

@@ -33,7 +33,10 @@ export default function PriceInput({ className, max, setPrice, currency }: IPric
     }
 
     setPriceInput(normalized);
-    setPrice(parsed);
+
+    const priceInCents = Math.round(parsed * 100);
+
+    setPrice(priceInCents);
   };
 
   return (
