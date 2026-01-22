@@ -79,3 +79,20 @@ export const validateTicketUpdateMiddleware = (req: Request, res: Response, next
     handleZodError(res, err);
   }
 };
+
+const ticketPaymentSchema = z
+  .object({
+    amount: z.number().min(0),
+    currency: z.enum(ESupportedCurrency),
+  })
+  .strict();
+
+export const validateTicketPaymentMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    req.body = ticketPaymentSchema.parse(req.body);
+
+    next();
+  } catch (err) {
+    handleZodError(res, err);
+  }
+};

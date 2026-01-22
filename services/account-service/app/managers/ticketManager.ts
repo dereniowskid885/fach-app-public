@@ -1,13 +1,13 @@
 import { AppError } from '@shared/utils/AppError';
-import Ticket from '@models/Ticket';
+import Ticket, { ITicketModel } from '@models/Ticket';
 import { JwtPayload } from 'jsonwebtoken';
 import { ESupportedCurrency, ETicketStatus, EUserRole } from '@shared/constants/enums';
-import Evaluation from '@models/Evaluation';
+import Evaluation, { IEvaluationModel } from '@models/Evaluation';
 import { EResponseStatus } from '@shared/constants/responseStatus';
-import { IGetTicketsFilter } from '@interfaces/ticket';
 import { CategoryManager } from './categoryManager';
 import { UserManager } from './userManager';
 import { checkTicketStatusTransition } from '@helpers/checkTicketStatusTransition';
+import { FilterQuery } from 'mongoose';
 
 export const TicketManager = {
   getTicketByID: async (ticketId: string) => {
@@ -25,7 +25,7 @@ export const TicketManager = {
 
     return ticket;
   },
-  getTickets: async (filter: IGetTicketsFilter, user?: JwtPayload) => {
+  getTickets: async (filter: FilterQuery<ITicketModel>, user: JwtPayload) => {
     if (!user) {
       throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
     }
@@ -53,7 +53,7 @@ export const TicketManager = {
       description: string;
       categoryId: string;
     },
-    user?: JwtPayload,
+    user: JwtPayload,
   ) => {
     if (!user) {
       throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
@@ -72,7 +72,7 @@ export const TicketManager = {
 
     return ticket;
   },
-  deleteTicket: async (ticketId: string, user?: JwtPayload) => {
+  deleteTicket: async (ticketId: string, user: JwtPayload) => {
     if (!user) {
       throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
     }
@@ -98,7 +98,7 @@ export const TicketManager = {
     ticketId: string,
     evaluatedPrice: { value: number; currency: ESupportedCurrency },
     evaluatedMinutes: number,
-    user?: JwtPayload,
+    user: JwtPayload,
   ) => {
     if (!user) {
       throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
@@ -144,7 +144,7 @@ export const TicketManager = {
 
     return ticket.populate({ path: 'updatedBy', select: 'email' });
   },
-  ticketEvaluationAcceptHandler: async (ticketId: string, evaluationId: string, user?: JwtPayload) => {
+  ticketEvaluationAcceptHandler: async (ticketId: string, evaluationId: string, user: JwtPayload) => {
     if (!user) {
       throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
     }
@@ -197,7 +197,7 @@ export const TicketManager = {
       title: string;
       description: string;
     }>,
-    user?: JwtPayload,
+    user: JwtPayload,
   ) => {
     if (!user) {
       throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
@@ -269,5 +269,31 @@ export const TicketManager = {
     await ticket.save();
 
     return ticket.populate({ path: 'updatedBy', select: 'email' });
+  },
+  handleSuccessfulPayment: async (ticketId: string) => {
+    const ticket = await Ticket.findById(ticketId).populate('acceptedEvaluation');
+
+    if (!ticket) {
+      throw new AppError(
+        404,
+        EResponseStatus.ERROR_TICKET_NOT_FOUND,
+        'Ticket not found - wrong ticketId associated with payment',
+      );
+    }
+
+    const acceptedEvaluation = ticket.acceptedEvaluation as IEvaluationModel;
+
+    if (!acceptedEvaluation) {
+      throw new AppError(
+        404,
+        EResponseStatus.ERROR_INVALID_DATA,
+        'Wrong ticket data - ticket does not have acceptedEvaluation',
+      );
+    }
+
+    ticket.assignee = acceptedEvaluation.user;
+    ticket.status = ETicketStatus.IN_PROGRESS;
+
+    await ticket.save();
   },
 };

@@ -3,6 +3,7 @@ import { IAppError } from '@shared/utils/AppError';
 import { handleAppError } from '@shared/helpers/handleAppError';
 import type { Request, Response } from 'express';
 import { FilterBuilder } from '@utils/filterBuilder';
+import { PaymentManager } from '@managers/paymentManager';
 
 export const createTicket = async (req: Request, res: Response) => {
   try {
@@ -75,6 +76,24 @@ export const ticketEvaluationAccept = async (req: Request, res: Response) => {
     const ticket = await TicketManager.ticketEvaluationAcceptHandler(req.params.id, req.body.evaluationId, req.user);
 
     return res.status(200).json({ success: true, message: 'Ticket evaluation accepted successfully', data: ticket });
+  } catch (err) {
+    handleAppError(res, err as IAppError);
+  }
+};
+
+export const ticketPaymentHandler = async (req: Request, res: Response) => {
+  try {
+    const { amount, currency } = req.body;
+    const result = await PaymentManager.ticketPaymentHandler(req.user, req.params.id, amount, currency);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Ticket payment successfull',
+      data: {
+        clientSecret: result?.clientSecret,
+        payment: result?.payment,
+      },
+    });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }

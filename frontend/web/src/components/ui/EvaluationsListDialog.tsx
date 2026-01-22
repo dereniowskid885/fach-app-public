@@ -6,7 +6,7 @@ import {
   PatchTicketsByIdAcceptEvaluationApiArg,
   usePatchTicketsByIdAcceptEvaluationMutation
 } from '@/api/accountApi';
-import { getFormattedDate, parseQueryError } from '@/lib/helpers';
+import { getFormattedDate, getFormattedPriceAmount, parseQueryError } from '@/lib/helpers';
 import { RowSelectionState } from '@tanstack/react-table';
 import { useToast } from '@/hooks/use-toast';
 
@@ -15,7 +15,7 @@ export interface IEvaluationsListDialog {
   refetchTickets: () => void;
   closeDialog: () => void;
   ticketId?: string;
-  ticketEvaluations: Evaluation[];
+  ticketEvaluations?: Evaluation[];
 }
 
 export const EvaluationsListDialog = ({
@@ -23,7 +23,7 @@ export const EvaluationsListDialog = ({
   refetchTickets,
   closeDialog,
   ticketId,
-  ticketEvaluations
+  ticketEvaluations = []
 }: IEvaluationsListDialog) => {
   const { toast } = useToast();
 
@@ -36,13 +36,18 @@ export const EvaluationsListDialog = ({
 
   const isEvaluationSelected = Object.keys(selectedEvaluationRow).length > 0;
 
-  const evaluationsTableData = ticketEvaluations?.map(evaluation => ({
-    specialistName: `${evaluation.user?.name} ${evaluation.user?.surname}`,
-    specialistEmail: evaluation.user?.email,
-    dateOfResponse: getFormattedDate(evaluation.dateOfResponse),
-    price: `${evaluation.price?.value} ${evaluation.price?.currency}`,
-    city: evaluation.user?.city
-  }));
+  const evaluationsTableData = ticketEvaluations?.map(evaluation => {
+    const formattedDate = getFormattedDate(evaluation.dateOfResponse);
+    const formattedAmount = getFormattedPriceAmount(evaluation.price?.value);
+
+    return {
+      specialistName: `${evaluation.user?.name} ${evaluation.user?.surname}`,
+      specialistEmail: evaluation.user?.email,
+      dateOfResponse: formattedDate,
+      price: `${formattedAmount} ${evaluation.price?.currency}`,
+      city: evaluation.user?.city
+    };
+  });
 
   const evaluationsTable = (
     <DataTable

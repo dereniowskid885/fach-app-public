@@ -10,12 +10,12 @@ export interface IMainLayout {
 
 export default async function MainLayout({ children }: IMainLayout) {
   const userData = await getUserData();
-  const { name, role } = userData;
+  const { name, role, categoryName } = userData;
 
   return (
     <AuthWrapper userData={userData}>
       <main className="h-full w-full overflow-hidden">
-        <Header userName={name} userRole={role} />
+        <Header userName={name} userRole={role} userCategory={categoryName} />
         {children}
         <Navigation />
       </main>

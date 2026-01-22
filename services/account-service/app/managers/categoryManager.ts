@@ -1,9 +1,9 @@
-import Category from '@models/Category';
+import Category, { ICategoryModel } from '@models/Category';
 import { AppError } from '@shared/utils/AppError';
 import { UserManager } from './userManager';
 import { EUserRole } from '@shared/constants/enums';
 import { EResponseStatus } from '@shared/constants/responseStatus';
-import { IGetCategoriesFilter } from '@interfaces/category';
+import { FilterQuery } from 'mongoose';
 
 const USER_KEYS = ['email', 'role', 'name', 'surname', 'city', 'isVerified'];
 
@@ -24,7 +24,7 @@ export const CategoryManager = {
 
     return category;
   },
-  getCategories: async (filter: IGetCategoriesFilter) => {
+  getCategories: async (filter: FilterQuery<ICategoryModel>) => {
     const categories = await Category.find(filter).populate('specialists', USER_KEYS);
 
     return categories;
@@ -78,28 +78,34 @@ export const CategoryManager = {
       throw new AppError(400, EResponseStatus.ERROR_USER_INVALID_ROLE, 'User is not a specialist');
     }
 
+    const category = await CategoryManager.getCategoryById(categoryId);
+
     if (user.category) {
       const userCategoryId = user.category.toString();
+      const userCategory = await Category.findById(userCategoryId);
 
-      if (userCategoryId === categoryId) {
-        throw new AppError(
-          400,
-          EResponseStatus.ERROR_USER_ALREADY_ASSIGNED_TO_CATEGORY,
-          'Specialist is already assigned to provided category',
-        );
+      if (!userCategory) {
+        throw new AppError(500, EResponseStatus.ERROR_CATEGORY_NOT_FOUND, 'Specialist category not found');
       }
 
-      const userCategory = await CategoryManager.getCategoryById(userCategoryId);
+      if (userCategoryId === categoryId) {
+        const updatedCategory = await Category.findByIdAndUpdate(
+          { _id: categoryId },
+          { $addToSet: { specialists: userId } },
+        );
+
+        return updatedCategory?.populate('specialists');
+      }
+
       const indexToRemove = userCategory.specialists.findIndex((id) => id.equals(user._id));
       const userIdFound = indexToRemove !== -1;
 
       if (userIdFound) {
         userCategory.specialists.splice(indexToRemove, 1);
+
         await userCategory.save();
       }
     }
-
-    const category = await CategoryManager.getCategoryById(categoryId);
 
     user.category = category._id;
     await user.save();
@@ -107,7 +113,7 @@ export const CategoryManager = {
     category.specialists.push(user.id);
     await category.save();
 
-    return category;
+    return category.populate('specialists');
   },
   removeSpecialistFromCategory: async (categoryId: string, userId: string) => {
     const user = await UserManager.getUserById(userId);

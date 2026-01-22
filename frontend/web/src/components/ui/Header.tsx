@@ -18,9 +18,10 @@ import { EUserRole } from '@/constants/userRole';
 export interface IHeader {
   userName: string;
   userRole: EUserRole;
+  userCategory?: string;
 }
 
-export default function Header({ userName, userRole }: IHeader) {
+export default function Header({ userName, userRole, userCategory }: IHeader) {
   return (
     <header className="absolute z-10 m-2 w-[calc(100%-1rem)] rounded-md bg-neutral-800 p-4 text-white">
       <Accordion type="single" collapsible>
@@ -31,18 +32,23 @@ export default function Header({ userName, userRole }: IHeader) {
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>Avatar</AvatarFallback>
               </Avatar>
+
               {userRole === EUserRole.SPECIALIST ? (
-                <FaWrench className="absolute left-1 top-1" />
+                <FaWrench className="absolute left-1 top-1" title={userCategory} />
               ) : null}
+
               <Typography variant="p">{`Witaj, ${userName}!`}</Typography>
             </div>
+
             <AccordionTrigger className="gap-2">
               <MdFavoriteBorder size={30} />
+
               <AmountIcon className="right-0" amount={notifications.length}>
                 <IoIosNotificationsOutline size={30} />
               </AmountIcon>
             </AccordionTrigger>
           </div>
+
           <AccordionContent>
             <HeaderNotificationList />
           </AccordionContent>

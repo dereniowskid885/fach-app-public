@@ -26,7 +26,7 @@ export default function SpecialistTicketEvaluationDialog({
   ticketCity,
   closeDialog
 }: ISpecialistTicketEvaluationDialog) {
-  const [price, setPrice] = useState<number>(0);
+  const [priceInCents, setPriceInCents] = useState<number>(0);
 
   const maxMinutes = 1440; // 1 day
   const [minutes, setMinutes] = useState<number>(0);
@@ -41,7 +41,7 @@ export default function SpecialistTicketEvaluationDialog({
 
   useEffect(() => {
     setErrorMessage('');
-  }, [minutes, price]);
+  }, [minutes, priceInCents]);
 
   const { categoryId } = useSelector(selectUserData);
   // Specialist pending tickets refetch
@@ -55,8 +55,8 @@ export default function SpecialistTicketEvaluationDialog({
       return;
     }
 
-    if (price < 1) {
-      setErrorMessage(`Cena nie może być mniejsza niż 1 ${ESupportedCurrency.PLN}`);
+    if (priceInCents < 200) {
+      setErrorMessage(`Cena nie może być mniejsza niż 2.00 ${ESupportedCurrency.PLN}`);
       return;
     }
 
@@ -64,7 +64,7 @@ export default function SpecialistTicketEvaluationDialog({
       id: ticketId,
       body: {
         price: {
-          value: price,
+          value: priceInCents,
           currency: ESupportedCurrency.PLN
         },
         minutes
@@ -91,6 +91,7 @@ export default function SpecialistTicketEvaluationDialog({
       <div className="flex flex-col justify-center space-y-8">
         <div className="flex w-full flex-col items-center space-y-4">
           <Typography variant="small">Czas odpowiedzi</Typography>
+
           <div className="flex space-x-3">
             <div className="flex flex-col items-center space-y-1">
               <Label htmlFor="days" className="text-xs">
@@ -106,6 +107,7 @@ export default function SpecialistTicketEvaluationDialog({
                 onRightFocus={() => hoursRef.current?.focus()}
               />
             </div>
+
             <div className="flex flex-col items-center space-y-1">
               <Label htmlFor="hours" className="text-xs">
                 Godziny
@@ -121,6 +123,7 @@ export default function SpecialistTicketEvaluationDialog({
                 onRightFocus={() => minutesRef.current?.focus()}
               />
             </div>
+
             <div className="flex flex-col items-center space-y-1">
               <Label htmlFor="minutes" className="text-xs">
                 Minuty
@@ -136,6 +139,7 @@ export default function SpecialistTicketEvaluationDialog({
               />
             </div>
           </div>
+
           <Slider
             value={[minutes]}
             min={0}
@@ -146,9 +150,10 @@ export default function SpecialistTicketEvaluationDialog({
         </div>
         <div className="flex w-full flex-col items-center space-y-4">
           <Typography variant="small">Cena</Typography>
+
           <PriceInput
             className="w-auto text-center"
-            setPrice={setPrice}
+            setPrice={setPriceInCents}
             max={10000}
             currency={ESupportedCurrency.PLN}
           />
