@@ -6,6 +6,7 @@ import {
   ticketEvaluationHandler,
   ticketEvaluationAccept,
   updateTicket,
+  ticketPaymentHandler,
 } from '@controllers/ticketController';
 
 import express from 'express';
@@ -17,6 +18,7 @@ import {
   validateCreateTicketMiddleware,
   validateTicketEvaluationAcceptMiddleware,
   validateTicketEvaluationMiddleware,
+  validateTicketPaymentMiddleware,
   validateTicketUpdateMiddleware,
 } from '@middlewares/ticketValidationMiddleware';
 
@@ -120,6 +122,111 @@ router.use(accessTokenMiddleware);
  *                   example: Server error
  */
 router.post('/', validateCreateTicketMiddleware, createTicket);
+
+/**
+ * @swagger
+ * /tickets/{id}/payment:
+ *   post:
+ *     summary: Ticket payment
+ *     tags:
+ *       - Ticketing
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the ticket
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - amount
+ *               - currency
+ *             properties:
+ *               amount:
+ *                 type: number
+ *                 description: Numeric value of the price
+ *                 example: 250.5
+ *               currency:
+ *                 type: string
+ *                 description: Currency code (e.g., PLN)
+ *                 example: "PLN"
+ *     responses:
+ *       200:
+ *         description: Ticket payment successfull
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Ticket payment successfull
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     clientSecret:
+ *                       type: string
+ *                       example: "src_client_secret_sBqfX18eq6GPfGxGvVfMByCp"
+ *                     payment:
+ *                       $ref: '#/components/schemas/Payment'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_INVALID_DATA"
+ *                 message:
+ *                   type: string
+ *                   example: Error occured on ticket payment
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: Missing user data
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.post('/:id/payment', validateTicketPaymentMiddleware, ticketPaymentHandler);
 
 /**
  * @swagger
