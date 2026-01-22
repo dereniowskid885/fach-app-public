@@ -5,6 +5,7 @@ import userRoutes from './routes/userRoutes';
 import ticketRoutes from './routes/ticketRoutes';
 import categoryRoutes from './routes/categoryRoutes';
 import swaggerRoutes from './routes/swaggerRoutes';
+import webhookRoutes from '@routes/webhookRoutes';
 import { ROUTES } from './constants/routeConstants';
 import express from 'express';
 import cors from 'cors';
@@ -27,15 +28,20 @@ app.use(
 
 dbConnect(mongoose, process.env.MONGO_URI ?? '');
 
+// Webhooks
+app.use(ROUTES.WEBHOOKS, express.raw({ type: 'application/json' }), webhookRoutes);
+
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
 
 // API Routes
-app.use(ROUTES.AUTH.BASE, authRoutes);
-app.use(ROUTES.USERS.BASE, userRoutes);
-app.use(ROUTES.TICKETS.BASE, ticketRoutes);
-app.use(ROUTES.CATEGORY.BASE, categoryRoutes);
+app.use(ROUTES.AUTH, authRoutes);
+app.use(ROUTES.USERS, userRoutes);
+app.use(ROUTES.TICKETS, ticketRoutes);
+app.use(ROUTES.CATEGORIES, categoryRoutes);
+
+// Swagger
 app.use(SWAGGER_ROUTES.BASE, swaggerRoutes);
 
 app.listen(process.env.ACCOUNT_SERVICE_PORT, () => {
