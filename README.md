@@ -37,3 +37,30 @@ Use `Ctrl+Shift+P` and select `Tasks:Run Task`
 
 - Frontend will be available at http://localhost:3000.
 - Account service will be available at http://localhost:4000.
+
+## Stripe payments (Local development)
+
+Stripe sends webhooks only to public URLs.  
+To receive them locally, one must use **Stripe CLI**.
+
+1. Install **Stripe CLI**: https://docs.stripe.com/stripe-cli
+2. Login to Stripe:
+```bash
+stripe login
+```
+3. Start forwarding webhooks to your local backend:
+```bash
+stripe listen --forward-to localhost:4000/api/webhooks/stripe
+```
+4. Copy the generated webhook secret and add it to account-service **.env**:
+```bash
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
+5. Copy the secret key from stripe dashboard (https://dashboard.stripe.com/login) to account-service **.env**:
+```bash
+STRIPE_SECRET_KEY=sk_test_...
+```
+
+- Stripe CLI is required only for local development.
+- Each developer must run Stripe CLI locally.
+- Without Stripe CLI, webhook-based payments (ex. ticket payments) will not work.
