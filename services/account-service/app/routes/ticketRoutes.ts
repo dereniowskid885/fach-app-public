@@ -606,7 +606,7 @@ router.patch('/:id', validateTicketUpdateMiddleware, updateTicket);
  * /tickets/{id}/evaluation:
  *   patch:
  *     summary: Ticket evaluation (used by specialist)
- *     description: Allows a specialist to evaluate a ticket by providing a price and response time (minutes)
+ *     description: Allows a specialist to evaluate a ticket by providing a price (in cents, cannot be lower than 200) and response time (in minutes, cannot be lower than 30)
  *     tags:
  *       - Ticketing
  *     parameters:
