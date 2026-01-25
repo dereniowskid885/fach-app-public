@@ -16,7 +16,14 @@ export const TicketManager = {
       { path: 'assignee', select: 'email' },
       { path: 'createdBy', select: 'email' },
       { path: 'updatedBy', select: 'email' },
-      { path: 'evaluations.user', select: 'email name surname city' },
+      { path: 'acceptedEvaluation' },
+      {
+        path: 'evaluations',
+        populate: {
+          path: 'user',
+          select: 'email name surname city',
+        },
+      },
     ]);
 
     if (!ticket) {
@@ -120,6 +127,26 @@ export const TicketManager = {
 
     if (!isUserAllowedToEvaluate) {
       throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'Missing permissions to evaluate a ticket');
+    }
+
+    const isTicketAlreadyEvaluatedByCurrentUser = ticket.evaluations.some(
+      (evaluation) => (evaluation as IEvaluationModel).user.id === user.userId,
+    );
+
+    if (isTicketAlreadyEvaluatedByCurrentUser) {
+      throw new AppError(
+        400,
+        EResponseStatus.ERROR_TICKET_ALREADY_EVALUATED_BY_USER,
+        'You have already put an evaluation on this ticket',
+      );
+    }
+
+    if (evaluatedMinutes < 30 || evaluatedPrice.value < 200) {
+      throw new AppError(
+        400,
+        EResponseStatus.ERROR_INVALID_DATA,
+        'Ticket response duration (minutes) cannot be lower than 30 and price (price.value) cannot be lower than 2.00',
+      );
     }
 
     const currentDate = new Date();
