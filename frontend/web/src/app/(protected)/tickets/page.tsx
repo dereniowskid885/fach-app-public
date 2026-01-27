@@ -7,7 +7,7 @@ export default async function Tickets() {
   const { role } = await getUserData();
 
   return (
-    <div className="mt-[86px] flex flex-col gap-4 p-3">
+    <div className="flex flex-col gap-4 px-3 py-24">
       {role === EUserRole.SPECIALIST ? <SpecialistPendingTickets /> : null}
     </div>
   );

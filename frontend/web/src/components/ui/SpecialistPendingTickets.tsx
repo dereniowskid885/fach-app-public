@@ -9,20 +9,19 @@ import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useForm } from 'react-hook-form';
 import CitySelect from './CitySelect';
 import { useGetTicketsQuery } from '@/api/accountApi';
-import { ETicketStatus } from '@/constants/ticketStatus';
+import { getSpecialistPendingTicketStatusesParam } from '@/helpers/getSpecialistPendingTicketStatusesParam';
 
 export default function SpecialistPendingTickets() {
   const { city, categoryId } = useAppSelector(selectUserData);
   const { register, watch } = useForm();
   const selectedCity = watch('city') ?? city;
 
-  const pendingTicketStatuses = `${ETicketStatus.PRICE_EVALUATION},${ETicketStatus.PRICE_USER_ACCEPTATION}`;
   const {
     data: getTicketsResponse,
     isLoading,
     isFetching
   } = useGetTicketsQuery(
-    { city: selectedCity, categoryId, status: pendingTicketStatuses },
+    { city: selectedCity, categoryId, status: getSpecialistPendingTicketStatusesParam() },
     { skip: !city, refetchOnMountOrArgChange: true }
   );
 
