@@ -27,6 +27,8 @@ Use `Ctrl+Shift+P` and select `Tasks:Run Task`
 | Start App | Runs all services and frontend in seperated terminals |
 | Start Frontend | Runs frontend web app |
 | Start Account Service | Runs account service |
+| Start Stripe CLI | Runs stripe CLI |
+| Generate all APIs | Runs npm script, which generates all API hooks for frontend |
 
 ## First usage
 
@@ -37,6 +39,7 @@ Use `Ctrl+Shift+P` and select `Tasks:Run Task`
 
 - Frontend will be available at http://localhost:3000.
 - Account service will be available at http://localhost:4000.
+- Stripe CLI will be listening to http://localhost:4000/api/webhooks/stripe webhook endpoint.
 
 ## Stripe payments (Local development)
 
