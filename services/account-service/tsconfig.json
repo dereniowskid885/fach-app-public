@@ -19,7 +19,8 @@
       "@routes/*": ["./routes/*"],
       "@utils/*": ["./utils/*"],
       "@interfaces/*": ["./interfaces/*"],
-      "@middlewares/*": ["./middlewares/*"]
+      "@middlewares/*": ["./middlewares/*"],
+      "@schemas/*": ["./schemas/*"]
     },
     "typeRoots": ["../../shared/types", "./node_modules/@types"]
   },

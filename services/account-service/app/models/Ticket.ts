@@ -2,7 +2,7 @@ import { ETicketStatus } from '@shared/constants/enums';
 import { Types, Document, Schema, model } from 'mongoose';
 import { ICategoryModel } from './Category';
 import { IUserModel } from './User';
-import { IEvaluationModel } from './Evaluation';
+import EvaluationSchema, { IEvaluationSchema } from '@schemas/evaluationSchema';
 
 export interface ITicketModel extends Document {
   _id: Types.ObjectId;
@@ -16,8 +16,8 @@ export interface ITicketModel extends Document {
   updatedAt: Date;
   title: string;
   description: string;
-  evaluations: (Types.ObjectId | IEvaluationModel)[];
-  acceptedEvaluation: Types.ObjectId | IEvaluationModel;
+  evaluations: [IEvaluationSchema];
+  acceptedEvaluation: IEvaluationSchema;
 }
 
 const ticketSchema = new Schema<ITicketModel>({
@@ -80,11 +80,8 @@ const ticketSchema = new Schema<ITicketModel>({
     type: String,
     required: true,
   },
-  evaluations: [{ type: Types.ObjectId, ref: 'Evaluation' }],
-  acceptedEvaluation: {
-    type: Types.ObjectId,
-    ref: 'Evaluation',
-  },
+  evaluations: [EvaluationSchema],
+  acceptedEvaluation: EvaluationSchema,
 });
 
 export default model('Ticket', ticketSchema);
