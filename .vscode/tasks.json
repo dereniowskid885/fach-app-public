@@ -14,8 +14,14 @@
       "problemMatcher": []
     },
     {
+      "label": "Start Stripe CLI",
+      "type": "shell",
+      "command": "stripe listen --forward-to localhost:4000/api/webhooks/stripe",
+      "problemMatcher": []
+    },
+    {
       "label": "Start App",
-      "dependsOn": ["Start Account Service", "Start Frontend"],
+      "dependsOn": ["Start Account Service", "Start Frontend", "Start Stripe CLI"],
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
@@ -26,6 +32,12 @@
       "label": "Install All Dependencies",
       "type": "shell",
       "command": "npm install ; npm install --prefix shared ; npm install --prefix services/account-service ; npm install --prefix frontend/web",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generate all APIs",
+      "type": "shell",
+      "command": "npm run apis-generate --prefix frontend/web",
       "problemMatcher": []
     }
   ]
