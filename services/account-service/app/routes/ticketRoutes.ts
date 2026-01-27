@@ -7,6 +7,7 @@ import {
   ticketEvaluationAccept,
   updateTicket,
   ticketPaymentHandler,
+  ticketEvaluationEdit,
 } from '@controllers/ticketController';
 
 import express from 'express';
@@ -17,6 +18,7 @@ import { checkAndParseAccessToken } from '@shared/middlewares/authMiddleware';
 import {
   validateCreateTicketMiddleware,
   validateTicketEvaluationAcceptMiddleware,
+  validateTicketEvaluationEditMiddleware,
   validateTicketEvaluationMiddleware,
   validateTicketPaymentMiddleware,
   validateTicketUpdateMiddleware,
@@ -834,5 +836,132 @@ router.patch('/:id/evaluation', validateTicketEvaluationMiddleware, ticketEvalua
  *                   example: Server error
  */
 router.patch('/:id/accept-evaluation', validateTicketEvaluationAcceptMiddleware, ticketEvaluationAccept);
+
+/**
+ * @swagger
+ * /tickets/{id}/edit-evaluation:
+ *   patch:
+ *     summary: Ticket evaluation edit (used by specialist)
+ *     description: Ticket evaluation edit used by specialist, who has already made an evaluation
+ *     tags:
+ *       - Ticketing
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the ticket
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - evaluationId
+ *             properties:
+ *               evaluationId:
+ *                 type: string
+ *                 example: "67c48e3fd50f0e2e0050381d"
+ *               price:
+ *                 type: object
+ *                 description: Price set by the specialist
+ *                 properties:
+ *                   value:
+ *                     type: number
+ *                     description: Numeric value of the price
+ *                     example: 250.5
+ *                   currency:
+ *                     type: string
+ *                     description: Currency code (e.g., PLN)
+ *                     example: "PLN"
+ *               minutes:
+ *                 type: number
+ *                 description: Evaluated minutes as the time of first response
+ *                 example: 60
+ *
+ *     responses:
+ *       200:
+ *         description: Ticket evaluation updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Ticket evaluation updated successfully
+ *                 data:
+ *                   $ref: '#/components/schemas/Ticket'
+ *       400:
+ *         description: Evaluation edit is not allowed in current ticket status
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TICKET_INVALID_STATUS"
+ *                 message:
+ *                   type: string
+ *                   example: Evaluation edit is not allowed in current ticket status
+ *       403:
+ *         description: Missing permissions to edit an evaluation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_INVALID_ROLE"
+ *                 message:
+ *                   type: string
+ *                   example: Missing permissions to edit an evaluation
+ *       404:
+ *         description: Evaluation with provided id does not belong to provided ticket or does not exist
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_EVALUATION_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: Evaluation with provided id does not belong to provided ticket or does not exist
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.patch('/:id/edit-evaluation', validateTicketEvaluationEditMiddleware, ticketEvaluationEdit);
 
 export default router;

@@ -80,6 +80,29 @@ export const validateTicketUpdateMiddleware = (req: Request, res: Response, next
   }
 };
 
+const ticketEvaluationEditSchema = z
+  .object({
+    evaluationId: z.string().length(24).optional(),
+    price: z
+      .object({
+        value: z.number().min(0),
+        currency: z.enum(ESupportedCurrency),
+      })
+      .optional(),
+    minutes: z.number().int().positive().optional(),
+  })
+  .strict();
+
+export const validateTicketEvaluationEditMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    req.body = ticketEvaluationEditSchema.parse(req.body);
+
+    next();
+  } catch (err) {
+    handleZodError(res, err);
+  }
+};
+
 const ticketPaymentSchema = z
   .object({
     amount: z.number().min(0),
