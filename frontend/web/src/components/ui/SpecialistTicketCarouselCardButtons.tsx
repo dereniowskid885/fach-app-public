@@ -5,20 +5,25 @@ import { TStatusActionButton } from './UserTicketCarouselCardButtons';
 import { useState } from 'react';
 import SpecialistTicketEvaluationDialog from './SpecialistTicketEvaluationDialog';
 import { ETicketStatus } from '@/constants/ticketStatus';
+import { EActionType } from '@/constants/enums';
+import { Evaluation, Ticket } from '@/api/accountApi';
 
 export interface ISpecialistTicketCarouselCardButtons {
-  ticketId?: string;
-  ticketCity?: string;
-  ticketStatus: ETicketStatus;
+  ticket: Ticket;
+  userEvaluation?: Evaluation;
   isEvaluatedByLoggedSpecialist: boolean;
 }
 
 export const SpecialistTicketCarouselCardButtons = ({
-  ticketId,
-  ticketCity,
-  ticketStatus,
+  ticket,
+  userEvaluation,
   isEvaluatedByLoggedSpecialist
 }: ISpecialistTicketCarouselCardButtons) => {
+  const ticketStatus = ticket.status as ETicketStatus;
+
+  const [evaluationDialogMode, setEvaluationDialogMode] = useState<EActionType>(
+    EActionType.CREATION
+  );
   const [priceEvaluationDialog, setPriceEvaluationDialog] = useState<boolean>(false);
 
   const statusActionButton: TStatusActionButton = {
@@ -33,11 +38,17 @@ export const SpecialistTicketCarouselCardButtons = ({
     [ETicketStatus.PRICE_USER_ACCEPTATION]: isEvaluatedByLoggedSpecialist
       ? {
           title: 'Edytuj wycenę',
-          handler: () => setPriceEvaluationDialog(false)
+          handler: () => {
+            setEvaluationDialogMode(EActionType.EDIT);
+            setPriceEvaluationDialog(true);
+          }
         }
       : {
           title: 'Wyceń',
-          handler: () => setPriceEvaluationDialog(true)
+          handler: () => {
+            setEvaluationDialogMode(EActionType.CREATION);
+            setPriceEvaluationDialog(true);
+          }
         }
   };
 
@@ -50,10 +61,12 @@ export const SpecialistTicketCarouselCardButtons = ({
           </Button>
         ) : null}
       </div>
+
       <SpecialistTicketEvaluationDialog
         open={priceEvaluationDialog}
-        ticketId={ticketId}
-        ticketCity={ticketCity}
+        mode={evaluationDialogMode}
+        ticket={ticket}
+        userEvaluation={userEvaluation}
         closeDialog={() => setPriceEvaluationDialog(false)}
       />
     </>

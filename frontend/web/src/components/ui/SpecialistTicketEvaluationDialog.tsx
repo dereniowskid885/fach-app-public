@@ -4,51 +4,69 @@ import { Label } from '@/components/shadcn/label';
 import { TimePickerInput } from '../common/TimePicker';
 import { Typography } from '../common/Typography';
 import { Slider } from '../shadcn/slider';
-import { ETimePickerType } from '@/constants/enums';
+import { EActionType, ETimePickerType } from '@/constants/enums';
 import PriceInput from '../common/PriceInput';
 import { ESupportedCurrency } from '@/constants/supportedCurrency';
-import { usePatchTicketsByIdEvaluationMutation, accountApi } from '@/api/accountApi';
-import { parseQueryError } from '@/lib/helpers';
+import {
+  usePatchTicketsByIdEvaluationMutation,
+  accountApi,
+  Ticket,
+  usePatchTicketsByIdEditEvaluationMutation,
+  Evaluation
+} from '@/api/accountApi';
+import { getFormattedPriceAmount, parseQueryError } from '@/lib/helpers';
 import { useToast } from '@/hooks/use-toast';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { getSpecialistPendingTicketStatusesParam } from '@/helpers/getSpecialistPendingTicketStatusesParam';
 
 export interface ISpecialistTicketEvaluationDialog {
   open: boolean;
-  ticketId?: string;
-  ticketCity?: string;
+  mode: EActionType;
+  ticket: Ticket;
+  userEvaluation?: Evaluation;
   closeDialog: () => void;
 }
 
 export default function SpecialistTicketEvaluationDialog({
   open,
-  ticketId,
-  ticketCity,
+  mode,
+  userEvaluation,
+  ticket,
   closeDialog
 }: ISpecialistTicketEvaluationDialog) {
-  const [priceInCents, setPriceInCents] = useState<number>(0);
-
+  const t = {
+    [EActionType.CREATION]: {
+      dialogTitle: 'Wycena sprawy',
+      toastMessage: 'Twoja wycena została wysłana do autora'
+    },
+    [EActionType.EDIT]: {
+      dialogTitle: 'Edycja wyceny',
+      toastMessage: 'Wycena została zaktualizowana'
+    }
+  };
   const maxMinutes = 1440; // 1 day
+
+  const [priceInCents, setPriceInCents] = useState<number>(userEvaluation?.price?.value ?? 0);
   const [minutes, setMinutes] = useState<number>(0);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const daysRef = useRef<HTMLInputElement>(null);
   const minutesRef = useRef<HTMLInputElement>(null);
   const hoursRef = useRef<HTMLInputElement>(null);
 
   const { toast } = useToast();
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [trigger, { isLoading }] = usePatchTicketsByIdEvaluationMutation();
 
-  useEffect(() => {
-    setErrorMessage('');
-  }, [minutes, priceInCents]);
+  const [triggerCreate, { isLoading: isLoadingCreate }] = usePatchTicketsByIdEvaluationMutation();
+  const [triggerEdit, { isLoading: isLoadingEdit }] = usePatchTicketsByIdEditEvaluationMutation();
+  const isLoading = isLoadingCreate || isLoadingEdit;
+
+  const [refetchPendingTickets] = accountApi.endpoints.getTickets.useLazyQuery({});
 
   const { categoryId } = useSelector(selectUserData);
-  // Specialist pending tickets refetch
-  const [refetch] = accountApi.endpoints.getTickets.useLazyQuery({});
 
   const submitHandler = async () => {
-    if (!ticketId) return;
+    if (!ticket._id) return;
 
     if (minutes < 30) {
       setErrorMessage('Czas odpowiedzi nie może być krótszy niż 30 min');
@@ -60,31 +78,66 @@ export default function SpecialistTicketEvaluationDialog({
       return;
     }
 
-    const result = await trigger({
-      id: ticketId,
-      body: {
-        price: {
-          value: priceInCents,
-          currency: ESupportedCurrency.PLN
-        },
-        minutes
-      }
-    });
+    let result;
+
+    switch (mode) {
+      case EActionType.CREATION:
+        result = await triggerCreate({
+          id: ticket._id,
+          body: {
+            price: {
+              value: priceInCents,
+              currency: ESupportedCurrency.PLN
+            },
+            minutes
+          }
+        });
+
+        break;
+
+      case EActionType.EDIT:
+        if (!userEvaluation?._id) return;
+
+        result = await triggerEdit({
+          id: ticket._id,
+          body: {
+            evaluationId: userEvaluation?._id,
+            price: {
+              value: priceInCents,
+              currency: ESupportedCurrency.PLN
+            },
+            minutes
+          }
+        });
+
+        break;
+    }
+
     const isSuccess = !result.error;
 
     if (isSuccess) {
       closeDialog();
-      refetch({ city: ticketCity, categoryId });
+
+      refetchPendingTickets({
+        city: ticket.city,
+        categoryId,
+        status: getSpecialistPendingTicketStatusesParam()
+      });
+
       toast({
-        title: 'Twoja wycena została wysłana do autora',
+        title: t[mode].toastMessage,
         duration: 3000
       });
     } else {
-      const { message } = parseQueryError(result.error);
+      const { message } = parseQueryError(result.error!);
 
       setErrorMessage(message);
     }
   };
+
+  useEffect(() => {
+    setErrorMessage('');
+  }, [minutes, priceInCents]);
 
   const ticketEvaluationForm = (
     <form>
@@ -153,6 +206,7 @@ export default function SpecialistTicketEvaluationDialog({
 
           <PriceInput
             className="w-auto text-center"
+            defaultInputValue={getFormattedPriceAmount(priceInCents).toString()}
             setPrice={setPriceInCents}
             max={10000}
             currency={ESupportedCurrency.PLN}
@@ -165,7 +219,7 @@ export default function SpecialistTicketEvaluationDialog({
   return (
     <DialogComponent
       open={open}
-      title="Wycena sprawy"
+      title={t[mode].dialogTitle}
       cancelButtonText="Anuluj"
       confirmButtonText="Potwierdź"
       confirmButtonHandler={submitHandler}
