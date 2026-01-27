@@ -38,12 +38,11 @@ export default function TicketCarouselCard({ userId, userRole, ticket }: ITicket
     description
   } = ticket;
 
+  const userEvaluation = evaluations?.find(evaluation => evaluation.user?._id === userId);
   const isEvaluatedByLoggedSpecialist =
     userRole === EUserRole.SPECIALIST &&
     status === ETicketStatus.PRICE_USER_ACCEPTATION &&
-    evaluations
-      ? evaluations.some(evaluation => evaluation.user?._id === userId)
-      : false;
+    !!userEvaluation;
 
   return (
     <Card className="bg-info-50">
@@ -86,12 +85,29 @@ export default function TicketCarouselCard({ userId, userRole, ticket }: ITicket
             </TicketInfoRow>
           </div>
 
-          {/* TODO */}
-          {/* add info about evaluation which is waiting */}
           {isEvaluatedByLoggedSpecialist ? (
             <Alert variant="destructive" className="border-primary-950 text-primary-950">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>Twoja wycena czeka na akceptację przez autora.</AlertDescription>
+              <AlertDescription className="flex flex-col gap-3">
+                <div className="flex gap-3">
+                  <AlertCircle className="mt-[1px] h-4 w-4 text-accent" />
+
+                  <Typography variant="muted">
+                    Twoja wycena czeka na akceptację przez autora.
+                  </Typography>
+                </div>
+
+                <div className="flex flex-col">
+                  <Typography variant="muted">
+                    Termin odpowiedzi:{' '}
+                    <b className="text-info">{getFormattedDate(userEvaluation.dateOfResponse)}</b>
+                  </Typography>
+
+                  <Typography variant="muted">
+                    Cena:{' '}
+                    <b className="text-info">{`${getFormattedPriceAmount(userEvaluation.price?.value)} ${userEvaluation.price?.currency}`}</b>
+                  </Typography>
+                </div>
+              </AlertDescription>
             </Alert>
           ) : acceptedEvaluation ? (
             <Alert variant="default" className="mt-3 bg-info-100">
@@ -116,9 +132,8 @@ export default function TicketCarouselCard({ userId, userRole, ticket }: ITicket
             <UserTicketCarouselCardButtons ticket={ticket} />
           ) : userRole === EUserRole.SPECIALIST ? (
             <SpecialistTicketCarouselCardButtons
-              ticketId={ticket._id}
-              ticketCity={city}
-              ticketStatus={status as ETicketStatus}
+              ticket={ticket}
+              userEvaluation={userEvaluation}
               isEvaluatedByLoggedSpecialist={isEvaluatedByLoggedSpecialist}
             />
           ) : null}
