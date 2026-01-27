@@ -81,6 +81,22 @@ export const ticketEvaluationAccept = async (req: Request, res: Response) => {
   }
 };
 
+export const ticketEvaluationEdit = async (req: Request, res: Response) => {
+  try {
+    const ticket = await TicketManager.ticketEvaluationEditHandler(
+      req.params.id,
+      req.body.evaluationId,
+      req.body.price,
+      req.body.minutes,
+      req.user,
+    );
+
+    return res.status(200).json({ success: true, message: 'Ticket evaluation updated successfully', data: ticket });
+  } catch (err) {
+    handleAppError(res, err as IAppError);
+  }
+};
+
 export const ticketPaymentHandler = async (req: Request, res: Response) => {
   try {
     const { amount, currency } = req.body;

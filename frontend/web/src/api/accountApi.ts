@@ -149,6 +149,16 @@ const injectedRtkApi = api.injectEndpoints({
         body: queryArg.body
       })
     }),
+    patchTicketsByIdEditEvaluation: build.mutation<
+      PatchTicketsByIdEditEvaluationApiResponse,
+      PatchTicketsByIdEditEvaluationApiArg
+    >({
+      query: queryArg => ({
+        url: `/tickets/${queryArg.id}/edit-evaluation`,
+        method: 'PATCH',
+        body: queryArg.body
+      })
+    }),
     postUsers: build.mutation<PostUsersApiResponse, PostUsersApiArg>({
       query: queryArg => ({ url: `/users`, method: 'POST', body: queryArg.body })
     }),
@@ -475,6 +485,28 @@ export type PatchTicketsByIdAcceptEvaluationApiArg = {
     evaluationId: string;
   };
 };
+export type PatchTicketsByIdEditEvaluationApiResponse =
+  /** status 200 Ticket evaluation updated successfully */ {
+    success?: boolean;
+    message?: string;
+    data?: Ticket;
+  };
+export type PatchTicketsByIdEditEvaluationApiArg = {
+  /** Unique ID of the ticket */
+  id: string;
+  body: {
+    evaluationId: string;
+    /** Price set by the specialist */
+    price?: {
+      /** Numeric value of the price */
+      value?: number;
+      /** Currency code (e.g., PLN) */
+      currency?: string;
+    };
+    /** Evaluated minutes as the time of first response */
+    minutes?: number;
+  };
+};
 export type PostUsersApiResponse = /** status 201 User created successfully */ {
   success?: boolean;
   message?: string;
@@ -641,6 +673,7 @@ export const {
   usePatchTicketsByIdMutation,
   usePatchTicketsByIdEvaluationMutation,
   usePatchTicketsByIdAcceptEvaluationMutation,
+  usePatchTicketsByIdEditEvaluationMutation,
   usePostUsersMutation,
   useGetUsersQuery,
   useGetUsersByIdQuery,

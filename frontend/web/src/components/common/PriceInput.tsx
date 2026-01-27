@@ -6,12 +6,19 @@ import { ESupportedCurrency } from '@/constants/supportedCurrency';
 export interface IPriceInput {
   className: string;
   max: number;
+  defaultInputValue?: string;
   setPrice: Dispatch<SetStateAction<number>>;
   currency: ESupportedCurrency;
 }
 
-export default function PriceInput({ className, max, setPrice, currency }: IPriceInput) {
-  const [priceInput, setPriceInput] = useState<string>('');
+export default function PriceInput({
+  className,
+  max,
+  defaultInputValue,
+  setPrice,
+  currency
+}: IPriceInput) {
+  const [priceInput, setPriceInput] = useState<string>(defaultInputValue ?? '');
 
   const handlePriceChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -48,6 +55,7 @@ export default function PriceInput({ className, max, setPrice, currency }: IPric
         onChange={handlePriceChange}
         inputMode="decimal"
       />
+
       <Typography
         variant="small"
         className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"

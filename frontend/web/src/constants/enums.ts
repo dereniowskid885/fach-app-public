@@ -16,3 +16,8 @@ export const enum ETimePickerType {
   HOURS = 'HOURS',
   MINUTES = 'MINUTES'
 }
+
+export const enum EActionType {
+  EDIT = 'EDIT',
+  CREATION = 'CREATION'
+}

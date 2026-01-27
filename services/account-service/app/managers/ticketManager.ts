@@ -2,12 +2,12 @@ import { AppError } from '@shared/utils/AppError';
 import Ticket, { ITicketModel } from '@models/Ticket';
 import { JwtPayload } from 'jsonwebtoken';
 import { ESupportedCurrency, ETicketStatus, EUserRole } from '@shared/constants/enums';
-import Evaluation, { IEvaluationModel } from '@models/Evaluation';
 import { EResponseStatus } from '@shared/constants/responseStatus';
 import { CategoryManager } from './categoryManager';
 import { UserManager } from './userManager';
 import { checkTicketStatusTransition } from '@helpers/checkTicketStatusTransition';
 import { FilterQuery } from 'mongoose';
+import { IEvaluationSchema } from '@schemas/evaluationSchema';
 
 export const TicketManager = {
   getTicketByID: async (ticketId: string) => {
@@ -130,7 +130,7 @@ export const TicketManager = {
     }
 
     const isTicketAlreadyEvaluatedByCurrentUser = ticket.evaluations.some(
-      (evaluation) => (evaluation as IEvaluationModel).user.id === user.userId,
+      (evaluation) => evaluation.user.id === user.userId,
     );
 
     if (isTicketAlreadyEvaluatedByCurrentUser) {
@@ -160,13 +160,12 @@ export const TicketManager = {
     ticket.updatedBy = user.userId;
     ticket.updatedAt = currentDate;
 
-    const evaluation = await Evaluation.create({
+    ticket.evaluations.push({
       user: user.userId,
       price: evaluatedPrice,
       dateOfResponse,
-    });
+    } as IEvaluationSchema);
 
-    ticket.evaluations.push(evaluation._id);
     await ticket.save();
 
     return ticket.populate({ path: 'updatedBy', select: 'email' });
@@ -201,7 +200,7 @@ export const TicketManager = {
       );
     }
 
-    const evaluation = ticket.evaluations.find((evaluationObjectId) => evaluationObjectId.toString() === evaluationId);
+    const evaluation = ticket.evaluations.find((evaluation) => evaluation._id.toString() === evaluationId);
 
     if (!evaluation) {
       throw new AppError(404, EResponseStatus.ERROR_EVALUATION_NOT_FOUND, 'Evaluation with provided id does not exist');
@@ -209,6 +208,7 @@ export const TicketManager = {
 
     ticket.acceptedEvaluation = evaluation;
     ticket.updatedBy = user.userId;
+    ticket.updatedAt = new Date();
     ticket.status = ETicketStatus.PENDING_PAYMENT;
     await ticket.save();
 
@@ -297,6 +297,68 @@ export const TicketManager = {
 
     return ticket.populate({ path: 'updatedBy', select: 'email' });
   },
+  ticketEvaluationEditHandler: async (
+    ticketId: string,
+    evaluationId: string,
+    price: { value: number; currency: ESupportedCurrency },
+    minutes: number,
+    user: JwtPayload,
+  ) => {
+    if (!user) {
+      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
+    }
+
+    if (user.role !== EUserRole.SPECIALIST) {
+      throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'Missing permissions to edit an evaluation');
+    }
+
+    const ticket = await TicketManager.getTicketByID(ticketId);
+
+    if (ticket.status !== ETicketStatus.PRICE_USER_ACCEPTATION) {
+      throw new AppError(
+        400,
+        EResponseStatus.ERROR_TICKET_INVALID_STATUS,
+        'Evaluation edit is not allowed in current ticket status',
+      );
+    }
+
+    const evaluation = ticket.evaluations.find((evaluation) => evaluation._id.toString() === evaluationId);
+
+    if (!evaluation) {
+      throw new AppError(
+        404,
+        EResponseStatus.ERROR_EVALUATION_NOT_FOUND,
+        'Evaluation with provided id does not belong to provided ticket or does not exist',
+      );
+    }
+
+    if (evaluation.user._id.toString() !== user.userId) {
+      throw new AppError(
+        403,
+        EResponseStatus.ERROR_USER_INVALID_ROLE,
+        'Current user is not a specialist who has made an evaluation',
+      );
+    }
+
+    if (minutes) {
+      const currentDate = new Date();
+      // create date of response by adding minutes (as miliseconds) to current date
+      const dateOfResponse = new Date(currentDate.getTime() + minutes * 60000);
+
+      evaluation.dateOfResponse = dateOfResponse;
+    }
+
+    if (price) {
+      evaluation.price = price;
+    }
+
+    ticket.updatedBy = user.userId;
+    ticket.updatedAt = new Date();
+
+    await ticket.save();
+
+    return ticket;
+  },
   handleSuccessfulPayment: async (ticketId: string) => {
     const ticket = await Ticket.findById(ticketId).populate('acceptedEvaluation');
 
@@ -308,7 +370,7 @@ export const TicketManager = {
       );
     }
 
-    const acceptedEvaluation = ticket.acceptedEvaluation as IEvaluationModel;
+    const acceptedEvaluation = ticket.acceptedEvaluation;
 
     if (!acceptedEvaluation) {
       throw new AppError(
@@ -318,6 +380,8 @@ export const TicketManager = {
       );
     }
 
+    ticket.updatedBy = ticket.createdBy;
+    ticket.updatedAt = new Date();
     ticket.assignee = acceptedEvaluation.user;
     ticket.status = ETicketStatus.IN_PROGRESS;
 
