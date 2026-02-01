@@ -15,9 +15,9 @@ const arimo = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Issue Solver',
-  description: 'Issue Solver Prototype',
-  authors: { name: 'DDS' }
+  title: 'FachApp',
+  description: 'FachApp - streamline your issue management',
+  authors: { name: 'DerSoft Daniel Dereniowski' }
 };
 
 export interface IRootLayout {
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: IRootLayout) {
   return (
     <StoreProvider>
       <html lang="en">
-        <body className={`${arimoItalic.className} ${arimo.className} bg-primary-700 antialiased`}>
+        <body className={`${arimoItalic.className} ${arimo.className} antialiased`}>
           {children}
           <Toaster />
         </body>
