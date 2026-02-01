@@ -36,15 +36,22 @@ export default function AsyncCountdown({
     return () => {
       if (timer) clearTimeout(timer);
     };
-  }, [count, timer]);
+  }, [count, timer, endOfCountdownHandler]);
 
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Typography variant="p">{title}</Typography>
-        <Typography variant="small">{`${description} ${count}`}</Typography>
+        <Typography variant="h2">{title}</Typography>
+        <Typography variant="lead" className="font-medium text-primary">
+          {description}
+
+          <span className="font-bold text-chart-2">{count}</span>
+        </Typography>
       </div>
-      <Button onClick={handleClick}>{buttonText}</Button>
+
+      <Button onClick={handleClick} className="w-full">
+        {buttonText}
+      </Button>
     </div>
   );
 }

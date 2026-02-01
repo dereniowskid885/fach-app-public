@@ -1,7 +1,5 @@
 'use client';
 
-import { Card, CardHeader, CardTitle } from '@/components/shadcn/card';
-import { Typography } from '@/components/common/Typography';
 import { usePathname, useRouter } from 'next/navigation';
 import AsyncCountdown from '@/components/ui/AsyncCountdown';
 import { useEffect, useState } from 'react';
@@ -13,6 +11,7 @@ import {
 import { HOME_PATH, LOGIN_PATH } from '@/constants/routes';
 import { parseQueryError } from '@/lib/helpers';
 import { EAccountVerificationResult } from '@/constants/enums';
+import AuthCard from '@/components/ui/AuthCard';
 
 export default function AccountVerifyPage() {
   const router = useRouter();
@@ -91,19 +90,11 @@ export default function AccountVerifyPage() {
     };
 
     verifyHandler();
-  }, []);
+  }, [token, triggerEmailVerify]);
 
   return isUninitialized ? null : isLoading ? (
     <LoadingSpinner />
   ) : (
-    <Card className="w-screen rounded-none border-none bg-primary-800 sm:w-auto sm:min-w-[400px]">
-      <CardHeader className="space-y-4">
-        <CardTitle>
-          <Typography variant="h3" className="text-center font-normal text-white">
-            <AsyncCountdown {...asyncCountdownProps[verificationResult]} />
-          </Typography>
-        </CardTitle>
-      </CardHeader>
-    </Card>
+    <AuthCard titleContent={<AsyncCountdown {...asyncCountdownProps[verificationResult]} />} />
   );
 }

@@ -2,14 +2,6 @@
 
 import { PostAuthLoginApiArg, usePostAuthLoginMutation } from '@/api/accountApi';
 import { Button } from '@/components/shadcn/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/shadcn/card';
 import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
 import AccountVerifyDialog from '@/components/ui/AccountVerifyDialog';
@@ -23,6 +15,9 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { isCookie } from '@/lib/isCookie';
 import { useToast } from '@/hooks/use-toast';
+import { FcGoogle } from 'react-icons/fc';
+import { FaGithub } from 'react-icons/fa';
+import AuthCard from '@/components/ui/AuthCard';
 
 interface ILoginForm {
   email: string;
@@ -88,74 +83,95 @@ export default function Login() {
   }, [toast, router]);
 
   return (
-    <Card className="w-screen min-w-[300px] rounded-none border-none bg-primary-800 sm:w-auto">
-      <CardHeader className="space-y-4 text-center lg:p-8">
-        <CardTitle>
-          <Typography variant="h1" className="italic">
-            Issue solver
-          </Typography>
-        </CardTitle>
+    <AuthCard
+      formSubmitHandler={handleSubmit(submitHandler)}
+      titleContent={'Sign in'}
+      descriptionContent={
+        <>
+          To be one step away from <span className="font-bold text-chart-2">solution</span>
+        </>
+      }
+      mainContent={
+        <>
+          <div className="space-y-2">
+            <Label htmlFor="email">E-mail</Label>
+            <Input
+              {...register('email')}
+              id="email"
+              type="email"
+              placeholder="jankowalski@gmail.com"
+              minLength={7}
+              maxLength={48}
+              required
+            />
+          </div>
 
-        <CardDescription>
-          <Typography variant="h3" className="font-normal text-white">
-            Zaloguj się na swoje konto
-          </Typography>
-        </CardDescription>
-      </CardHeader>
-
-      <form onSubmit={handleSubmit(submitHandler)}>
-        <CardContent>
-          <div className="flex w-full flex-col gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="email">E-mail</Label>
-              <Input
-                {...register('email')}
-                id="email"
-                type="email"
-                placeholder="jankowalski@gmail.com"
-                minLength={7}
-                maxLength={32}
-                required
-              />
-            </div>
-
-            <div className="flex flex-col space-y-1.5">
+          <div className="flex flex-col gap-2">
+            <div className="space-y-2">
               <Label htmlFor="password">Hasło</Label>
               <PasswordInput register={register('password')} id="password" />
-              <Link href={PASSWORD_RESET_PATH}>
-                <Typography variant="small" className="block text-right text-info hover:underline">
-                  Zapomniałeś hasła ?
-                </Typography>
-              </Link>
             </div>
 
-            {formState.errors.root && (
-              <Typography variant="p" className="text-center font-bold text-error">
-                {formState.errors.root.message}
+            <Link href={PASSWORD_RESET_PATH}>
+              <Typography variant="small" className="text-info block text-right hover:underline">
+                Zapomniałeś hasła ?
               </Typography>
-            )}
+            </Link>
           </div>
-        </CardContent>
 
-        <CardFooter className="flex justify-between">
-          <Button loading={isLoading} type="submit">
-            Zaloguj
+          {formState.errors.root && (
+            <Typography variant="p" className="text-center font-bold text-destructive">
+              {formState.errors.root.message}
+            </Typography>
+          )}
+        </>
+      }
+      footerContent={
+        <>
+          <Button loading={isLoading} type="submit" className="w-full">
+            Zaloguj się
           </Button>
 
-          <Link href={REGISTER_PATH}>
-            <Button variant="outline">Rejestracja</Button>
-          </Link>
-        </CardFooter>
-      </form>
+          <p className="text-sm text-muted-foreground">
+            {`Don't have an account?`}
+            <Link href={REGISTER_PATH} className="ml-1 font-bold text-primary hover:underline">
+              Sign up
+            </Link>
+          </p>
 
-      <AccountVerifyDialog
-        open={accountVerifyDialog}
-        email={getValues('email')}
-        title="Konto nieaktywne"
-        description={`Czy chcesz otrzymać link aktywacyjny na e-mail: ${getValues('email')}?`}
-        emailSentDescription="Link do aktywacji konta został wysłany!"
-        closeDialogHandler={() => setAccountVerifyDialog(false)}
-      />
-    </Card>
+          <div className="relative w-full">
+            <div className="absolute inset-0 flex items-center">
+              <div className="border-muted-foreground/20 w-full border-t"></div>
+            </div>
+
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-secondary px-2 text-muted-foreground">Or continue with</span>
+            </div>
+          </div>
+
+          <div className="flex w-full gap-2">
+            <Button variant="outline" className="w-full gap-2">
+              <FaGithub />
+              Github
+            </Button>
+
+            <Button variant="outline" className="w-full gap-2">
+              <FcGoogle />
+              Google
+            </Button>
+          </div>
+        </>
+      }
+      bottomContent={
+        <AccountVerifyDialog
+          open={accountVerifyDialog}
+          email={getValues('email')}
+          title="Konto nieaktywne"
+          description={`Czy chcesz otrzymać link aktywacyjny na e-mail: ${getValues('email')}?`}
+          emailSentDescription="Link do aktywacji konta został wysłany!"
+          closeDialogHandler={() => setAccountVerifyDialog(false)}
+        />
+      }
+    />
   );
 }
