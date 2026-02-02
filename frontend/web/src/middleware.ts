@@ -1,13 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { LOGIN_PATH, protectedRoutes } from './constants/routes';
+import { LOGIN_PATH } from './constants/routes';
 import { isTokenExpired } from './lib/token';
 import axios from 'axios';
 import { API } from './constants/api';
+import { routing } from './i18n/routing';
+import createMiddleware from 'next-intl/middleware';
+import { isProtectedPath } from './helpers/isProtectedPath';
+
+const intlMiddleware = createMiddleware(routing);
 
 export default async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  const isProtectedRoute = protectedRoutes.includes(path);
 
+  const localePrefix = path.split('/')[1];
+  const isProtectedRoute = isProtectedPath(path, localePrefix);
   const refreshToken = request.cookies.get('refreshToken');
   const isRefreshTokenInvalid = !refreshToken || isTokenExpired(refreshToken.value);
 
@@ -61,5 +67,17 @@ export default async function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  return intlMiddleware(request);
 }
+
+export const config = {
+  // Match only internationalized pathnames
+  matcher: [
+    // Enable a redirect to a matching locale at the root
+    '/',
+    '/(pl|en)/:path*',
+    // Enable redirects that add missing locales
+    // (e.g. `/pathnames` -> `/en/pathnames`)
+    '/((?!_next|_vercel|.*\\..*).*)'
+  ]
+};
