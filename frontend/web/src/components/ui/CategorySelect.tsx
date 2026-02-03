@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Category, useGetCategoriesQuery } from '@/api/accountApi';
 import { EFallbackKey } from '@/constants/enums';
+import { useTranslations } from 'next-intl';
 
 export interface ICategorySelect {
   selectedCategory: Category | null;
@@ -29,6 +30,8 @@ export default function CategorySelect({
   setSelectedCategory,
   resetSelectedCategory
 }: ICategorySelect) {
+  const t = useTranslations();
+
   const [open, setOpen] = useState<boolean>(false);
 
   const { data: getCategoriesResponse } = useGetCategoriesQuery({});
@@ -54,15 +57,15 @@ export default function CategorySelect({
               {selectedCategory.name}
             </>
           ) : (
-            'Wyszukaj kategorie'
+            t('category.search')
           )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="z-[99] p-0">
         <Command>
-          <CommandInput placeholder="Wyszukaj kategorie" />
+          <CommandInput placeholder={t('category.search')} />
           <CommandList>
-            <CommandEmpty>Nie znaleziono kategorii</CommandEmpty>
+            <CommandEmpty>{t('category.noResults')}</CommandEmpty>
             <CommandGroup defaultValue="all">
               {resetSelectedCategory ? (
                 <CommandItem
@@ -72,7 +75,8 @@ export default function CategorySelect({
                   }}
                 >
                   <BiSolidCategory />
-                  Wszystkie
+
+                  {t('common.all')}
                 </CommandItem>
               ) : null}
               {getCategoriesResponse?.success &&

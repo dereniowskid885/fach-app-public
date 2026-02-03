@@ -1,7 +1,8 @@
-import { IResult } from '@/constants/interfaces';
+import { IErrorData, IResult } from '@/constants/interfaces';
 import { SerializedError } from '@reduxjs/toolkit';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import axios from 'axios';
+import { EResponseStatus } from '@shared/constants/responseStatus';
 
 // helpful with axios error handling
 // gets axios error message or returns default unknown error
@@ -29,12 +30,16 @@ export const getLastPathSegment = (path: string) => {
 };
 
 export const parseQueryError = (error: FetchBaseQueryError | SerializedError) => {
-  const message =
-    'data' in error ? (error.data as { message: string }).message : 'Server is unavailable';
-  const status = 'status' in error && typeof error.status === 'number' ? error.status : null;
+  const errorDataObj = 'data' in error ? error.data : {};
+  const errorData = errorDataObj as IErrorData;
+
+  const message = errorData.message.length > 0 ? errorData.message : 'Server is unavailable';
+  const status = errorData.status.length > 0 ? errorData.status : EResponseStatus.SERVER_ERROR;
+  const code = 'status' in error && typeof error.status === 'number' ? error.status : 500;
 
   return {
     message,
+    code,
     status
   };
 };

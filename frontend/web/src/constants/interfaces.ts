@@ -6,6 +6,12 @@ export interface IResult {
   error?: string;
 }
 
+export interface IErrorData {
+  message: string;
+  status: string;
+  success: boolean;
+}
+
 export interface ITokenPayload {
   userId: string;
   categoryId: string;

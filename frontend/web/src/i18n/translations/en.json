@@ -1,3 +1,82 @@
 {
-  "test": "testENG"
+  "common": {
+    "appTitle": "FachApp",
+    "noResults": "No results.",
+    "close": "Close",
+    "all": "All",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "back": "Back",
+    "goToLogin": "Go to login",
+    "backToLogin": "Back to login",
+    "goToApp": "Go to app",
+    "sendLink": "Send link"
+  },
+  "category": {
+    "search": "Search category",
+    "noResults": "No categories found"
+  },
+  "select": {
+    "city": "Select city"
+  },
+  "errorMessages": {
+    "passwordMatch": "Passwords must match",
+    "cityRequired": "City is required"
+  },
+  "authLayout": {
+    "title": "Fast and reliable support",
+    "subtitle": "The all-in-one platform for reporting, tracking, and resolving technical challenges with world-class specialists.",
+    "feature1": "Organized category-based ticket management",
+    "feature2": "Easy tracking of ticket progress and updates",
+    "feature3": "Access to qualified specialists on demand",
+    "feature4": "Quick resolution of technical issues",
+    "feature5": "User-friendly intuitive interface",
+    "feature6": "Secure communication and data storage"
+  },
+  "authForm": {
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "email": "E-mail",
+    "emailPlaceholder": "user@example.com",
+    "password": "Password",
+    "passwordConfirm": "Confirm password",
+    "name": "Name",
+    "namePlaceholder": "John",
+    "surname": "Surname",
+    "surnamePlaceholder": "Doe",
+    "city": "City"
+  },
+  "loginPage": {
+    "toastTitle": "You are already logged in",
+    "authCardDescription": "To be one step away from <span>solution</span>",
+    "forgotPassword": "Forgot password?",
+    "signUpLabel": "Don't have an account?",
+    "continueWith": "Or continue with",
+    "github": "Github",
+    "google": "Google",
+    "accountVerifyTitle": "Account inactive",
+    "accountVerifyDescription": "Do you want to receive a verification link to your email: <span>{email}</span>?",
+    "accountVerifyEmailSent": "Account verification link has been sent!"
+  },
+  "registerPage": {
+    "authCardTitle": "Create your account",
+    "successDialogTitle": "Account created",
+    "successDialogDescription": "Account verification link has been sent to email: <span>{email}</span>"
+  },
+  "passwordReset": {
+    "authCardDescription": "Enter your email to receive a password reset link",
+    "authCardDescriptionSuccess": "Password reset link has been sent to email: <span>{email}</span>"
+  },
+  "passwordResetPage": {
+    "authCardTitle": "Reset password",
+    "authCardTitleSuccess": "Password has been reset",
+    "authCardDescription": "Fill in the data",
+    "linkExpired": "Link expired or invalid"
+  },
+  "accountVerifyPage": {
+    "countdownDescription": "Redirecting to login in ",
+    "successTitle": "Account verified",
+    "errorTitle": "An error occurred during verification",
+    "tokenInvalidTitle": "Account verification link is invalid"
+  }
 }
