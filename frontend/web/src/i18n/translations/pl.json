@@ -1,0 +1,82 @@
+{
+  "common": {
+    "appTitle": "FachApp",
+    "noResults": "Brak wyników.",
+    "close": "Zamknij",
+    "all": "Wszystkie",
+    "confirm": "Potwierdź",
+    "cancel": "Anuluj",
+    "back": "Wróć",
+    "goToLogin": "Przejdź do logowania",
+    "backToLogin": "Wróć do logowania",
+    "goToApp": "Przejdź do aplikacji",
+    "sendLink": "Wyślij link"
+  },
+  "category": {
+    "search": "Wyszukaj kategorie",
+    "noResults": "Nie znaleziono kategorii"
+  },
+  "select": {
+    "city": "Wybierz miasto"
+  },
+  "errorMessages": {
+    "passwordMatch": "Hasła muszą być takie same",
+    "cityRequired": "Miasto jest wymagane"
+  },
+  "authLayout": {
+    "title": "Szybka i fachowa pomoc",
+    "subtitle": "Wszechstronna platforma do zgłaszania, śledzenia i rozwiązywania problemów technicznych z udziałem światowej klasy specjalistów.",
+    "feature1": "Zorganizowane zarządzanie zgłoszeniami według kategorii",
+    "feature2": "Łatwe śledzenie postępów i aktualizacji zgłoszeń",
+    "feature3": "Dostęp do wykwalifikowanych specjalistów na żądanie",
+    "feature4": "Szybkie rozwiązywanie problemów technicznych",
+    "feature5": "Intuicyjny interfejs użytkownika przyjazny dla użytkownika",
+    "feature6": "Bezpieczna komunikacja i przechowywanie danych"
+  },
+  "authForm": {
+    "signIn": "Zaloguj się",
+    "signUp": "Zarejestruj się",
+    "email": "E-mail",
+    "emailPlaceholder": "jankowalski@gmail.com",
+    "password": "Hasło",
+    "passwordConfirm": "Powtórz hasło",
+    "name": "Imię",
+    "namePlaceholder": "Jan",
+    "surname": "Nazwisko",
+    "surnamePlaceholder": "Kowalski",
+    "city": "Miasto"
+  },
+  "loginPage": {
+    "toastTitle": "Jesteś zalogowany",
+    "authCardDescription": "Aby być krok od <span>rozwiązania</span>",
+    "forgotPassword": "Zapomniałeś hasła?",
+    "signUpLabel": "Nie masz konta?",
+    "continueWith": "Lub kontynuuj za pomocą",
+    "github": "Github",
+    "google": "Google",
+    "accountVerifyTitle": "Konto nieaktywne",
+    "accountVerifyDescription": "Czy chcesz otrzymać link aktywacyjny na e-mail: <span>{email}</span>?",
+    "accountVerifyEmailSent": "Link do aktywacji konta został wysłany!"
+  },
+  "registerPage": {
+    "authCardTitle": "Stwórz swoje konto",
+    "successDialogTitle": "Konto zostało utworzone",
+    "successDialogDescription": "Link do weryfikacji konta został wysłany na e-mail: <span>{email}</span>"
+  },
+  "passwordReset": {
+    "authCardDescription": "Wprowadź swój e-mail, aby uzyskać link do zresetowania hasła",
+    "authCardDescriptionSuccess": "Link do zresetowania hasła został wysłany na e-mail: <span>{email}</span>"
+  },
+  "passwordResetPage": {
+    "authCardTitle": "Zresetuj hasło",
+    "authCardTitleSuccess": "Hasło zostało zresetowane",
+    "authCardDescription": "Wypełnij dane",
+    "linkExpired": "Link wygasł lub jest nieprawidłowy"
+  },
+  "accountVerifyPage": {
+    "countdownDescription": "Przekierowanie do logowania za ",
+    "successTitle": "Konto zostało aktywowane",
+    "errorTitle": "Wystąpił błąd podczas weryfikacji",
+    "tokenInvalidTitle": "Link do aktywacji konta jest nieprawidłowy"
+  }
+}

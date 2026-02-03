@@ -40,7 +40,7 @@ export const StripePaymentForm = () => {
       </Button>
 
       {errorMessage ? (
-        <Typography variant="p" className="text-center font-bold text-error">
+        <Typography variant="p" className="text-center font-bold text-destructive">
           {errorMessage}
         </Typography>
       ) : null}

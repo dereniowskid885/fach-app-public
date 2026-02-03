@@ -18,6 +18,7 @@ import {
 } from '@/components/shadcn/table';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Checkbox } from '../shadcn/checkbox';
+import { useTranslations } from 'next-intl';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -34,13 +35,14 @@ export function DataTable<TData, TValue>({
   oneSelectableRow = false,
   setSelectedRow
 }: DataTableProps<TData, TValue>) {
+  const t = useTranslations();
   const [rowSelection, setRowSelection] = useState({});
 
   useEffect(() => {
     if (!setSelectedRow) return;
 
     setSelectedRow(rowSelection);
-  }, [rowSelection]);
+  }, [rowSelection, setSelectedRow]);
 
   if (selectableRows) {
     columns = [
@@ -106,7 +108,7 @@ export function DataTable<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                {t('common.noResults')}
               </TableCell>
             </TableRow>
           )}
