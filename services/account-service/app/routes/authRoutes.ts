@@ -155,8 +155,8 @@ router.post('/register', validateUserRegisterMiddleware, register);
  *                       type: string
  *                     refreshToken:
  *                       type: string
- *       400:
- *         description: Bad request
+ *       401:
+ *         description: Unauthorized
  *         content:
  *           application/json:
  *             schema:
