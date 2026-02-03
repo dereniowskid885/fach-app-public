@@ -14,7 +14,7 @@ import { ReactNode } from 'react';
 export interface IDialogComponent {
   open: boolean;
   title: string;
-  description?: string;
+  description?: string | ReactNode;
   cancelButtonText?: string;
   cancelButtonHandler?: () => void;
   confirmButtonText?: string;
@@ -51,7 +51,7 @@ export default function DialogComponent({
         </AlertDialogHeader>
         {content ? content : null}
         {errorMessage ? (
-          <Typography variant="p" className="text-center font-bold text-error">
+          <Typography variant="p" className="text-center font-bold text-destructive">
             {errorMessage}
           </Typography>
         ) : null}

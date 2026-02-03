@@ -6,6 +6,7 @@ import {
   SelectValue
 } from '@/components/shadcn/select';
 import { cities } from '@shared/constants/mocks';
+import { useTranslations } from 'next-intl';
 import { UseFormRegisterReturn } from 'react-hook-form';
 
 export interface ICitySelect {
@@ -15,6 +16,8 @@ export interface ICitySelect {
 }
 
 export default function CitySelect({ register, defaultValue, id }: ICitySelect) {
+  const t = useTranslations();
+
   return (
     <Select
       onValueChange={value => register.onChange({ target: { name: register.name, value } })}
@@ -22,7 +25,7 @@ export default function CitySelect({ register, defaultValue, id }: ICitySelect) 
       required
     >
       <SelectTrigger id={id}>
-        <SelectValue placeholder="Wybierz miasto" />
+        <SelectValue placeholder={t('select.city')} />
       </SelectTrigger>
       <SelectContent>
         {cities.map(city => (

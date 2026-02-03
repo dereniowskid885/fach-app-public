@@ -144,14 +144,18 @@ export const AuthManager = {
   login: async ({ email, password }: { email: string; password: string }) => {
     const user = await UserManager.getUserByEmail(email);
 
-    if (!user || !user.isVerified) {
-      throw new AppError(400, EResponseStatus.ERROR_INVALID_CREDENTIALS, 'Invalid credentials or e-mail not verified');
+    if (!user) {
+      throw new AppError(401, EResponseStatus.ERROR_INVALID_CREDENTIALS, 'Invalid credentials or e-mail not verified');
     }
 
     const isPasswordMatch = await user.comparePassword(password);
 
     if (!isPasswordMatch) {
-      throw new AppError(400, EResponseStatus.ERROR_INVALID_CREDENTIALS, 'Invalid credentials or e-mail not verified');
+      throw new AppError(401, EResponseStatus.ERROR_INVALID_CREDENTIALS, 'Invalid credentials or e-mail not verified');
+    }
+
+    if (!user.isVerified) {
+      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_VERIFIED, 'Email address not verified');
     }
 
     return user;

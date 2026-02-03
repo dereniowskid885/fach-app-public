@@ -1,7 +1,5 @@
 'use client';
 
-import { Card, CardHeader, CardTitle } from '@/components/shadcn/card';
-import { Typography } from '@/components/common/Typography';
 import { usePathname, useRouter } from 'next/navigation';
 import AsyncCountdown from '@/components/ui/AsyncCountdown';
 import { useEffect, useState } from 'react';
@@ -13,8 +11,11 @@ import {
 import { HOME_PATH, LOGIN_PATH } from '@/constants/routes';
 import { parseQueryError } from '@/lib/helpers';
 import { EAccountVerificationResult } from '@/constants/enums';
+import AuthCard from '@/components/ui/AuthCard';
+import { useTranslations } from 'next-intl';
 
 export default function AccountVerifyPage() {
+  const t = useTranslations();
   const router = useRouter();
   const [verificationResult, setVerificationResult] = useState<EAccountVerificationResult>(
     EAccountVerificationResult.ERROR
@@ -27,32 +28,24 @@ export default function AccountVerifyPage() {
     usePostAuthEmailVerificationMutation();
 
   const countdownDefaultProps = {
-    description: 'Przekierowanie do logowania za ',
-    buttonText: 'Przejdź do logowania',
+    description: t('accountVerifyPage.countdownDescription'),
+    buttonText: t('common.goToLogin'),
     endOfCountdownHandler: () => router.push(LOGIN_PATH)
   };
 
   const asyncCountdownProps = {
     [EAccountVerificationResult.SUCCESS]: {
-      title: 'Konto zostało aktywowane!',
-      description: 'Przekierowanie do aplikacji za ',
-      buttonText: 'Przejdź do aplikacji',
+      title: t('accountVerifyPage.successTitle'),
+      description: t('accountVerifyPage.countdownDescription'),
+      buttonText: t('common.goToApp'),
       endOfCountdownHandler: () => router.push(HOME_PATH)
     },
     [EAccountVerificationResult.ERROR]: {
-      title: 'Wystąpił błąd podczas weryfikacji',
-      ...countdownDefaultProps
-    },
-    [EAccountVerificationResult.TOKEN_EXPIRED]: {
-      title: 'Link do aktywacji konta wygasł',
+      title: t('accountVerifyPage.errorTitle'),
       ...countdownDefaultProps
     },
     [EAccountVerificationResult.TOKEN_INVALID]: {
-      title: 'Nieprawidłowy link',
-      ...countdownDefaultProps
-    },
-    [EAccountVerificationResult.ALREADY_VERIFIED]: {
-      title: 'Konto jest już aktywne',
+      title: t('accountVerifyPage.tokenInvalidTitle'),
       ...countdownDefaultProps
     }
   };
@@ -73,37 +66,19 @@ export default function AccountVerifyPage() {
         return;
       }
 
-      const { status } = parseQueryError(result.error);
+      const { code } = parseQueryError(result.error);
 
-      switch (status) {
-        case 400:
-          setVerificationResult(EAccountVerificationResult.TOKEN_INVALID);
-          break;
-
-        case 409:
-          setVerificationResult(EAccountVerificationResult.ALREADY_VERIFIED);
-          break;
-
-        case 410:
-          setVerificationResult(EAccountVerificationResult.TOKEN_EXPIRED);
-          break;
-      }
+      setVerificationResult(
+        code === 400 ? EAccountVerificationResult.TOKEN_INVALID : EAccountVerificationResult.ERROR
+      );
     };
 
     verifyHandler();
-  }, []);
+  }, [token, triggerEmailVerify]);
 
   return isUninitialized ? null : isLoading ? (
     <LoadingSpinner />
   ) : (
-    <Card className="w-screen rounded-none border-none bg-primary-800 sm:w-auto sm:min-w-[400px]">
-      <CardHeader className="space-y-4">
-        <CardTitle>
-          <Typography variant="h3" className="text-center font-normal text-white">
-            <AsyncCountdown {...asyncCountdownProps[verificationResult]} />
-          </Typography>
-        </CardTitle>
-      </CardHeader>
-    </Card>
+    <AuthCard titleContent={<AsyncCountdown {...asyncCountdownProps[verificationResult]} />} />
   );
 }
