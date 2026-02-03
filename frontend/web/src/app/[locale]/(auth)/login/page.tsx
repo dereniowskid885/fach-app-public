@@ -18,6 +18,8 @@ import { useToast } from '@/hooks/use-toast';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 import AuthCard from '@/components/ui/AuthCard';
+import { EResponseStatus } from '@shared/constants/responseStatus';
+import { useTranslations } from 'next-intl';
 
 interface ILoginForm {
   email: string;
@@ -25,6 +27,7 @@ interface ILoginForm {
 }
 
 export default function Login() {
+  const t = useTranslations();
   const router = useRouter();
   const { toast } = useToast();
   const { register, handleSubmit, formState, setError, getValues } = useForm<ILoginForm>();
@@ -47,9 +50,9 @@ export default function Login() {
       return;
     }
 
-    const { status, message } = parseQueryError(result.error);
+    const { status, message, code } = parseQueryError(result.error);
 
-    if (status === 403) {
+    if (code === 401 && status === EResponseStatus.ERROR_USER_NOT_VERIFIED) {
       setAccountVerifyDialog(true);
     } else {
       setError('root', { message: message });
@@ -67,10 +70,10 @@ export default function Login() {
 
       if (hasRefreshToken) {
         const { dismiss } = toast({
-          title: 'Jesteś zalogowany!',
+          title: t('loginPage.toastTitle'),
           action: (
             <Button variant="outline" onClick={() => toastClickHandler(dismiss)}>
-              Przejdź do aplikacji
+              {t('common.goToApp')}
             </Button>
           ),
           duration: 30000,
@@ -80,26 +83,24 @@ export default function Login() {
     };
 
     checkUserSession();
-  }, [toast, router]);
+  }, [t, toast, router]);
 
   return (
     <AuthCard
       formSubmitHandler={handleSubmit(submitHandler)}
-      titleContent={'Sign in'}
-      descriptionContent={
-        <>
-          To be one step away from <span className="font-bold text-chart-2">solution</span>
-        </>
-      }
+      titleContent={t('authForm.signIn')}
+      descriptionContent={t.rich('loginPage.authCardDescription', {
+        span: chunks => <span className="font-bold text-chart-2">{chunks}</span>
+      })}
       mainContent={
         <>
           <div className="space-y-2">
-            <Label htmlFor="email">E-mail</Label>
+            <Label htmlFor="email">{t('authForm.email')}</Label>
             <Input
               {...register('email')}
               id="email"
               type="email"
-              placeholder="jankowalski@gmail.com"
+              placeholder={t('authForm.emailPlaceholder')}
               minLength={7}
               maxLength={48}
               required
@@ -108,13 +109,13 @@ export default function Login() {
 
           <div className="flex flex-col gap-2">
             <div className="space-y-2">
-              <Label htmlFor="password">Hasło</Label>
+              <Label htmlFor="password">{t('authForm.password')}</Label>
               <PasswordInput register={register('password')} id="password" />
             </div>
 
             <Link href={PASSWORD_RESET_PATH}>
               <Typography variant="small" className="text-info block text-right hover:underline">
-                Zapomniałeś hasła ?
+                {t('loginPage.forgotPassword')}
               </Typography>
             </Link>
           </div>
@@ -129,13 +130,14 @@ export default function Login() {
       footerContent={
         <>
           <Button loading={isLoading} type="submit" className="w-full">
-            Zaloguj się
+            {t('authForm.signIn')}
           </Button>
 
           <p className="text-sm text-muted-foreground">
-            {`Don't have an account?`}
+            {t('loginPage.signUpLabel')}
+
             <Link href={REGISTER_PATH} className="ml-1 font-bold text-primary hover:underline">
-              Sign up
+              {t('authForm.signUp')}
             </Link>
           </p>
 
@@ -145,19 +147,23 @@ export default function Login() {
             </div>
 
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-secondary px-2 text-muted-foreground">Or continue with</span>
+              <span className="bg-secondary px-2 text-muted-foreground">
+                {t('loginPage.continueWith')}
+              </span>
             </div>
           </div>
 
           <div className="flex w-full gap-2">
             <Button variant="outline" className="w-full gap-2">
               <FaGithub />
-              Github
+
+              {t('loginPage.github')}
             </Button>
 
             <Button variant="outline" className="w-full gap-2">
               <FcGoogle />
-              Google
+
+              {t('loginPage.google')}
             </Button>
           </div>
         </>
@@ -166,9 +172,12 @@ export default function Login() {
         <AccountVerifyDialog
           open={accountVerifyDialog}
           email={getValues('email')}
-          title="Konto nieaktywne"
-          description={`Czy chcesz otrzymać link aktywacyjny na e-mail: ${getValues('email')}?`}
-          emailSentDescription="Link do aktywacji konta został wysłany!"
+          title={t('loginPage.accountVerifyTitle')}
+          description={t.rich('loginPage.accountVerifyDescription', {
+            email: getValues('email'),
+            span: chunks => <span className="font-bold text-chart-2">{chunks}</span>
+          })}
+          emailSentDescription={t('loginPage.accountVerifyEmailSent')}
           closeDialogHandler={() => setAccountVerifyDialog(false)}
         />
       }

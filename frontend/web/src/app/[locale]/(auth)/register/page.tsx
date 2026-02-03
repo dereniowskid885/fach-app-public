@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/shadcn/button';
 import { Input } from '@/components/shadcn/input';
-import AccountVerifyDialog from '@/components/ui/AccountVerifyDialog';
 import DialogComponent from '@/components/common/DialogComponent';
 import CitySelect from '@/components/ui/CitySelect';
 import PasswordInput from '@/components/common/PasswordInput';
@@ -16,6 +15,7 @@ import { useForm } from 'react-hook-form';
 import { PostAuthRegisterApiArg, usePostAuthRegisterMutation } from '@/api/accountApi';
 import { parseQueryError } from '@/lib/helpers';
 import AuthCard from '@/components/ui/AuthCard';
+import { useTranslations } from 'next-intl';
 
 interface IRegisterForm {
   email: string;
@@ -27,21 +27,21 @@ interface IRegisterForm {
 }
 
 export default function Register() {
+  const t = useTranslations();
   const router = useRouter();
   const { register, handleSubmit, formState, setError, getValues } = useForm<IRegisterForm>();
   const [successDialog, setSuccessDialog] = useState<boolean>(false);
-  const [accountVerifyDialog, setAccountVerifyDialog] = useState<boolean>(false);
 
   const [triggerRegister, { isLoading }] = usePostAuthRegisterMutation();
 
   const submitHandler = async (formData: IRegisterForm) => {
     if (formData.password !== formData.passwordConfirm) {
-      setError('root', { message: 'Hasła muszą być takie same' });
+      setError('root', { message: t('errorMessages.passwordMatch') });
       return;
     }
 
     if (!formData.city) {
-      setError('root', { type: 'required', message: 'Miasto jest wymagane.' });
+      setError('root', { type: 'required', message: t('errorMessages.cityRequired') });
       return;
     }
 
@@ -60,31 +60,27 @@ export default function Register() {
 
     if (isMutationSuccess) {
       setSuccessDialog(true);
+
       return;
     }
 
-    const { status, message } = parseQueryError(result.error);
-
-    if (status === 207) {
-      setAccountVerifyDialog(true);
-    } else {
-      setError('root', { message: message });
-    }
+    const { message } = parseQueryError(result.error);
+    setError('root', { message });
   };
 
   return (
     <AuthCard
       formSubmitHandler={handleSubmit(submitHandler)}
-      titleContent={'Stwórz swoje konto'}
+      titleContent={t('registerPage.authCardTitle')}
       mainContent={
         <>
           <div className="space-y-2">
-            <Label htmlFor="email">E-mail</Label>
+            <Label htmlFor="email">{t('authForm.email')}</Label>
             <Input
               {...register('email')}
               id="email"
               type="email"
-              placeholder="jankowalski@gmail.com"
+              placeholder={t('authForm.emailPlaceholder')}
               minLength={7}
               maxLength={48}
               required
@@ -92,11 +88,11 @@ export default function Register() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="name">Imię</Label>
+            <Label htmlFor="name">{t('authForm.name')}</Label>
             <Input
               {...register('name')}
               id="name"
-              placeholder="Jan"
+              placeholder={t('authForm.namePlaceholder')}
               minLength={2}
               maxLength={20}
               required
@@ -104,11 +100,11 @@ export default function Register() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="surname">Nazwisko</Label>
+            <Label htmlFor="surname">{t('authForm.surname')}</Label>
             <Input
               {...register('surname')}
               id="surname"
-              placeholder="Kowalski"
+              placeholder={t('authForm.surnamePlaceholder')}
               minLength={3}
               maxLength={25}
               required
@@ -116,17 +112,17 @@ export default function Register() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Hasło</Label>
+            <Label htmlFor="password">{t('authForm.password')}</Label>
             <PasswordInput register={register('password')} id="password" />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="passwordConfirm">Powtórz hasło</Label>
+            <Label htmlFor="passwordConfirm">{t('authForm.passwordConfirm')}</Label>
             <PasswordInput register={register('passwordConfirm')} id="passwordConfirm" />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="city">Miasto</Label>
+            <Label htmlFor="city">{t('authForm.city')}</Label>
             <CitySelect register={register('city')} id="city" />
           </div>
 
@@ -140,11 +136,12 @@ export default function Register() {
       footerContent={
         <div className="flex w-full gap-2">
           <Button loading={isLoading} type="submit" className="w-full">
-            Potwierdź
+            {t('common.confirm')}
           </Button>
+
           <Link href={LOGIN_PATH} className="w-full">
             <Button variant="outline" className="w-full">
-              Wróć
+              {t('common.back')}
             </Button>
           </Link>
         </div>
@@ -153,25 +150,15 @@ export default function Register() {
         <>
           <DialogComponent
             open={successDialog}
-            title="Konto utworzone"
-            description={
-              <>
-                {'Link do weryfikacji konta został wysłany na e-mail: '}
-                <span className="font-bold text-chart-2">{getValues('email')}</span>
-              </>
-            }
-            cancelButtonText="Zamknij"
-            confirmButtonText="Przejdź do logowania"
+            title={t('registerPage.successDialogTitle')}
+            description={t.rich('registerPage.successDialogDescription', {
+              email: getValues('email'),
+              span: chunks => <span className="font-bold text-chart-2">{chunks}</span>
+            })}
+            cancelButtonText={t('common.close')}
+            confirmButtonText={t('common.goToLogin')}
             cancelButtonHandler={() => setSuccessDialog(false)}
             confirmButtonHandler={() => router.push(LOGIN_PATH)}
-          />
-          <AccountVerifyDialog
-            open={accountVerifyDialog}
-            email={getValues('email')}
-            title="Konto utworzone"
-            description={`Wystąpił problem podczas wysyłania linku aktywacyjnego. Czy chcesz wysłać link ponownie na e-mail: ${getValues('email')}?`}
-            emailSentDescription="Link do aktywacji konta został wysłany!"
-            closeDialogHandler={() => setAccountVerifyDialog(false)}
           />
         </>
       }

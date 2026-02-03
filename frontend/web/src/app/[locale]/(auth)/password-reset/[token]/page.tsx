@@ -15,6 +15,7 @@ import { useForm } from 'react-hook-form';
 import { notFound } from 'next/navigation';
 import { PostAuthPasswordResetApiArg, usePostAuthPasswordResetMutation } from '@/api/accountApi';
 import AuthCard from '@/components/ui/AuthCard';
+import { useTranslations } from 'next-intl';
 
 interface IPasswordResetForm {
   newPassword: string;
@@ -23,6 +24,7 @@ interface IPasswordResetForm {
 }
 
 export default function PasswordResetForm() {
+  const t = useTranslations();
   const { register, handleSubmit, formState, setError } = useForm<IPasswordResetForm>();
   const pathname = usePathname();
 
@@ -40,7 +42,7 @@ export default function PasswordResetForm() {
 
   const submitHandler = async (formData: IPasswordResetForm) => {
     if (formData.newPassword !== formData.newPasswordConfirm) {
-      setError('root', { message: 'Hasła muszą być takie same' });
+      setError('root', { message: t('errorMessages.passwordMatch') });
       return;
     }
 
@@ -67,21 +69,21 @@ export default function PasswordResetForm() {
       formSubmitHandler={isFormVisible ? handleSubmit(submitHandler) : undefined}
       titleContent={
         isFormVisible
-          ? 'Zresetuj hasło'
+          ? t('passwordResetPage.authCardTitle')
           : tokenExpired
-            ? 'Link do resetu hasła wygasł'
-            : 'Hasło zostało zresetowane!'
+            ? t('passwordResetPage.linkExpired')
+            : t('passwordResetPage.authCardTitleSuccess')
       }
-      descriptionContent={isFormVisible ? 'Wypełnij dane' : null}
+      descriptionContent={isFormVisible ? t('passwordResetPage.authCardDescription') : null}
       mainContent={
         isFormVisible ? (
           <>
             <div className="space-y-2">
-              <Label htmlFor="email">E-mail</Label>
+              <Label htmlFor="email">{t('authForm.email')}</Label>
               <Input
                 id="email"
                 type="email"
-                value={tokenPayload.email ?? ''}
+                value={tokenPayload.email ?? t('authForm.emailPlaceholder')}
                 minLength={7}
                 maxLength={48}
                 readOnly
@@ -90,12 +92,12 @@ export default function PasswordResetForm() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="newPassword">Hasło</Label>
+              <Label htmlFor="newPassword">{t('authForm.password')}</Label>
               <PasswordInput register={register('newPassword')} id="newPassword" />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="newPasswordConfirm">Powtórz hasło</Label>
+              <Label htmlFor="newPasswordConfirm">{t('authForm.passwordConfirm')}</Label>
               <PasswordInput register={register('newPasswordConfirm')} id="newPasswordConfirm" />
             </div>
 
@@ -111,13 +113,13 @@ export default function PasswordResetForm() {
         <div className="flex w-full gap-2">
           {isFormVisible ? (
             <Button loading={isLoading} type="submit" className="w-full">
-              Potwierdź
+              {t('common.confirm')}
             </Button>
           ) : null}
 
           <Link href={LOGIN_PATH} className="w-full">
             <Button variant="outline" className="w-full">
-              Wróć do logowania
+              {t('common.backToLogin')}
             </Button>
           </Link>
         </div>

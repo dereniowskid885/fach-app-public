@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import DialogComponent from '../common/DialogComponent';
 import {
   PostAuthRequestEmailVerificationApiArg,
   usePostAuthRequestEmailVerificationMutation
 } from '@/api/accountApi';
 import { parseQueryError } from '@/lib/helpers';
+import { useTranslations } from 'next-intl';
 
 export interface IAccountVerifyDialog {
   open: boolean;
@@ -12,7 +13,7 @@ export interface IAccountVerifyDialog {
   email: string;
   title: string;
   emailSentTitle?: string;
-  description: string;
+  description: string | ReactNode;
   emailSentDescription?: string;
 }
 
@@ -25,6 +26,8 @@ export default function AccountVerifyDialog({
   emailSentDescription,
   closeDialogHandler
 }: IAccountVerifyDialog) {
+  const t = useTranslations();
+
   const [isEmailSent, setEmailSent] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -63,8 +66,8 @@ export default function AccountVerifyDialog({
       open={open}
       title={isEmailSent ? (emailSentTitle ?? title) : title}
       description={isEmailSent ? (emailSentDescription ?? description) : description}
-      cancelButtonText="Zamknij"
-      confirmButtonText={isEmailSent ? undefined : 'Wyślij link'}
+      cancelButtonText={t('common.close')}
+      confirmButtonText={isEmailSent ? undefined : t('common.sendLink')}
       cancelButtonHandler={closeDialogHandler}
       confirmButtonHandler={isEmailSent ? undefined : accountVerifyRequest}
       errorMessage={errorMessage}

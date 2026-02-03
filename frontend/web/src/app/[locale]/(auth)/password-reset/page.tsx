@@ -14,12 +14,14 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import AuthCard from '@/components/ui/AuthCard';
+import { useTranslations } from 'next-intl';
 
 interface IPasswordResetRequestForm {
   email: string;
 }
 
 export default function PasswordResetRequest() {
+  const t = useTranslations();
   const { register, handleSubmit, formState, setError, getValues } =
     useForm<IPasswordResetRequestForm>();
   const [isEmailSent, setEmailSent] = useState<boolean>(false);
@@ -47,27 +49,25 @@ export default function PasswordResetRequest() {
   return (
     <AuthCard
       formSubmitHandler={isEmailSent ? undefined : handleSubmit(submitHandler)}
-      titleContent={isEmailSent ? null : 'Zresetuj hasło'}
+      titleContent={isEmailSent ? null : t('passwordResetPage.authCardTitle')}
       descriptionContent={
-        isEmailSent ? (
-          <>
-            {'Link do zresetowania hasła został wysłany na e-mail: '}
-            <span className="font-bold text-chart-2">{getValues('email')}</span>
-          </>
-        ) : (
-          'Wprowadź swój e-mail, aby uzyskać link do zresetowania hasła.'
-        )
+        isEmailSent
+          ? t.rich('passwordReset.authCardDescriptionSuccess', {
+              email: getValues('email'),
+              span: chunks => <span className="font-bold text-chart-2">{chunks}</span>
+            })
+          : t('passwordReset.authCardDescription')
       }
       mainContent={
         isEmailSent ? null : (
           <>
             <div className="space-y-2">
-              <Label htmlFor="email">E-mail</Label>
+              <Label htmlFor="email">{t('authForm.email')}</Label>
               <Input
                 {...register('email')}
                 id="email"
                 type="email"
-                placeholder="jankowalski@gmail.com"
+                placeholder={t('authForm.emailPlaceholder')}
                 minLength={7}
                 maxLength={48}
                 required
@@ -85,17 +85,17 @@ export default function PasswordResetRequest() {
       footerContent={
         isEmailSent ? (
           <Link href={LOGIN_PATH}>
-            <Button>Wróć do logowania</Button>
+            <Button>{t('common.backToLogin')}</Button>
           </Link>
         ) : (
           <div className="flex w-full gap-2">
             <Button loading={isLoading} type="submit" className="w-full">
-              Potwierdź
+              {t('common.confirm')}
             </Button>
 
             <Link href={LOGIN_PATH} className="w-full">
               <Button variant="outline" className="w-full">
-                Wróć
+                {t('common.back')}
               </Button>
             </Link>
           </div>
