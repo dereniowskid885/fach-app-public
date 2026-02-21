@@ -7,13 +7,14 @@ import {
   requestEmailVerificationLink,
   verifyEmail,
   passwordReset,
+  getCurrentUser,
 } from '@controllers/authController';
 
 import express from 'express';
 const router = express.Router();
 
 import { createMiddleware } from '@shared/helpers/createMiddleware';
-import { checkRefreshToken } from '@shared/middlewares/authMiddleware';
+import { checkAndParseAccessToken, checkRefreshToken } from '@shared/middlewares/authMiddleware';
 import {
   validateUserRegisterMiddleware,
   validateUserLoginMiddleware,
@@ -23,6 +24,95 @@ import {
 import { validateSendEmailMiddleware } from '@middlewares/sendEmailValidationMiddleware';
 
 const refreshTokenMiddleware = createMiddleware(checkRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+const accessTokenMiddleware = createMiddleware(checkAndParseAccessToken, process.env.ACCESS_TOKEN_SECRET);
+
+/**
+ * @swagger
+ * /auth/me:
+ *   get:
+ *     summary: Get authenticated user data
+ *     description: Returns information about currently logged user
+ *     tags:
+ *       - Authentication
+ *     responses:
+ *       200:
+ *         description: Single user object.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_INVALID_DATA"
+ *                 message:
+ *                   type: string
+ *                   example: User with provided id not found
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TOKEN_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: No access token provided
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: User with provided id not found
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.get('/me', accessTokenMiddleware, getCurrentUser);
 
 /**
  * @swagger
@@ -62,6 +152,8 @@ const refreshTokenMiddleware = createMiddleware(checkRefreshToken, process.env.R
  *               city:
  *                 type: string
  *                 description: User's city
+ *               lang:
+ *                 $ref: '#/components/schemas/Language'
  *     responses:
  *       201:
  *         description: User registered successfully
@@ -323,10 +415,14 @@ router.post('/logout', logout);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - email
  *             properties:
  *               email:
  *                 type: string
  *                 description: User's email address
+ *               lang:
+ *                 $ref: '#/components/schemas/Language'
  *     responses:
  *       200:
  *         description: If this email is registered, a verification link has been sent
@@ -441,10 +537,14 @@ router.post('/email-verification', validateEmailVerificationMiddleware, verifyEm
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - email
  *             properties:
  *               email:
  *                 type: string
  *                 description: User's email address
+ *               lang:
+ *                 $ref: '#/components/schemas/Language'
  *     responses:
  *       200:
  *         description: If this email is registered, a password reset link has been sent

@@ -7,6 +7,8 @@ import { CategoryManager } from './categoryManager';
 import User from '@models/User';
 import { printMongooseValidationErrors } from '@helpers/printMongooseValidationErrors';
 import { FilterQuery, Error as MongooseError } from 'mongoose';
+import { IUpdateUserData } from '@interfaces/user';
+import { JwtPayload } from 'jsonwebtoken';
 
 export const UserManager = {
   getUsers: async (filter: FilterQuery<IUserModel>) => {
@@ -36,23 +38,42 @@ export const UserManager = {
 
     return user;
   },
-  updateUser: async (
-    userId: string,
-    updateData: Partial<{ email: string; name: string; surname: string; city: string; isVerified: boolean }>,
-  ) => {
-    if (!updateData || Object.keys(updateData).length === 0) {
+  updateUser: async (requestUser: JwtPayload, userId: string, updateData: Partial<IUpdateUserData>) => {
+    const updateDataKeys = Object.keys(updateData);
+
+    if (!updateData || updateDataKeys.length === 0) {
       throw new AppError(400, EResponseStatus.ERROR_INVALID_DATA, 'No data provided for update');
     }
 
-    const user = await UserModel.findByIdAndUpdate(userId, updateData, { new: true }).select(safeUserProjection);
+    const isAdmin = requestUser.role === EUserRole.ADMIN;
 
-    if (!user) {
+    if (!isAdmin) {
+      const isUpdatingSelf = requestUser.userId === userId;
+
+      if (!isUpdatingSelf) {
+        throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'You can update only your own account');
+      }
+
+      const isUpdatingRestrictedField = updateDataKeys.includes('isVerified');
+
+      if (isUpdatingRestrictedField) {
+        throw new AppError(
+          403,
+          EResponseStatus.ERROR_USER_INVALID_ROLE,
+          'You are not allowed to modify verification status',
+        );
+      }
+    }
+
+    const updatedUser = await UserModel.findByIdAndUpdate(userId, updateData, { new: true }).select(safeUserProjection);
+
+    if (!updatedUser) {
       throw new AppError(404, EResponseStatus.ERROR_USER_NOT_FOUND, 'User with provided id not found');
     }
 
-    await user.save();
+    await updatedUser.save();
 
-    return user;
+    return updatedUser;
   },
   updateUserRole: async (userId: string, role: EUserRole) => {
     // TODO: to be changed in superadmin role addition ticket

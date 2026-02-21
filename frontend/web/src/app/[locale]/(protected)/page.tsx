@@ -1,9 +1,24 @@
+'use client';
+
+import DashboardGreeting from '@/components/ui/DashboardGreeting';
+import DashboardMetrics from '@/components/ui/DashboardMetrics';
 import DashboardTickets from '@/components/ui/DashboardTickets';
+import { useSidebarContext } from '@/contexts/SidebarContext';
+import { motion } from 'framer-motion';
 
 export default function Home() {
+  const { isSidebarCollapsed } = useSidebarContext();
+
   return (
-    <div className="flex flex-col gap-4 px-3 py-24">
+    <motion.div
+      animate={{ maxWidth: isSidebarCollapsed ? 1600 : 1280 }}
+      className="mx-auto flex w-full max-w-7xl flex-col gap-8"
+    >
+      <DashboardGreeting />
+
+      <DashboardMetrics />
+
       <DashboardTickets />
-    </div>
+    </motion.div>
   );
 }

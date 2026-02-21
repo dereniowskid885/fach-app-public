@@ -13,9 +13,10 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { PostAuthRegisterApiArg, usePostAuthRegisterMutation } from '@/api/accountApi';
-import { parseQueryError } from '@/lib/helpers';
+import { parseQueryError } from '@/lib/utils';
 import AuthCard from '@/components/ui/AuthCard';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { ESupportedLanguages } from '@shared/constants/enums';
 
 interface IRegisterForm {
   email: string;
@@ -29,6 +30,7 @@ interface IRegisterForm {
 export default function Register() {
   const t = useTranslations();
   const router = useRouter();
+  const currentLocale = useLocale();
   const { register, handleSubmit, formState, setError, getValues } = useForm<IRegisterForm>();
   const [successDialog, setSuccessDialog] = useState<boolean>(false);
 
@@ -51,7 +53,8 @@ export default function Register() {
         name: formData.name,
         surname: formData.surname,
         password: formData.password,
-        city: formData.city
+        city: formData.city,
+        lang: currentLocale as ESupportedLanguages
       }
     };
 

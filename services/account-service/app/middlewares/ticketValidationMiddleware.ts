@@ -9,6 +9,7 @@ const createTicketSchema = z
     title: z.string().min(7).max(32),
     description: z.string().min(7).max(3000),
     categoryId: z.string().length(24),
+    city: z.enum(cities),
   })
   .strict();
 

@@ -1,5 +1,5 @@
 import { ROUTES } from '@/constants/routes';
-import { ESupportedLanguages } from '@/constants/supportedLanguages';
+import { ESupportedLanguages } from '@shared/constants/enums';
 import { defineRouting } from 'next-intl/routing';
 
 export const locales = Object.values(ESupportedLanguages);

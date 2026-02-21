@@ -45,6 +45,7 @@ router.use(accessTokenMiddleware);
  *               - title
  *               - description
  *               - categoryId
+ *               - city
  *             properties:
  *               title:
  *                 type: string
@@ -58,6 +59,10 @@ router.use(accessTokenMiddleware);
  *                 type: string
  *                 description: Unique ID of the category
  *                 example: "66df7gh8sasd6f66767rt6"
+ *               city:
+ *                 type: string
+ *                 description: City associated with the ticket
+ *                 example: "Warsaw"
  *     responses:
  *       200:
  *         description: Ticket created successfully

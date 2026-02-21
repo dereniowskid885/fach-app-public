@@ -7,6 +7,9 @@ import { EResponseStatus } from '@shared/constants/responseStatus';
 import { printMongooseValidationErrors } from '@helpers/printMongooseValidationErrors';
 import { Error as MongooseError } from 'mongoose';
 import { handleAccessTokenError, handleRefreshTokenError } from '@shared/helpers/handleJwtError';
+import UserModel from '@models/User';
+import { ESupportedLanguages } from '@shared/constants/enums';
+import { VERIFY_PATH, PASSWORD_RESET_PATH } from '@web/constants/routes';
 
 export const AuthManager = {
   handlePasswordReset: async (accessToken: string, newPassword: string) => {
@@ -38,7 +41,7 @@ export const AuthManager = {
       }
 
       if (!user.isVerified) {
-        await UserManager.updateUser(user.id, { isVerified: true });
+        await UserModel.findByIdAndUpdate(user._id, { isVerified: true });
       }
 
       return;
@@ -50,7 +53,7 @@ export const AuthManager = {
       throw err;
     }
   },
-  sendPasswordResetLink: async (email: string) => {
+  sendPasswordResetLink: async (email: string, lang: ESupportedLanguages) => {
     const user = await UserManager.getUserByEmail(email);
 
     if (!user) {
@@ -65,8 +68,8 @@ export const AuthManager = {
       { expiresIn: '30m' },
     );
 
-    const appBaseUrl = process.env.FRONTEND_BASE_URL;
-    const resetLink = `${appBaseUrl}/password-reset/${resetToken}`;
+    const passwordResetPath = `/${lang}${PASSWORD_RESET_PATH}`;
+    const resetLink = `${process.env.FRONTEND_BASE_URL}${passwordResetPath}/${resetToken}`;
 
     await sendMail({
       email,
@@ -74,7 +77,7 @@ export const AuthManager = {
       html: `<div>Here is your password reset link: <a href="${resetLink}">CLICK</a></div>`,
     });
   },
-  sendEmailVerificationLink: async (email: string) => {
+  sendEmailVerificationLink: async (email: string, lang: ESupportedLanguages) => {
     const user = await UserManager.getUserByEmail(email);
 
     if (!user || user.isVerified) {
@@ -89,8 +92,8 @@ export const AuthManager = {
       { expiresIn: '24h' },
     );
 
-    const baseUrl = process.env.FRONTEND_BASE_URL;
-    const verificationLink = `${baseUrl}/verify/${verificationToken}`;
+    const verifyPath = `/${lang}${VERIFY_PATH}`;
+    const verificationLink = `${process.env.FRONTEND_BASE_URL}${verifyPath}/${verificationToken}`;
 
     await sendMail({
       email,

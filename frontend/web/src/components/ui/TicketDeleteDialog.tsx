@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import DialogComponent from '../common/DialogComponent';
-import { parseQueryError } from '@/lib/helpers';
+import { parseQueryError } from '@/lib/utils';
 import { useDeleteTicketsByIdMutation } from '@/api/accountApi';
-import { toast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 
 export interface ITicketDeleteDialog {
   open: boolean;
@@ -17,6 +18,8 @@ export const TicketDeleteDialog = ({
   refetchTickets,
   closeDialog
 }: ITicketDeleteDialog) => {
+  const t = useTranslations();
+
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const [trigger, { isLoading }] = useDeleteTicketsByIdMutation();
@@ -31,10 +34,7 @@ export const TicketDeleteDialog = ({
 
     if (isSuccess) {
       refetchTickets();
-      toast({
-        title: 'Sprawa anulowana pomyślnie',
-        duration: 3000
-      });
+      toast.success(t('ticketDeleteDialog.toastTitle'));
     } else {
       const { message } = parseQueryError(result.error);
 
@@ -45,9 +45,9 @@ export const TicketDeleteDialog = ({
   return (
     <DialogComponent
       open={open}
-      title="Czy na pewno chcesz anulować sprawę?"
-      cancelButtonText="Wstecz"
-      confirmButtonText="Potwierdź"
+      title={t('ticketDeleteDialog.title')}
+      cancelButtonText={t('common.back')}
+      confirmButtonText={t('common.confirm')}
       confirmButtonHandler={submitHandler}
       isLoadingConfirmButton={isLoading}
       cancelButtonHandler={closeDialog}

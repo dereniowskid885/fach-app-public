@@ -3,9 +3,10 @@ import { ReactNode } from 'react';
 import { Layers, CheckCircle, RefreshCw, Star, Heart, Bolt } from 'lucide-react';
 import AuthLeftBanner from '@assets/auth-left-banner.jpg';
 import Image from 'next/image';
-import { MdEngineering } from 'react-icons/md';
 import { useTranslations } from 'next-intl';
 import { EFallbackKey } from '@/constants/enums';
+import PreferencesButtons from '@/components/ui/PreferencesButtons';
+import Logo from '@/components/ui/Logo';
 
 export interface IAuthLayout {
   children: ReactNode;
@@ -28,12 +29,10 @@ export default function AuthLayout({ children }: IAuthLayout) {
   ];
 
   return (
-    <div className="relative z-0 flex min-h-dvh w-full flex-col gap-8 bg-black p-8 md:gap-12 md:p-12 lg:flex-row">
+    <div className="relative z-0 flex min-h-dvh w-full flex-col gap-12 bg-black p-10 md:gap-12 md:p-12 lg:flex-row">
       <div className="flex flex-col justify-between gap-8 lg:w-1/2">
         <div className="flex flex-col items-center gap-4 lg:flex-row">
-          <div className="flex rounded-full bg-chart-2 p-3">
-            <MdEngineering className="text-black" size={40} />
-          </div>
+          <Logo />
 
           <Typography
             variant="h1"
@@ -81,7 +80,11 @@ export default function AuthLayout({ children }: IAuthLayout) {
         </div>
       </div>
 
-      <div className="flex w-full items-center justify-center lg:w-1/2">{children}</div>
+      <div className="flex w-full items-center justify-center lg:w-1/2">
+        {children}
+
+        <PreferencesButtons />
+      </div>
 
       <Image
         src={AuthLeftBanner}

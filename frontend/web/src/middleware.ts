@@ -1,16 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { LOGIN_PATH } from './constants/routes';
-import { isTokenExpired } from './lib/token';
+import { isTokenExpired } from './lib/tokenUtils';
 import axios from 'axios';
 import { API } from './constants/api';
 import { routing } from './i18n/routing';
 import createMiddleware from 'next-intl/middleware';
-import { isProtectedPath } from './helpers/isProtectedPath';
+import { isMiddlewareExcludedPath, isProtectedPath } from './lib/pathnameUtils';
 
 const intlMiddleware = createMiddleware(routing);
 
 export default async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
+
+  if (isMiddlewareExcludedPath(path)) {
+    return NextResponse.next();
+  }
+
+  const intlResponse = intlMiddleware(request);
 
   const localePrefix = path.split('/')[1];
   const isProtectedRoute = isProtectedPath(path, localePrefix);
@@ -46,7 +52,7 @@ export default async function middleware(request: NextRequest) {
       const axiosResponseData = axiosResponse.data;
 
       const expirationTime = 900; // 15 minutes - 15 * 60
-      const response = NextResponse.next();
+      const response = NextResponse.next(intlResponse);
       response.cookies.set('accessToken', axiosResponseData.data.accessToken, {
         httpOnly: true,
         secure: process.env.NEXT_PUBLIC_NODE_ENV === 'production',
@@ -67,7 +73,7 @@ export default async function middleware(request: NextRequest) {
     }
   }
 
-  return intlMiddleware(request);
+  return intlResponse;
 }
 
 export const config = {

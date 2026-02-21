@@ -9,10 +9,11 @@ import {
   usePostAuthEmailVerificationMutation
 } from '@/api/accountApi';
 import { HOME_PATH, LOGIN_PATH } from '@/constants/routes';
-import { parseQueryError } from '@/lib/helpers';
+import { parseQueryError } from '@/lib/utils';
 import { EAccountVerificationResult } from '@/constants/enums';
 import AuthCard from '@/components/ui/AuthCard';
 import { useTranslations } from 'next-intl';
+import { getLastPathSegment } from '@/lib/pathnameUtils';
 
 export default function AccountVerifyPage() {
   const t = useTranslations();
@@ -22,7 +23,7 @@ export default function AccountVerifyPage() {
   );
 
   const pathname = usePathname();
-  const token = pathname.split('/')[2];
+  const token = getLastPathSegment(pathname);
 
   const [triggerEmailVerify, { isLoading, isUninitialized }] =
     usePostAuthEmailVerificationMutation();
