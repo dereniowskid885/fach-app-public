@@ -3,11 +3,12 @@ import localFont from 'next/font/local';
 import '@/styles/globals.css';
 import { ReactNode } from 'react';
 import StoreProvider from '@/app/[locale]/StoreProvider';
-import { Toaster } from '@/components/shadcn/toaster';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { locales } from '@/i18n/routing';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { Toaster } from '@/components/shadcn/sonner';
+import { ThemeProvider } from 'next-themes';
 
 const arimoItalic = localFont({
   src: '../../../public/fonts/Arimo-Italic-VariableFont_wght.ttf',
@@ -39,11 +40,14 @@ export default async function RootLayout({ children, params }: IRootLayout) {
   setRequestLocale(locale);
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <body className={`${arimoItalic.className} ${arimo.className} antialiased`}>
         <StoreProvider>
-          <NextIntlClientProvider>{children}</NextIntlClientProvider>
-          <Toaster />
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <NextIntlClientProvider>{children}</NextIntlClientProvider>
+
+            <Toaster visibleToasts={3} richColors />
+          </ThemeProvider>
         </StoreProvider>
       </body>
     </html>

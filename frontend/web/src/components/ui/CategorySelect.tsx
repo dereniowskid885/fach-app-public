@@ -57,13 +57,13 @@ export default function CategorySelect({
               {selectedCategory.name}
             </>
           ) : (
-            t('category.search')
+            t('category.select')
           )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="z-[99] p-0">
         <Command>
-          <CommandInput placeholder={t('category.search')} />
+          <CommandInput placeholder={t('common.search')} />
           <CommandList>
             <CommandEmpty>{t('category.noResults')}</CommandEmpty>
             <CommandGroup defaultValue="all">

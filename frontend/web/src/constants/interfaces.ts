@@ -1,4 +1,4 @@
-import { EUserRole } from './userRole';
+import { UserRole } from '@/api/accountApi';
 
 export interface IResult {
   success: boolean;
@@ -14,14 +14,8 @@ export interface IErrorData {
 
 export interface ITokenPayload {
   userId: string;
-  categoryId: string;
-  categoryName: string;
-  role: EUserRole;
   email: string;
-  name: string;
-  surname: string;
-  fullName: string;
-  city: string;
+  role: UserRole;
   iat: number;
   exp: number;
 }

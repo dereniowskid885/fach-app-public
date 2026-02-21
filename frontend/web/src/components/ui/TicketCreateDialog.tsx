@@ -7,8 +7,11 @@ import CategorySelect from './CategorySelect';
 import { useEffect, useState } from 'react';
 import { Typography } from '../common/Typography';
 import { Category, PostTicketsApiArg, usePostTicketsMutation } from '@/api/accountApi';
-import { parseQueryError } from '@/lib/helpers';
-import { useToast } from '@/hooks/use-toast';
+import { parseQueryError } from '@/lib/utils';
+import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
+import { useSelector } from 'react-redux';
+import { selectUserData } from '@/redux/slices/UserDataSlice';
 
 interface ITicketCreateForm {
   category: Category;
@@ -26,7 +29,8 @@ export default function TicketCreateDialog({
   refetchTickets,
   closeDialog
 }: ITicketCreateDialog) {
-  const { toast } = useToast();
+  const t = useTranslations();
+  const { city } = useSelector(selectUserData);
   const { register, handleSubmit, reset: resetForm, formState } = useForm<ITicketCreateForm>();
   const [errorMessage, setErrorMessage] = useState<string | undefined>('');
 
@@ -45,7 +49,7 @@ export default function TicketCreateDialog({
     let errorMessage;
 
     if (!ticketCategory) {
-      errorMessage = 'Wybierz kategorię sprawy';
+      errorMessage = t('ticketCreateDialog.errorMissingCategory');
     } else if (mutationError) {
       errorMessage = parseQueryError(mutationError).message;
     } else {
@@ -54,7 +58,7 @@ export default function TicketCreateDialog({
     }
 
     setErrorMessage(errorMessage);
-  }, [formState, mutationError, ticketCategory]);
+  }, [t, formState, mutationError, ticketCategory]);
 
   const submitHandler = async (formData: ITicketCreateForm) => {
     if (!ticketCategory?._id) {
@@ -64,7 +68,8 @@ export default function TicketCreateDialog({
     const payload: PostTicketsApiArg = {
       body: {
         ...formData,
-        categoryId: ticketCategory._id
+        categoryId: ticketCategory._id,
+        city
       }
     };
 
@@ -75,10 +80,7 @@ export default function TicketCreateDialog({
       closeDialog();
       resetForm();
       refetchTickets();
-      toast({
-        title: 'Sprawa utworzona pomyślnie',
-        duration: 3000
-      });
+      toast.success(t('ticketCreateDialog.toastTitle'));
     }
   };
 
@@ -92,13 +94,14 @@ export default function TicketCreateDialog({
           />
         </div>
         <div className="flex flex-col space-y-1.5">
-          <Label htmlFor="title">Tytuł</Label>
+          <Label htmlFor="title">{t('ticketCreateDialog.titleFormLabel')}</Label>
+
           <Input
             {...register('title', {
-              required: 'Tytuł nie może być pusty',
+              required: t('ticketCreateDialog.errorTitleRequired'),
               minLength: {
                 value: 7,
-                message: 'Tytuł musi mieć minimum 7 znaków'
+                message: t('ticketCreateDialog.errorTitleMinLength', { amount: 7 })
               }
             })}
             id="title"
@@ -109,13 +112,14 @@ export default function TicketCreateDialog({
           />
         </div>
         <div className="flex flex-col space-y-1.5">
-          <Label htmlFor="description">Opis</Label>
+          <Label htmlFor="description">{t('ticketCreateDialog.descriptionFormLabel')}</Label>
+
           <Textarea
             {...register('description', {
-              required: 'Opis nie może być pusty',
+              required: t('ticketCreateDialog.errorDescriptionRequired'),
               minLength: {
                 value: 7,
-                message: 'Opis musi mieć minimum 7 znaków'
+                message: t('ticketCreateDialog.errorDescriptionMinLength', { amount: 7 })
               }
             })}
             id="description"
@@ -125,8 +129,9 @@ export default function TicketCreateDialog({
             onChange={e => descriptionInputOnChange(e.target.value.length)}
             required
           />
+
           <Typography variant="note" className="text-right text-neutral-500">
-            Pozostało: {descriptionCharsLeft} znaków
+            {t('ticketCreateDialog.descriptionCharsAmount', { amount: descriptionCharsLeft })}
           </Typography>
         </div>
       </div>
@@ -136,9 +141,9 @@ export default function TicketCreateDialog({
   return (
     <DialogComponent
       open={open}
-      title="Utwórz sprawę"
-      cancelButtonText="Anuluj"
-      confirmButtonText="Potwierdź"
+      title={t('ticketCreateDialog.title')}
+      cancelButtonText={t('common.cancel')}
+      confirmButtonText={t('common.confirm')}
       confirmButtonHandler={handleSubmit(submitHandler)}
       isLoadingConfirmButton={isLoading}
       cancelButtonHandler={closeDialog}

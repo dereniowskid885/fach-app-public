@@ -14,11 +14,12 @@ import {
   usePatchTicketsByIdEditEvaluationMutation,
   Evaluation
 } from '@/api/accountApi';
-import { getFormattedPriceAmount, parseQueryError } from '@/lib/helpers';
-import { useToast } from '@/hooks/use-toast';
+import { getFormattedPriceAmount, parseQueryError } from '@/lib/utils';
+import { toast } from 'sonner';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { getSpecialistPendingTicketStatusesParam } from '@/helpers/getSpecialistPendingTicketStatusesParam';
+import { useTranslations } from 'next-intl';
 
 export interface ISpecialistTicketEvaluationDialog {
   open: boolean;
@@ -35,14 +36,15 @@ export default function SpecialistTicketEvaluationDialog({
   ticket,
   closeDialog
 }: ISpecialistTicketEvaluationDialog) {
-  const t = {
+  const t = useTranslations();
+  const labels = {
     [EActionType.CREATION]: {
-      dialogTitle: 'Wycena sprawy',
-      toastMessage: 'Twoja wycena została wysłana do autora'
+      dialogTitle: t('evaluationDialog.creationTitle'),
+      toastMessage: t('evaluationDialog.creationSuccess')
     },
     [EActionType.EDIT]: {
-      dialogTitle: 'Edycja wyceny',
-      toastMessage: 'Wycena została zaktualizowana'
+      dialogTitle: t('evaluationDialog.editTitle'),
+      toastMessage: t('evaluationDialog.editSuccess')
     }
   };
   const maxMinutes = 1440; // 1 day
@@ -54,8 +56,6 @@ export default function SpecialistTicketEvaluationDialog({
   const daysRef = useRef<HTMLInputElement>(null);
   const minutesRef = useRef<HTMLInputElement>(null);
   const hoursRef = useRef<HTMLInputElement>(null);
-
-  const { toast } = useToast();
 
   const [triggerCreate, { isLoading: isLoadingCreate }] = usePatchTicketsByIdEvaluationMutation();
   const [triggerEdit, { isLoading: isLoadingEdit }] = usePatchTicketsByIdEditEvaluationMutation();
@@ -69,12 +69,14 @@ export default function SpecialistTicketEvaluationDialog({
     if (!ticket._id) return;
 
     if (minutes < 30) {
-      setErrorMessage('Czas odpowiedzi nie może być krótszy niż 30 min');
+      setErrorMessage(t('evaluationDialog.errorMinutes', { amount: 30 }));
       return;
     }
 
     if (priceInCents < 200) {
-      setErrorMessage(`Cena nie może być mniejsza niż 2.00 ${ESupportedCurrency.PLN}`);
+      setErrorMessage(
+        t('evaluationDialog.errorPrice', { amount: '2.00', currency: ESupportedCurrency.PLN })
+      );
       return;
     }
 
@@ -124,10 +126,7 @@ export default function SpecialistTicketEvaluationDialog({
         status: getSpecialistPendingTicketStatusesParam()
       });
 
-      toast({
-        title: t[mode].toastMessage,
-        duration: 3000
-      });
+      toast.success(labels[mode].toastMessage);
     } else {
       const { message } = parseQueryError(result.error!);
 
@@ -143,13 +142,14 @@ export default function SpecialistTicketEvaluationDialog({
     <form>
       <div className="flex flex-col justify-center space-y-8">
         <div className="flex w-full flex-col items-center space-y-4">
-          <Typography variant="small">Czas odpowiedzi</Typography>
+          <Typography variant="small">{t('evaluation.dateOfResponse')}</Typography>
 
           <div className="flex space-x-3">
             <div className="flex flex-col items-center space-y-1">
               <Label htmlFor="days" className="text-xs">
-                Dni
+                {t('evaluationDialog.daysLabel')}
               </Label>
+
               <TimePickerInput
                 picker={ETimePickerType.DAYS}
                 id="days"
@@ -163,8 +163,9 @@ export default function SpecialistTicketEvaluationDialog({
 
             <div className="flex flex-col items-center space-y-1">
               <Label htmlFor="hours" className="text-xs">
-                Godziny
+                {t('evaluationDialog.hoursLabel')}
               </Label>
+
               <TimePickerInput
                 picker={ETimePickerType.HOURS}
                 id="hours"
@@ -179,8 +180,9 @@ export default function SpecialistTicketEvaluationDialog({
 
             <div className="flex flex-col items-center space-y-1">
               <Label htmlFor="minutes" className="text-xs">
-                Minuty
+                {t('evaluationDialog.minutesLabel')}
               </Label>
+
               <TimePickerInput
                 picker={ETimePickerType.MINUTES}
                 id="minutes"
@@ -202,7 +204,7 @@ export default function SpecialistTicketEvaluationDialog({
           />
         </div>
         <div className="flex w-full flex-col items-center space-y-4">
-          <Typography variant="small">Cena</Typography>
+          <Typography variant="small">{t('evaluation.price')}</Typography>
 
           <PriceInput
             className="w-auto text-center"
@@ -219,9 +221,9 @@ export default function SpecialistTicketEvaluationDialog({
   return (
     <DialogComponent
       open={open}
-      title={t[mode].dialogTitle}
-      cancelButtonText="Anuluj"
-      confirmButtonText="Potwierdź"
+      title={labels[mode].dialogTitle}
+      cancelButtonText={t('common.cancel')}
+      confirmButtonText={t('common.confirm')}
       confirmButtonHandler={submitHandler}
       isLoadingConfirmButton={isLoading}
       cancelButtonHandler={closeDialog}

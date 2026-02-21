@@ -1,6 +1,6 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import { GetUsersMeApiResponse, ThemeType } from '@/api/accountApi';
+import { GetAuthMeApiResponse, ThemeType } from '@/api/accountApi';
 
 const initialState = {
   user: {
@@ -21,7 +21,7 @@ const userData = createSlice({
   name: 'userData',
   initialState,
   reducers: {
-    setUserData(state, action: PayloadAction<GetUsersMeApiResponse['data'] | null>) {
+    setUserData(state, action: PayloadAction<GetAuthMeApiResponse['data'] | null>) {
       if (!action.payload) return;
 
       const {

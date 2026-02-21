@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import DialogComponent from '../common/DialogComponent';
-import { parseQueryError } from '@/lib/helpers';
+import { parseQueryError } from '@/lib/utils';
 import { usePostTicketsByIdPaymentMutation } from '@/api/accountApi';
 import { ESupportedCurrency } from '@/constants/supportedCurrency';
 import { StripePaymentForm } from './StripePaymentForm';
 import { StripeProvider } from '../providers/StripeProvider';
+import { useTranslations } from 'next-intl';
 
 export interface ITicketPaymentDialog {
   open: boolean;
@@ -25,6 +26,8 @@ export const TicketPaymentDialog = ({
   amount,
   currency
 }: ITicketPaymentDialog) => {
+  const t = useTranslations();
+
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -70,7 +73,7 @@ export const TicketPaymentDialog = ({
       open={open}
       isLoadingConfirmButton={isLoading}
       title="Wypełnij dane płatności"
-      cancelButtonText="Anuluj"
+      cancelButtonText={t('common.cancel')}
       cancelButtonHandler={closeDialog}
       content={
         <StripeProvider clientSecret={clientSecret}>

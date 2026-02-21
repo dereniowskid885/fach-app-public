@@ -6,9 +6,10 @@ import {
   PatchTicketsByIdAcceptEvaluationApiArg,
   usePatchTicketsByIdAcceptEvaluationMutation
 } from '@/api/accountApi';
-import { getFormattedDate, getFormattedPriceAmount, parseQueryError } from '@/lib/helpers';
+import { getFormattedDate, getFormattedPriceAmount, parseQueryError } from '@/lib/utils';
 import { RowSelectionState } from '@tanstack/react-table';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 
 export interface IEvaluationsListDialog {
   open: boolean;
@@ -25,7 +26,7 @@ export const EvaluationsListDialog = ({
   ticketId,
   ticketEvaluations = []
 }: IEvaluationsListDialog) => {
-  const { toast } = useToast();
+  const t = useTranslations();
 
   const [selectedEvaluationRow, setSelectedEvaluationRow] = useState<RowSelectionState>({});
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -58,23 +59,23 @@ export const EvaluationsListDialog = ({
       columns={[
         {
           accessorKey: 'specialistName',
-          header: 'Fachowiec'
+          header: t('userRole.specialist')
         },
         {
           accessorKey: 'specialistEmail',
-          header: 'Email'
+          header: t('authForm.email')
         },
         {
           accessorKey: 'dateOfResponse',
-          header: 'Czas odpowiedzi'
+          header: t('evaluation.dateOfResponse')
         },
         {
           accessorKey: 'price',
-          header: 'Cena'
+          header: t('evaluation.price')
         },
         {
           accessorKey: 'city',
-          header: 'Miasto'
+          header: t('evaluation.city')
         }
       ]}
     />
@@ -110,10 +111,7 @@ export const EvaluationsListDialog = ({
     if (isMutationSuccess) {
       closeDialog();
       refetchTickets();
-      toast({
-        title: 'Wycena sprawy została zaakceptowana',
-        duration: 3000
-      });
+      toast.success(t('evaluationListDialog.toastTitle'));
     } else {
       const { message } = parseQueryError(result.error);
 
@@ -125,11 +123,11 @@ export const EvaluationsListDialog = ({
     <DialogComponent
       open={open}
       contentClass="max-lg:max-w-none lg:max-w-[70%]"
-      title="Aktualne wyceny sprawy"
+      title={t('evaluationListDialog.title')}
       content={evaluationsTable}
-      cancelButtonText="Wstecz"
+      cancelButtonText={t('common.back')}
       cancelButtonHandler={closeDialog}
-      confirmButtonText="Zaakceptuj wycenę"
+      confirmButtonText={t('evaluationListDialog.confirmButtonText')}
       confirmButtonHandler={submitHandler}
       confirmButtonDisabled={!isEvaluationSelected}
       isLoadingConfirmButton={isLoading}
