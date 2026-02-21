@@ -19,7 +19,7 @@ export const getUserById = async (req: Request, res: Response) => {
   try {
     const user = await UserManager.getUserById(req.params.id);
 
-    return res.status(200).json(user);
+    return res.status(200).json({ success: true, data: user });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -27,7 +27,7 @@ export const getUserById = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    const user = await UserManager.updateUser(req.params.id, req.body);
+    const user = await UserManager.updateUser(req.user, req.params.id, req.body);
 
     return res.status(200).json({ success: true, message: 'User updated successfully', data: user });
   } catch (err) {

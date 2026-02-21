@@ -35,7 +35,18 @@ export enum ESupportedCurrency {
   PLN = "PLN",
 }
 
+export enum ESupportedLanguages {
+  PL = "pl",
+  EN = "en",
+}
+
 export enum EEnvironmentType {
   DEVELOPMENT = "development",
   PRODUCTION = "production",
+}
+
+export enum EThemeType {
+  DARK = "dark",
+  LIGHT = "light",
+  SYSTEM = "system",
 }

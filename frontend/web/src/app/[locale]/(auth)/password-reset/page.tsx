@@ -9,12 +9,13 @@ import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
 import { Typography } from '@/components/common/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
-import { parseQueryError } from '@/lib/helpers';
+import { parseQueryError } from '@/lib/utils';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import AuthCard from '@/components/ui/AuthCard';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { ESupportedLanguages } from '@shared/constants/enums';
 
 interface IPasswordResetRequestForm {
   email: string;
@@ -25,13 +26,15 @@ export default function PasswordResetRequest() {
   const { register, handleSubmit, formState, setError, getValues } =
     useForm<IPasswordResetRequestForm>();
   const [isEmailSent, setEmailSent] = useState<boolean>(false);
+  const currentLocale = useLocale();
 
   const [triggerRequest, { isLoading }] = usePostAuthRequestPasswordResetMutation();
 
   const submitHandler = async (formData: IPasswordResetRequestForm) => {
     const payload: PostAuthRequestPasswordResetApiArg = {
       body: {
-        ...formData
+        ...formData,
+        lang: currentLocale as ESupportedLanguages
       }
     };
 

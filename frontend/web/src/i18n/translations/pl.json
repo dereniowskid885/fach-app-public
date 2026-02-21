@@ -1,4 +1,15 @@
 {
+  "lang": {
+    "sidebarButtonText": "Język",
+    "pl": "Polski",
+    "en": "Angielski"
+  },
+  "theme": {
+    "sidebarButtonText": "Motyw",
+    "lightVariant": "Jasny",
+    "darkVariant": "Ciemny",
+    "systemVariant": "Domyślny"
+  },
   "common": {
     "appTitle": "FachApp",
     "noResults": "Brak wyników.",
@@ -10,10 +21,46 @@
     "goToLogin": "Przejdź do logowania",
     "backToLogin": "Wróć do logowania",
     "goToApp": "Przejdź do aplikacji",
-    "sendLink": "Wyślij link"
+    "sendLink": "Wyślij link",
+    "logout": "Wyloguj",
+    "selectLanguage": "Wybierz język",
+    "selectTheme": "Wybierz motyw",
+    "avatar": "Awatar",
+    "unassigned": "Nieprzypisany",
+    "noUpdates": "Brak aktualizacji",
+    "viewAll": "Zobacz wszystkie",
+    "collapse": "Zwiń",
+    "search": "Szukaj"
+  },
+  "userRole": {
+    "admin": "Admin",
+    "user": "Użytkownik",
+    "specialist": "Specjalista"
+  },
+  "timeOfDay": {
+    "morning": "Dzień dobry",
+    "afternoon": "Dzień dobry",
+    "evening": "Dobry wieczór"
+  },
+  "sidebar": {
+    "mainMenu": "Menu główne"
+  },
+  "dashboard": {
+    "greeting": "{timeOfDayGreeting}, {userName}!",
+    "greetingMessage": "Sprawdź, co nowego i bądź na bieżąco.",
+    "createNewTicketButtonText": "Utwórz nową sprawę",
+    "recentTicketsHeader": "Ostatnie sprawy",
+    "recentTicketsAmount": "{count, plural, =0 {0 spraw} one {# sprawa} few {# sprawy} many {# spraw} other {# spraw}}"
+  },
+  "pages": {
+    "dashboard": "Pulpit",
+    "tickets": "Sprawy",
+    "inbox": "Wiadomości",
+    "settings": "Ustawienia"
   },
   "category": {
-    "search": "Wyszukaj kategorie",
+    "select": "Wybierz kategorie",
+    "search": "W",
     "noResults": "Nie znaleziono kategorii"
   },
   "select": {
@@ -47,7 +94,6 @@
     "city": "Miasto"
   },
   "loginPage": {
-    "toastTitle": "Jesteś zalogowany",
     "authCardDescription": "Aby być krok od <span>rozwiązania</span>",
     "forgotPassword": "Zapomniałeś hasła?",
     "signUpLabel": "Nie masz konta?",
@@ -70,7 +116,6 @@
   "passwordResetPage": {
     "authCardTitle": "Zresetuj hasło",
     "authCardTitleSuccess": "Hasło zostało zresetowane",
-    "authCardDescription": "Wypełnij dane",
     "linkExpired": "Link wygasł lub jest nieprawidłowy"
   },
   "accountVerifyPage": {
@@ -78,5 +123,42 @@
     "successTitle": "Konto zostało aktywowane",
     "errorTitle": "Wystąpił błąd podczas weryfikacji",
     "tokenInvalidTitle": "Link do aktywacji konta jest nieprawidłowy"
+  },
+  "ticketCreateDialog": {
+    "title": "Nowa sprawa",
+    "toastTitle": "Sprawa utworzona pomyślnie",
+    "titleFormLabel": "Tytuł",
+    "descriptionFormLabel": "Opis",
+    "descriptionCharsAmount": "Pozostało: {amount} znaków",
+    "errorMissingCategory": "Wybierz kategorię sprawy",
+    "errorTitleRequired": "Tytuł nie może być pusty",
+    "errorTitleMinLength": "Tytuł musi mieć minimum {amount} znaków",
+    "errorDescriptionRequired": "Opis nie może być pusty",
+    "errorDescriptionMinLength": "Opis musi mieć minimum {amount} znaków"
+  },
+  "ticketDeleteDialog": {
+    "title": "Czy na pewno chcesz anulować sprawę?",
+    "toastTitle": "Sprawa anulowana pomyślnie"
+  },
+  "evaluation": {
+    "dateOfResponse": "Czas odpowiedzi",
+    "price": "Cena",
+    "city": "Miasto"
+  },
+  "evaluationDialog": {
+    "creationTitle": "Wycena sprawy",
+    "creationSuccess": "Twoja wycena została wysłana do autora",
+    "editTitle": "Edycja wyceny",
+    "editSuccess": "Wycena została zaktualizowana",
+    "daysLabel": "Dni",
+    "hoursLabel": "Godziny",
+    "minutesLabel": "Minuty",
+    "errorMinutes": "Czas odpowiedzi nie może być krótszy niż {amount} min",
+    "errorPrice": "Cena nie może być mniejsza niż {amount} {currency}"
+  },
+  "evaluationListDialog": {
+    "title": "Aktualne wyceny sprawy",
+    "toastTitle": "Wycena sprawy została zaakceptowana",
+    "confirmButtonText": "Zaakceptuj wycenę"
   }
 }

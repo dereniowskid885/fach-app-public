@@ -17,7 +17,7 @@ const checkAdminRole = createMiddleware(checkUserRole, [EUserRole.ADMIN]);
 
 // Auth middleware
 const accessTokenMiddleware = createMiddleware(checkAndParseAccessToken, process.env.ACCESS_TOKEN_SECRET);
-router.use(accessTokenMiddleware, checkAdminRole);
+router.use(accessTokenMiddleware);
 
 /**
  * @swagger
@@ -143,7 +143,7 @@ router.use(accessTokenMiddleware, checkAdminRole);
  *                   type: string
  *                   example: Server error
  */
-router.post('/', validateCreateUserMiddleware, createUser);
+router.post('/', validateCreateUserMiddleware, checkAdminRole, createUser);
 
 /**
  * @swagger
@@ -247,7 +247,7 @@ router.post('/', validateCreateUserMiddleware, createUser);
  *                   type: string
  *                   example: Server error
  */
-router.get('/', getUsers);
+router.get('/', checkAdminRole, getUsers);
 
 /**
  * @swagger
@@ -342,7 +342,7 @@ router.get('/', getUsers);
  *                   type: string
  *                   example: Server error
  */
-router.get('/:id', getUserById);
+router.get('/:id', checkAdminRole, getUserById);
 
 /**
  * @swagger
@@ -368,14 +368,16 @@ router.get('/:id', getUserById);
  *             properties:
  *                 email:
  *                   type: string
- *                 role:
- *                   type: string
- *                 category:
- *                   type: string
  *                 city:
  *                   type: string
  *                 isVerified:
  *                   type: boolean
+ *                 name:
+ *                   type: string
+ *                 surname:
+ *                   type: string
+ *                 theme:
+ *                   $ref: '#/components/schemas/ThemeType'
  *     responses:
  *       200:
  *         description: Successfully updated the user
@@ -598,7 +600,7 @@ router.patch('/:id', validateUserUpdateMiddleware, updateUser);
  *                   type: string
  *                   example: Server error
  */
-router.patch('/:id/role', validateUserRoleUpdateMiddleware, updateUserRole);
+router.patch('/:id/role', validateUserRoleUpdateMiddleware, checkAdminRole, updateUserRole);
 
 /**
  * @swagger
@@ -694,6 +696,6 @@ router.patch('/:id/role', validateUserRoleUpdateMiddleware, updateUserRole);
  *                   type: string
  *                   example: Server error
  */
-router.delete('/:id', deleteUser);
+router.delete('/:id', checkAdminRole, deleteUser);
 
 export default router;

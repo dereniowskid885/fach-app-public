@@ -4,7 +4,7 @@ import {
   PostAuthRequestEmailVerificationApiArg,
   usePostAuthRequestEmailVerificationMutation
 } from '@/api/accountApi';
-import { parseQueryError } from '@/lib/helpers';
+import { parseQueryError } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
 
 export interface IAccountVerifyDialog {

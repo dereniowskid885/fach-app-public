@@ -6,8 +6,8 @@ import { Label } from '@/components/shadcn/label';
 import PasswordInput from '@/components/common/PasswordInput';
 import { Typography } from '@/components/common/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
-import { getLastPathSegment, parseQueryError } from '@/lib/helpers';
-import { getTokenPayload, isTokenExpired } from '@/lib/token';
+import { parseQueryError } from '@/lib/utils';
+import { getTokenPayload, isTokenExpired } from '@/lib/tokenUtils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -16,6 +16,7 @@ import { notFound } from 'next/navigation';
 import { PostAuthPasswordResetApiArg, usePostAuthPasswordResetMutation } from '@/api/accountApi';
 import AuthCard from '@/components/ui/AuthCard';
 import { useTranslations } from 'next-intl';
+import { getLastPathSegment } from '@/lib/pathnameUtils';
 
 interface IPasswordResetForm {
   newPassword: string;
@@ -74,7 +75,6 @@ export default function PasswordResetForm() {
             ? t('passwordResetPage.linkExpired')
             : t('passwordResetPage.authCardTitleSuccess')
       }
-      descriptionContent={isFormVisible ? t('passwordResetPage.authCardDescription') : null}
       mainContent={
         isFormVisible ? (
           <>

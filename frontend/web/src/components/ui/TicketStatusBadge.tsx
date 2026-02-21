@@ -1,34 +1,22 @@
-import { Badge } from '@/components/shadcn/badge';
-import { ETicketStatus } from '@/constants/ticketStatus';
-
-const getStatusBgColor = (status: ETicketStatus): string => {
-  switch (status) {
-    case ETicketStatus.PRICE_EVALUATION:
-      return 'bg-secondary';
-    case ETicketStatus.PRICE_USER_ACCEPTATION:
-      return 'bg-secondary-600';
-    case ETicketStatus.PENDING_PAYMENT:
-      return 'bg-accent-400';
-    case ETicketStatus.IN_PROGRESS:
-      return 'bg-primary-500';
-    case ETicketStatus.SOLUTION_USER_APPROVAL:
-      return 'bg-warning-500';
-    case ETicketStatus.MODERATOR_INVESTIGATION:
-      return 'bg-neutral-500';
-    case ETicketStatus.COMPLETED:
-      return 'bg-success-500';
-  }
-};
+import { TicketStatus } from '@/api/accountApi';
+import { ETicketStatus, getTicketStatusColorClasses } from '@/constants/ticketStatus';
+import { cn } from '@/lib/utils';
 
 export interface ITicketStatusBadge {
   className?: string;
-  status: ETicketStatus;
+  status?: TicketStatus | ETicketStatus;
 }
 
 export default function TicketStatusBadge({ className, status }: ITicketStatusBadge) {
   return (
-    <Badge variant="outline" className={`w-fit ${getStatusBgColor(status)} ${className}`}>
+    <div
+      className={cn(
+        'inline-flex items-center rounded-full border border-neutral-200 px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2 dark:border-neutral-800 dark:focus:ring-neutral-300',
+        getTicketStatusColorClasses(status),
+        className
+      )}
+    >
       {status}
-    </Badge>
+    </div>
   );
 }
