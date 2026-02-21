@@ -1,4 +1,4 @@
-import { isCookie } from '@/lib/isCookie';
+import { isCookie } from '@/helpers/isCookie';
 import {
   BaseQueryFn,
   createApi,

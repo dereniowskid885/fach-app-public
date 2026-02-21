@@ -1,4 +1,15 @@
 {
+  "lang": {
+    "sidebarButtonText": "Language",
+    "pl": "Polish",
+    "en": "English"
+  },
+  "theme": {
+    "sidebarButtonText": "Theme",
+    "lightVariant": "Light",
+    "darkVariant": "Dark",
+    "systemVariant": "Default"
+  },
   "common": {
     "appTitle": "FachApp",
     "noResults": "No results.",
@@ -10,9 +21,45 @@
     "goToLogin": "Go to login",
     "backToLogin": "Back to login",
     "goToApp": "Go to app",
-    "sendLink": "Send link"
+    "sendLink": "Send link",
+    "logout": "Logout",
+    "selectLanguage": "Select language",
+    "selectTheme": "Select theme",
+    "avatar": "Avatar",
+    "unassigned": "Unassigned",
+    "noUpdates": "No updates yet",
+    "viewAll": "View all",
+    "collapse": "Collapse",
+    "search": "Search"
+  },
+  "userRole": {
+    "admin": "Admin",
+    "user": "User",
+    "specialist": "Specialist"
+  },
+  "timeOfDay": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "sidebar": {
+    "mainMenu": "Main Menu"
+  },
+  "dashboard": {
+    "greeting": "{timeOfDayGreeting}, {userName}!",
+    "greetingMessage": "Check out what's new and be up to date.",
+    "createNewTicketButtonText": "Create new ticket",
+    "recentTicketsHeader": "Recent tickets",
+    "recentTicketsAmount": "{count, plural, =0 {0 tickets} one {ticket} other {# tickets}}"
+  },
+  "pages": {
+    "dashboard": "Dashboard",
+    "tickets": "Tickets",
+    "inbox": "Inbox",
+    "settings": "Settings"
   },
   "category": {
+    "select": "Select category",
     "search": "Search category",
     "noResults": "No categories found"
   },
@@ -47,7 +94,6 @@
     "city": "City"
   },
   "loginPage": {
-    "toastTitle": "You are already logged in",
     "authCardDescription": "To be one step away from <span>solution</span>",
     "forgotPassword": "Forgot password?",
     "signUpLabel": "Don't have an account?",
@@ -70,7 +116,6 @@
   "passwordResetPage": {
     "authCardTitle": "Reset password",
     "authCardTitleSuccess": "Password has been reset",
-    "authCardDescription": "Fill in the data",
     "linkExpired": "Link expired or invalid"
   },
   "accountVerifyPage": {
@@ -78,5 +123,42 @@
     "successTitle": "Account verified",
     "errorTitle": "An error occurred during verification",
     "tokenInvalidTitle": "Account verification link is invalid"
+  },
+  "ticketCreateDialog": {
+    "title": "New ticket",
+    "toastTitle": "Ticket created successfully",
+    "titleFormLabel": "Title",
+    "descriptionFormLabel": "Description",
+    "descriptionCharsAmount": "{amount} characters remaining",
+    "errorMissingCategory": "Please select ticket category",
+    "errorTitleRequired": "Title cannot be empty",
+    "errorTitleMinLength": "Title must be at least {amount} characters",
+    "errorDescriptionRequired": "Description cannot be empty",
+    "errorDescriptionMinLength": "Description must be at least {amount} characters"
+  },
+  "ticketDeleteDialog": {
+    "title": "Are you sure you want to cancel this ticket?",
+    "toastTitle": "Ticket successfully cancelled"
+  },
+  "evaluation": {
+    "dateOfResponse": "Date of response",
+    "price": "Price",
+    "city": "City"
+  },
+  "evaluationDialog": {
+    "creationTitle": "Ticket evaluation",
+    "creationSuccess": "Your evaluation has been sent to the author",
+    "editTitle": "Edit evaluation",
+    "editSuccess": "The evaluation has been updated",
+    "daysLabel": "Days",
+    "hoursLabel": "Hours",
+    "minutesLabel": "Minutes",
+    "errorMinutes": "Response time cannot be shorter than {amount} min",
+    "errorPrice": "Price cannot be less than {amount} {currency}"
+  },
+  "evaluationListDialog": {
+    "title": "Current ticket evaluations",
+    "toastTitle": "Case evaluation has been accepted",
+    "confirmButtonText": "Accept evaluation"
   }
 }
