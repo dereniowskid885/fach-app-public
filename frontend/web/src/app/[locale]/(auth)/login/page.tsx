@@ -8,18 +8,19 @@ import AccountVerifyDialog from '@/components/ui/AccountVerifyDialog';
 import PasswordInput from '@/components/common/PasswordInput';
 import { Typography } from '@/components/common/Typography';
 import { HOME_PATH, PASSWORD_RESET_PATH, REGISTER_PATH } from '@/constants/routes';
-import { parseQueryError } from '@/lib/helpers';
+import { parseQueryError } from '@/lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { isCookie } from '@/lib/isCookie';
-import { useToast } from '@/hooks/use-toast';
+import { isCookie } from '@/helpers/isCookie';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 import AuthCard from '@/components/ui/AuthCard';
 import { EResponseStatus } from '@shared/constants/responseStatus';
 import { useTranslations } from 'next-intl';
+import { useDispatch } from 'react-redux';
+import { clearUserData } from '@/redux/slices/UserDataSlice';
 
 interface ILoginForm {
   email: string;
@@ -29,11 +30,11 @@ interface ILoginForm {
 export default function Login() {
   const t = useTranslations();
   const router = useRouter();
-  const { toast } = useToast();
+  const dispatch = useDispatch();
   const { register, handleSubmit, formState, setError, getValues } = useForm<ILoginForm>();
   const [accountVerifyDialog, setAccountVerifyDialog] = useState<boolean>(false);
 
-  const [triggerLogin, { isLoading }] = usePostAuthLoginMutation();
+  const [triggerLogin, { isLoading: isLoadingLogin }] = usePostAuthLoginMutation();
 
   const submitHandler = async (formData: ILoginForm) => {
     const payload: PostAuthLoginApiArg = {
@@ -60,30 +61,18 @@ export default function Login() {
   };
 
   useEffect(() => {
-    const toastClickHandler = (closeToast: () => void) => {
-      router.push(HOME_PATH);
-      closeToast();
-    };
+    dispatch(clearUserData());
 
     const checkUserSession = async () => {
       const hasRefreshToken = await isCookie('refreshToken');
 
       if (hasRefreshToken) {
-        const { dismiss } = toast({
-          title: t('loginPage.toastTitle'),
-          action: (
-            <Button variant="outline" onClick={() => toastClickHandler(dismiss)}>
-              {t('common.goToApp')}
-            </Button>
-          ),
-          duration: 30000,
-          type: 'background'
-        });
+        router.push(HOME_PATH);
       }
     };
 
     checkUserSession();
-  }, [t, toast, router]);
+  }, [t, router, dispatch]);
 
   return (
     <AuthCard
@@ -129,7 +118,7 @@ export default function Login() {
       }
       footerContent={
         <>
-          <Button loading={isLoading} type="submit" className="w-full">
+          <Button loading={isLoadingLogin} type="submit" className="w-full">
             {t('authForm.signIn')}
           </Button>
 

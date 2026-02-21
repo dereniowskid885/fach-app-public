@@ -17,8 +17,8 @@
   --font-weight-medium: 500;
 
   /* surfaces */
-  --background: 1 0 0;
-  --foreground: 0.145 0 0;
+  --background: 0.984 0.0034 247.9;
+  --foreground: 0.145 0.0034 247.9;
 
   --card: 1 0 0;
   --card-foreground: 0.145 0 0;
@@ -33,6 +33,10 @@
   /* secondary */
   --secondary: 0.95 0.0058 264.53;
   --secondary-foreground: 0.145 0 0;
+
+  /* tertiary */
+  --tertiary: 0.7 0.018 248;
+  --tertiary-foreground: 0.26 0.02 248;
 
   /* subtle */
   --muted: 0.96 0 0;
@@ -63,7 +67,7 @@
   --radius: 0.625rem;
 
   /* sidebar */
-  --sidebar: 0.985 0 0;
+  --sidebar: 1 0 0;
   --sidebar-foreground: 0.145 0 0;
   --sidebar-primary: 0.145 0 0;
   --sidebar-primary-foreground: 0.985 0 0;
@@ -71,6 +75,11 @@
   --sidebar-accent-foreground: 0.205 0 0;
   --sidebar-border: 0.922 0 0;
   --sidebar-ring: 0.708 0 0;
+
+  /* hover */
+  --primary-hover: 0.3 0 0;
+  --secondary-hover: 0.92 0.0058 264.53;
+  --destructive-hover: 0.52 0.25 25;
 }
 
 /* ---------------------------------------------
@@ -92,6 +101,9 @@
   --secondary: 0.269 0 0;
   --secondary-foreground: 0.985 0 0;
 
+  --tertiary: 0.64 0.02 248;
+  --tertiary-foreground: 0.18 0.015 248;
+
   --muted: 0.269 0 0;
   --muted-foreground: 0.7 0 0;
   --muted-constant: 0.96 0 0;
@@ -99,7 +111,7 @@
   --accent: 0.269 0 0;
   --accent-foreground: 0.985 0 0;
 
-  --destructive: 0.396 0.141 25.723;
+  --destructive: 0.645 0.246 16.439;
   --destructive-foreground: 0.985 0 0;
 
   --border: 0.269 0 0;
@@ -121,6 +133,10 @@
   --sidebar-accent-foreground: 0.985 0 0;
   --sidebar-border: 0.269 0 0;
   --sidebar-ring: 0.439 0 0;
+
+  --primary-hover: 0.9 0 0;
+  --secondary-hover: 0.31 0 0;
+  --destructive-hover: 0.43 0.141 25.723;
 }
 
 /* ---------------------------------------------
@@ -137,11 +153,6 @@ html {
   font-size: var(--font-size);
 }
 
-svg {
-  min-width: 20px;
-  min-height: 20px;
-}
-
 @layer base {
   * {
     @apply border-border;
@@ -154,6 +165,22 @@ svg {
 }
 
 @layer components {
+  .animation-base {
+    @apply transition-colors duration-200 ease-out;
+  }
+
+  .animation-idle {
+    @apply bg-transparent text-muted-foreground;
+  }
+
+  .animation-interactive {
+    @apply hover:bg-muted hover:text-foreground focus-visible:bg-muted focus-visible:text-foreground;
+  }
+
+  .animation-active {
+    @apply bg-secondary font-bold text-foreground;
+  }
+
   .animate-zoom-enter {
     @apply duration-500 ease-out animate-in fade-in-75 zoom-in-95;
   }

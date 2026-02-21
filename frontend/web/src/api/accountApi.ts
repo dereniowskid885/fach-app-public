@@ -1,6 +1,9 @@
 import { api } from './services/account/index';
 const injectedRtkApi = api.injectEndpoints({
   endpoints: build => ({
+    getAuthMe: build.query<GetAuthMeApiResponse, GetAuthMeApiArg>({
+      query: () => ({ url: `/auth/me` })
+    }),
     postAuthRegister: build.mutation<PostAuthRegisterApiResponse, PostAuthRegisterApiArg>({
       query: queryArg => ({ url: `/auth/register`, method: 'POST', body: queryArg.body })
     }),
@@ -194,6 +197,11 @@ const injectedRtkApi = api.injectEndpoints({
   overrideExisting: false
 });
 export { injectedRtkApi as accountApi };
+export type GetAuthMeApiResponse = /** status 200 Single user object. */ {
+  success?: boolean;
+  data?: User;
+};
+export type GetAuthMeApiArg = void;
 export type PostAuthRegisterApiResponse = /** status 201 User registered successfully */ {
   success?: boolean;
   message?: string;
@@ -211,6 +219,7 @@ export type PostAuthRegisterApiArg = {
     surname: string;
     /** User's city */
     city: string;
+    lang?: Language;
   };
 };
 export type PostAuthLoginApiResponse = /** status 200 User logged in succesfully */ {
@@ -250,7 +259,8 @@ export type PostAuthRequestEmailVerificationApiResponse =
 export type PostAuthRequestEmailVerificationApiArg = {
   body: {
     /** User's email address */
-    email?: string;
+    email: string;
+    lang?: Language;
   };
 };
 export type PostAuthEmailVerificationApiResponse =
@@ -272,7 +282,8 @@ export type PostAuthRequestPasswordResetApiResponse =
 export type PostAuthRequestPasswordResetApiArg = {
   body: {
     /** User's email address */
-    email?: string;
+    email: string;
+    lang?: Language;
   };
 };
 export type PostAuthPasswordResetApiResponse = /** status 200 Password reset successful */ {
@@ -373,6 +384,8 @@ export type PostTicketsApiArg = {
     description: string;
     /** Unique ID of the category */
     categoryId: string;
+    /** City associated with the ticket */
+    city: string;
   };
 };
 export type GetTicketsApiResponse = /** status 200 Array of tickets */ {
@@ -564,10 +577,11 @@ export type PatchUsersByIdApiArg = {
   id: string;
   body: {
     email?: string;
-    role?: string;
-    category?: string;
     city?: string;
     isVerified?: boolean;
+    name?: string;
+    surname?: string;
+    theme?: ThemeType;
   };
 };
 export type DeleteUsersByIdApiResponse = /** status 200 Successfully deleted the user */ {
@@ -605,7 +619,9 @@ export type User = {
   surname?: string;
   city?: string;
   isVerified?: boolean;
+  theme?: 'light' | 'dark' | 'system';
 };
+export type Language = 'pl' | 'en';
 export type TicketStatus =
   | 'Wycena'
   | 'Akceptacja wyceny'
@@ -649,7 +665,9 @@ export type Payment = {
   status?: PaymentStatus;
   createdAt?: string;
 };
+export type ThemeType = 'light' | 'dark' | 'system';
 export const {
+  useGetAuthMeQuery,
   usePostAuthRegisterMutation,
   usePostAuthLoginMutation,
   usePostAuthRefreshTokenMutation,
