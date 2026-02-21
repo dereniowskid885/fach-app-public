@@ -13,9 +13,9 @@ export const TicketManager = {
   getTicketByID: async (ticketId: string) => {
     const ticket = await Ticket.findOne({ _id: ticketId }).populate([
       { path: 'category', select: 'name' },
-      { path: 'assignee', select: 'email' },
-      { path: 'createdBy', select: 'email' },
-      { path: 'updatedBy', select: 'email' },
+      { path: 'assignee', select: 'email name surname city role' },
+      { path: 'createdBy', select: 'email name surname city role' },
+      { path: 'updatedBy', select: 'email name surname city role' },
       { path: 'acceptedEvaluation' },
       {
         path: 'evaluations',
@@ -37,20 +37,22 @@ export const TicketManager = {
       throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
     }
 
-    const tickets = await Ticket.find(filter).populate([
-      { path: 'category', select: 'name' },
-      { path: 'assignee', select: 'email' },
-      { path: 'createdBy', select: 'email' },
-      { path: 'updatedBy', select: 'email' },
-      { path: 'acceptedEvaluation' },
-      {
-        path: 'evaluations',
-        populate: {
-          path: 'user',
-          select: 'email name surname city',
+    const tickets = await Ticket.find(filter)
+      .populate([
+        { path: 'category', select: 'name' },
+        { path: 'assignee', select: 'email name surname city role' },
+        { path: 'createdBy', select: 'email name surname city role' },
+        { path: 'updatedBy', select: 'email name surname city role' },
+        { path: 'acceptedEvaluation' },
+        {
+          path: 'evaluations',
+          populate: {
+            path: 'user',
+            select: 'email name surname city',
+          },
         },
-      },
-    ]);
+      ])
+      .sort({ updatedAt: -1 });
 
     return tickets;
   },
@@ -59,6 +61,7 @@ export const TicketManager = {
       title: string;
       description: string;
       categoryId: string;
+      city: string;
     },
     user: JwtPayload,
   ) => {
@@ -69,7 +72,7 @@ export const TicketManager = {
     const ticket = new Ticket({
       createdBy: user.userId,
       assignee: user.userId,
-      city: user.city,
+      city: ticketData.city,
       category: ticketData.categoryId,
       title: ticketData.title,
       description: ticketData.description,

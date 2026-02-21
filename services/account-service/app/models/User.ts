@@ -1,6 +1,6 @@
 import { Types, Document, Schema, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { EUserRole } from '@shared/constants/enums';
+import { EThemeType, EUserRole } from '@shared/constants/enums';
 import { CategoryManager } from '@managers/categoryManager';
 import { ISafeUserObject } from '@interfaces/user';
 
@@ -20,6 +20,7 @@ export interface IUserModel extends IUserDocument {
     createdAt: Date;
   }[];
   isVerified: boolean;
+  theme: EThemeType;
 }
 
 interface IUserDocument extends Document {
@@ -81,6 +82,11 @@ const userSchema = new Schema<IUserModel>(
       type: Boolean,
       default: false,
     },
+    theme: {
+      type: String,
+      enum: [EThemeType.DARK, EThemeType.LIGHT, EThemeType.SYSTEM],
+      default: EThemeType.SYSTEM,
+    },
   },
   { timestamps: true },
 );
@@ -98,7 +104,7 @@ userSchema.pre('deleteOne', { document: true, query: false }, async function (ne
 
   // remove specialist from category
   if (this.category) {
-    const category = await CategoryManager.getCategoryById(this.category.id.toString());
+    const category = await CategoryManager.getCategoryById(this.category.toString());
 
     const indexToRemove = category.specialists.findIndex((id) => id.equals(this._id));
     const userIdFound = indexToRemove !== -1;

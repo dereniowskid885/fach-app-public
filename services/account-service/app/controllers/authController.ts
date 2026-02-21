@@ -4,11 +4,27 @@ import { AuthManager } from '@managers/authManager';
 import { EResponseStatus } from '@shared/constants/responseStatus';
 import { IAppError } from '@shared/utils/AppError';
 import { handleAppError } from '@shared/helpers/handleAppError';
+import { UserManager } from '@managers/userManager';
+
+export const getCurrentUser = async (req: Request, res: Response) => {
+  try {
+    const user = await UserManager.getUserById(req.user.userId);
+
+    return res.status(200).json({ success: true, data: user });
+  } catch (err) {
+    TokenManager.clearAllTokens(res);
+
+    handleAppError(res, err as IAppError);
+  }
+};
 
 export const register = async (req: Request, res: Response) => {
   try {
     const user = await AuthManager.register(req.body);
-    await AuthManager.sendEmailVerificationLink(req.body.email);
+
+    const { email, lang } = req.body;
+
+    await AuthManager.sendEmailVerificationLink(email, lang);
 
     return res.status(201).json({
       success: true,
@@ -71,7 +87,9 @@ export const logout = async (req: Request, res: Response) => {
 
 export const requestEmailVerificationLink = async (req: Request, res: Response) => {
   try {
-    await AuthManager.sendEmailVerificationLink(req.body.email);
+    const { email, lang } = req.body;
+
+    await AuthManager.sendEmailVerificationLink(email, lang);
 
     return res.status(200).json({
       success: true,
@@ -84,7 +102,9 @@ export const requestEmailVerificationLink = async (req: Request, res: Response) 
 
 export const requestPasswordResetLink = async (req: Request, res: Response) => {
   try {
-    await AuthManager.sendPasswordResetLink(req.body.email);
+    const { email, lang } = req.body;
+
+    await AuthManager.sendPasswordResetLink(email, lang);
 
     return res.status(200).json({
       success: true,
@@ -118,6 +138,7 @@ export const passwordReset = async (req: Request, res: Response) => {
 };
 
 module.exports = {
+  getCurrentUser,
   register,
   login,
   refreshToken,

@@ -9,7 +9,6 @@ import { Types } from 'mongoose';
 import { UserManager } from './userManager';
 import { EResponseStatus } from '@shared/constants/responseStatus';
 import { handleRefreshTokenError } from '@shared/helpers/handleJwtError';
-import Category, { ICategoryModel } from '@models/Category';
 
 export const TokenManager = {
   handleTokenRefresh: async (req: Request, res: Response) => {
@@ -53,30 +52,10 @@ export const TokenManager = {
     return crypto.randomBytes(32).toString('hex');
   },
   generateAccessToken: async (req: Request, res: Response, user: IUserModel) => {
-    const { _id, role, email, name, surname, city, category } = user;
-
-    let categoryName;
-
-    if (category) {
-      const categoryModel = (await Category.findById(category)) as ICategoryModel;
-
-      if (!categoryModel) {
-        throw new AppError(500, EResponseStatus.ERROR_CATEGORY_NOT_FOUND, 'Specialist category not found');
-      }
-
-      categoryName = categoryModel ? categoryModel.name : '';
-    }
-
-    const fullName = `${name} ${surname}`;
-
-    const accessToken = jwt.sign(
-      { userId: _id, role, email, name, surname, fullName, city, categoryId: category, categoryName },
-      process.env.ACCESS_TOKEN_SECRET ?? '',
-      {
-        expiresIn: '15m',
-      },
-    );
-
+    const { _id, role, email } = user;
+    const accessToken = jwt.sign({ userId: _id, role, email }, process.env.ACCESS_TOKEN_SECRET ?? '', {
+      expiresIn: '15m',
+    });
     const expirationTime = 900000; // 15 minutes - 15 * 60 * 1000
 
     res.cookie('accessToken', accessToken, {
