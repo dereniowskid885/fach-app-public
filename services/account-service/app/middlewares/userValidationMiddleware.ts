@@ -2,7 +2,8 @@ import { NextFunction } from 'express';
 import { Response, Request } from 'express';
 import { z } from 'zod';
 import { handleZodError } from '@shared/helpers/handleZodError';
-import { EUserRole } from '@shared/constants/enums';
+import { EThemeType, EUserRole } from '@shared/constants/enums';
+import { cities } from '@shared/constants/mocks';
 
 const createUserSchema = z
   .object({
@@ -10,7 +11,7 @@ const createUserSchema = z
     password: z.string().min(7).max(64),
     name: z.string().min(2).max(20),
     surname: z.string().min(3).max(25),
-    city: z.string().min(1),
+    city: z.enum(cities),
     role: z.enum(EUserRole),
     categoryName: z.string().min(1).optional(),
   })
@@ -43,10 +44,11 @@ export const validateUserRoleUpdateMiddleware = (req: Request, res: Response, ne
 const updateUserSchema = z
   .object({
     email: z.email().optional(),
-    city: z.string().optional(),
+    city: z.enum(cities).optional(),
     isVerified: z.boolean().optional(),
     name: z.string().optional(),
     surname: z.string().optional(),
+    theme: z.enum(EThemeType).optional(),
   })
   .strict();
 

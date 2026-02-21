@@ -63,6 +63,13 @@
  *         isVerified:
  *           type: boolean
  *           example: true
+ *         theme:
+ *           type: string
+ *           enum:
+ *             - light
+ *             - dark
+ *             - system
+ *           example: system
  *     UserRole:
  *       type: string
  *       enum:
@@ -70,6 +77,18 @@
  *         - specialist
  *         - admin
  *       example: user
+ *     ThemeType:
+ *       type: string
+ *       enum:
+ *         - light
+ *         - dark
+ *         - system
+ *       example: system
+ *     Language:
+ *       type: string
+ *       enum:
+ *         - pl
+ *         - en
  *     TicketStatus:
  *       type: string
  *       enum:

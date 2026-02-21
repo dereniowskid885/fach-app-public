@@ -1,10 +1,12 @@
 import { handleZodError } from '@shared/helpers/handleZodError';
 import z from 'zod';
 import { NextFunction, Request, Response } from 'express';
+import { ESupportedLanguages } from '@shared/constants/enums';
 
 const sendEmailSchema = z
   .object({
     email: z.email().min(7).max(48),
+    lang: z.enum(ESupportedLanguages).optional().default(ESupportedLanguages.PL),
   })
   .strict();
 
