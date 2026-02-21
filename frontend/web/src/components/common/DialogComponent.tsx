@@ -45,22 +45,27 @@ export default function DialogComponent({
       <AlertDialogContent className={contentClass}>
         <AlertDialogHeader className="items-center">
           <AlertDialogTitle>{title}</AlertDialogTitle>
+
           <AlertDialogDescription className={`${description ? '' : 'hidden'}`}>
             {description}
           </AlertDialogDescription>
         </AlertDialogHeader>
+
         {content ? content : null}
+
         {errorMessage ? (
           <Typography variant="p" className="text-center font-bold text-destructive">
             {errorMessage}
           </Typography>
         ) : null}
+
         <AlertDialogFooter className="flex-row items-center justify-center gap-2 sm:justify-center">
           {cancelButtonHandler && cancelButtonText ? (
             <AlertDialogCancel className="m-0" onClick={cancelButtonHandler}>
               {cancelButtonText}
             </AlertDialogCancel>
           ) : null}
+
           {confirmButtonHandler && confirmButtonText ? (
             <Button
               loading={isLoadingConfirmButton}

@@ -2,9 +2,9 @@ export const HOME_PATH = '/';
 export const LOGIN_PATH = '/login';
 export const REGISTER_PATH = '/register';
 export const PASSWORD_RESET_PATH = '/password-reset';
+export const PASSWORD_RESET_FORM_PATH = `${PASSWORD_RESET_PATH}/[token]`;
 export const TICKETS_PATH = '/tickets';
-export const FAVORITES_PATH = '/favorites';
-export const PROFILE_PATH = '/profile';
+export const VERIFY_PATH = '/verify';
 
 export const ROUTES = {
   [HOME_PATH]: {
@@ -23,26 +23,29 @@ export const ROUTES = {
     pl: '/reset-hasla',
     en: PASSWORD_RESET_PATH
   },
+  [PASSWORD_RESET_FORM_PATH]: {
+    pl: PASSWORD_RESET_FORM_PATH,
+    en: PASSWORD_RESET_FORM_PATH
+  },
   [TICKETS_PATH]: {
     pl: '/sprawy',
     en: TICKETS_PATH
   },
-  [FAVORITES_PATH]: {
-    pl: '/ulubione',
-    en: FAVORITES_PATH
-  },
-  [PROFILE_PATH]: {
-    pl: '/profil',
-    en: PROFILE_PATH
+  [VERIFY_PATH]: {
+    pl: '/weryfikacja',
+    en: VERIFY_PATH
   }
 };
 
 const {
   [LOGIN_PATH]: login,
   [REGISTER_PATH]: register,
-  [PASSWORD_RESET_PATH]: reset,
+  [PASSWORD_RESET_PATH]: passwordReset,
+  [VERIFY_PATH]: verify,
   ...rest
 } = ROUTES;
 
-export const PUBLIC_ROUTES = [login, register, reset].flatMap(r => Object.values(r));
+export const PUBLIC_ROUTES = [login, register, passwordReset, verify].flatMap(r =>
+  Object.values(r)
+);
 export const PROTECTED_ROUTES = Object.values(rest).flatMap(r => Object.values(r));
