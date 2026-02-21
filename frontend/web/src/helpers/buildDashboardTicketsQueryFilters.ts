@@ -1,4 +1,4 @@
-import { EUserRole } from '@/constants/userRole';
+import { EUserRole } from '@shared/constants/enums';
 
 export const buildDashboardTicketsQueryFilters = (role: string, userId: string) => {
   const filters: Record<string, string> = {};
