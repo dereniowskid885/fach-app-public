@@ -9,13 +9,13 @@ import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
 import { Typography } from '@/components/common/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
-import { parseQueryError } from '@/lib/utils';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import AuthCard from '@/components/ui/AuthCard';
 import { useLocale, useTranslations } from 'next-intl';
 import { ESupportedLanguages } from '@shared/constants/enums';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 interface IPasswordResetRequestForm {
   email: string;
@@ -28,7 +28,11 @@ export default function PasswordResetRequest() {
   const [isEmailSent, setEmailSent] = useState<boolean>(false);
   const currentLocale = useLocale();
 
-  const [triggerRequest, { isLoading }] = usePostAuthRequestPasswordResetMutation();
+  const [triggerRequest, { isLoading, error }] = usePostAuthRequestPasswordResetMutation();
+
+  useErrorHandler(error, {
+    setInlineError: message => setError('root', { message })
+  });
 
   const submitHandler = async (formData: IPasswordResetRequestForm) => {
     const payload: PostAuthRequestPasswordResetApiArg = {
@@ -38,15 +42,10 @@ export default function PasswordResetRequest() {
       }
     };
 
-    const result = await triggerRequest(payload);
+    const { error } = await triggerRequest(payload);
+    if (error) return;
 
-    if (result.error) {
-      const { message } = parseQueryError(result.error);
-
-      setError('root', { message: message });
-    } else {
-      setEmailSent(true);
-    }
+    setEmailSent(true);
   };
 
   return (

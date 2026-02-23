@@ -7,11 +7,11 @@ import CategorySelect from './CategorySelect';
 import { useEffect, useState } from 'react';
 import { Typography } from '../common/Typography';
 import { Category, PostTicketsApiArg, usePostTicketsMutation } from '@/api/accountApi';
-import { parseQueryError } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 interface ITicketCreateForm {
   category: Category;
@@ -31,37 +31,58 @@ export default function TicketCreateDialog({
 }: ITicketCreateDialog) {
   const t = useTranslations();
   const { city } = useSelector(selectUserData);
-  const { register, handleSubmit, reset: resetForm, formState } = useForm<ITicketCreateForm>();
+  const {
+    register,
+    handleSubmit,
+    reset: resetForm,
+    watch,
+    formState,
+    clearErrors
+  } = useForm<ITicketCreateForm>();
+
   const [errorMessage, setErrorMessage] = useState<string | undefined>('');
+  const formStateErrors = Object.values(formState.errors);
+  const formError = formStateErrors.find(error => error.message)?.message;
 
   const [ticketCategory, setTicketCategory] = useState<Category | null>(null);
   const descriptionMaxLength = 3000;
   const [descriptionCharsLeft, setDescriptionCharsLeft] = useState<number>(descriptionMaxLength);
+  const descriptionInput = watch('description');
 
-  const descriptionInputOnChange = (currentDescriptionLength: number) => {
-    setDescriptionCharsLeft(descriptionMaxLength - currentDescriptionLength);
-  };
+  const [triggerCreateTicketMutation, { isLoading, error }] = usePostTicketsMutation();
 
-  const [triggerCreateTicketMutation, { isLoading, error: mutationError }] =
-    usePostTicketsMutation();
+  useErrorHandler(error, {
+    setInlineError: message => setErrorMessage(message)
+  });
 
   useEffect(() => {
-    let errorMessage;
+    const descriptionInputLength = descriptionInput ? descriptionInput.length : 0;
+    setDescriptionCharsLeft(descriptionMaxLength - descriptionInputLength);
+  }, [descriptionInput]);
 
-    if (!ticketCategory) {
-      errorMessage = t('ticketCreateDialog.errorMissingCategory');
-    } else if (mutationError) {
-      errorMessage = parseQueryError(mutationError).message;
-    } else {
-      // find first form error and return error message
-      errorMessage = Object.values(formState.errors).find(error => error.message)?.message;
-    }
+  useEffect(() => {
+    if (ticketCategory) setErrorMessage('');
+  }, [ticketCategory]);
 
-    setErrorMessage(errorMessage);
-  }, [t, formState, mutationError, ticketCategory]);
+  useEffect(() => {
+    if (!open) return;
+
+    setErrorMessage('');
+    clearErrors();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const submitHandler = async (formData: ITicketCreateForm) => {
+    if (!ticketCategory) {
+      setErrorMessage(t('ticketCreateDialog.errorMissingCategory'));
+
+      return;
+    }
+
     if (!ticketCategory?._id) {
+      setErrorMessage(t('ticketCreateDialog.errorInvalidCategory'));
+
       return;
     }
 
@@ -73,15 +94,13 @@ export default function TicketCreateDialog({
       }
     };
 
-    const result = await triggerCreateTicketMutation(payload);
-    const isMutationSuccess = !result.error;
+    const { error } = await triggerCreateTicketMutation(payload);
+    if (error) return;
 
-    if (isMutationSuccess) {
-      closeDialog();
-      resetForm();
-      refetchTickets();
-      toast.success(t('ticketCreateDialog.toastTitle'));
-    }
+    closeDialog();
+    resetForm();
+    refetchTickets();
+    toast.success(t('ticketCreateDialog.toastTitle'));
   };
 
   const ticketCreateForm = (
@@ -126,11 +145,10 @@ export default function TicketCreateDialog({
             className="min-h-60 resize-none"
             minLength={7}
             maxLength={descriptionMaxLength}
-            onChange={e => descriptionInputOnChange(e.target.value.length)}
             required
           />
 
-          <Typography variant="note" className="text-right text-neutral-500">
+          <Typography variant="note" className="text-right text-muted-foreground">
             {t('ticketCreateDialog.descriptionCharsAmount', { amount: descriptionCharsLeft })}
           </Typography>
         </div>
@@ -148,9 +166,8 @@ export default function TicketCreateDialog({
       isLoadingConfirmButton={isLoading}
       cancelButtonHandler={closeDialog}
       content={ticketCreateForm}
-      errorMessage={errorMessage}
-      // TODO: fix disabled confirm button
-      // confirmButtonDisabled={!!errorMessage}
+      errorMessage={errorMessage ? errorMessage : formError}
+      confirmButtonDisabled={!!(errorMessage ? errorMessage : formError)}
     />
   );
 }

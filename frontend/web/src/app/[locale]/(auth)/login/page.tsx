@@ -8,7 +8,6 @@ import AccountVerifyDialog from '@/components/ui/AccountVerifyDialog';
 import PasswordInput from '@/components/common/PasswordInput';
 import { Typography } from '@/components/common/Typography';
 import { HOME_PATH, PASSWORD_RESET_PATH, REGISTER_PATH } from '@/constants/routes';
-import { parseQueryError } from '@/lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -21,6 +20,8 @@ import { EResponseStatus } from '@shared/constants/responseStatus';
 import { useTranslations } from 'next-intl';
 import { useDispatch } from 'react-redux';
 import { clearUserData } from '@/redux/slices/UserDataSlice';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { parseQueryError } from '@/lib/errorUtils';
 
 interface ILoginForm {
   email: string;
@@ -34,7 +35,18 @@ export default function Login() {
   const { register, handleSubmit, formState, setError, getValues } = useForm<ILoginForm>();
   const [accountVerifyDialog, setAccountVerifyDialog] = useState<boolean>(false);
 
-  const [triggerLogin, { isLoading: isLoadingLogin }] = usePostAuthLoginMutation();
+  const [triggerLogin, { isLoading, error }] = usePostAuthLoginMutation();
+
+  useErrorHandler(error, {
+    callback: () => {
+      const { status } = parseQueryError(error!);
+
+      if (status === EResponseStatus.ERROR_USER_NOT_VERIFIED) {
+        setAccountVerifyDialog(true);
+      }
+    },
+    setInlineError: message => setError('root', { message })
+  });
 
   const submitHandler = async (formData: ILoginForm) => {
     const payload: PostAuthLoginApiArg = {
@@ -43,21 +55,10 @@ export default function Login() {
       }
     };
 
-    const result = await triggerLogin(payload);
-    const isMutationSuccess = !result.error;
+    const { error } = await triggerLogin(payload);
+    if (error) return;
 
-    if (isMutationSuccess) {
-      router.push(HOME_PATH);
-      return;
-    }
-
-    const { status, message, code } = parseQueryError(result.error);
-
-    if (code === 401 && status === EResponseStatus.ERROR_USER_NOT_VERIFIED) {
-      setAccountVerifyDialog(true);
-    } else {
-      setError('root', { message: message });
-    }
+    router.push(HOME_PATH);
   };
 
   useEffect(() => {
@@ -72,7 +73,9 @@ export default function Login() {
     };
 
     checkUserSession();
-  }, [t, router, dispatch]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AuthCard
@@ -102,8 +105,8 @@ export default function Login() {
               <PasswordInput register={register('password')} id="password" />
             </div>
 
-            <Link href={PASSWORD_RESET_PATH}>
-              <Typography variant="small" className="text-info block text-right hover:underline">
+            <Link href={PASSWORD_RESET_PATH} className="ml-auto w-fit">
+              <Typography variant="small" className="text-info hover:underline">
                 {t('loginPage.forgotPassword')}
               </Typography>
             </Link>
@@ -118,7 +121,7 @@ export default function Login() {
       }
       footerContent={
         <>
-          <Button loading={isLoadingLogin} type="submit" className="w-full">
+          <Button loading={isLoading} type="submit" className="w-full">
             {t('authForm.signIn')}
           </Button>
 

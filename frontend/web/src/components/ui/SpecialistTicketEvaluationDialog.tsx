@@ -14,12 +14,13 @@ import {
   usePatchTicketsByIdEditEvaluationMutation,
   Evaluation
 } from '@/api/accountApi';
-import { getFormattedPriceAmount, parseQueryError } from '@/lib/utils';
+import { getFormattedPriceAmount } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { getSpecialistPendingTicketStatusesParam } from '@/helpers/getSpecialistPendingTicketStatusesParam';
 import { useTranslations } from 'next-intl';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export interface ISpecialistTicketEvaluationDialog {
   open: boolean;
@@ -57,11 +58,16 @@ export default function SpecialistTicketEvaluationDialog({
   const minutesRef = useRef<HTMLInputElement>(null);
   const hoursRef = useRef<HTMLInputElement>(null);
 
-  const [triggerCreate, { isLoading: isLoadingCreate }] = usePatchTicketsByIdEvaluationMutation();
-  const [triggerEdit, { isLoading: isLoadingEdit }] = usePatchTicketsByIdEditEvaluationMutation();
+  const [triggerCreate, { isLoading: isLoadingCreate, error: createError }] =
+    usePatchTicketsByIdEvaluationMutation();
+  const [triggerEdit, { isLoading: isLoadingEdit, error: editError }] =
+    usePatchTicketsByIdEditEvaluationMutation();
   const isLoading = isLoadingCreate || isLoadingEdit;
 
-  const [refetchPendingTickets] = accountApi.endpoints.getTickets.useLazyQuery({});
+  const [refetchPendingTickets, { error: refetchTicketsError }] =
+    accountApi.endpoints.getTickets.useLazyQuery({});
+
+  useErrorHandler(createError || editError || refetchTicketsError);
 
   const { categoryId } = useSelector(selectUserData);
 
@@ -115,28 +121,26 @@ export default function SpecialistTicketEvaluationDialog({
         break;
     }
 
-    const isSuccess = !result.error;
+    const { error } = result;
+    if (error) return;
 
-    if (isSuccess) {
-      closeDialog();
+    closeDialog();
 
-      refetchPendingTickets({
-        city: ticket.city,
-        categoryId,
-        status: getSpecialistPendingTicketStatusesParam()
-      });
+    refetchPendingTickets({
+      city: ticket.city,
+      categoryId,
+      status: getSpecialistPendingTicketStatusesParam()
+    });
 
-      toast.success(labels[mode].toastMessage);
-    } else {
-      const { message } = parseQueryError(result.error!);
-
-      setErrorMessage(message);
-    }
+    toast.success(labels[mode].toastMessage);
   };
 
   useEffect(() => {
     setErrorMessage('');
   }, [minutes, priceInCents]);
+
+  // TODO:
+  // add similar code to TicketCreateDialog
 
   const ticketEvaluationForm = (
     <form>

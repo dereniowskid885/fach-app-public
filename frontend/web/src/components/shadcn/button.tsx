@@ -6,7 +6,7 @@ import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex duration-300 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-white  transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 dark:ring-offset-neutral-950 dark:focus-visible:ring-neutral-300',
+  'inline-flex duration-300 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 dark:ring-offset-neutral-950 dark:focus-visible:ring-neutral-300',
   {
     variants: {
       variant: {
@@ -16,12 +16,12 @@ const buttonVariants = cva(
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary-hover',
         ghost: 'bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground',
         link: 'bg-transparent text-foreground underline-offset-4 hover:underline',
-        'special-1': 'bg-chart-1 text-secondary hover:opacity-90 transition-opacity',
-        'special-2': 'bg-chart-2 text-secondary hover:opacity-90 transition-opacity',
-        'special-3': 'bg-chart-3 text-secondary hover:opacity-90 transition-opacity',
-        'special-4': 'bg-chart-4 text-primary hover:opacity-90 transition-opacity',
-        'special-5': 'bg-chart-5 text-primary hover:opacity-90 transition-opacity',
-        'special-6': 'bg-chart-6 text-secondary hover:opacity-90 transition-opacity'
+        'special-1': 'bg-chart-1 text-secondary hover:opacity-90',
+        'special-2': 'bg-chart-2 text-secondary hover:opacity-90',
+        'special-3': 'bg-chart-3 text-secondary hover:opacity-90',
+        'special-4': 'bg-chart-4 text-primary hover:opacity-90',
+        'special-5': 'bg-chart-5 text-primary hover:opacity-90',
+        'special-6': 'bg-chart-6 text-secondary hover:opacity-90'
       },
       size: {
         default: 'h-10 px-4 py-2 text-sm',

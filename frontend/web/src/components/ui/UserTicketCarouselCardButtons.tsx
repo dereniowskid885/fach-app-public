@@ -12,6 +12,7 @@ import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useAppSelector } from '@/redux/hooks';
 import { TicketPaymentDialog } from './TicketPaymentDialog';
 import { ESupportedCurrency } from '@/constants/supportedCurrency';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export type TStatusActionButton = Partial<{
   [key in ETicketStatus]: {
@@ -45,7 +46,9 @@ export const UserTicketCarouselCardButtons = ({ ticket }: IUserTicketCarouselCar
 
   const { role, userId } = useAppSelector(selectUserData);
   const filters = buildDashboardTicketsQueryFilters(role, userId);
-  const { refetch } = useGetTicketsQuery(filters ?? {});
+  const { refetch, error } = useGetTicketsQuery(filters ?? {});
+
+  useErrorHandler(error);
 
   const statusActionButton: TStatusActionButton = {
     [ETicketStatus.PENDING_PAYMENT]: {
@@ -70,7 +73,7 @@ export const UserTicketCarouselCardButtons = ({ ticket }: IUserTicketCarouselCar
       <div className="flex flex-col gap-2">
         <div className="flex gap-3">
           {isEligibleForEdit ? (
-            <Button variant="outline" className="w-full bg-primary-200">
+            <Button variant="outline" className="bg-primary-200 w-full">
               Edytuj
             </Button>
           ) : null}

@@ -7,8 +7,6 @@ import { usePostAuthLogoutMutation } from '@/api/accountApi';
 import { Button } from '../shadcn/button';
 import { Typography } from '../common/Typography';
 import { usePathname, useRouter } from 'next/navigation';
-import { toast } from 'sonner';
-import { parseQueryError } from '@/lib/utils';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { menuItems } from '@/constants/menu';
@@ -22,6 +20,7 @@ import { ArrowLeftFromLine, ArrowRightFromLine } from 'lucide-react';
 import AnimateCollapse from '../common/AnimateCollapse';
 import { useSidebarContext } from '@/contexts/SidebarContext';
 import { normalizePathname } from '@/lib/pathnameUtils';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export default function Sidebar() {
   const t = useTranslations();
@@ -34,19 +33,15 @@ export default function Sidebar() {
   const router = useRouter();
   const { role, fullName, name, surname } = useSelector(selectUserData);
 
-  const [triggerLogout, { isLoading: isLogoutLoading }] = usePostAuthLogoutMutation();
+  const [triggerLogout, { isLoading, error }] = usePostAuthLogoutMutation();
+
+  useErrorHandler(error);
 
   const handleLogout = async () => {
-    const result = await triggerLogout();
-    const isMutationSuccess = !result.error;
+    const { error } = await triggerLogout();
+    if (error) return;
 
-    if (isMutationSuccess) {
-      router.push(LOGIN_PATH);
-    } else {
-      const { message } = parseQueryError(result.error);
-
-      toast.error(message);
-    }
+    router.push(LOGIN_PATH);
   };
 
   return (
@@ -180,7 +175,7 @@ export default function Sidebar() {
         </Button>
       </div>
 
-      <LoadingOverlay isLoading={isLogoutLoading} />
+      <LoadingOverlay isLoading={isLoading} />
     </motion.aside>
   );
 }

@@ -1,11 +1,5 @@
 import { UserRole } from '@/api/accountApi';
 
-export interface IResult {
-  success: boolean;
-  status?: number;
-  error?: string;
-}
-
 export interface IErrorData {
   message: string;
   status: string;
