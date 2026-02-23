@@ -4,8 +4,8 @@ import {
   PostAuthRequestEmailVerificationApiArg,
   usePostAuthRequestEmailVerificationMutation
 } from '@/api/accountApi';
-import { parseQueryError } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export interface IAccountVerifyDialog {
   open: boolean;
@@ -31,10 +31,14 @@ export default function AccountVerifyDialog({
   const [isEmailSent, setEmailSent] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const [triggerVerifyRequest, { isLoading }] = usePostAuthRequestEmailVerificationMutation();
+  const [triggerVerifyRequest, { isLoading, error }] =
+    usePostAuthRequestEmailVerificationMutation();
+
+  useErrorHandler(error, {
+    setInlineError: message => setErrorMessage(message)
+  });
 
   useEffect(() => {
-    // states reset on dialog open
     if (!open) return;
 
     setEmailSent(false);
@@ -48,17 +52,11 @@ export default function AccountVerifyDialog({
       }
     };
 
-    const result = await triggerVerifyRequest(payload);
-    const isMutationSuccess = !result.error;
+    const { error } = await triggerVerifyRequest(payload);
+    if (error) return;
 
-    if (isMutationSuccess) {
-      setEmailSent(true);
-      setErrorMessage('');
-    } else {
-      const { message } = parseQueryError(result.error);
-
-      setErrorMessage(message);
-    }
+    setEmailSent(true);
+    setErrorMessage('');
   };
 
   return (

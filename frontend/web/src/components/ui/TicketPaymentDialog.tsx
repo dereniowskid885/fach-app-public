@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import DialogComponent from '../common/DialogComponent';
-import { parseQueryError } from '@/lib/utils';
 import { usePostTicketsByIdPaymentMutation } from '@/api/accountApi';
 import { ESupportedCurrency } from '@/constants/supportedCurrency';
 import { StripePaymentForm } from './StripePaymentForm';
 import { StripeProvider } from '../providers/StripeProvider';
 import { useTranslations } from 'next-intl';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export interface ITicketPaymentDialog {
   open: boolean;
@@ -31,13 +31,17 @@ export const TicketPaymentDialog = ({
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const [trigger, { isLoading }] = usePostTicketsByIdPaymentMutation();
+  const [trigger, { isLoading, error }] = usePostTicketsByIdPaymentMutation();
+
+  useErrorHandler(error, {
+    setInlineError: message => setErrorMessage(message)
+  });
 
   useEffect(() => {
     const submitHandler = async () => {
       if (!ticketId || !amount || !currency) return;
 
-      const result = await trigger({
+      const { error, data: responseData } = await trigger({
         id: ticketId,
         body: {
           amount,
@@ -48,16 +52,10 @@ export const TicketPaymentDialog = ({
 
         return data;
       });
-      const { error, data: responseData } = result;
-      const isSuccess = !error;
 
-      if (isSuccess) {
-        setClientSecret(responseData?.data?.clientSecret ?? '');
-      } else {
-        const { message } = parseQueryError(result.error);
+      if (error) return;
 
-        setErrorMessage(message);
-      }
+      setClientSecret(responseData?.data?.clientSecret ?? '');
     };
 
     if (!open) return;
@@ -72,7 +70,7 @@ export const TicketPaymentDialog = ({
     <DialogComponent
       open={open}
       isLoadingConfirmButton={isLoading}
-      title="Wypełnij dane płatności"
+      title={t('ticketPaymentDialog.title')}
       cancelButtonText={t('common.cancel')}
       cancelButtonHandler={closeDialog}
       content={

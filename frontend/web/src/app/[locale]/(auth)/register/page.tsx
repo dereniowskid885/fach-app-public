@@ -13,10 +13,10 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { PostAuthRegisterApiArg, usePostAuthRegisterMutation } from '@/api/accountApi';
-import { parseQueryError } from '@/lib/utils';
 import AuthCard from '@/components/ui/AuthCard';
 import { useLocale, useTranslations } from 'next-intl';
 import { ESupportedLanguages } from '@shared/constants/enums';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 interface IRegisterForm {
   email: string;
@@ -34,7 +34,11 @@ export default function Register() {
   const { register, handleSubmit, formState, setError, getValues } = useForm<IRegisterForm>();
   const [successDialog, setSuccessDialog] = useState<boolean>(false);
 
-  const [triggerRegister, { isLoading }] = usePostAuthRegisterMutation();
+  const [triggerRegister, { isLoading, error }] = usePostAuthRegisterMutation();
+
+  useErrorHandler(error, {
+    setInlineError: message => setError('root', { message })
+  });
 
   const submitHandler = async (formData: IRegisterForm) => {
     if (formData.password !== formData.passwordConfirm) {
@@ -58,17 +62,10 @@ export default function Register() {
       }
     };
 
-    const result = await triggerRegister(payload);
-    const isMutationSuccess = !result.error;
+    const { error } = await triggerRegister(payload);
+    if (error) return;
 
-    if (isMutationSuccess) {
-      setSuccessDialog(true);
-
-      return;
-    }
-
-    const { message } = parseQueryError(result.error);
-    setError('root', { message });
+    setSuccessDialog(true);
   };
 
   return (

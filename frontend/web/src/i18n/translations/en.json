@@ -30,7 +30,8 @@
     "noUpdates": "No updates yet",
     "viewAll": "View all",
     "collapse": "Collapse",
-    "search": "Search"
+    "search": "Search",
+    "success": "Success"
   },
   "userRole": {
     "admin": "Admin",
@@ -41,6 +42,29 @@
     "morning": "Good morning",
     "afternoon": "Good afternoon",
     "evening": "Good evening"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again in a moment.",
+    "invalidToken": "Your session is invalid or has expired. Please log in again.",
+    "invalidLink": "Invalid or expired link.",
+    "tokenNotFound": "Authentication token not found. Please log in again.",
+    "invalidData": "The provided data is invalid. Please check and try again.",
+    "invalidCredentials": "Invalid email or password.",
+    "userNotFound": "User not found.",
+    "userAlreadyExists": "A user with this email already exists.",
+    "userNotVerified": "Your account is not verified yet.",
+    "emailFailed": "Failed to send the email. Please try again later.",
+    "categoryNotFound": "Category not found.",
+    "ticketNotFound": "Ticket not found.",
+    "evaluationNotFound": "Evaluation not found.",
+    "invalidTicketStatus": "Invalid ticket status.",
+    "alreadyEvaluated": "You have already evaluated this ticket.",
+    "categoryHasSpecialists": "This category has assigned specialists and cannot be removed.",
+    "userAlreadyAssigned": "User is already assigned to this category.",
+    "categoryAlreadyExists": "Category already exists.",
+    "invalidRole": "Invalid user role.",
+    "userAlreadyCategorized": "User is already categorized.",
+    "userNotAssignedToCategory": "User is not assigned to this category."
   },
   "sidebar": {
     "mainMenu": "Main Menu"
@@ -116,7 +140,7 @@
   "passwordResetPage": {
     "authCardTitle": "Reset password",
     "authCardTitleSuccess": "Password has been reset",
-    "linkExpired": "Link expired or invalid"
+    "linkExpired": "Invalid or expired link"
   },
   "accountVerifyPage": {
     "countdownDescription": "Redirecting to login in ",
@@ -131,6 +155,7 @@
     "descriptionFormLabel": "Description",
     "descriptionCharsAmount": "{amount} characters remaining",
     "errorMissingCategory": "Please select ticket category",
+    "errorInvalidCategory": "Invalid category, please select other one.",
     "errorTitleRequired": "Title cannot be empty",
     "errorTitleMinLength": "Title must be at least {amount} characters",
     "errorDescriptionRequired": "Description cannot be empty",
@@ -139,6 +164,9 @@
   "ticketDeleteDialog": {
     "title": "Are you sure you want to cancel this ticket?",
     "toastTitle": "Ticket successfully cancelled"
+  },
+  "ticketPaymentDialog": {
+    "title": "Enter payment details"
   },
   "evaluation": {
     "dateOfResponse": "Date of response",

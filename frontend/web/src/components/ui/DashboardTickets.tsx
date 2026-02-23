@@ -19,6 +19,7 @@ import TicketCategoriesFilter from './TicketCategoriesFilter';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { getUserFullName } from '@/lib/utils';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export default function DashoardTickets() {
   const t = useTranslations();
@@ -33,10 +34,13 @@ export default function DashoardTickets() {
     isLoading,
     isFetching,
     isUninitialized,
-    isError
+    isError,
+    error
   } = useGetTicketsQuery(filters ?? {}, { skip: !filters, refetchOnMountOrArgChange: true });
-  const isLoadingQuery = isLoading || isFetching;
 
+  useErrorHandler(error);
+
+  const isLoadingQuery = isLoading || isFetching;
   const userTickets = getTicketsResponse?.data ?? [];
   const userTicketsLength = getTicketsResponse?.dataLength ?? 0;
 

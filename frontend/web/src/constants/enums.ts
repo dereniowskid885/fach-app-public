@@ -21,3 +21,10 @@ export const enum EActionType {
   EDIT = 'EDIT',
   CREATION = 'CREATION'
 }
+
+export const enum EErrorStrategy {
+  TOAST = 'TOAST',
+  INLINE = 'INLINE',
+  REDIRECT = 'REDIRECT',
+  SILENT = 'SILENT'
+}

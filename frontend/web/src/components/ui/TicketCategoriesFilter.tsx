@@ -35,9 +35,7 @@ export default function TicketCategoriesFilter({
         <Button
           variant={selectedCategory ? 'secondary' : 'special-2'}
           onClick={resetSelectedCategory}
-          className={
-            'shrink-0 whitespace-nowrap rounded-xl border px-4 py-2 text-xs font-bold transition-all'
-          }
+          className={'shrink-0 whitespace-nowrap rounded-xl border px-4 py-2 text-xs font-bold'}
         >
           {t('common.all')}
         </Button>
@@ -47,9 +45,7 @@ export default function TicketCategoriesFilter({
             variant={selectedCategory?._id === category._id ? 'special-2' : 'secondary'}
             key={category._id}
             onClick={() => selectCategoryHandler(category)}
-            className={
-              'shrink-0 whitespace-nowrap rounded-xl border px-4 py-2 text-xs font-bold transition-all'
-            }
+            className={'shrink-0 whitespace-nowrap rounded-xl border px-4 py-2 text-xs font-bold'}
           >
             <CategoryIcon categoryName={category.name} />
 
