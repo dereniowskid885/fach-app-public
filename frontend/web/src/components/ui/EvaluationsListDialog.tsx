@@ -6,10 +6,12 @@ import {
   PatchTicketsByIdAcceptEvaluationApiArg,
   usePatchTicketsByIdAcceptEvaluationMutation
 } from '@/api/accountApi';
-import { getFormattedDate, getFormattedPriceAmount, parseQueryError } from '@/lib/utils';
+import { getFormattedPriceAmount } from '@/lib/utils';
 import { RowSelectionState } from '@tanstack/react-table';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
+import { getFormattedDate } from '@/lib/dateUtils';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export interface IEvaluationsListDialog {
   open: boolean;
@@ -31,7 +33,12 @@ export const EvaluationsListDialog = ({
   const [selectedEvaluationRow, setSelectedEvaluationRow] = useState<RowSelectionState>({});
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const [triggerEvaluationAccept, { isLoading }] = usePatchTicketsByIdAcceptEvaluationMutation();
+  const [triggerEvaluationAccept, { isLoading, error }] =
+    usePatchTicketsByIdAcceptEvaluationMutation();
+
+  useErrorHandler(error, {
+    setInlineError: message => setErrorMessage(message)
+  });
 
   if (!ticketEvaluations) return;
 
@@ -105,18 +112,12 @@ export const EvaluationsListDialog = ({
       }
     };
 
-    const result = await triggerEvaluationAccept(payload);
-    const isMutationSuccess = !result.error;
+    const { error } = await triggerEvaluationAccept(payload);
+    if (error) return;
 
-    if (isMutationSuccess) {
-      closeDialog();
-      refetchTickets();
-      toast.success(t('evaluationListDialog.toastTitle'));
-    } else {
-      const { message } = parseQueryError(result.error);
-
-      setErrorMessage(message);
-    }
+    closeDialog();
+    refetchTickets();
+    toast.success(t('evaluationListDialog.toastTitle'));
   };
 
   return (

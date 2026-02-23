@@ -8,10 +8,9 @@ import AnimateCollapse from '../common/AnimateCollapse';
 import { PatchUsersByIdApiArg, ThemeType, usePatchUsersByIdMutation } from '@/api/accountApi';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUserData, setUserTheme } from '@/redux/slices/UserDataSlice';
-import { toast } from 'sonner';
-import { parseQueryError } from '@/lib/utils';
 import { useTheme } from 'next-themes';
 import { useEffect } from 'react';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export interface IThemeSwitcher {
   popoverContentDirection?: 'top' | 'bottom' | 'left' | 'right';
@@ -39,7 +38,9 @@ export default function ThemeSwitcher({
     setTheme(userTheme);
   }, [setTheme, userTheme]);
 
-  const [trigger] = usePatchUsersByIdMutation();
+  const [trigger, { error }] = usePatchUsersByIdMutation();
+
+  useErrorHandler(error);
 
   const handleThemeChange = async (themeClass: string) => {
     if (triggerPatchUserMutation) {
@@ -50,15 +51,7 @@ export default function ThemeSwitcher({
         }
       };
 
-      const result = await trigger(payload);
-      const isMutationSuccess = !result.error;
-
-      if (!isMutationSuccess) {
-        const { message } = parseQueryError(result.error);
-        toast.error(message);
-
-        return;
-      }
+      await trigger(payload);
     }
 
     setTheme(themeClass);

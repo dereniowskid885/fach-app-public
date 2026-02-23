@@ -5,7 +5,7 @@ import { useTheme } from 'next-themes';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 
-export function useSyncTheme() {
+export const useSyncTheme = () => {
   const { theme: userTheme } = useSelector(selectUserData);
   const { theme, setTheme } = useTheme();
 
@@ -16,4 +16,4 @@ export function useSyncTheme() {
   }, [theme, setTheme, userTheme]);
 
   return { theme, setTheme };
-}
+};

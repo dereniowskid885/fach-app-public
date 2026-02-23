@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 
 export interface IRootLayout {
   children: ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }
 
 export default async function RootLayout({ children, params }: IRootLayout) {
