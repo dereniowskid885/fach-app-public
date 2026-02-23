@@ -51,13 +51,13 @@ export default function Header() {
           <div className="absolute left-0 -translate-x-1/2">
             <div className="group relative w-32 lg:w-64 xl:w-[600px]">
               <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary"
                 size={24}
               />
 
               <Input
                 placeholder={t('common.search')}
-                className="h-11 rounded-xl bg-background pl-11 transition-all focus-visible:bg-background focus-visible:ring-2 dark:bg-secondary"
+                className="h-11 rounded-xl bg-background pl-11 focus-visible:bg-background focus-visible:ring-2 dark:bg-secondary"
               />
             </div>
           </div>

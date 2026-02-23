@@ -6,7 +6,6 @@ import { Label } from '@/components/shadcn/label';
 import PasswordInput from '@/components/common/PasswordInput';
 import { Typography } from '@/components/common/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
-import { parseQueryError } from '@/lib/utils';
 import { getTokenPayload, isTokenExpired } from '@/lib/tokenUtils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -17,6 +16,7 @@ import { PostAuthPasswordResetApiArg, usePostAuthPasswordResetMutation } from '@
 import AuthCard from '@/components/ui/AuthCard';
 import { useTranslations } from 'next-intl';
 import { getLastPathSegment } from '@/lib/pathnameUtils';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 interface IPasswordResetForm {
   newPassword: string;
@@ -39,7 +39,11 @@ export default function PasswordResetForm() {
     notFound();
   }
 
-  const [triggerPasswordReset, { isLoading }] = usePostAuthPasswordResetMutation();
+  const [triggerPasswordReset, { isLoading, error }] = usePostAuthPasswordResetMutation();
+
+  useErrorHandler(error, {
+    setInlineError: message => setError('root', { message })
+  });
 
   const submitHandler = async (formData: IPasswordResetForm) => {
     if (formData.newPassword !== formData.newPasswordConfirm) {
@@ -54,15 +58,10 @@ export default function PasswordResetForm() {
       }
     };
 
-    const result = await triggerPasswordReset(payload);
+    const { error } = await triggerPasswordReset(payload);
+    if (error) return;
 
-    if (result.error) {
-      const { message } = parseQueryError(result.error);
-
-      setError('root', { message });
-    } else {
-      setFormVisible(false);
-    }
+    setFormVisible(false);
   };
 
   return (

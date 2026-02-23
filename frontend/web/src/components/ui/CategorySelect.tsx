@@ -18,6 +18,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { Category, useGetCategoriesQuery } from '@/api/accountApi';
 import { EFallbackKey } from '@/constants/enums';
 import { useTranslations } from 'next-intl';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export interface ICategorySelect {
   selectedCategory: Category | null;
@@ -34,7 +35,9 @@ export default function CategorySelect({
 
   const [open, setOpen] = useState<boolean>(false);
 
-  const { data: getCategoriesResponse } = useGetCategoriesQuery({});
+  const { data: getCategoriesResponse, isError, error } = useGetCategoriesQuery({});
+
+  useErrorHandler(error);
 
   const selectCategoryHandler = (newCategory: Category) => {
     const isCategoryChange = newCategory._id !== selectedCategory?._id;
@@ -46,7 +49,7 @@ export default function CategorySelect({
     setOpen(false);
   };
 
-  return (
+  return isError ? null : (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="outline" role="combobox" aria-expanded={open}>

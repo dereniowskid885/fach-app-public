@@ -9,11 +9,12 @@ import {
   usePostAuthEmailVerificationMutation
 } from '@/api/accountApi';
 import { HOME_PATH, LOGIN_PATH } from '@/constants/routes';
-import { parseQueryError } from '@/lib/utils';
+import { parseQueryError } from '@/lib/errorUtils';
 import { EAccountVerificationResult } from '@/constants/enums';
 import AuthCard from '@/components/ui/AuthCard';
 import { useTranslations } from 'next-intl';
 import { getLastPathSegment } from '@/lib/pathnameUtils';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export default function AccountVerifyPage() {
   const t = useTranslations();
@@ -25,8 +26,18 @@ export default function AccountVerifyPage() {
   const pathname = usePathname();
   const token = getLastPathSegment(pathname);
 
-  const [triggerEmailVerify, { isLoading, isUninitialized }] =
+  const [triggerEmailVerify, { isLoading, isUninitialized, error }] =
     usePostAuthEmailVerificationMutation();
+
+  useErrorHandler(error, {
+    callback: () => {
+      const { code } = parseQueryError(error!);
+
+      setVerificationResult(
+        code === 400 ? EAccountVerificationResult.TOKEN_INVALID : EAccountVerificationResult.ERROR
+      );
+    }
+  });
 
   const countdownDefaultProps = {
     description: t('accountVerifyPage.countdownDescription'),
@@ -59,19 +70,10 @@ export default function AccountVerifyPage() {
         }
       };
 
-      const result = await triggerEmailVerify(payload);
-      const isMutationSuccess = !result.error;
+      const { error } = await triggerEmailVerify(payload);
+      if (error) return;
 
-      if (isMutationSuccess) {
-        setVerificationResult(EAccountVerificationResult.SUCCESS);
-        return;
-      }
-
-      const { code } = parseQueryError(result.error);
-
-      setVerificationResult(
-        code === 400 ? EAccountVerificationResult.TOKEN_INVALID : EAccountVerificationResult.ERROR
-      );
+      setVerificationResult(EAccountVerificationResult.SUCCESS);
     };
 
     verifyHandler();
