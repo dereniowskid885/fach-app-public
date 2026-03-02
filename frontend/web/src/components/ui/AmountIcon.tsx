@@ -2,15 +2,22 @@ import { ReactNode } from 'react';
 
 export interface IAmountIcon {
   className?: string;
-  amount?: number;
+  amount: number;
+  showZeroAmount?: boolean;
   children?: ReactNode;
 }
 
-export default function AmountIcon({ className, amount, children }: IAmountIcon) {
+export default function AmountIcon({
+  className,
+  amount,
+  showZeroAmount = false,
+  children
+}: IAmountIcon) {
   return (
-    <div className="relative inline-block">
+    <div className="relative">
       {children}
-      {amount && amount > 0 ? (
+
+      {showZeroAmount || amount > 0 ? (
         <div
           className={`absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-chart-5 font-semibold text-primary ${className}`}
         >

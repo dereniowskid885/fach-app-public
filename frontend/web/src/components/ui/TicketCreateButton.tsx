@@ -1,5 +1,3 @@
-'use client';
-
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { EUserRole } from '@shared/constants/enums';
 import { useTranslations } from 'next-intl';
@@ -26,7 +24,6 @@ export default function TicketCreateButton() {
 
       <TicketCreateDialog
         open={ticketCreateDialog}
-        refetchTickets={() => null}
         closeDialog={() => setTicketCreateDialog(false)}
       />
     </>

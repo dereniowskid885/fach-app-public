@@ -6,14 +6,14 @@ import {
   PatchTicketsByIdAcceptEvaluationApiArg,
   usePatchTicketsByIdAcceptEvaluationMutation
 } from '@/api/accountApi';
-import { getFormattedPriceAmount } from '@/lib/utils';
+import { getFormattedPriceAmount, getUserFullName } from '@/lib/utils';
 import { RowSelectionState } from '@tanstack/react-table';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { getFormattedDate } from '@/lib/dateUtils';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 
-export interface IEvaluationsListDialog {
+export interface ITicketEvaluationsListDialog {
   open: boolean;
   refetchTickets: () => void;
   closeDialog: () => void;
@@ -21,13 +21,13 @@ export interface IEvaluationsListDialog {
   ticketEvaluations?: Evaluation[];
 }
 
-export const EvaluationsListDialog = ({
+export const TicketEvaluationsListDialog = ({
   open,
   refetchTickets,
   closeDialog,
   ticketId,
   ticketEvaluations = []
-}: IEvaluationsListDialog) => {
+}: ITicketEvaluationsListDialog) => {
   const t = useTranslations();
 
   const [selectedEvaluationRow, setSelectedEvaluationRow] = useState<RowSelectionState>({});
@@ -46,41 +46,47 @@ export const EvaluationsListDialog = ({
 
   const evaluationsTableData = ticketEvaluations?.map(evaluation => {
     const formattedDate = getFormattedDate(evaluation.dateOfResponse);
-    const formattedAmount = getFormattedPriceAmount(evaluation.price?.value);
+    const formattedAmount = getFormattedPriceAmount(evaluation.price?.amountInCents);
 
     return {
-      specialistName: `${evaluation.user?.name} ${evaluation.user?.surname}`,
+      specialistName: getUserFullName(evaluation.user, t('common.unknownUser')),
       specialistEmail: evaluation.user?.email,
       dateOfResponse: formattedDate,
       price: `${formattedAmount} ${evaluation.price?.currency}`,
-      city: evaluation.user?.city
+      city: evaluation.user?.city,
+      disabled: !evaluation.user
     };
   });
 
   const evaluationsTable = (
     <DataTable
-      data={evaluationsTableData!}
+      data={evaluationsTableData}
       selectableRows={true}
       oneSelectableRow={true}
       setSelectedRow={setSelectedEvaluationRow}
       columns={[
         {
+          id: 'evaluation-list-specialist-name',
           accessorKey: 'specialistName',
           header: t('userRole.specialist')
         },
         {
+          id: 'evaluation-list-specialist-email',
           accessorKey: 'specialistEmail',
           header: t('authForm.email')
         },
         {
+          id: 'evaluation-list-date-of-response',
           accessorKey: 'dateOfResponse',
           header: t('evaluation.dateOfResponse')
         },
         {
+          id: 'evaluation-list-price',
           accessorKey: 'price',
           header: t('evaluation.price')
         },
         {
+          id: 'evaluation-list-city',
           accessorKey: 'city',
           header: t('evaluation.city')
         }
