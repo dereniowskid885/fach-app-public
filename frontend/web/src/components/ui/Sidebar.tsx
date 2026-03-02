@@ -123,7 +123,7 @@ export default function Sidebar() {
       <div className="space-y-3 border-t p-3 shadow-md">
         <div className="flex items-center gap-3 rounded-xl bg-background p-3">
           {name && surname ? (
-            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-xl border bg-card text-xs font-bold uppercase shadow-md">
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border bg-card text-xs font-bold uppercase shadow-md">
               {`${name.charAt(0)}${surname.charAt(0)}`}
             </div>
           ) : (
@@ -141,7 +141,7 @@ export default function Sidebar() {
               )}
 
               {role ? (
-                <Typography variant="note" className="text-xs capitalize text-muted-foreground">
+                <Typography variant="note" className="text-muted-foreground">
                   {t(`userRole.${role}`)}
                 </Typography>
               ) : (

@@ -6,12 +6,19 @@ import { Textarea } from '../shadcn/textarea';
 import CategorySelect from './CategorySelect';
 import { useEffect, useState } from 'react';
 import { Typography } from '../common/Typography';
-import { Category, PostTicketsApiArg, usePostTicketsMutation } from '@/api/accountApi';
+import {
+  Category,
+  PostTicketsApiArg,
+  useGetTicketsQuery,
+  usePostTicketsMutation
+} from '@/api/accountApi';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { useAppSelector } from '@/redux/hooks';
+import { buildDashboardTicketsQueryFilters } from '@/helpers/buildDashboardTicketsQueryFilters';
 
 interface ITicketCreateForm {
   category: Category;
@@ -20,15 +27,10 @@ interface ITicketCreateForm {
 }
 export interface ITicketCreateDialog {
   open: boolean;
-  refetchTickets: () => void;
   closeDialog: () => void;
 }
 
-export default function TicketCreateDialog({
-  open,
-  refetchTickets,
-  closeDialog
-}: ITicketCreateDialog) {
+export default function TicketCreateDialog({ open, closeDialog }: ITicketCreateDialog) {
   const t = useTranslations();
   const { city } = useSelector(selectUserData);
   const {
@@ -49,9 +51,14 @@ export default function TicketCreateDialog({
   const [descriptionCharsLeft, setDescriptionCharsLeft] = useState<number>(descriptionMaxLength);
   const descriptionInput = watch('description');
 
-  const [triggerCreateTicketMutation, { isLoading, error }] = usePostTicketsMutation();
+  const [triggerCreateTicketMutation, { isLoading, error: errorTicketCreate }] =
+    usePostTicketsMutation();
 
-  useErrorHandler(error, {
+  const { role, userId } = useAppSelector(selectUserData);
+  const filters = buildDashboardTicketsQueryFilters(role, userId);
+  const { refetch: refetchTickets, error: errorTicketsRefetch } = useGetTicketsQuery(filters ?? {});
+
+  useErrorHandler(errorTicketCreate || errorTicketsRefetch, {
     setInlineError: message => setErrorMessage(message)
   });
 
