@@ -6,7 +6,7 @@ import { FilterBuilder } from '@utils/filterBuilder';
 
 export const createCategory = async (req: Request, res: Response) => {
   try {
-    const category = await CategoryManager.createCategory(req.body.name);
+    const category = await CategoryManager.createCategory(req.user.userId, req.body.name);
 
     return res.status(201).json({ success: true, message: 'Category created successfully', data: category });
   } catch (err) {
@@ -47,7 +47,7 @@ export const deleteCategory = async (req: Request, res: Response) => {
 
 export const updateCategory = async (req: Request, res: Response) => {
   try {
-    const category = await CategoryManager.updateCategory(req.params.id, req.body.name);
+    const category = await CategoryManager.updateCategory(req.user.userId, req.params.id, req.body.name);
 
     return res.status(200).json({ success: true, message: 'Category updated successfully', data: category });
   } catch (err) {
@@ -57,7 +57,7 @@ export const updateCategory = async (req: Request, res: Response) => {
 
 export const assignSpecialistToCategory = async (req: Request, res: Response) => {
   try {
-    const category = await CategoryManager.assignSpecialistToCategory(req.params.id, req.body.userId);
+    const category = await CategoryManager.assignSpecialistToCategory(req.user.userId, req.params.id, req.body.userId);
 
     return res
       .status(200)
@@ -69,11 +69,15 @@ export const assignSpecialistToCategory = async (req: Request, res: Response) =>
 
 export const removeSpecialistFromCategory = async (req: Request, res: Response) => {
   try {
-    const category = await CategoryManager.removeSpecialistFromCategory(req.params.id, req.body.userId);
+    const category = await CategoryManager.removeSpecialistFromCategory(
+      req.user.userId,
+      req.params.id,
+      req.body.userId,
+    );
 
     return res
       .status(200)
-      .json({ success: true, message: 'Specialist succesfully removed from category', data: category });
+      .json({ success: true, message: 'Specialist successfully removed from category', data: category });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }

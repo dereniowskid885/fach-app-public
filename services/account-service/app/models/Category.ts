@@ -1,10 +1,14 @@
 import { Types, Document, model, Schema } from 'mongoose';
 import Ticket from './Ticket';
+import { IUserModel } from './User';
 
 export interface ICategoryModel extends Document {
   _id: Types.ObjectId;
   name: string;
   specialists: Types.ObjectId[];
+  createdAt: Date;
+  updatedBy: Types.ObjectId | IUserModel;
+  updatedAt: Date;
 }
 
 const categorySchema = new Schema<ICategoryModel>({
@@ -14,6 +18,21 @@ const categorySchema = new Schema<ICategoryModel>({
     unique: true,
   },
   specialists: [{ type: Types.ObjectId, ref: 'User' }],
+  createdAt: {
+    type: Date,
+    required: true,
+    default: new Date(),
+  },
+  updatedBy: {
+    type: Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  updatedAt: {
+    type: Date,
+    required: true,
+    default: new Date(),
+  },
 });
 
 categorySchema.pre('deleteOne', { document: true, query: false }, async function (next) {

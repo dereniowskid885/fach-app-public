@@ -2,7 +2,8 @@ import { Clock, CheckCircle, ClipboardList, MessageSquare, Bell, CreditCard } fr
 import { Card, CardContent } from '../shadcn/card';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import { ETicketStatus, getTicketStatusColorClasses } from '@/constants/ticketStatus';
+import { getTicketStatusColorClasses } from '@/constants/ticketStatus';
+import { ETicketStatus } from '@shared/constants/enums';
 
 export default function DashboardMetrics() {
   // TODO: replace after creation of metrics endpoints

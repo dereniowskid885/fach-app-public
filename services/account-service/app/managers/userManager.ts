@@ -1,24 +1,26 @@
 import { safeUserProjection } from '@constants/projections';
-import UserModel, { IUserModel } from '@models/User';
 import { EResponseStatus } from '@shared/constants/responseStatus';
 import { AppError } from '@shared/utils/AppError';
-import { EUserRole } from '@shared/constants/enums';
+import { ETicketStatus, EUserRole } from '@shared/constants/enums';
 import { CategoryManager } from './categoryManager';
-import User from '@models/User';
+import User, { IUserModel } from '@models/User';
 import { printMongooseValidationErrors } from '@helpers/printMongooseValidationErrors';
-import { FilterQuery, Error as MongooseError } from 'mongoose';
+import mongoose, { FilterQuery, Error as MongooseError } from 'mongoose';
 import { IUpdateUserData } from '@interfaces/user';
 import { JwtPayload } from 'jsonwebtoken';
+import Ticket from '@models/Ticket';
+import Category from '@models/Category';
+import { handleTransactionError } from '@shared/helpers/handleTransactionError';
 
 export const UserManager = {
   getUsers: async (filter: FilterQuery<IUserModel>) => {
-    const users = await UserModel.find(filter, safeUserProjection);
+    const users = await User.find(filter, safeUserProjection).populate('category');
 
     return users;
   },
   getUserById: async (userId: string, projection = true) => {
     try {
-      const user = await UserModel.findById(userId, projection ? safeUserProjection : null);
+      const user = await User.findById(userId, projection ? safeUserProjection : null);
 
       if (!user) {
         throw new AppError(404, EResponseStatus.ERROR_USER_NOT_FOUND, 'User with provided id not found');
@@ -34,21 +36,21 @@ export const UserManager = {
       throw new AppError(400, EResponseStatus.ERROR_INVALID_DATA, 'Email is not provided');
     }
 
-    const user = await UserModel.findOne({ email });
+    const user = await User.findOne({ email });
 
     return user;
   },
-  updateUser: async (requestUser: JwtPayload, userId: string, updateData: Partial<IUpdateUserData>) => {
+  updateUser: async (currentUser: JwtPayload, userId: string, updateData: Partial<IUpdateUserData>) => {
     const updateDataKeys = Object.keys(updateData);
 
     if (!updateData || updateDataKeys.length === 0) {
       throw new AppError(400, EResponseStatus.ERROR_INVALID_DATA, 'No data provided for update');
     }
 
-    const isAdmin = requestUser.role === EUserRole.ADMIN;
+    const isAdmin = currentUser.role === EUserRole.ADMIN;
 
     if (!isAdmin) {
-      const isUpdatingSelf = requestUser.userId === userId;
+      const isUpdatingSelf = currentUser.userId === userId;
 
       if (!isUpdatingSelf) {
         throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'You can update only your own account');
@@ -65,7 +67,7 @@ export const UserManager = {
       }
     }
 
-    const updatedUser = await UserModel.findByIdAndUpdate(userId, updateData, { new: true }).select(safeUserProjection);
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true }).select(safeUserProjection);
 
     if (!updatedUser) {
       throw new AppError(404, EResponseStatus.ERROR_USER_NOT_FOUND, 'User with provided id not found');
@@ -91,7 +93,7 @@ export const UserManager = {
   },
   updateUserRefreshToken: async (userId: string, refreshToken: string) => {
     // Find user and delete the specific existing refresh token
-    await UserModel.findOneAndUpdate(
+    await User.findOneAndUpdate(
       {
         _id: userId,
         'refreshTokens.token': refreshToken,
@@ -102,32 +104,140 @@ export const UserManager = {
       { new: true },
     );
   },
-  deleteUser: async (userId: string) => {
-    const user = await UserManager.getUserById(userId);
+  deleteUser: async (currentUserId: string, userId: string) => {
+    if (currentUserId === userId) {
+      throw new AppError(400, EResponseStatus.ERROR_INVALID_DATA, 'You cannot delete yourself');
+    }
 
-    if (!user) {
+    const userToDelete = await UserManager.getUserById(userId);
+
+    if (!userToDelete) {
       throw new AppError(404, EResponseStatus.ERROR_USER_NOT_FOUND, 'User with provided id not found');
     }
 
-    await user.deleteOne();
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      switch (userToDelete.role) {
+        case EUserRole.USER:
+          await Ticket.updateMany(
+            { $or: [{ assignee: userToDelete._id }, { createdBy: userToDelete._id }] },
+            [
+              {
+                $set: {
+                  status: ETicketStatus.MODERATOR_INVESTIGATION,
+                  assignee: null,
+                },
+              },
+            ],
+            { session },
+          );
+          break;
+
+        case EUserRole.SPECIALIST:
+          // remove deleted user (specialist) evaluations from tickets
+          await Ticket.updateMany(
+            { 'evaluations.user': userToDelete._id },
+            {
+              $pull: { evaluations: { user: userToDelete._id } },
+              $set: {
+                updatedAt: new Date(),
+                updatedBy: currentUserId,
+              },
+            },
+            { session },
+          );
+
+          // change status on tickets with 0 evaluations
+          await Ticket.updateMany(
+            {
+              evaluations: { $size: 0 },
+              status: ETicketStatus.PRICE_USER_ACCEPTATION,
+            },
+            {
+              $set: { status: ETicketStatus.PRICE_EVALUATION, updatedAt: new Date(), updatedBy: currentUserId },
+            },
+            { session },
+          );
+
+          // change ticket status and assignee, where deleted specialist is assigned or has his evaluation accepted
+          await Ticket.updateMany(
+            { $or: [{ assignee: userToDelete._id }, { 'acceptedEvaluation.user': userToDelete._id }] },
+            [
+              {
+                $set: {
+                  status: ETicketStatus.MODERATOR_INVESTIGATION,
+                  assignee: '$createdBy',
+                  updatedAt: new Date(),
+                  updatedBy: currentUserId,
+                },
+              },
+            ],
+            { session },
+          );
+
+          // remove deleted user (specialist) from category
+          if (userToDelete.category) {
+            await Category.updateOne(
+              { _id: userToDelete.category, specialists: userToDelete._id },
+              {
+                $pull: { specialists: userToDelete._id },
+                $set: {
+                  updatedAt: new Date(),
+                  updatedBy: currentUserId,
+                },
+              },
+              { session },
+            );
+          }
+          break;
+
+        case EUserRole.ADMIN:
+          await Ticket.updateMany(
+            { assignee: userToDelete._id },
+            [
+              {
+                $set: {
+                  status: ETicketStatus.MODERATOR_INVESTIGATION,
+                  assignee: null,
+                  updatedBy: currentUserId,
+                  updatedAt: new Date(),
+                },
+              },
+            ],
+            { session },
+          );
+      }
+
+      await session.commitTransaction();
+      session.endSession();
+    } catch (err) {
+      handleTransactionError(err, session, 'Failed to delete user');
+    }
+
+    await userToDelete.deleteOne();
   },
-  createUser: async ({
-    email,
-    password,
-    role,
-    name,
-    surname,
-    city,
-    categoryName,
-  }: {
-    email: string;
-    password: string;
-    role?: EUserRole;
-    name: string;
-    surname: string;
-    city: string;
-    categoryName?: string;
-  }) => {
+  createUser: async (
+    currentUserId: string,
+    {
+      email,
+      password,
+      role,
+      name,
+      surname,
+      city,
+      categoryName,
+    }: {
+      email: string;
+      password: string;
+      role?: EUserRole;
+      name: string;
+      surname: string;
+      city: string;
+      categoryName?: string;
+    },
+  ) => {
     const userExists = await UserManager.getUserByEmail(email);
 
     if (userExists) {
@@ -162,7 +272,7 @@ export const UserManager = {
       });
 
       if (isSpecialistCreation && categoryName) {
-        const category = await CategoryManager.getOrCreateNewCategory(categoryName);
+        const category = await CategoryManager.getOrCreateNewCategory(currentUserId, categoryName);
 
         user.category = category.id;
 
@@ -171,7 +281,7 @@ export const UserManager = {
         await category.save();
       }
 
-      user.populate({ path: 'category', select: 'name' });
+      user.populate('category');
       await user.save();
 
       return user.toSafeObject();

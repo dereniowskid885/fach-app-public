@@ -1,4 +1,5 @@
 import { TicketStatus } from '@/api/accountApi';
+import { ETicketStatus } from '@shared/constants/enums';
 import {
   CheckCircle,
   CheckCircle2,
@@ -8,16 +9,6 @@ import {
   PlayCircle,
   Search
 } from 'lucide-react';
-
-export enum ETicketStatus {
-  PRICE_EVALUATION = 'Wycena',
-  PRICE_USER_ACCEPTATION = 'Akceptacja wyceny',
-  PENDING_PAYMENT = 'Oczekiwanie na płatność',
-  IN_PROGRESS = 'W trakcie',
-  SOLUTION_USER_APPROVAL = 'Akceptacja rozwiązania',
-  MODERATOR_INVESTIGATION = 'Badanie przez moderatora',
-  COMPLETED = 'Ukończony'
-}
 
 export const ticketStatusObj = {
   [ETicketStatus.PRICE_EVALUATION]: {

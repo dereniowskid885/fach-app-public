@@ -50,7 +50,9 @@ export default function SpecialistTicketEvaluationDialog({
   };
   const maxMinutes = 1440; // 1 day
 
-  const [priceInCents, setPriceInCents] = useState<number>(userEvaluation?.price?.value ?? 0);
+  const [priceInCents, setPriceInCents] = useState<number>(
+    userEvaluation?.price?.amountInCents ?? 0
+  );
   const [minutes, setMinutes] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -94,7 +96,7 @@ export default function SpecialistTicketEvaluationDialog({
           id: ticket._id,
           body: {
             price: {
-              value: priceInCents,
+              amountInCents: priceInCents,
               currency: ESupportedCurrency.PLN
             },
             minutes
@@ -111,7 +113,7 @@ export default function SpecialistTicketEvaluationDialog({
           body: {
             evaluationId: userEvaluation?._id,
             price: {
-              value: priceInCents,
+              amountInCents: priceInCents,
               currency: ESupportedCurrency.PLN
             },
             minutes
