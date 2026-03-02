@@ -7,7 +7,6 @@ import { EResponseStatus } from '@shared/constants/responseStatus';
 import { printMongooseValidationErrors } from '@helpers/printMongooseValidationErrors';
 import { Error as MongooseError } from 'mongoose';
 import { handleAccessTokenError, handleRefreshTokenError } from '@shared/helpers/handleJwtError';
-import UserModel from '@models/User';
 import { ESupportedLanguages } from '@shared/constants/enums';
 import { VERIFY_PATH, PASSWORD_RESET_PATH } from '@web/constants/routes';
 
@@ -41,7 +40,7 @@ export const AuthManager = {
       }
 
       if (!user.isVerified) {
-        await UserModel.findByIdAndUpdate(user._id, { isVerified: true });
+        await User.findByIdAndUpdate(user._id, { isVerified: true });
       }
 
       return;

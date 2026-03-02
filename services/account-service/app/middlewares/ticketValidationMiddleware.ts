@@ -26,7 +26,7 @@ export const validateCreateTicketMiddleware = (req: Request, res: Response, next
 const ticketEvaluationSchema = z
   .object({
     price: z.object({
-      value: z.number().min(0),
+      amountInCents: z.number().min(0),
       currency: z.enum(ESupportedCurrency),
     }),
     minutes: z.number().int().positive(),
@@ -86,7 +86,7 @@ const ticketEvaluationEditSchema = z
     evaluationId: z.string().length(24).optional(),
     price: z
       .object({
-        value: z.number().min(0),
+        amountInCents: z.number().min(0),
         currency: z.enum(ESupportedCurrency),
       })
       .optional(),

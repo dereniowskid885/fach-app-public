@@ -30,7 +30,7 @@
  *         price:
  *           type: object
  *           properties:
- *             value:
+ *             amountInCents:
  *               type: number
  *               format: float
  *               example: 250.5

@@ -228,7 +228,7 @@ router.post('/register', validateUserRegisterMiddleware, register);
  *                 description: User's password
  *     responses:
  *       200:
- *         description: User logged in succesfully
+ *         description: User logged in successfully
  *         content:
  *           application/json:
  *             schema:
@@ -239,7 +239,7 @@ router.post('/register', validateUserRegisterMiddleware, register);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: User logged in succesfully
+ *                   example: User logged in successfully
  *                 data:
  *                   type: object
  *                   properties:
@@ -292,7 +292,7 @@ router.post('/login', validateUserLoginMiddleware, login);
  *       - Authentication
  *     responses:
  *       200:
- *         description: Access token refreshed succesfully
+ *         description: Access token refreshed successfully
  *         content:
  *           application/json:
  *             schema:
@@ -303,7 +303,7 @@ router.post('/login', validateUserLoginMiddleware, login);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Access token refreshed succesfully
+ *                   example: Access token refreshed successfully
  *                 data:
  *                   type: object
  *                   properties:
@@ -370,7 +370,7 @@ router.post('/refresh-token', refreshTokenMiddleware, refreshToken);
  *       - Authentication
  *     responses:
  *       200:
- *         description: User logged out succesfully.
+ *         description: User logged out successfully.
  *         content:
  *           application/json:
  *             schema:
@@ -381,7 +381,7 @@ router.post('/refresh-token', refreshTokenMiddleware, refreshToken);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: User logged out succesfully.
+ *                   example: User logged out successfully.
  *       500:
  *         description: Server error
  *         content:
