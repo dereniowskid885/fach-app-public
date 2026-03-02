@@ -106,7 +106,7 @@ export const TicketManager = {
   },
   ticketEvaluationHandler: async (
     ticketId: string,
-    evaluatedPrice: { value: number; currency: ESupportedCurrency },
+    evaluatedPrice: { amountInCents: number; currency: ESupportedCurrency },
     evaluatedMinutes: number,
     user: JwtPayload,
   ) => {
@@ -126,14 +126,8 @@ export const TicketManager = {
       );
     }
 
-    const isUserAllowedToEvaluate = [EUserRole.ADMIN, EUserRole.SPECIALIST].includes(user.role);
-
-    if (!isUserAllowedToEvaluate) {
-      throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'Missing permissions to evaluate a ticket');
-    }
-
     const isTicketAlreadyEvaluatedByCurrentUser = ticket.evaluations.some(
-      (evaluation) => evaluation.user.id === user.userId,
+      (evaluation) => evaluation.user?.id === user?.userId,
     );
 
     if (isTicketAlreadyEvaluatedByCurrentUser) {
@@ -144,11 +138,11 @@ export const TicketManager = {
       );
     }
 
-    if (evaluatedMinutes < 30 || evaluatedPrice.value < 200) {
+    if (evaluatedMinutes < 30 || evaluatedPrice.amountInCents < 200) {
       throw new AppError(
         400,
         EResponseStatus.ERROR_INVALID_DATA,
-        'Ticket response duration (minutes) cannot be lower than 30 and price (price.value) cannot be lower than 2.00',
+        'Ticket response duration (minutes) cannot be lower than 30 and price amount in cents cannot be lower than 200',
       );
     }
 
@@ -303,16 +297,12 @@ export const TicketManager = {
   ticketEvaluationEditHandler: async (
     ticketId: string,
     evaluationId: string,
-    price: { value: number; currency: ESupportedCurrency },
+    price: { amountInCents: number; currency: ESupportedCurrency },
     minutes: number,
     user: JwtPayload,
   ) => {
     if (!user) {
       throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
-    }
-
-    if (user.role !== EUserRole.SPECIALIST) {
-      throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'Missing permissions to edit an evaluation');
     }
 
     const ticket = await TicketManager.getTicketByID(ticketId);

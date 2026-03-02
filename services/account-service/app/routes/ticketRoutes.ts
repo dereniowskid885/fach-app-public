@@ -14,7 +14,7 @@ import express from 'express';
 const router = express.Router();
 
 import { createMiddleware } from '@shared/helpers/createMiddleware';
-import { checkAndParseAccessToken } from '@shared/middlewares/authMiddleware';
+import { checkAndParseAccessToken, checkUserRole } from '@shared/middlewares/authMiddleware';
 import {
   validateCreateTicketMiddleware,
   validateTicketEvaluationAcceptMiddleware,
@@ -23,6 +23,11 @@ import {
   validateTicketPaymentMiddleware,
   validateTicketUpdateMiddleware,
 } from '@middlewares/ticketValidationMiddleware';
+import { EUserRole } from '@shared/constants/enums';
+
+// Role middleware
+const checkSpecialistRole = createMiddleware(checkUserRole, [EUserRole.SPECIALIST]);
+const checkIsUserRole = createMiddleware(checkUserRole, [EUserRole.USER]);
 
 // Auth middleware
 const accessTokenMiddleware = createMiddleware(checkAndParseAccessToken, process.env.ACCESS_TOKEN_SECRET);
@@ -111,6 +116,22 @@ router.use(accessTokenMiddleware);
  *                 message:
  *                   type: string
  *                   example: Missing user data
+ *       403:
+ *         description: Forbidden due to invalid role
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_INVALID_ROLE"
+ *                 message:
+ *                   type: string
+ *                   example: Required role is missing
  *       500:
  *         description: Server error
  *         content:
@@ -128,7 +149,7 @@ router.use(accessTokenMiddleware);
  *                   type: string
  *                   example: Server error
  */
-router.post('/', validateCreateTicketMiddleware, createTicket);
+router.post('/', validateCreateTicketMiddleware, checkIsUserRole, createTicket);
 
 /**
  * @swagger
@@ -637,7 +658,7 @@ router.patch('/:id', validateTicketUpdateMiddleware, updateTicket);
  *                 type: object
  *                 description: Price set by the specialist
  *                 properties:
- *                   value:
+ *                   amountInCents:
  *                     type: number
  *                     description: Numeric value of the price
  *                     example: 250.5
@@ -730,7 +751,7 @@ router.patch('/:id', validateTicketUpdateMiddleware, updateTicket);
  *                   type: string
  *                   example: Server error
  */
-router.patch('/:id/evaluation', validateTicketEvaluationMiddleware, ticketEvaluationHandler);
+router.patch('/:id/evaluation', validateTicketEvaluationMiddleware, checkSpecialistRole, ticketEvaluationHandler);
 
 /**
  * @swagger
@@ -873,7 +894,7 @@ router.patch('/:id/accept-evaluation', validateTicketEvaluationAcceptMiddleware,
  *                 type: object
  *                 description: Price set by the specialist
  *                 properties:
- *                   value:
+ *                   amountInCents:
  *                     type: number
  *                     description: Numeric value of the price
  *                     example: 250.5
@@ -967,6 +988,6 @@ router.patch('/:id/accept-evaluation', validateTicketEvaluationAcceptMiddleware,
  *                   type: string
  *                   example: Server error
  */
-router.patch('/:id/edit-evaluation', validateTicketEvaluationEditMiddleware, ticketEvaluationEdit);
+router.patch('/:id/edit-evaluation', validateTicketEvaluationEditMiddleware, checkSpecialistRole, ticketEvaluationEdit);
 
 export default router;

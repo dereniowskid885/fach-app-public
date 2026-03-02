@@ -1,14 +1,15 @@
 import Category, { ICategoryModel } from '@models/Category';
 import { AppError } from '@shared/utils/AppError';
+import { handleTransactionError } from '@shared/helpers/handleTransactionError';
 import { UserManager } from './userManager';
 import { EUserRole } from '@shared/constants/enums';
 import { EResponseStatus } from '@shared/constants/responseStatus';
-import { FilterQuery } from 'mongoose';
+import mongoose, { FilterQuery, Types } from 'mongoose';
 
 const USER_KEYS = ['email', 'role', 'name', 'surname', 'city', 'isVerified'];
 
 export const CategoryManager = {
-  createCategory: async (categoryName: string) => {
+  createCategory: async (currentUserId: string, categoryName: string) => {
     let category = await Category.findOne({ name: categoryName });
 
     if (category) {
@@ -19,7 +20,7 @@ export const CategoryManager = {
       );
     }
 
-    category = new Category({ name: categoryName });
+    category = new Category({ name: categoryName, updatedBy: currentUserId });
     await category.save();
 
     return category;
@@ -38,11 +39,11 @@ export const CategoryManager = {
 
     return category;
   },
-  getOrCreateNewCategory: async (categoryName: string) => {
+  getOrCreateNewCategory: async (currentUserId: string, categoryName: string) => {
     let category = await Category.findOne({ name: categoryName });
 
     if (!category) {
-      category = new Category({ name: categoryName });
+      category = new Category({ name: categoryName, updatedBy: currentUserId });
     }
 
     category.populate('specialists', 'email');
@@ -63,80 +64,119 @@ export const CategoryManager = {
 
     await category.deleteOne();
   },
-  updateCategory: async (categoryId: string, newName: string) => {
-    const category = await CategoryManager.getCategoryById(categoryId);
+  updateCategory: async (currentUserId: string, categoryId: string, newName: string) => {
+    const updatedCategory = await Category.findByIdAndUpdate(
+      categoryId,
+      {
+        name: newName,
+        updatedAt: new Date(),
+        updatedBy: currentUserId,
+      },
+      { new: true },
+    );
 
-    category.name = newName;
-    await category.save();
-
-    return category;
+    return updatedCategory;
   },
-  assignSpecialistToCategory: async (categoryId: string, userId: string) => {
+  assignSpecialistToCategory: async (currentUserId: string, categoryId: string, userId: string) => {
     const user = await UserManager.getUserById(userId);
 
     if (user.role !== EUserRole.SPECIALIST) {
       throw new AppError(400, EResponseStatus.ERROR_USER_INVALID_ROLE, 'User is not a specialist');
     }
 
-    const category = await CategoryManager.getCategoryById(categoryId);
-
-    if (user.category) {
-      const userCategoryId = user.category.toString();
-      const userCategory = await Category.findById(userCategoryId);
-
-      if (!userCategory) {
-        throw new AppError(500, EResponseStatus.ERROR_CATEGORY_NOT_FOUND, 'Specialist category not found');
-      }
-
-      if (userCategoryId === categoryId) {
-        const updatedCategory = await Category.findByIdAndUpdate(
-          { _id: categoryId },
-          { $addToSet: { specialists: userId } },
-        );
-
-        return updatedCategory?.populate('specialists');
-      }
-
-      const indexToRemove = userCategory.specialists.findIndex((id) => id.equals(user._id));
-      const userIdFound = indexToRemove !== -1;
-
-      if (userIdFound) {
-        userCategory.specialists.splice(indexToRemove, 1);
-
-        await userCategory.save();
-      }
-    }
-
-    user.category = category._id;
-    await user.save();
-
-    category.specialists.push(user.id);
-    await category.save();
-
-    return category.populate('specialists');
-  },
-  removeSpecialistFromCategory: async (categoryId: string, userId: string) => {
-    const user = await UserManager.getUserById(userId);
-
-    if (user.role !== EUserRole.SPECIALIST) {
-      throw new AppError(400, EResponseStatus.ERROR_USER_INVALID_ROLE, 'User is not a specialist');
-    }
-
-    const category = await CategoryManager.getCategoryById(categoryId);
-    const indexToRemove = category.specialists.findIndex((id) => id.equals(userId));
-    const userIdNotFound = indexToRemove === -1;
-
-    if (userIdNotFound) {
+    if (user.category?.toString() === categoryId) {
       throw new AppError(
         400,
-        EResponseStatus.ERROR_USER_NOT_ASSIGNED_TO_CATEGORY,
-        'Specialist is not assigned to provided category',
+        EResponseStatus.ERROR_USER_ALREADY_ASSIGNED_TO_CATEGORY,
+        'User is already assigned to this category',
       );
     }
 
-    category.specialists.splice(indexToRemove, 1);
-    await category.save();
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    return category;
+    try {
+      if (user.category) {
+        await Category.updateOne(
+          { _id: user.category },
+          {
+            $pull: {
+              specialists: user._id,
+            },
+            $set: {
+              updatedAt: new Date(),
+              updatedBy: currentUserId,
+            },
+          },
+          { session },
+        );
+      }
+
+      const updatedCategory = await Category.findByIdAndUpdate(
+        categoryId,
+        {
+          $addToSet: { specialists: user._id },
+          $set: {
+            updatedAt: new Date(),
+            updatedBy: currentUserId,
+          },
+        },
+        { new: true, session },
+      );
+
+      if (!updatedCategory) {
+        throw new AppError(404, EResponseStatus.ERROR_CATEGORY_NOT_FOUND, 'Category with provided id does not exist');
+      }
+
+      user.category = new Types.ObjectId(categoryId);
+      await user.save({ session });
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return updatedCategory;
+    } catch (err) {
+      handleTransactionError(err, session, 'Failed to assign specialist to a category');
+    }
+  },
+  removeSpecialistFromCategory: async (currentUserId: string, categoryId: string, userId: string) => {
+    const user = await UserManager.getUserById(userId);
+
+    if (user.role !== EUserRole.SPECIALIST) {
+      throw new AppError(400, EResponseStatus.ERROR_USER_INVALID_ROLE, 'User is not a specialist');
+    }
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      const updatedCategory = await Category.findByIdAndUpdate(
+        categoryId,
+        {
+          $pull: { specialists: user._id },
+          $set: {
+            updatedAt: new Date(),
+            updatedBy: currentUserId,
+          },
+        },
+        { new: true, session },
+      );
+
+      if (!updatedCategory) {
+        throw new AppError(404, EResponseStatus.ERROR_CATEGORY_NOT_FOUND, 'Category with provided id does not exist');
+      }
+
+      if (user.category?.toString() === categoryId) {
+        user.category = undefined;
+        await user.save({ session });
+      }
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return updatedCategory;
+    } catch (err) {
+      handleTransactionError(err, session, 'Failed to remove specialist from category');
+    }
   },
 };

@@ -50,9 +50,9 @@ export const FilterBuilder = {
 
     // TODO: to be changed while working on superadmin role
     // https://github.com/dereniowskid885/fach-app/issues/7
-    const isUserRole = user.role === EUserRole.USER;
+    const isUserRole = user?.role === EUserRole.USER;
 
-    if (isUserRole) filterObj.createdBy = user.userId;
+    if (isUserRole) filterObj.createdBy = user?.userId;
 
     return filterObj;
   },
