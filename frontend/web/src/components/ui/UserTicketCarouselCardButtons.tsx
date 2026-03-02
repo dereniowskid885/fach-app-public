@@ -1,12 +1,9 @@
-'use client';
-
 import { ReactElement, useCallback, useState } from 'react';
 import { Button } from '../shadcn/button';
 import { Ticket, useGetTicketsQuery } from '@/api/accountApi';
-import { ETicketStatus } from '@/constants/ticketStatus';
+import { ETicketStatus } from '@shared/constants/enums';
 import AmountIcon from './AmountIcon';
-import { TicketDeleteDialog } from './TicketDeleteDialog';
-import { EvaluationsListDialog } from './EvaluationsListDialog';
+import { TicketEvaluationsListDialog } from './TicketEvaluationsListDialog';
 import { buildDashboardTicketsQueryFilters } from '@/helpers/buildDashboardTicketsQueryFilters';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useAppSelector } from '@/redux/hooks';
@@ -30,7 +27,6 @@ export interface IUserTicketCarouselCardButtons {
 export const UserTicketCarouselCardButtons = ({ ticket }: IUserTicketCarouselCardButtons) => {
   const ticketStatus = ticket.status as ETicketStatus;
 
-  const [ticketDeleteDialog, setTicketDeleteDialog] = useState<boolean>(false);
   const [evaluationListDialog, setEvaluationListDialog] = useState<boolean>(false);
 
   const [ticketPaymentDialog, setTicketPaymentDialog] = useState<boolean>(false);
@@ -38,11 +34,6 @@ export const UserTicketCarouselCardButtons = ({ ticket }: IUserTicketCarouselCar
 
   const paymentDialogLoadingStart = useCallback(() => setTicketPaymentDialogLoading(true), []);
   const paymentDialogLoadingEnd = useCallback(() => setTicketPaymentDialogLoading(false), []);
-
-  const isEligibleForEdit = [
-    ETicketStatus.PRICE_EVALUATION,
-    ETicketStatus.PRICE_USER_ACCEPTATION
-  ].includes(ticketStatus);
 
   const { role, userId } = useAppSelector(selectUserData);
   const filters = buildDashboardTicketsQueryFilters(role, userId);
@@ -60,10 +51,13 @@ export const UserTicketCarouselCardButtons = ({ ticket }: IUserTicketCarouselCar
       title: 'Zobacz wyceny',
       handler: () => setEvaluationListDialog(true),
       element: (
-        <AmountIcon
-          className="top-0 -translate-y-[50%] translate-x-[50%]"
-          amount={ticket.evaluations?.length}
-        />
+        <div className="mt-[1px] pr-4">
+          <AmountIcon
+            className="top-0 -translate-y-[50%] translate-x-[50%]"
+            amount={ticket.evaluations?.length ?? 0}
+            showZeroAmount={true}
+          />
+        </div>
       )
     }
   };
@@ -71,25 +65,9 @@ export const UserTicketCarouselCardButtons = ({ ticket }: IUserTicketCarouselCar
   return (
     <>
       <div className="flex flex-col gap-2">
-        <div className="flex gap-3">
-          {isEligibleForEdit ? (
-            <Button variant="outline" className="bg-primary-200 w-full">
-              Edytuj
-            </Button>
-          ) : null}
-
-          <Button
-            variant="destructive"
-            className="w-full"
-            onClick={() => setTicketDeleteDialog(true)}
-          >
-            Anuluj
-          </Button>
-        </div>
-
         {statusActionButton[ticketStatus] ? (
           <Button
-            variant="default"
+            variant="secondary"
             onClick={statusActionButton[ticketStatus].handler}
             loading={statusActionButton[ticketStatus].isLoading ?? false}
           >
@@ -99,24 +77,17 @@ export const UserTicketCarouselCardButtons = ({ ticket }: IUserTicketCarouselCar
         ) : null}
       </div>
 
-      <TicketDeleteDialog
-        open={ticketDeleteDialog}
-        refetchTickets={refetch}
-        closeDialog={() => setTicketDeleteDialog(false)}
-        ticketId={ticket._id}
-      />
-
       <TicketPaymentDialog
         open={ticketPaymentDialog}
         closeDialog={() => setTicketPaymentDialog(false)}
         loadingStartHandler={paymentDialogLoadingStart}
         loadingEndHandler={paymentDialogLoadingEnd}
         ticketId={ticket._id}
-        amount={ticket.acceptedEvaluation?.price?.value}
+        amount={ticket.acceptedEvaluation?.price?.amountInCents}
         currency={ticket.acceptedEvaluation?.price?.currency as ESupportedCurrency}
       />
 
-      <EvaluationsListDialog
+      <TicketEvaluationsListDialog
         open={evaluationListDialog}
         refetchTickets={refetch}
         closeDialog={() => setEvaluationListDialog(false)}

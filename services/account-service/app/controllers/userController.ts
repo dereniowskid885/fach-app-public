@@ -17,7 +17,7 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const getUserById = async (req: Request, res: Response) => {
   try {
-    const user = await UserManager.getUserById(req.params.id);
+    const user = (await UserManager.getUserById(req.params.id)).populate('category');
 
     return res.status(200).json({ success: true, data: user });
   } catch (err) {
@@ -47,7 +47,7 @@ export const updateUserRole = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
   try {
-    await UserManager.deleteUser(req.params.id);
+    await UserManager.deleteUser(req.user.userId, req.params.id);
 
     return res.status(200).json({ success: true, message: 'User deleted successfully' });
   } catch (err) {
@@ -57,7 +57,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const user = await UserManager.createUser(req.body);
+    const user = await UserManager.createUser(req.user.userId, req.body);
 
     return res.status(200).json({ success: true, message: 'User created successfully', data: user });
   } catch (err) {

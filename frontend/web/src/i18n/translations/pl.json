@@ -31,7 +31,10 @@
     "viewAll": "Zobacz wszystkie",
     "collapse": "Zwiń",
     "search": "Szukaj",
-    "success": "Sukces"
+    "success": "Sukces",
+    "edit": "Edytuj",
+    "delete": "Usuń",
+    "unknownUser": "Nieznany użytkownik"
   },
   "userRole": {
     "admin": "Admin",

@@ -222,7 +222,7 @@ export type PostAuthRegisterApiArg = {
     lang?: Language;
   };
 };
-export type PostAuthLoginApiResponse = /** status 200 User logged in succesfully */ {
+export type PostAuthLoginApiResponse = /** status 200 User logged in successfully */ {
   success?: boolean;
   message?: string;
   data?: {
@@ -238,15 +238,16 @@ export type PostAuthLoginApiArg = {
     password?: string;
   };
 };
-export type PostAuthRefreshTokenApiResponse = /** status 200 Access token refreshed succesfully */ {
-  success?: boolean;
-  message?: string;
-  data?: {
-    accessToken?: string;
+export type PostAuthRefreshTokenApiResponse =
+  /** status 200 Access token refreshed successfully */ {
+    success?: boolean;
+    message?: string;
+    data?: {
+      accessToken?: string;
+    };
   };
-};
 export type PostAuthRefreshTokenApiArg = void;
-export type PostAuthLogoutApiResponse = /** status 200 User logged out succesfully. */ {
+export type PostAuthLogoutApiResponse = /** status 200 User logged out successfully. */ {
   success?: boolean;
   message?: string;
 };
@@ -477,7 +478,7 @@ export type PatchTicketsByIdEvaluationApiArg = {
     /** Price set by the specialist */
     price: {
       /** Numeric value of the price */
-      value?: number;
+      amountInCents?: number;
       /** Currency code (e.g., PLN) */
       currency?: string;
     };
@@ -512,7 +513,7 @@ export type PatchTicketsByIdEditEvaluationApiArg = {
     /** Price set by the specialist */
     price?: {
       /** Numeric value of the price */
-      value?: number;
+      amountInCents?: number;
       /** Currency code (e.g., PLN) */
       currency?: string;
     };
@@ -635,7 +636,7 @@ export type Evaluation = {
   user?: User;
   dateOfResponse?: string;
   price?: {
-    value?: number;
+    amountInCents?: number;
     currency?: 'PLN';
   };
 };

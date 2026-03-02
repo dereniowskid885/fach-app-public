@@ -1,37 +1,36 @@
 import React, { useState } from 'react';
 import DialogComponent from '../common/DialogComponent';
-import { useDeleteTicketsByIdMutation } from '@/api/accountApi';
+import { useDeleteTicketsByIdMutation, useGetTicketsQuery } from '@/api/accountApi';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { useAppSelector } from '@/redux/hooks';
+import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { buildDashboardTicketsQueryFilters } from '@/helpers/buildDashboardTicketsQueryFilters';
 
 export interface ITicketDeleteDialog {
   open: boolean;
-  ticketId?: string;
-  refetchTickets: () => void;
+  ticketId: string;
   closeDialog: () => void;
 }
 
-export const TicketDeleteDialog = ({
-  open,
-  ticketId,
-  refetchTickets,
-  closeDialog
-}: ITicketDeleteDialog) => {
+export const TicketDeleteDialog = ({ open, ticketId, closeDialog }: ITicketDeleteDialog) => {
   const t = useTranslations();
 
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const [trigger, { isLoading, error }] = useDeleteTicketsByIdMutation();
+  const [triggerDelete, { isLoading, error: errorDelete }] = useDeleteTicketsByIdMutation();
 
-  useErrorHandler(error, {
+  const { role, userId } = useAppSelector(selectUserData);
+  const filters = buildDashboardTicketsQueryFilters(role, userId);
+  const { refetch: refetchTickets, error: errorTicketsRefetch } = useGetTicketsQuery(filters ?? {});
+
+  useErrorHandler(errorDelete || errorTicketsRefetch, {
     setInlineError: message => setErrorMessage(message)
   });
 
   const submitHandler = async () => {
-    if (!ticketId) return;
-
-    const { error } = await trigger({
+    const { error } = await triggerDelete({
       id: ticketId
     });
 

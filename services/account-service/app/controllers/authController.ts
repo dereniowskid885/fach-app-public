@@ -54,7 +54,7 @@ export const login = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      message: 'User logged in succesfully',
+      message: 'User logged in successfully',
       data: {
         accessToken,
         refreshToken,
@@ -71,7 +71,7 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     return res
       .status(200)
-      .json({ success: true, message: 'Access token refreshed succesfully', data: { accessToken } });
+      .json({ success: true, message: 'Access token refreshed successfully', data: { accessToken } });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -82,7 +82,7 @@ export const logout = async (req: Request, res: Response) => {
 
   await AuthManager.logout(req.cookies.refreshToken);
 
-  return res.status(200).json({ success: true, message: 'User logged out succesfully' });
+  return res.status(200).json({ success: true, message: 'User logged out successfully' });
 };
 
 export const requestEmailVerificationLink = async (req: Request, res: Response) => {

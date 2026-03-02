@@ -4,7 +4,7 @@ import { Button } from '../shadcn/button';
 import { TStatusActionButton } from './UserTicketCarouselCardButtons';
 import { useState } from 'react';
 import SpecialistTicketEvaluationDialog from './SpecialistTicketEvaluationDialog';
-import { ETicketStatus } from '@/constants/ticketStatus';
+import { ETicketStatus } from '@shared/constants/enums';
 import { EActionType } from '@/constants/enums';
 import { Evaluation, Ticket } from '@/api/accountApi';
 

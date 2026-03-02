@@ -1,7 +1,6 @@
 import { Types, Document, Schema, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { EThemeType, EUserRole } from '@shared/constants/enums';
-import { CategoryManager } from '@managers/categoryManager';
 import { ISafeUserObject } from '@interfaces/user';
 
 export interface IUserModel extends IUserDocument {
@@ -94,32 +93,6 @@ const userSchema = new Schema<IUserModel>(
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, parseInt(process.env.SALT ?? ''));
-  next();
-});
-
-userSchema.pre('deleteOne', { document: true, query: false }, async function (next) {
-  if (this.role !== EUserRole.SPECIALIST) {
-    next();
-  }
-
-  // remove specialist from category
-  if (this.category) {
-    const category = await CategoryManager.getCategoryById(this.category.toString());
-
-    const indexToRemove = category.specialists.findIndex((id) => id.equals(this._id));
-    const userIdFound = indexToRemove !== -1;
-
-    if (userIdFound && category.specialists.length === 1) {
-      await category.deleteOne();
-      next();
-    }
-
-    if (userIdFound) {
-      category.specialists.splice(indexToRemove, 1);
-      await category.save();
-    }
-  }
-
   next();
 });
 

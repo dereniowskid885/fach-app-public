@@ -627,22 +627,6 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  *                   example: Specialist successfully removed from category
  *                 data:
  *                   $ref: '#/components/schemas/Category'
- *       400:
- *         description: User is not assigned to the provided category
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_USER_NOT_ASSIGNED_TO_CATEGORY"
- *                 message:
- *                   type: string
- *                   example: User is not assigned to provided category
  *       401:
  *         description: Unauthorized
  *         content:
