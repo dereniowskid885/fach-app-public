@@ -58,7 +58,8 @@ const injectedRtkApi = api.injectEndpoints({
       query: queryArg => ({
         url: `/categories`,
         params: {
-          name: queryArg.name
+          name: queryArg.name,
+          hasSpecialists: queryArg.hasSpecialists
         }
       })
     }),
@@ -121,6 +122,26 @@ const injectedRtkApi = api.injectEndpoints({
         url: `/tickets/${queryArg.id}/payment`,
         method: 'POST',
         body: queryArg.body
+      })
+    }),
+    getTicketsMy: build.query<GetTicketsMyApiResponse, GetTicketsMyApiArg>({
+      query: queryArg => ({
+        url: `/tickets/my`,
+        params: {
+          categoryId: queryArg.categoryId,
+          status: queryArg.status
+        }
+      })
+    }),
+    getTicketsSpecialistAvailable: build.query<
+      GetTicketsSpecialistAvailableApiResponse,
+      GetTicketsSpecialistAvailableApiArg
+    >({
+      query: queryArg => ({
+        url: `/tickets/specialist/available`,
+        params: {
+          city: queryArg.city
+        }
       })
     }),
     getTicketsById: build.query<GetTicketsByIdApiResponse, GetTicketsByIdApiArg>({
@@ -317,6 +338,8 @@ export type GetCategoriesApiResponse = /** status 200 Array of categories */ {
 export type GetCategoriesApiArg = {
   /** Category name to filter by */
   name?: string;
+  /** Determines if should omit categories with no specialists assigned */
+  hasSpecialists?: boolean;
 };
 export type GetCategoriesByIdApiResponse = /** status 200 Category object */ {
   success?: boolean;
@@ -401,7 +424,7 @@ export type GetTicketsApiArg = {
   city?: string;
   /** Filter by one or multiple ticket statuses.
     You can pass a single value or a comma-separated list.
-    Example: Wycena,Oczekiwanie na płatność
+    Example: awaiting_evaluation,in_progress
      */
   status?: string;
   /** Filter by assignee (userId) */
@@ -426,6 +449,29 @@ export type PostTicketsByIdPaymentApiArg = {
     /** Currency code (e.g., PLN) */
     currency: string;
   };
+};
+export type GetTicketsMyApiResponse = /** status 200 Array of tickets */ {
+  success?: boolean;
+  dataLength?: number;
+  data?: Ticket[];
+};
+export type GetTicketsMyApiArg = {
+  /** Filter by categoryId */
+  categoryId?: string;
+  /** Filter by one or multiple ticket statuses.
+    You can pass a single value or a comma-separated list.
+    Example: awaiting_evaluation,in_progress
+     */
+  status?: string;
+};
+export type GetTicketsSpecialistAvailableApiResponse = /** status 200 Array of tickets */ {
+  success?: boolean;
+  dataLength?: number;
+  data?: Ticket[];
+};
+export type GetTicketsSpecialistAvailableApiArg = {
+  /** Filter by city */
+  city?: string;
 };
 export type GetTicketsByIdApiResponse = /** status 200 Successfully retrieved the ticket */ {
   success?: boolean;
@@ -624,13 +670,13 @@ export type User = {
 };
 export type Language = 'pl' | 'en';
 export type TicketStatus =
-  | 'Wycena'
-  | 'Akceptacja wyceny'
-  | 'Oczekiwanie na p\u0142atno\u015B\u0107'
-  | 'W trakcie'
-  | 'Akceptacja rozwi\u0105zania'
-  | 'Badanie przez moderatora'
-  | 'Uko\u0144czony';
+  | 'awaiting_evaluation'
+  | 'awaiting_payment'
+  | 'in_progress'
+  | 'solution_review'
+  | 'moderator_investigation'
+  | 'completed'
+  | 'canceled';
 export type Evaluation = {
   _id?: string;
   user?: User;
@@ -687,6 +733,8 @@ export const {
   usePostTicketsMutation,
   useGetTicketsQuery,
   usePostTicketsByIdPaymentMutation,
+  useGetTicketsMyQuery,
+  useGetTicketsSpecialistAvailableQuery,
   useGetTicketsByIdQuery,
   useDeleteTicketsByIdMutation,
   usePatchTicketsByIdMutation,
