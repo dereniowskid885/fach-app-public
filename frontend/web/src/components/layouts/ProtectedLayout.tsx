@@ -12,7 +12,7 @@ export interface IProtectedLayout {
 }
 
 export default function ProtectedLayout({ children }: IProtectedLayout) {
-  const { sidebarWidth } = useSidebarContext();
+  const { sidebarWidth, isSidebarCollapsed } = useSidebarContext();
 
   useSyncTheme();
 
@@ -26,9 +26,14 @@ export default function ProtectedLayout({ children }: IProtectedLayout) {
         animate={{
           marginLeft: sidebarWidth
         }}
-        className={`h-vdh mt-[90px] w-full p-8 ml-[${sidebarWidth}px]`}
+        className={`h-vdh mt-[90px] w-full p-8 ml-[${sidebarWidth}px] min-w-0`}
       >
-        {children}
+        <motion.div
+          animate={{ maxWidth: isSidebarCollapsed ? 1600 : 1280 }}
+          className="mx-auto max-w-7xl space-y-8"
+        >
+          {children}
+        </motion.div>
       </motion.div>
     </main>
   );

@@ -8,20 +8,27 @@ import { UserManager } from './userManager';
 import { checkTicketStatusTransition } from '@helpers/checkTicketStatusTransition';
 import { FilterQuery } from 'mongoose';
 import { IEvaluationSchema } from '@schemas/evaluationSchema';
+import { safeUserProjection } from '@constants/projections';
 
 export const TicketManager = {
   getTicketByID: async (ticketId: string) => {
     const ticket = await Ticket.findOne({ _id: ticketId }).populate([
-      { path: 'category', select: 'name' },
-      { path: 'assignee', select: 'email name surname city role' },
-      { path: 'createdBy', select: 'email name surname city role' },
-      { path: 'updatedBy', select: 'email name surname city role' },
-      { path: 'acceptedEvaluation' },
+      { path: 'category' },
+      { path: 'assignee', select: safeUserProjection },
+      { path: 'createdBy', select: safeUserProjection },
+      { path: 'updatedBy', select: safeUserProjection },
+      {
+        path: 'acceptedEvaluation',
+        populate: {
+          path: 'user',
+          select: safeUserProjection,
+        },
+      },
       {
         path: 'evaluations',
         populate: {
           path: 'user',
-          select: 'email name surname city',
+          select: safeUserProjection,
         },
       },
     ]);
@@ -32,23 +39,25 @@ export const TicketManager = {
 
     return ticket;
   },
-  getTickets: async (filter: FilterQuery<ITicketModel>, user: JwtPayload) => {
-    if (!user) {
-      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
-    }
-
+  getTickets: async (filter: FilterQuery<ITicketModel>) => {
     const tickets = await Ticket.find(filter)
       .populate([
-        { path: 'category', select: 'name' },
-        { path: 'assignee', select: 'email name surname city role' },
-        { path: 'createdBy', select: 'email name surname city role' },
-        { path: 'updatedBy', select: 'email name surname city role' },
-        { path: 'acceptedEvaluation' },
+        { path: 'category' },
+        { path: 'assignee', select: safeUserProjection },
+        { path: 'createdBy', select: safeUserProjection },
+        { path: 'updatedBy', select: safeUserProjection },
+        {
+          path: 'acceptedEvaluation',
+          populate: {
+            path: 'user',
+            select: safeUserProjection,
+          },
+        },
         {
           path: 'evaluations',
           populate: {
             path: 'user',
-            select: 'email name surname city',
+            select: safeUserProjection,
           },
         },
       ])
@@ -116,16 +125,6 @@ export const TicketManager = {
 
     const ticket = await TicketManager.getTicketByID(ticketId);
 
-    const isStatusTransitionAllowed = checkTicketStatusTransition(ticket.status, ETicketStatus.PRICE_USER_ACCEPTATION);
-
-    if (!isStatusTransitionAllowed) {
-      throw new AppError(
-        400,
-        EResponseStatus.ERROR_TICKET_INVALID_STATUS,
-        'Ticket does not have proper status for evaluation',
-      );
-    }
-
     const isTicketAlreadyEvaluatedByCurrentUser = ticket.evaluations.some(
       (evaluation) => evaluation.user?.id === user?.userId,
     );
@@ -150,10 +149,6 @@ export const TicketManager = {
     // create date of response by adding minutes (as miliseconds) to current date
     const dateOfResponse = new Date(currentDate.getTime() + evaluatedMinutes * 60000);
 
-    if (ticket.status === ETicketStatus.PRICE_EVALUATION) {
-      ticket.status = ETicketStatus.PRICE_USER_ACCEPTATION;
-    }
-
     ticket.updatedBy = user.userId;
     ticket.updatedAt = currentDate;
 
@@ -174,7 +169,7 @@ export const TicketManager = {
 
     const ticket = await TicketManager.getTicketByID(ticketId);
 
-    const isEligibleForEvaluation = ticket.status === ETicketStatus.PRICE_USER_ACCEPTATION;
+    const isEligibleForEvaluation = ticket.status === ETicketStatus.AWAITING_EVALUATION;
 
     if (!isEligibleForEvaluation) {
       throw new AppError(
@@ -206,7 +201,7 @@ export const TicketManager = {
     ticket.acceptedEvaluation = evaluation;
     ticket.updatedBy = user.userId;
     ticket.updatedAt = new Date();
-    ticket.status = ETicketStatus.PENDING_PAYMENT;
+    ticket.status = ETicketStatus.AWAITING_PAYMENT;
     await ticket.save();
 
     return ticket.populate({ path: 'updatedBy', select: 'email' });
@@ -307,7 +302,7 @@ export const TicketManager = {
 
     const ticket = await TicketManager.getTicketByID(ticketId);
 
-    if (ticket.status !== ETicketStatus.PRICE_USER_ACCEPTATION) {
+    if (ticket.status !== ETicketStatus.AWAITING_EVALUATION) {
       throw new AppError(
         400,
         EResponseStatus.ERROR_TICKET_INVALID_STATUS,

@@ -16,20 +16,21 @@ export const FilterBuilder = {
     if (role) filterObj.role = role.toString();
     if (category) filterObj.category = category.toString();
     if (city) filterObj.city = city.toString();
-    if (verified !== undefined) filterObj.isVerified = verified === 'true';
+    if (verified === 'true') filterObj.isVerified = true;
 
     return filterObj;
   },
   getCategories: (req: Request) => {
-    const { name } = req.query;
+    const { name, hasSpecialists } = req.query;
 
     const filterObj: FilterQuery<ICategoryModel> = {};
 
     if (name) filterObj.name = name.toString();
+    if (hasSpecialists === 'true') filterObj.specialists = { $ne: [] };
 
     return filterObj;
   },
-  getTickets: (req: Request, user: JwtPayload) => {
+  getTickets: (req: Request) => {
     const { categoryId, city, status, assignee, createdBy } = req.query;
 
     const filterObj: FilterQuery<ITicketModel> = {};
@@ -48,11 +49,46 @@ export const FilterBuilder = {
       filterObj.status = { $in: statuses as ETicketStatus[] };
     }
 
-    // TODO: to be changed while working on superadmin role
-    // https://github.com/dereniowskid885/fach-app/issues/7
-    const isUserRole = user?.role === EUserRole.USER;
+    return filterObj;
+  },
+  getMyTickets: (req: Request, user: JwtPayload) => {
+    const { categoryId, status } = req.query;
 
-    if (isUserRole) filterObj.createdBy = user?.userId;
+    const filterObj: FilterQuery<ITicketModel> = {};
+
+    // user role - show tickets created by user, and allow filtering by category
+    if (user.role === EUserRole.USER) {
+      filterObj.createdBy = user.userId;
+
+      if (categoryId) filterObj.category = categoryId.toString();
+    }
+
+    // specialist role - show tickets where acceptedEvaluation belongs to the specialist
+    if (user.role === EUserRole.SPECIALIST) {
+      filterObj['acceptedEvaluation.user'] = user.userId;
+    }
+
+    if (status) {
+      const statuses = Array.isArray(status)
+        ? status
+        : String(status)
+            .split(',')
+            .map((s) => s.trim());
+
+      filterObj.status = { $in: statuses as ETicketStatus[] };
+    }
+
+    return filterObj;
+  },
+  getSpecialistAvailableTickets: (req: Request, categoryId?: string) => {
+    const { city } = req.query;
+
+    const filterObj: FilterQuery<ITicketModel> = {
+      status: ETicketStatus.AWAITING_EVALUATION,
+      category: categoryId,
+    };
+
+    if (city) filterObj.city = city.toString();
 
     return filterObj;
   },

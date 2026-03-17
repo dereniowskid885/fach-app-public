@@ -1,9 +1,10 @@
+'use client';
+
 import { useTranslations } from 'next-intl';
-import { Typography } from '../common/Typography';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
-import { Skeleton } from '../shadcn/skeleton';
 import TicketCreateButton from './TicketCreateButton';
+import PageHeader from '../common/PageHeader';
 
 export default function DashboardGreeting() {
   const t = useTranslations();
@@ -16,25 +17,18 @@ export default function DashboardGreeting() {
     return t('timeOfDay.evening');
   };
 
-  return name ? (
+  return (
     <div className="flex items-center justify-between">
-      <div className="flex flex-col gap-1">
-        <Typography variant="h3" className="font-bold">
-          {t('dashboard.greeting', {
-            timeOfDayGreeting: getTimeOfDayGreeting(),
-            userName: name
-          })}
-        </Typography>
-
-        <Typography variant="muted">{t('dashboard.greetingMessage')}</Typography>
-      </div>
+      <PageHeader
+        isDataLoaded={Boolean(name)}
+        title={t('dashboard.greeting', {
+          timeOfDayGreeting: getTimeOfDayGreeting(),
+          userName: name
+        })}
+        description={t('dashboard.greetingMessage')}
+      />
 
       <TicketCreateButton />
-    </div>
-  ) : (
-    <div className="flex flex-col gap-1">
-      <Skeleton className="h-[32px] w-[200px]" />
-      <Skeleton className="h-[20px] w-[180px]" />
     </div>
   );
 }

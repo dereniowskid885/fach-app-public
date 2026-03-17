@@ -1,7 +1,7 @@
 import { GiMechanicGarage } from 'react-icons/gi';
 import { MdDevices } from 'react-icons/md';
 import { IoHome } from 'react-icons/io5';
-import { TbCategory } from 'react-icons/tb';
+import { Layers } from 'lucide-react';
 
 export interface ICategoryIcon {
   categoryName?: string;
@@ -17,6 +17,6 @@ export default function CategoryIcon({ categoryName = '' }: ICategoryIcon) {
     case 'Dom':
       return <IoHome size={40} />;
     default:
-      return <TbCategory size={40} />;
+      return <Layers size={40} />;
   }
 }

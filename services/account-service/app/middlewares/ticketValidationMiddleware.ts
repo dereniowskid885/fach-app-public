@@ -6,7 +6,7 @@ import { cities } from '@shared/constants/mocks';
 
 const createTicketSchema = z
   .object({
-    title: z.string().min(7).max(32),
+    title: z.string().min(4).max(60),
     description: z.string().min(7).max(3000),
     categoryId: z.string().length(24),
     city: z.enum(cities),

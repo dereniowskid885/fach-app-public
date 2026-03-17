@@ -13,7 +13,7 @@ import { useTranslations } from 'next-intl';
 import { getFormattedDate } from '@/lib/dateUtils';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 
-export interface ITicketEvaluationsListDialog {
+export interface ITicketUserEvaluationsListDialog {
   open: boolean;
   refetchTickets: () => void;
   closeDialog: () => void;
@@ -21,13 +21,13 @@ export interface ITicketEvaluationsListDialog {
   ticketEvaluations?: Evaluation[];
 }
 
-export const TicketEvaluationsListDialog = ({
+export default function TicketUserEvaluationsListDialog({
   open,
   refetchTickets,
   closeDialog,
   ticketId,
   ticketEvaluations = []
-}: ITicketEvaluationsListDialog) => {
+}: ITicketUserEvaluationsListDialog) {
   const t = useTranslations();
 
   const [selectedEvaluationRow, setSelectedEvaluationRow] = useState<RowSelectionState>({});
@@ -141,4 +141,4 @@ export const TicketEvaluationsListDialog = ({
       errorMessage={errorMessage}
     />
   );
-};
+}

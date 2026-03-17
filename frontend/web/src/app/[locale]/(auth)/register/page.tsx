@@ -5,7 +5,7 @@ import { Input } from '@/components/shadcn/input';
 import DialogComponent from '@/components/common/DialogComponent';
 import CitySelect from '@/components/ui/CitySelect';
 import PasswordInput from '@/components/common/PasswordInput';
-import { Typography } from '@/components/common/Typography';
+import Typography from '@/components/common/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
 import { Label } from '@/components/shadcn/label';
 import Link from 'next/link';

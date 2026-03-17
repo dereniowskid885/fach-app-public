@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import DialogComponent from '../common/DialogComponent';
-import { useDeleteTicketsByIdMutation, useGetTicketsQuery } from '@/api/accountApi';
+import { accountApi, useDeleteTicketsByIdMutation } from '@/api/accountApi';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { useAppSelector } from '@/redux/hooks';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
-import { buildDashboardTicketsQueryFilters } from '@/helpers/buildDashboardTicketsQueryFilters';
 
 export interface ITicketDeleteDialog {
   open: boolean;
@@ -21,9 +18,8 @@ export const TicketDeleteDialog = ({ open, ticketId, closeDialog }: ITicketDelet
 
   const [triggerDelete, { isLoading, error: errorDelete }] = useDeleteTicketsByIdMutation();
 
-  const { role, userId } = useAppSelector(selectUserData);
-  const filters = buildDashboardTicketsQueryFilters(role, userId);
-  const { refetch: refetchTickets, error: errorTicketsRefetch } = useGetTicketsQuery(filters ?? {});
+  const [triggerTicketsRefetch, { error: errorTicketsRefetch }] =
+    accountApi.endpoints.getTicketsMy.useLazyQuery({});
 
   useErrorHandler(errorDelete || errorTicketsRefetch, {
     setInlineError: message => setErrorMessage(message)
@@ -36,7 +32,7 @@ export const TicketDeleteDialog = ({ open, ticketId, closeDialog }: ITicketDelet
 
     if (error) return;
 
-    refetchTickets();
+    triggerTicketsRefetch({});
     toast.success(t('ticketDeleteDialog.toastTitle'));
   };
 

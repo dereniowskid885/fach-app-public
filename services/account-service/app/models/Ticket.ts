@@ -32,17 +32,9 @@ const ticketSchema = new Schema<ITicketModel>({
   },
   status: {
     type: String,
-    enum: [
-      ETicketStatus.PRICE_EVALUATION,
-      ETicketStatus.PRICE_USER_ACCEPTATION,
-      ETicketStatus.PENDING_PAYMENT,
-      ETicketStatus.IN_PROGRESS,
-      ETicketStatus.SOLUTION_USER_APPROVAL,
-      ETicketStatus.MODERATOR_INVESTIGATION,
-      ETicketStatus.COMPLETED,
-    ],
+    enum: [...Object.values(ETicketStatus)],
     required: false,
-    default: ETicketStatus.PRICE_EVALUATION,
+    default: ETicketStatus.AWAITING_EVALUATION,
   },
   assignee: {
     type: Types.ObjectId,

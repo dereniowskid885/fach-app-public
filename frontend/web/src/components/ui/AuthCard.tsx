@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle
 } from '../shadcn/card';
-import { Typography } from '../common/Typography';
+import Typography from '../common/Typography';
 
 export interface IAuthCard {
   titleContent: string | ReactNode;

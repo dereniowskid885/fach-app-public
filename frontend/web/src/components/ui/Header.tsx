@@ -1,29 +1,34 @@
 import { notifications } from '@/mocks/notifications';
 import AmountIcon from './AmountIcon';
 import HeaderNotificationList from './HeaderNotificationList';
-import { Typography } from '../common/Typography';
+import Typography from '../common/Typography';
 import { usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { menuItems } from '@/constants/menu';
-import { ESupportedLanguages } from '@shared/constants/enums';
-import { Bell, HelpCircle, Search, Settings } from 'lucide-react';
+import { menuItemsObj } from '@/constants/menu';
+import { ESupportedLanguages, EUserRole } from '@shared/constants/enums';
+import { Bell, HelpCircle, Settings } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../shadcn/popover';
-import { Input } from '../shadcn/input';
 import { Button } from '../shadcn/button';
 import { Separator } from '../shadcn/separator';
 import { motion } from 'framer-motion';
 import { useSidebarContext } from '@/contexts/SidebarContext';
 import { normalizePathname } from '@/lib/pathnameUtils';
+import { useSelector } from 'react-redux';
+import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { Skeleton } from '../shadcn/skeleton';
+import SearchComponent from '../common/SearchComponent';
+import { ESearchComponentVariant } from '@/constants/enums';
 
 export default function Header() {
   const t = useTranslations();
   const { sidebarWidth } = useSidebarContext();
+  const { role } = useSelector(selectUserData);
 
   const currentPath = usePathname();
   const currentLocale = useLocale();
   const normalizedPath = normalizePathname(currentPath, currentLocale);
 
-  const pageData = menuItems.find(item =>
+  const pageData = menuItemsObj[role as EUserRole]?.find(item =>
     item.path ? item.path[currentLocale as ESupportedLanguages] === normalizedPath : false
   );
 
@@ -37,29 +42,31 @@ export default function Header() {
       className={`fixed flex h-[88px] bg-sidebar p-8 shadow-md left-[${sidebarWidth}px] w-[calc(100vw-${sidebarWidth}px)] z-50`}
     >
       <div className="flex w-full items-center justify-between">
-        {pageData ? (
-          <div className="flex w-1/2 items-center gap-3">
+        <div className="flex w-1/2 items-center gap-3">
+          {pageData ? (
             <div className="rounded-sm bg-foreground p-1 shadow-md">
               <pageData.icon size={26} className="text-background" />
             </div>
+          ) : (
+            <Skeleton className="h-[34px] w-[34px]" />
+          )}
 
-            <Typography variant="large">{t(`pages.${pageData?.id}`)}</Typography>
-          </div>
-        ) : null}
+          {pageData ? (
+            <Typography variant="large">{t(pageData.translationKey)}</Typography>
+          ) : (
+            <Skeleton className="h-[28px] w-[100px]" />
+          )}
+        </div>
 
         <div className="relative flex w-1/2 items-center justify-end gap-3">
           <div className="absolute left-0 -translate-x-1/2">
-            <div className="group relative w-32 lg:w-64 xl:w-[600px]">
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary"
-                size={24}
-              />
-
-              <Input
-                placeholder={t('common.search')}
-                className="h-11 rounded-xl bg-background pl-11 focus-visible:bg-background focus-visible:ring-2 dark:bg-secondary"
-              />
-            </div>
+            {/* TODO to be improved - header search component */}
+            <SearchComponent
+              inputValue=""
+              inputOnChangeHandler={() => null}
+              variant={ESearchComponentVariant.BIG}
+              inputClassName="shadow-md ring-1 ring-border"
+            />
           </div>
 
           <div className="flex items-center gap-3">
@@ -75,7 +82,7 @@ export default function Header() {
               </PopoverContent>
             </Popover>
 
-            <Separator orientation="vertical" className="mx-2 h-[20px] bg-border" />
+            <Separator orientation="vertical" className="mx-2 h-[20px]" />
 
             <Button
               variant="ghost"

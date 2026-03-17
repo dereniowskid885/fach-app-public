@@ -8,13 +8,14 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import AnimateCollapse from '../common/AnimateCollapse';
 import { ESupportedLanguages } from '@shared/constants/enums';
+import { EPopoverContentDirection } from '@/constants/enums';
+import Typography from '../common/Typography';
 
 export interface ILanguageSwitcher {
   currentPath: string;
   currentLang: ESupportedLanguages;
   wrapperClassName?: string;
-  textClassName?: string;
-  popoverContentDirection?: 'top' | 'bottom' | 'left' | 'right';
+  popoverContentDirection?: EPopoverContentDirection;
   hideButtonText?: boolean;
   isSidebarCollapsed?: boolean;
 }
@@ -23,8 +24,7 @@ export default function LanguageSwitcher({
   currentPath,
   currentLang,
   wrapperClassName = '',
-  textClassName = '',
-  popoverContentDirection = 'right',
+  popoverContentDirection = EPopoverContentDirection.RIGHT,
   hideButtonText = false,
   isSidebarCollapsed = false
 }: ILanguageSwitcher) {
@@ -48,9 +48,7 @@ export default function LanguageSwitcher({
               <Globe strokeWidth={2.5} className="ml-2" />
 
               <AnimateCollapse isHidden={isSidebarCollapsed}>
-                <span className={cn('text-sm font-semibold', textClassName)}>
-                  {t('lang.sidebarButtonText')}
-                </span>
+                <Typography variant="small">{t('lang.sidebarButtonText')}</Typography>
               </AnimateCollapse>
             </div>
           )}

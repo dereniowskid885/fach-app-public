@@ -20,7 +20,7 @@ export const UserManager = {
   },
   getUserById: async (userId: string, projection = true) => {
     try {
-      const user = await User.findById(userId, projection ? safeUserProjection : null);
+      const user = await User.findById(userId, projection ? safeUserProjection : null).populate('category');
 
       if (!user) {
         throw new AppError(404, EResponseStatus.ERROR_USER_NOT_FOUND, 'User with provided id not found');
@@ -149,18 +149,6 @@ export const UserManager = {
             { session },
           );
 
-          // change status on tickets with 0 evaluations
-          await Ticket.updateMany(
-            {
-              evaluations: { $size: 0 },
-              status: ETicketStatus.PRICE_USER_ACCEPTATION,
-            },
-            {
-              $set: { status: ETicketStatus.PRICE_EVALUATION, updatedAt: new Date(), updatedBy: currentUserId },
-            },
-            { session },
-          );
-
           // change ticket status and assignee, where deleted specialist is assigned or has his evaluation accepted
           await Ticket.updateMany(
             { $or: [{ assignee: userToDelete._id }, { 'acceptedEvaluation.user': userToDelete._id }] },
@@ -168,9 +156,9 @@ export const UserManager = {
               {
                 $set: {
                   status: ETicketStatus.MODERATOR_INVESTIGATION,
-                  assignee: '$createdBy',
-                  updatedAt: new Date(),
+                  assignee: null,
                   updatedBy: currentUserId,
+                  updatedAt: new Date(),
                 },
               },
             ],
@@ -180,7 +168,7 @@ export const UserManager = {
           // remove deleted user (specialist) from category
           if (userToDelete.category) {
             await Category.updateOne(
-              { _id: userToDelete.category, specialists: userToDelete._id },
+              { _id: userToDelete.category._id, specialists: userToDelete._id },
               {
                 $pull: { specialists: userToDelete._id },
                 $set: {
