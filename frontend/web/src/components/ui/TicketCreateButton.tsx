@@ -1,3 +1,5 @@
+'use client';
+
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { EUserRole } from '@shared/constants/enums';
 import { useTranslations } from 'next-intl';
@@ -16,10 +18,10 @@ export default function TicketCreateButton() {
 
   return isUser ? (
     <>
-      <Button variant="special-2" size="lg" onClick={() => setTicketCreateDialog(true)}>
-        <span>{t('dashboard.createNewTicketButtonText')}</span>
-
+      <Button size="lg" onClick={() => setTicketCreateDialog(true)}>
         <ClipboardPlus />
+
+        <span>{t('dashboard.createNewTicketButtonText')}</span>
       </Button>
 
       <TicketCreateDialog

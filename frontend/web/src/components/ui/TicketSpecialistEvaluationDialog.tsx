@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import DialogComponent from '@/components/common/DialogComponent';
 import { Label } from '@/components/shadcn/label';
 import { TimePickerInput } from '../common/TimePicker';
-import { Typography } from '../common/Typography';
+import Typography from '../common/Typography';
 import { Slider } from '../shadcn/slider';
 import { EActionType, ETimePickerType } from '@/constants/enums';
 import PriceInput from '../common/PriceInput';
@@ -16,27 +16,24 @@ import {
 } from '@/api/accountApi';
 import { getFormattedPriceAmount } from '@/lib/utils';
 import { toast } from 'sonner';
-import { useSelector } from 'react-redux';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
-import { getSpecialistPendingTicketStatusesParam } from '@/helpers/getSpecialistPendingTicketStatusesParam';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 
-export interface ISpecialistTicketEvaluationDialog {
+export interface ITicketSpecialistEvaluationDialog {
   open: boolean;
   mode: EActionType;
   ticket: Ticket;
-  userEvaluation?: Evaluation;
+  currentUserEvaluation?: Evaluation;
   closeDialog: () => void;
 }
 
-export default function SpecialistTicketEvaluationDialog({
+export default function TicketSpecialistEvaluationDialog({
   open,
   mode,
-  userEvaluation,
+  currentUserEvaluation,
   ticket,
   closeDialog
-}: ISpecialistTicketEvaluationDialog) {
+}: ITicketSpecialistEvaluationDialog) {
   const t = useTranslations();
   const labels = {
     [EActionType.CREATION]: {
@@ -51,7 +48,7 @@ export default function SpecialistTicketEvaluationDialog({
   const maxMinutes = 1440; // 1 day
 
   const [priceInCents, setPriceInCents] = useState<number>(
-    userEvaluation?.price?.amountInCents ?? 0
+    currentUserEvaluation?.price?.amountInCents ?? 0
   );
   const [minutes, setMinutes] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -67,11 +64,9 @@ export default function SpecialistTicketEvaluationDialog({
   const isLoading = isLoadingCreate || isLoadingEdit;
 
   const [refetchPendingTickets, { error: refetchTicketsError }] =
-    accountApi.endpoints.getTickets.useLazyQuery({});
+    accountApi.endpoints.getTicketsSpecialistAvailable.useLazyQuery({});
 
   useErrorHandler(createError || editError || refetchTicketsError);
-
-  const { categoryId } = useSelector(selectUserData);
 
   const submitHandler = async () => {
     if (!ticket._id) return;
@@ -106,12 +101,12 @@ export default function SpecialistTicketEvaluationDialog({
         break;
 
       case EActionType.EDIT:
-        if (!userEvaluation?._id) return;
+        if (!currentUserEvaluation?._id) return;
 
         result = await triggerEdit({
           id: ticket._id,
           body: {
-            evaluationId: userEvaluation?._id,
+            evaluationId: currentUserEvaluation?._id,
             price: {
               amountInCents: priceInCents,
               currency: ESupportedCurrency.PLN
@@ -127,11 +122,8 @@ export default function SpecialistTicketEvaluationDialog({
     if (error) return;
 
     closeDialog();
-
     refetchPendingTickets({
-      city: ticket.city,
-      categoryId,
-      status: getSpecialistPendingTicketStatusesParam()
+      city: ticket.city
     });
 
     toast.success(labels[mode].toastMessage);

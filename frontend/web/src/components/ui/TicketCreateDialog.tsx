@@ -5,20 +5,13 @@ import { Input } from '../shadcn/input';
 import { Textarea } from '../shadcn/textarea';
 import CategorySelect from './CategorySelect';
 import { useEffect, useState } from 'react';
-import { Typography } from '../common/Typography';
-import {
-  Category,
-  PostTicketsApiArg,
-  useGetTicketsQuery,
-  usePostTicketsMutation
-} from '@/api/accountApi';
+import Typography from '../common/Typography';
+import { accountApi, Category, PostTicketsApiArg, usePostTicketsMutation } from '@/api/accountApi';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { useAppSelector } from '@/redux/hooks';
-import { buildDashboardTicketsQueryFilters } from '@/helpers/buildDashboardTicketsQueryFilters';
 
 interface ITicketCreateForm {
   category: Category;
@@ -54,9 +47,8 @@ export default function TicketCreateDialog({ open, closeDialog }: ITicketCreateD
   const [triggerCreateTicketMutation, { isLoading, error: errorTicketCreate }] =
     usePostTicketsMutation();
 
-  const { role, userId } = useAppSelector(selectUserData);
-  const filters = buildDashboardTicketsQueryFilters(role, userId);
-  const { refetch: refetchTickets, error: errorTicketsRefetch } = useGetTicketsQuery(filters ?? {});
+  const [triggerTicketsRefetch, { error: errorTicketsRefetch }] =
+    accountApi.endpoints.getTicketsMy.useLazyQuery({});
 
   useErrorHandler(errorTicketCreate || errorTicketsRefetch, {
     setInlineError: message => setErrorMessage(message)
@@ -106,7 +98,7 @@ export default function TicketCreateDialog({ open, closeDialog }: ITicketCreateD
 
     closeDialog();
     resetForm();
-    refetchTickets();
+    triggerTicketsRefetch({});
     toast.success(t('ticketCreateDialog.toastTitle'));
   };
 
@@ -126,14 +118,14 @@ export default function TicketCreateDialog({ open, closeDialog }: ITicketCreateD
             {...register('title', {
               required: t('ticketCreateDialog.errorTitleRequired'),
               minLength: {
-                value: 7,
-                message: t('ticketCreateDialog.errorTitleMinLength', { amount: 7 })
+                value: 4,
+                message: t('ticketCreateDialog.errorTitleMinLength', { amount: 4 })
               }
             })}
             id="title"
             type="text"
             minLength={7}
-            maxLength={32}
+            maxLength={60}
             required
           />
         </div>

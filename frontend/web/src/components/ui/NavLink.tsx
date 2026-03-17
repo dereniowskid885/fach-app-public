@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React, { ReactNode } from 'react';
-import { Typography } from '../common/Typography';
+import Typography from '../common/Typography';
 import { cn } from '@/lib/utils';
 import AnimateCollapse from '../common/AnimateCollapse';
 
@@ -32,7 +32,10 @@ export default function NavLink({
         {children ? children : null}
 
         <AnimateCollapse isHidden={isSidebarCollapsed}>
-          <Typography variant="small" className={isCurrentPath ? 'font-bold' : ''}>
+          <Typography
+            variant="small"
+            className={cn('text-nowrap', isCurrentPath ? 'font-semibold' : '')}
+          >
             {title}
           </Typography>
         </AnimateCollapse>
