@@ -1,6 +1,8 @@
 import {
   createTicket,
   getTickets,
+  getMyTickets,
+  getSpecialistAvailableTickets,
   deleteTicket,
   getTicketByID,
   ticketEvaluationHandler,
@@ -28,6 +30,7 @@ import { EUserRole } from '@shared/constants/enums';
 // Role middleware
 const checkSpecialistRole = createMiddleware(checkUserRole, [EUserRole.SPECIALIST]);
 const checkIsUserRole = createMiddleware(checkUserRole, [EUserRole.USER]);
+const checkAdminRole = createMiddleware(checkUserRole, [EUserRole.ADMIN]);
 
 // Auth middleware
 const accessTokenMiddleware = createMiddleware(checkAndParseAccessToken, process.env.ACCESS_TOKEN_SECRET);
@@ -260,8 +263,8 @@ router.post('/:id/payment', validateTicketPaymentMiddleware, ticketPaymentHandle
  * @swagger
  * /tickets:
  *   get:
- *     summary: Get tickets with filtering options
- *     description: Returns all tickets created by user (normal user), or related to specialist (tickets which have an accepted evaluation)
+ *     summary: Get tickets with filtering options (admin only)
+ *     description: Returns all tickets
  *     tags:
  *       - Ticketing
  *     parameters:
@@ -341,13 +344,150 @@ router.post('/:id/payment', validateTicketPaymentMiddleware, ticketPaymentHandle
  *                   type: string
  *                   example: Server error
  */
-router.get('/', getTickets);
+router.get('/', checkAdminRole, getTickets);
+
+/**
+ * @swagger
+ * /tickets/my:
+ *   get:
+ *     summary: Get tickets with filtering options (for my tickets page)
+ *     description: Returns all tickets (user role - tickets created by user, and allow filtering by category, specialist role - tickets where acceptedEvaluation belongs to the specialist)
+ *     tags:
+ *       - Ticketing
+ *     parameters:
+ *       - in: query
+ *         name: categoryId
+ *         schema:
+ *           type: string
+ *         description: Filter by categoryId
+ *         example: "66df7gh8sasd6f66767rt6"
+ *       - $ref: '#/components/parameters/TicketStatusQuery'
+ *     responses:
+ *       200:
+ *         description: Array of tickets
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 dataLength:
+ *                   type: number
+ *                   example: 24
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Ticket'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: Missing user data
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.get('/my', getMyTickets);
+
+/**
+ * @swagger
+ * /tickets/specialist/available:
+ *   get:
+ *     summary: Get tickets with city filtering (for specialist available tickets page)
+ *     description: Returns all tickets with awaiting_evaluation status and specialist category for specialist ticket page view
+ *     tags:
+ *       - Ticketing
+ *     parameters:
+ *       - in: query
+ *         name: city
+ *         schema:
+ *           type: string
+ *         description: Filter by city
+ *         example: "Warszawa"
+ *     responses:
+ *       200:
+ *         description: Array of tickets
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 dataLength:
+ *                   type: number
+ *                   example: 24
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Ticket'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: Missing user data
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.get('/specialist/available', checkSpecialistRole, getSpecialistAvailableTickets);
 
 /**
  * @swagger
  * /tickets/{id}:
  *   get:
- *     summary: Get ticket by ID
+ *     summary: Get ticket by ID (admin only)
  *     description: Fetches a single ticket from the database using its unique ID
  *     tags:
  *       - Ticketing
@@ -404,7 +544,7 @@ router.get('/', getTickets);
  *                   type: string
  *                   example: Server error
  */
-router.get('/:id', getTicketByID);
+router.get('/:id', checkAdminRole, getTicketByID);
 
 /**
  * @swagger
@@ -633,7 +773,7 @@ router.patch('/:id', validateTicketUpdateMiddleware, updateTicket);
  * @swagger
  * /tickets/{id}/evaluation:
  *   patch:
- *     summary: Ticket evaluation (used by specialist)
+ *     summary: Ticket evaluation (specialist only)
  *     description: Allows a specialist to evaluate a ticket by providing a price (in cents, cannot be lower than 200) and response time (in minutes, cannot be lower than 30)
  *     tags:
  *       - Ticketing
@@ -687,7 +827,7 @@ router.patch('/:id', validateTicketUpdateMiddleware, updateTicket);
  *                 data:
  *                   $ref: '#/components/schemas/Ticket'
  *       400:
- *         description: Ticket does not have proper status for evaluation
+ *         description: Ticket already has an evaluation by the current specialist, or provided data is invalid
  *         content:
  *           application/json:
  *             schema:
@@ -698,10 +838,10 @@ router.patch('/:id', validateTicketUpdateMiddleware, updateTicket);
  *                   example: false
  *                 status:
  *                   type: string
- *                   example: "ERROR_TICKET_INVALID_STATUS"
+ *                   example: "ERROR_TICKET_ALREADY_EVALUATED_BY_USER"
  *                 message:
  *                   type: string
- *                   example: Ticket does not have proper status for evaluation
+ *                   example: Ticket already has an evaluation by the current specialist, or provided data is invalid
  *       403:
  *         description: Missing permissions to evaluate a ticket
  *         content:
@@ -867,7 +1007,7 @@ router.patch('/:id/accept-evaluation', validateTicketEvaluationAcceptMiddleware,
  * @swagger
  * /tickets/{id}/edit-evaluation:
  *   patch:
- *     summary: Ticket evaluation edit (used by specialist)
+ *     summary: Ticket evaluation edit (specialist only)
  *     description: Ticket evaluation edit used by specialist, who has already made an evaluation
  *     tags:
  *       - Ticketing

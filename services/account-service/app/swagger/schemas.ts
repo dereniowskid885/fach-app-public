@@ -92,14 +92,14 @@
  *     TicketStatus:
  *       type: string
  *       enum:
- *         - Wycena
- *         - Akceptacja wyceny
- *         - Oczekiwanie na płatność
- *         - W trakcie
- *         - Akceptacja rozwiązania
- *         - Badanie przez moderatora
- *         - Ukończony
- *       example: Wycena
+ *         - awaiting_evaluation
+ *         - awaiting_payment
+ *         - in_progress
+ *         - solution_review
+ *         - moderator_investigation
+ *         - completed
+ *         - canceled
+ *       example: awaiting_evaluation
  *     PaymentStatus:
  *       type: string
  *       enum:

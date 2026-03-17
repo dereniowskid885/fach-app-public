@@ -27,7 +27,7 @@ router.use(accessTokenMiddleware);
  * @swagger
  * /categories:
  *   post:
- *     summary: Create category
+ *     summary: Create category (admin only)
  *     description: Creates a new category
  *     tags:
  *       - Categories
@@ -124,6 +124,12 @@ router.post('/', checkAdminRole, validateCategoryBodyMiddleware, createCategory)
  *         schema:
  *           type: string
  *         description: Category name to filter by
+ *       - in: query
+ *         name: hasSpecialists
+ *         schema:
+ *           type: boolean
+ *         description: Determines if should omit categories with no specialists assigned
+ *         example: true
  *     responses:
  *       200:
  *         description: Array of categories
@@ -260,7 +266,7 @@ router.get('/:id', getCategoryById);
  * @swagger
  * /categories/{id}:
  *   delete:
- *     summary: Remove category by id
+ *     summary: Remove category by id (admin only)
  *     description: Removes category by id
  *     tags:
  *       - Categories
@@ -356,7 +362,7 @@ router.delete('/:id', checkAdminRole, deleteCategory);
  * @swagger
  * /categories/{id}:
  *   patch:
- *     summary: Update category
+ *     summary: Update category (admin only)
  *     description: Updates category
  *     tags:
  *       - Categories
@@ -461,7 +467,7 @@ router.patch('/:id', checkAdminRole, validateCategoryBodyMiddleware, updateCateg
  * @swagger
  * /categories/{id}/specialist/assign:
  *   patch:
- *     summary: Assign specialist to category
+ *     summary: Assign specialist to category (admin only)
  *     description: Assign specialist to category
  *     tags:
  *       - Categories
@@ -587,7 +593,7 @@ router.patch('/:id/specialist/assign', checkAdminRole, assignSpecialistToCategor
  * @swagger
  * /categories/{id}/specialist/remove:
  *   patch:
- *     summary: Remove specialist from category
+ *     summary: Remove specialist from category (admin only)
  *     description: Removes a specialist from the specified category.
  *     tags:
  *       - Categories

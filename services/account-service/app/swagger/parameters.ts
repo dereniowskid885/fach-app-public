@@ -8,9 +8,9 @@
  *       description: |
  *          Filter by one or multiple ticket statuses.
  *          You can pass a single value or a comma-separated list.
- *          Example: Wycena,Oczekiwanie na płatność
+ *          Example: awaiting_evaluation,in_progress
  *       required: false
  *       schema:
  *         type: string
- *         example: "Wycena,Oczekiwanie na płatność"
+ *         example: "awaiting_evaluation,in_progress"
  */

@@ -23,7 +23,7 @@ router.use(accessTokenMiddleware);
  * @swagger
  * /users:
  *   post:
- *     summary: Create user
+ *     summary: Create user (admin only)
  *     description: Default role is "user", to create a specialist categoryName must be provided and role must be "specialist"
  *     tags:
  *       - Users
@@ -149,7 +149,7 @@ router.post('/', validateCreateUserMiddleware, checkAdminRole, createUser);
  * @swagger
  * /users:
  *   get:
- *     summary: Get all users with filtering options
+ *     summary: Get all users with filtering options (admin only)
  *     description: Returns a list of users based on provided filtering criteria
  *     tags:
  *       - Users
@@ -253,7 +253,7 @@ router.get('/', checkAdminRole, getUsers);
  * @swagger
  * /users/{id}:
  *   get:
- *     summary: Get user by id
+ *     summary: Get user by id (admin only)
  *     description: Returns user by id
  *     tags:
  *       - Users
@@ -481,7 +481,7 @@ router.patch('/:id', validateUserUpdateMiddleware, updateUser);
  * @swagger
  * /users/{id}/role:
  *   patch:
- *     summary: Update user role
+ *     summary: Update user role (admin only)
  *     description: Updates the role of a user based on the provided user ID
  *     tags:
  *       - Users
@@ -606,7 +606,7 @@ router.patch('/:id/role', validateUserRoleUpdateMiddleware, checkAdminRole, upda
  * @swagger
  * /users/{id}:
  *   delete:
- *     summary: Delete user by id
+ *     summary: Delete user by id (admin only)
  *     description: Deletes the user from the system based on the provided user ID
  *     tags:
  *       - Users
