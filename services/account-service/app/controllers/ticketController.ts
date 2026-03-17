@@ -4,6 +4,7 @@ import { handleAppError } from '@shared/helpers/handleAppError';
 import type { Request, Response } from 'express';
 import { FilterBuilder } from '@utils/filterBuilder';
 import { PaymentManager } from '@managers/paymentManager';
+import { UserManager } from '@managers/userManager';
 
 export const createTicket = async (req: Request, res: Response) => {
   try {
@@ -17,8 +18,32 @@ export const createTicket = async (req: Request, res: Response) => {
 
 export const getTickets = async (req: Request, res: Response) => {
   try {
-    const filter = FilterBuilder.getTickets(req, req.user);
-    const tickets = await TicketManager.getTickets(filter, req.user);
+    const filter = FilterBuilder.getTickets(req);
+    const tickets = await TicketManager.getTickets(filter);
+
+    return res.status(200).json({ success: true, dataLength: tickets.length, data: tickets });
+  } catch (err) {
+    handleAppError(res, err as IAppError);
+  }
+};
+
+export const getMyTickets = async (req: Request, res: Response) => {
+  try {
+    const filter = FilterBuilder.getMyTickets(req, req.user);
+    const tickets = await TicketManager.getTickets(filter);
+
+    return res.status(200).json({ success: true, dataLength: tickets.length, data: tickets });
+  } catch (err) {
+    handleAppError(res, err as IAppError);
+  }
+};
+
+export const getSpecialistAvailableTickets = async (req: Request, res: Response) => {
+  try {
+    const categoryId = (await UserManager.getUserById(req.user.userId)).category?._id.toString();
+
+    const filter = FilterBuilder.getSpecialistAvailableTickets(req, categoryId);
+    const tickets = await TicketManager.getTickets(filter);
 
     return res.status(200).json({ success: true, dataLength: tickets.length, data: tickets });
   } catch (err) {

@@ -17,7 +17,7 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const getUserById = async (req: Request, res: Response) => {
   try {
-    const user = (await UserManager.getUserById(req.params.id)).populate('category');
+    const user = await UserManager.getUserById(req.params.id);
 
     return res.status(200).json({ success: true, data: user });
   } catch (err) {
