@@ -34,12 +34,23 @@
     "success": "Success",
     "edit": "Edit",
     "delete": "Delete",
-    "unknownUser": "Unknown user"
+    "unknownUser": "Unknown user",
+    "unknown": "Unknown"
   },
   "userRole": {
     "admin": "Admin",
     "user": "User",
     "specialist": "Specialist"
+  },
+  "ticketStatus": {
+    "awaitingEvaluation": "Awaiting evaluation",
+    "awaitingPayment": "Awaiting payment",
+    "inProgress": "In progress",
+    "solutionReview": "Solution review",
+    "moderatorInvestigation": "Moderator investigation",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "unknown": "Unknown status"
   },
   "timeOfDay": {
     "morning": "Good morning",
@@ -76,19 +87,22 @@
     "greeting": "{timeOfDayGreeting}, {userName}!",
     "greetingMessage": "Check out what's new and be up to date.",
     "createNewTicketButtonText": "Create new ticket",
-    "recentTicketsHeader": "Recent tickets",
-    "recentTicketsAmount": "{count, plural, =0 {0 tickets} one {# ticket} other {# tickets}}"
+    "recentTicketsHeader": "Recent tickets"
   },
   "pages": {
     "dashboard": "Dashboard",
-    "tickets": "Tickets",
+    "availableTickets": "Available tickets",
+    "tickets": "My tickets",
+    "evaluations": "My evaluations",
+    "completedTickets": "Completed tickets",
     "inbox": "Inbox",
     "settings": "Settings"
   },
   "category": {
     "select": "Select category",
     "search": "Search category",
-    "noResults": "No categories found"
+    "noResults": "No categories found",
+    "unknown": "Unknown category"
   },
   "select": {
     "city": "Select city"
@@ -189,7 +203,73 @@
   },
   "evaluationListDialog": {
     "title": "Current ticket evaluations",
-    "toastTitle": "Case evaluation has been accepted",
+    "toastTitle": "Ticket evaluation has been accepted",
     "confirmButtonText": "Accept evaluation"
+  },
+  "buttonsCarousel": {
+    "searchPlaceholder": "Filter...",
+    "categoryFilterHeader": "Categories",
+    "statusFilterHeader": "Statuses",
+    "cityFilterHeader": "Cities"
+  },
+  "ticketDataTable": {
+    "ticketHeader": "Ticket",
+    "statusHeader": "Status",
+    "categoryHeader": "Category",
+    "createdAtHeader": "Creation date",
+    "assigneeHeader": "Assignee",
+    "createdByHeader": "Created by",
+    "conversationHeader": "Conversation",
+    "cityHeader": "City"
+  },
+  "ticket": {
+    "searchPlaceholder": "Search tickets...",
+    "ticketsAmount": "{count, plural, =0 {0 tickets} one {# ticket} other {# tickets}}",
+    "evaluationsAmount": "{count, plural, =0 {0 evaluations} one {# evaluation} other {# evaluations}}",
+    "messagesAmount": "{count, plural, =0 {0 messages} one {# message} other {# messages}}"
+  },
+  "ticketSpecialistActionButtons": {
+    "reply": "Reply",
+    "editEvaluation": "Edit evaluation",
+    "evaluate": "Evaluate"
+  },
+  "ticketUserActionButtons": {
+    "pay": "Pay",
+    "showEvaluations": "Show evaluations"
+  },
+  "ticketDropdownMenu": {
+    "showDetails": "Show details"
+  },
+  "myTicketsPage": {
+    "headerTitle": {
+      "user": "Your support requests",
+      "specialist": "Tickets assigned to you",
+      "admin": "admin"
+    },
+    "headerDescription": {
+      "user": "Track the status of tickets you have submitted and continue working with the assigned specialist.",
+      "specialist": "Manage tickets you are currently working on and communicate with their creators.",
+      "admin": "admin"
+    }
+  },
+  "completedTicketsPage": {
+    "headerTitle": {
+      "user": "Finished tickets",
+      "specialist": "Finished tickets",
+      "admin": "admin"
+    },
+    "headerDescription": {
+      "user": "Review tickets that have been completed or cancelled.",
+      "specialist": "Review tickets you have worked on that are now completed or cancelled.",
+      "admin": "admin"
+    }
+  },
+  "availableTicketsPage": {
+    "headerTitle": "Open requests",
+    "headerDescription": "Browse tickets submitted by users and send your evaluations."
+  },
+  "myEvaluationsPage": {
+    "headerTitle": "Your evaluations",
+    "headerDescription": "Track tickets where you have already submitted your evaluation."
   }
 }
