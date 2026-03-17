@@ -14,14 +14,13 @@ const buttonVariants = cva(
         destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive-hover',
         outline: 'border border-border bg-background text-foreground hover:bg-muted',
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary-hover',
-        ghost: 'bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground',
+        ghost: 'bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground ',
         link: 'bg-transparent text-foreground underline-offset-4 hover:underline',
-        'special-1': 'bg-chart-1 text-secondary hover:opacity-90',
+        'special-1': 'bg-chart-1 text-primary hover:opacity-90',
         'special-2': 'bg-chart-2 text-secondary hover:opacity-90',
         'special-3': 'bg-chart-3 text-secondary hover:opacity-90',
         'special-4': 'bg-chart-4 text-primary hover:opacity-90',
-        'special-5': 'bg-chart-5 text-primary hover:opacity-90',
-        'special-6': 'bg-chart-6 text-secondary hover:opacity-90'
+        'special-5': 'bg-chart-5 text-primary hover:opacity-90'
       },
       size: {
         default: 'h-10 px-4 py-2 text-sm',

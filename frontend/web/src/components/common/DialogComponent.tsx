@@ -7,7 +7,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/components/shadcn/alert-dialog';
-import { Typography } from '../common/Typography';
+import Typography from '../common/Typography';
 import { Button } from '../shadcn/button';
 import { ReactNode } from 'react';
 
