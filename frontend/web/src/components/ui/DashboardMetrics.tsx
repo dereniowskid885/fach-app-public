@@ -1,9 +1,9 @@
 import { Clock, CheckCircle, ClipboardList, MessageSquare, Bell, CreditCard } from 'lucide-react';
-import { Card, CardContent } from '../shadcn/card';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
-import { getTicketStatusColorClasses } from '@/constants/ticketStatus';
+import { getTicketStatusColorClasses } from '@/lib/ticketUtils';
 import { ETicketStatus } from '@shared/constants/enums';
+import ContentCard from '../common/ContentCard';
+import Typography from '../common/Typography';
 
 export default function DashboardMetrics() {
   // TODO: replace after creation of metrics endpoints
@@ -20,7 +20,7 @@ export default function DashboardMetrics() {
       label: 'Sprawy oczekujące na płatność',
       value: '02',
       icon: CreditCard,
-      color: getTicketStatusColorClasses(ETicketStatus.PENDING_PAYMENT)
+      color: getTicketStatusColorClasses(ETicketStatus.AWAITING_PAYMENT)
     },
     {
       id: 'dashboard-metric-3',
@@ -48,34 +48,28 @@ export default function DashboardMetrics() {
       label: 'Nowe powiadomienia',
       value: '03',
       icon: Bell,
-      color: 'bg-chart-5 text-primary border-chart-5'
+      color: 'bg-chart-1 text-primary'
     }
   ];
 
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
       {widgets.map((widget, i) => (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: i * 0.05 }}
-          key={widget.id}
-        >
-          <Card className="rounded-2xl border shadow-sm transition-shadow hover:shadow-md">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                <div className={cn('rounded-xl border p-2.5', widget.color)}>
-                  <widget.icon size={22} />
-                </div>
-              </div>
+        <ContentCard key={widget.id} index={i} className="space-y-4">
+          <div className="flex items-start justify-between">
+            <div className={cn('rounded-xl border p-2.5', widget.color)}>
+              <widget.icon size={22} />
+            </div>
+          </div>
 
-              <div className="mt-4">
-                <p className="text-3xl font-black tracking-tighter text-primary">{widget.value}</p>
-                <p className="mt-0.5 text-sm font-semibold text-muted-foreground">{widget.label}</p>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+          <div className="space-y-2">
+            <p className="text-3xl font-black tracking-tighter text-primary">{widget.value}</p>
+
+            <Typography variant="note-wide" as="p">
+              {widget.label}
+            </Typography>
+          </div>
+        </ContentCard>
       ))}
     </div>
   );

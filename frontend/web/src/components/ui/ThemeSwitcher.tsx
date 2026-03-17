@@ -11,6 +11,7 @@ import { selectUserData, setUserTheme } from '@/redux/slices/UserDataSlice';
 import { useTheme } from 'next-themes';
 import { useEffect } from 'react';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import Typography from '../common/Typography';
 
 export interface IThemeSwitcher {
   popoverContentDirection?: 'top' | 'bottom' | 'left' | 'right';
@@ -76,7 +77,7 @@ export default function ThemeSwitcher({
               <Palette strokeWidth={2.5} className="ml-2" />
 
               <AnimateCollapse isHidden={isSidebarCollapsed}>
-                <span className="text-sm font-semibold">{t('theme.sidebarButtonText')}</span>
+                <Typography variant="small">{t('theme.sidebarButtonText')}</Typography>
               </AnimateCollapse>
             </div>
           )}
@@ -99,7 +100,7 @@ export default function ThemeSwitcher({
                 onClick={() => handleThemeChange(themeObj.className)}
                 variant="ghost"
                 className={cn(
-                  'animation-base animation-idle animation-interactive group flex w-full items-center justify-start gap-3 rounded-sm px-3 py-2 text-sm',
+                  'animation-base animation-idle animation-interactive group flex w-full items-center justify-start gap-3 px-3 py-2 text-sm',
                   isCurrentTheme ? 'font-bold' : ''
                 )}
               >

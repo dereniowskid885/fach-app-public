@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/shadcn/button';
-import { Typography } from '@/components/common/Typography';
+import Typography from '@/components/common/Typography';
 import { useEffect, useState } from 'react';
 
 export interface IAsyncCountdown {

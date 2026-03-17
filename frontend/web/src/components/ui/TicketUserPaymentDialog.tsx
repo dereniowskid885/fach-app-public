@@ -7,7 +7,7 @@ import { StripeProvider } from '../providers/StripeProvider';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 
-export interface ITicketPaymentDialog {
+export interface ITicketUserPaymentDialog {
   open: boolean;
   closeDialog: () => void;
   loadingStartHandler: () => void;
@@ -17,7 +17,7 @@ export interface ITicketPaymentDialog {
   currency?: ESupportedCurrency;
 }
 
-export const TicketPaymentDialog = ({
+export default function TicketUserPaymentDialog({
   open,
   closeDialog,
   loadingStartHandler,
@@ -25,7 +25,7 @@ export const TicketPaymentDialog = ({
   ticketId,
   amount,
   currency
-}: ITicketPaymentDialog) => {
+}: ITicketUserPaymentDialog) {
   const t = useTranslations();
 
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -81,4 +81,4 @@ export const TicketPaymentDialog = ({
       errorMessage={errorMessage}
     />
   );
-};
+}

@@ -1,15 +1,13 @@
 import { ReactElement, useCallback, useState } from 'react';
 import { Button } from '../shadcn/button';
-import { Ticket, useGetTicketsQuery } from '@/api/accountApi';
+import { accountApi, Ticket } from '@/api/accountApi';
 import { ETicketStatus } from '@shared/constants/enums';
 import AmountIcon from './AmountIcon';
-import { TicketEvaluationsListDialog } from './TicketEvaluationsListDialog';
-import { buildDashboardTicketsQueryFilters } from '@/helpers/buildDashboardTicketsQueryFilters';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
-import { useAppSelector } from '@/redux/hooks';
-import { TicketPaymentDialog } from './TicketPaymentDialog';
+import TicketUserEvaluationsListDialog from './TicketUserEvaluationsListDialog';
+import TicketUserPaymentDialog from './TicketUserPaymentDialog';
 import { ESupportedCurrency } from '@/constants/supportedCurrency';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { useTranslations } from 'next-intl';
 
 export type TStatusActionButton = Partial<{
   [key in ETicketStatus]: {
@@ -20,12 +18,14 @@ export type TStatusActionButton = Partial<{
   };
 }>;
 
-export interface IUserTicketCarouselCardButtons {
+export interface ITicketUserActionButtons {
   ticket: Ticket;
 }
 
-export const UserTicketCarouselCardButtons = ({ ticket }: IUserTicketCarouselCardButtons) => {
+export default function TicketUserActionButtons({ ticket }: ITicketUserActionButtons) {
   const ticketStatus = ticket.status as ETicketStatus;
+
+  const t = useTranslations();
 
   const [evaluationListDialog, setEvaluationListDialog] = useState<boolean>(false);
 
@@ -35,20 +35,18 @@ export const UserTicketCarouselCardButtons = ({ ticket }: IUserTicketCarouselCar
   const paymentDialogLoadingStart = useCallback(() => setTicketPaymentDialogLoading(true), []);
   const paymentDialogLoadingEnd = useCallback(() => setTicketPaymentDialogLoading(false), []);
 
-  const { role, userId } = useAppSelector(selectUserData);
-  const filters = buildDashboardTicketsQueryFilters(role, userId);
-  const { refetch, error } = useGetTicketsQuery(filters ?? {});
+  const [triggerTicketsRefetch, { error }] = accountApi.endpoints.getTicketsMy.useLazyQuery({});
 
   useErrorHandler(error);
 
   const statusActionButton: TStatusActionButton = {
-    [ETicketStatus.PENDING_PAYMENT]: {
-      title: 'Opłać',
+    [ETicketStatus.AWAITING_PAYMENT]: {
+      title: t('ticketUserActionButtons.pay'),
       handler: () => setTicketPaymentDialog(true),
       isLoading: ticketPaymentDialogLoading
     },
-    [ETicketStatus.PRICE_USER_ACCEPTATION]: {
-      title: 'Zobacz wyceny',
+    [ETicketStatus.AWAITING_EVALUATION]: {
+      title: t('ticketUserActionButtons.showEvaluations'),
       handler: () => setEvaluationListDialog(true),
       element: (
         <div className="mt-[1px] pr-4">
@@ -67,7 +65,7 @@ export const UserTicketCarouselCardButtons = ({ ticket }: IUserTicketCarouselCar
       <div className="flex flex-col gap-2">
         {statusActionButton[ticketStatus] ? (
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={statusActionButton[ticketStatus].handler}
             loading={statusActionButton[ticketStatus].isLoading ?? false}
           >
@@ -77,7 +75,7 @@ export const UserTicketCarouselCardButtons = ({ ticket }: IUserTicketCarouselCar
         ) : null}
       </div>
 
-      <TicketPaymentDialog
+      <TicketUserPaymentDialog
         open={ticketPaymentDialog}
         closeDialog={() => setTicketPaymentDialog(false)}
         loadingStartHandler={paymentDialogLoadingStart}
@@ -87,13 +85,13 @@ export const UserTicketCarouselCardButtons = ({ ticket }: IUserTicketCarouselCar
         currency={ticket.acceptedEvaluation?.price?.currency as ESupportedCurrency}
       />
 
-      <TicketEvaluationsListDialog
+      <TicketUserEvaluationsListDialog
         open={evaluationListDialog}
-        refetchTickets={refetch}
+        refetchTickets={() => triggerTicketsRefetch({})}
         closeDialog={() => setEvaluationListDialog(false)}
         ticketId={ticket._id}
         ticketEvaluations={ticket.evaluations}
       />
     </>
   );
-};
+}
