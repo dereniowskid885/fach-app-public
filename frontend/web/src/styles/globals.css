@@ -56,12 +56,11 @@
   --ring: 0.7 0 0;
 
   /* charts */
-  --chart-1: 0.646 0.222 41.116;
+  --chart-1: 0.95 0.222 41.116;
   --chart-2: 0.6 0.118 184.704;
   --chart-3: 0.398 0.07 227.392;
   --chart-4: 0.828 0.189 84.429;
-  --chart-5: 0.769 0.188 70.08;
-  --chart-6: 0.62 0.18 200;
+  --chart-5: 0.62 0.18 200;
 
   /* radius */
   --radius: 0.625rem;
@@ -118,16 +117,15 @@
   --input: 0.269 0 0;
   --ring: 0.439 0 0;
 
-  --chart-1: 0.488 0.243 264.376;
+  --chart-1: 0.683 0.243 264.376;
   --chart-2: 0.696 0.17 162.48;
   --chart-3: 0.769 0.188 70.08;
   --chart-4: 0.627 0.265 303.9;
-  --chart-5: 0.645 0.246 16.439;
-  --chart-6: 0.72 0.16 200;
+  --chart-5: 0.72 0.16 200;
 
   --sidebar: 0.205 0 0;
   --sidebar-foreground: 0.985 0 0;
-  --sidebar-primary: 0.488 0.243 264.376;
+  --sidebar-primary: 0.683 0.243 264.376;
   --sidebar-primary-foreground: 0.985 0 0;
   --sidebar-accent: 0.269 0 0;
   --sidebar-accent-foreground: 0.985 0 0;
@@ -151,6 +149,10 @@
 
 html {
   font-size: var(--font-size);
+}
+
+svg {
+  flex-shrink: 0;
 }
 
 @layer base {
@@ -178,7 +180,7 @@ html {
   }
 
   .animation-active {
-    @apply bg-secondary font-bold text-foreground;
+    @apply bg-background font-bold text-foreground;
   }
 
   .animate-zoom-enter {

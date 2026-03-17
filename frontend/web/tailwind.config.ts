@@ -48,8 +48,7 @@ export default {
           2: 'oklch(var(--chart-2))',
           3: 'oklch(var(--chart-3))',
           4: 'oklch(var(--chart-4))',
-          5: 'oklch(var(--chart-5))',
-          6: 'oklch(var(--chart-6))'
+          5: 'oklch(var(--chart-5))'
         },
 
         sidebar: {
@@ -98,25 +97,28 @@ export default {
   safelist: [
     'bg-yellow-50',
     'text-yellow-600',
-    'border-yellow-100',
+    'border-yellow-200',
     'bg-emerald-50',
     'text-emerald-600',
-    'border-emerald-100',
+    'border-emerald-200',
     'bg-purple-50',
     'text-purple-600',
-    'border-purple-100',
+    'border-purple-200',
     'bg-blue-50',
     'text-blue-600',
-    'border-blue-100',
+    'border-blue-200',
     'bg-orange-50',
     'text-orange-600',
-    'border-orange-100',
+    'border-orange-200',
     'bg-teal-50',
     'text-teal-600',
-    'border-teal-100',
+    'border-teal-200',
     'bg-lime-50',
     'text-lime-600',
-    'border-lime-100'
+    'border-lime-200',
+    'bg-red-50',
+    'text-red-600',
+    'border-red-200'
   ],
   plugins: [animate]
 } satisfies Config;
