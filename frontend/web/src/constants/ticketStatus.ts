@@ -1,50 +1,48 @@
-import { TicketStatus } from '@/api/accountApi';
 import { ETicketStatus } from '@shared/constants/enums';
 import {
   CheckCircle,
   CheckCircle2,
-  ClipboardList,
   Clock,
   CreditCard,
   PlayCircle,
-  Search
+  Search,
+  XCircle
 } from 'lucide-react';
 
 export const ticketStatusObj = {
-  [ETicketStatus.PRICE_EVALUATION]: {
+  [ETicketStatus.AWAITING_EVALUATION]: {
     icon: Clock,
-    className: 'bg-yellow-50 text-yellow-600 border-yellow-100'
+    className: 'bg-yellow-50 text-yellow-600 border-yellow-200',
+    translationKey: 'ticketStatus.awaitingEvaluation'
   },
-  [ETicketStatus.PRICE_USER_ACCEPTATION]: {
-    icon: CheckCircle,
-    className: 'bg-teal-50 text-teal-600 border-teal-100'
-  },
-  [ETicketStatus.PENDING_PAYMENT]: {
+  [ETicketStatus.AWAITING_PAYMENT]: {
     icon: CreditCard,
-    className: 'bg-purple-50 text-purple-600 border-purple-100'
+    className: 'bg-purple-50 text-purple-600 border-purple-200',
+    translationKey: 'ticketStatus.awaitingPayment'
   },
   [ETicketStatus.IN_PROGRESS]: {
     icon: PlayCircle,
-    className: 'bg-blue-50 text-blue-600 border-blue-100'
+    className: 'bg-blue-50 text-blue-600 border-blue-200',
+    translationKey: 'ticketStatus.inProgress'
   },
-  [ETicketStatus.SOLUTION_USER_APPROVAL]: {
+  [ETicketStatus.SOLUTION_REVIEW]: {
     icon: CheckCircle2,
-    className: 'bg-lime-50 text-lime-600 border-lime-100'
+    className: 'bg-lime-50 text-lime-600 border-lime-200',
+    translationKey: 'ticketStatus.solutionReview'
   },
   [ETicketStatus.MODERATOR_INVESTIGATION]: {
     icon: Search,
-    className: 'bg-orange-50 text-orange-600 border-orange-100'
+    className: 'bg-orange-50 text-orange-600 border-orange-200',
+    translationKey: 'ticketStatus.moderatorInvestigation'
   },
   [ETicketStatus.COMPLETED]: {
     icon: CheckCircle,
-    className: 'bg-emerald-50 text-emerald-600 border-emerald-100'
+    className: 'bg-emerald-50 text-emerald-600 border-emerald-200',
+    translationKey: 'ticketStatus.completed'
+  },
+  [ETicketStatus.CANCELLED]: {
+    icon: XCircle,
+    className: 'bg-red-50 text-red-600 border-red-200',
+    translationKey: 'ticketStatus.cancelled'
   }
-};
-
-export const getTicketStatusColorClasses = (status?: TicketStatus | ETicketStatus) => {
-  return status ? ticketStatusObj[status].className : 'bg-blue-50 text-blue-600 border-blue-100';
-};
-
-export const getTicketStatusIcon = (status?: TicketStatus | ETicketStatus) => {
-  return status ? ticketStatusObj[status].icon : ClipboardList;
 };
