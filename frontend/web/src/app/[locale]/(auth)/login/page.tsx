@@ -6,7 +6,7 @@ import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
 import AccountVerifyDialog from '@/components/ui/AccountVerifyDialog';
 import PasswordInput from '@/components/common/PasswordInput';
-import { Typography } from '@/components/common/Typography';
+import Typography from '@/components/common/Typography';
 import { HOME_PATH, PASSWORD_RESET_PATH, REGISTER_PATH } from '@/constants/routes';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
