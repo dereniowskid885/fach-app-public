@@ -4,7 +4,7 @@ import { Button } from '@/components/shadcn/button';
 import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
 import PasswordInput from '@/components/common/PasswordInput';
-import { Typography } from '@/components/common/Typography';
+import Typography from '@/components/common/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
 import { getTokenPayload, isTokenExpired } from '@/lib/tokenUtils';
 import Link from 'next/link';
