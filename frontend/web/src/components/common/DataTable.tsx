@@ -19,6 +19,7 @@ import {
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Checkbox } from '../shadcn/checkbox';
 import { useTranslations } from 'next-intl';
+import { cn } from '@/lib/utils';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -26,6 +27,8 @@ interface DataTableProps<TData, TValue> {
   oneSelectableRow?: boolean;
   setSelectedRow?: Dispatch<SetStateAction<RowSelectionState>>;
   data: TData[];
+  tableClassName?: string;
+  headClassName?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -33,7 +36,9 @@ export function DataTable<TData, TValue>({
   data,
   selectableRows = false,
   oneSelectableRow = false,
-  setSelectedRow
+  setSelectedRow,
+  tableClassName,
+  headClassName
 }: DataTableProps<TData, TValue>) {
   const t = useTranslations();
   const [rowSelection, setRowSelection] = useState({});
@@ -77,14 +82,20 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="overflow-x-auto rounded-md border">
-      <Table>
+    <div className="overflow-x-auto rounded-xl border">
+      <Table className={tableClassName}>
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map(header => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className={cn(
+                      'text-xs font-bold uppercase tracking-wide text-muted-foreground',
+                      headClassName
+                    )}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -94,6 +105,7 @@ export function DataTable<TData, TValue>({
             </TableRow>
           ))}
         </TableHeader>
+
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map(row => (
