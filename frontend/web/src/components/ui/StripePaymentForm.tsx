@@ -1,7 +1,7 @@
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { FormEvent, useState } from 'react';
 import { Button } from '../shadcn/button';
-import { Typography } from '../common/Typography';
+import Typography from '../common/Typography';
 
 export const StripePaymentForm = () => {
   const [isLoading, setLoading] = useState<boolean>(false);

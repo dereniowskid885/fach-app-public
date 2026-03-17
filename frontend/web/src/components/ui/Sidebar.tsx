@@ -3,15 +3,15 @@ import NavLink from './NavLink';
 import { LOGIN_PATH } from '@/constants/routes';
 import { useLocale, useTranslations } from 'next-intl';
 import LoadingOverlay from '../common/LoadingOverlay';
-import { usePostAuthLogoutMutation } from '@/api/accountApi';
+import { usePostAuthLogoutMutation, UserRole } from '@/api/accountApi';
 import { Button } from '../shadcn/button';
-import { Typography } from '../common/Typography';
+import Typography from '../common/Typography';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
-import { menuItems } from '@/constants/menu';
+import { menuItemsObj } from '@/constants/menu';
 import LanguageSwitcher from './LanguageSwitcher';
-import { ESupportedLanguages } from '@shared/constants/enums';
+import { ESupportedLanguages, EUserRole } from '@shared/constants/enums';
 import Logo from './Logo';
 import { Skeleton } from '../shadcn/skeleton';
 import ThemeSwitcher from './ThemeSwitcher';
@@ -21,6 +21,8 @@ import AnimateCollapse from '../common/AnimateCollapse';
 import { useSidebarContext } from '@/contexts/SidebarContext';
 import { normalizePathname } from '@/lib/pathnameUtils';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { EPopoverContentDirection } from '@/constants/enums';
+import UserCard from './UserCard';
 
 export default function Sidebar() {
   const t = useTranslations();
@@ -31,7 +33,7 @@ export default function Sidebar() {
   const normalizedPath = normalizePathname(currentPath, currentLocale);
 
   const router = useRouter();
-  const { role, fullName, name, surname } = useSelector(selectUserData);
+  const { role, name, surname } = useSelector(selectUserData);
 
   const [triggerLogout, { isLoading, error }] = usePostAuthLogoutMutation();
 
@@ -74,10 +76,7 @@ export default function Sidebar() {
             exit={{ opacity: 0, height: 0 }}
             className="text-center"
           >
-            <Typography
-              variant="note"
-              className="px-3 font-bold uppercase tracking-widest text-muted-foreground"
-            >
+            <Typography variant="note-wide" className="px-3 tracking-widest">
               {t('sidebar.mainMenu')}
             </Typography>
           </motion.div>
@@ -85,25 +84,31 @@ export default function Sidebar() {
       </AnimatePresence>
 
       <nav className="flex-1 space-y-2 p-3">
-        {menuItems.map(item => (
-          <NavLink
-            key={item.id}
-            href={item.href}
-            isCurrentPath={
-              item.path ? item.path[currentLocale as ESupportedLanguages] === normalizedPath : false
-            }
-            isSidebarCollapsed={isSidebarCollapsed}
-            title={t(`pages.${item.id}`)}
-          >
-            <item.icon size={18} strokeWidth={2.5} className="ml-1" />
-          </NavLink>
-        ))}
+        {role
+          ? menuItemsObj[role as EUserRole].map(item => (
+              <NavLink
+                key={item.id}
+                href={item.href}
+                isCurrentPath={
+                  item.path
+                    ? item.path[currentLocale as ESupportedLanguages] === normalizedPath
+                    : false
+                }
+                isSidebarCollapsed={isSidebarCollapsed}
+                title={t(item.translationKey)}
+              >
+                <item.icon size={18} strokeWidth={2.5} className="ml-1 shrink-0" />
+              </NavLink>
+            ))
+          : Array.from({ length: 4 }).map((item, index) => (
+              <Skeleton key={`menu-item-skeleton-${item}-${index}`} className="h-[36px]" />
+            ))}
       </nav>
 
       <div className="p-3">
         <Button
           variant="ghost"
-          className="animation-base animation-idle animation-interactive h-9 w-full justify-start gap-2.5 px-2"
+          className="animation-base animation-idle animation-interactive h-9 w-full items-center justify-start gap-2.5 px-2"
           onClick={toggleSidebar}
         >
           {isSidebarCollapsed ? (
@@ -113,48 +118,26 @@ export default function Sidebar() {
           )}
 
           <AnimateCollapse isHidden={isSidebarCollapsed}>
-            <Typography variant="small" className="font-bold">
-              {t('common.collapse')}
-            </Typography>
+            <Typography variant="small">{t('common.collapse')}</Typography>
           </AnimateCollapse>
         </Button>
       </div>
 
-      <div className="space-y-3 border-t p-3 shadow-md">
-        <div className="flex items-center gap-3 rounded-xl bg-background p-3">
-          {name && surname ? (
-            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border bg-card text-xs font-bold uppercase shadow-md">
-              {`${name.charAt(0)}${surname.charAt(0)}`}
-            </div>
-          ) : (
-            <Skeleton className="h-[32px] w-[32px] rounded-xl" />
-          )}
-
-          {isSidebarCollapsed ? null : (
-            <div className="flex flex-col gap-1">
-              {fullName ? (
-                <Typography variant="note" className="line-clamp-1 font-bold">
-                  {fullName}
-                </Typography>
-              ) : (
-                <Skeleton className="h-[16px] w-[100px]" />
-              )}
-
-              {role ? (
-                <Typography variant="note" className="text-muted-foreground">
-                  {t(`userRole.${role}`)}
-                </Typography>
-              ) : (
-                <Skeleton className="h-[16px] w-[100px]" />
-              )}
-            </div>
-          )}
-        </div>
+      <div className="space-y-3 border-t p-3">
+        <UserCard
+          user={{
+            name,
+            surname,
+            role: role as UserRole
+          }}
+          showBackground={true}
+          isSidebarCollapsed={isSidebarCollapsed}
+        />
 
         <LanguageSwitcher
           currentPath={normalizedPath}
           currentLang={currentLocale as ESupportedLanguages}
-          popoverContentDirection="right"
+          popoverContentDirection={EPopoverContentDirection.RIGHT}
           isSidebarCollapsed={isSidebarCollapsed}
         />
 
@@ -168,9 +151,7 @@ export default function Sidebar() {
           <LogOut size={18} strokeWidth={2.5} className="ml-2" />
 
           <AnimateCollapse isHidden={isSidebarCollapsed}>
-            <Typography variant="small" className="font-bold">
-              {t('common.logout')}
-            </Typography>
+            <Typography variant="small">{t('common.logout')}</Typography>
           </AnimateCollapse>
         </Button>
       </div>

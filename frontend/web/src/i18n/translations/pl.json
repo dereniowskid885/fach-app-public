@@ -34,12 +34,23 @@
     "success": "Sukces",
     "edit": "Edytuj",
     "delete": "Usuń",
-    "unknownUser": "Nieznany użytkownik"
+    "unknownUser": "Nieznany użytkownik",
+    "unknown": "Nieznany"
   },
   "userRole": {
     "admin": "Admin",
     "user": "Użytkownik",
     "specialist": "Specjalista"
+  },
+  "ticketStatus": {
+    "awaitingEvaluation": "Oczekuje na wycenę",
+    "awaitingPayment": "Oczekuje na płatność",
+    "inProgress": "W trakcie rozwiązywania",
+    "solutionReview": "Akceptacja rozwiązania",
+    "moderatorInvestigation": "Badanie przez moderatora",
+    "completed": "Ukończony",
+    "cancelled": "Anulowany",
+    "unknown": "Nieznany status"
   },
   "timeOfDay": {
     "morning": "Dzień dobry",
@@ -81,14 +92,18 @@
   },
   "pages": {
     "dashboard": "Pulpit",
-    "tickets": "Sprawy",
+    "availableTickets": "Dostępne sprawy",
+    "tickets": "Moje sprawy",
+    "evaluations": "Moje ewaluacje",
+    "completedTickets": "Ukończone sprawy",
     "inbox": "Wiadomości",
     "settings": "Ustawienia"
   },
   "category": {
     "select": "Wybierz kategorie",
-    "search": "W",
-    "noResults": "Nie znaleziono kategorii"
+    "search": "Wyszukaj kategorię",
+    "noResults": "Nie znaleziono kategorii",
+    "unknown": "Nieznana kategoria"
   },
   "select": {
     "city": "Wybierz miasto"
@@ -191,5 +206,71 @@
     "title": "Aktualne wyceny sprawy",
     "toastTitle": "Wycena sprawy została zaakceptowana",
     "confirmButtonText": "Zaakceptuj wycenę"
+  },
+  "buttonsCarousel": {
+    "searchPlaceholder": "Filtruj...",
+    "categoryFilterHeader": "Kategorie",
+    "statusFilterHeader": "Statusy",
+    "cityFilterHeader": "Miasta"
+  },
+  "ticketDataTable": {
+    "ticketHeader": "Sprawa",
+    "statusHeader": "Status",
+    "categoryHeader": "Kategoria",
+    "createdAtHeader": "Data utworzenia",
+    "assigneeHeader": "Przypisany",
+    "createdByHeader": "Twórca",
+    "conversationHeader": "Konwersacja",
+    "cityHeader": "Miasto"
+  },
+  "ticket": {
+    "searchPlaceholder": "Szukaj spraw...",
+    "ticketsAmount": "{count, plural, =0 {0 spraw} one {# sprawa} few {# sprawy} many {# spraw} other {# spraw}}",
+    "evaluationsAmount": "{count, plural, =0 {0 ewaluacji} one {# ewaluacja} few {# ewaluacje} many {# ewaluacji} other {# ewaluacji}}",
+    "messagesAmount": "{count, plural, =0 {0 wiadomości} one {# wiadomość} few {# wiadomości} many {# wiadomości} other {# wiadomości}}"
+  },
+  "ticketSpecialistActionButtons": {
+    "reply": "Odpowiedz",
+    "editEvaluation": "Edytuj wycenę",
+    "evaluate": "Wyceń"
+  },
+  "ticketUserActionButtons": {
+    "pay": "Opłać",
+    "showEvaluations": "Zobacz wyceny"
+  },
+  "ticketDropdownMenu": {
+    "showDetails": "Zobacz szczegóły"
+  },
+  "myTicketsPage": {
+    "headerTitle": {
+      "user": "Twoje sprawy",
+      "specialist": "Sprawy przypisane do Ciebie",
+      "admin": "admin"
+    },
+    "headerDescription": {
+      "user": "Śledź status swoich spraw, przeglądaj wyceny i kontynuuj współpracę ze specjalistą.",
+      "specialist": "Zarządzaj sprawami, nad którymi aktualnie pracujesz, i komunikuj się z ich twórcami.",
+      "admin": "admin"
+    }
+  },
+  "completedTicketsPage": {
+    "headerTitle": {
+      "user": "Zakończone sprawy",
+      "specialist": "Zakończone sprawy",
+      "admin": "admin"
+    },
+    "headerDescription": {
+      "user": "Przeglądaj sprawy, które zostały ukończone lub anulowane.",
+      "specialist": "Przeglądaj sprawy, nad którymi pracowałeś i które zostały ukończone lub anulowane.",
+      "admin": "admin"
+    }
+  },
+  "availableTicketsPage": {
+    "headerTitle": "Dostępne sprawy",
+    "headerDescription": "Przeglądaj sprawy użytkowników i wysyłaj swoje wyceny."
+  },
+  "myEvaluationsPage": {
+    "headerTitle": "Twoje wyceny",
+    "headerDescription": "Śledź sprawy, dla których wysłałeś już swoją wycenę."
   }
 }

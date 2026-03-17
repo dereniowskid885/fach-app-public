@@ -148,7 +148,7 @@ export const TimePickerInput = React.forwardRef<HTMLInputElement, TimePickerInpu
         id={id || picker}
         name={name || picker}
         className={cn(
-          'focus:text-accent-foreground w-[48px] text-center font-mono text-base tabular-nums caret-transparent focus:bg-primary-200 [&::-webkit-inner-spin-button]:appearance-none',
+          'w-[48px] text-center font-mono text-base tabular-nums caret-transparent focus:bg-secondary dark:focus:bg-secondary [&::-webkit-inner-spin-button]:appearance-none',
           className
         )}
         value={pickerInputValue}

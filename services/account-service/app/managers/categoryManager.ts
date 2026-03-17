@@ -84,7 +84,7 @@ export const CategoryManager = {
       throw new AppError(400, EResponseStatus.ERROR_USER_INVALID_ROLE, 'User is not a specialist');
     }
 
-    if (user.category?.toString() === categoryId) {
+    if (user.category?._id.toString() === categoryId) {
       throw new AppError(
         400,
         EResponseStatus.ERROR_USER_ALREADY_ASSIGNED_TO_CATEGORY,
@@ -166,7 +166,7 @@ export const CategoryManager = {
         throw new AppError(404, EResponseStatus.ERROR_CATEGORY_NOT_FOUND, 'Category with provided id does not exist');
       }
 
-      if (user.category?.toString() === categoryId) {
+      if (user.category?._id.toString() === categoryId) {
         user.category = undefined;
         await user.save({ session });
       }

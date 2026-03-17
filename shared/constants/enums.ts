@@ -1,11 +1,11 @@
 export enum ETicketStatus {
-  PRICE_EVALUATION = "Wycena",
-  PRICE_USER_ACCEPTATION = "Akceptacja wyceny",
-  PENDING_PAYMENT = "Oczekiwanie na płatność",
-  IN_PROGRESS = "W trakcie",
-  SOLUTION_USER_APPROVAL = "Akceptacja rozwiązania",
-  MODERATOR_INVESTIGATION = "Badanie przez moderatora",
-  COMPLETED = "Ukończony",
+  AWAITING_EVALUATION = "awaiting_evaluation",
+  AWAITING_PAYMENT = "awaiting_payment",
+  IN_PROGRESS = "in_progress",
+  SOLUTION_REVIEW = "solution_review",
+  MODERATOR_INVESTIGATION = "moderator_investigation",
+  COMPLETED = "completed",
+  CANCELLED = "canceled",
 }
 
 export enum EPaymentStatus {

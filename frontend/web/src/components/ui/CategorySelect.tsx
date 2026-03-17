@@ -3,7 +3,6 @@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn/popover';
 import { Button } from '../shadcn/button';
 import CategoryIcon from './CategoryIcon';
-import { BiSolidCategory } from 'react-icons/bi';
 import {
   Command,
   CommandEmpty,
@@ -23,19 +22,18 @@ import { useErrorHandler } from '@/hooks/useErrorHandler';
 export interface ICategorySelect {
   selectedCategory: Category | null;
   setSelectedCategory: Dispatch<SetStateAction<Category | null>>;
-  resetSelectedCategory?: () => void;
 }
 
-export default function CategorySelect({
-  selectedCategory,
-  setSelectedCategory,
-  resetSelectedCategory
-}: ICategorySelect) {
+export default function CategorySelect({ selectedCategory, setSelectedCategory }: ICategorySelect) {
   const t = useTranslations();
 
   const [open, setOpen] = useState<boolean>(false);
 
-  const { data: getCategoriesResponse, isError, error } = useGetCategoriesQuery({});
+  const {
+    data: getCategoriesResponse,
+    isError,
+    error
+  } = useGetCategoriesQuery({ hasSpecialists: true });
 
   useErrorHandler(error);
 
@@ -70,28 +68,17 @@ export default function CategorySelect({
           <CommandList>
             <CommandEmpty>{t('category.noResults')}</CommandEmpty>
             <CommandGroup defaultValue="all">
-              {resetSelectedCategory ? (
-                <CommandItem
-                  onSelect={() => {
-                    resetSelectedCategory();
-                    setOpen(false);
-                  }}
-                >
-                  <BiSolidCategory />
-
-                  {t('common.all')}
-                </CommandItem>
-              ) : null}
               {getCategoriesResponse?.success &&
                 getCategoriesResponse?.data?.map((category, index) => (
                   <CommandItem
-                    key={category._id ?? `${EFallbackKey.TICKET_CATEGORY}-${index}`}
+                    key={category._id ?? `${EFallbackKey.CATEGORY_SELECT_ITEM}-${index}`}
                     value={category.name}
+                    disabled={!category.name}
                     onSelect={() => selectCategoryHandler(category)}
                   >
                     <CategoryIcon categoryName={category.name} />
 
-                    {category.name}
+                    {category.name ? category.name : t('category.unknown')}
 
                     <Check
                       className={cn(

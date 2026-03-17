@@ -1,7 +1,8 @@
 import { TicketStatus } from '@/api/accountApi';
-import { getTicketStatusColorClasses } from '@/constants/ticketStatus';
+import { getTicketStatusColorClasses, getTicketStatusTranslationKey } from '@/lib/ticketUtils';
 import { cn } from '@/lib/utils';
 import { ETicketStatus } from '@shared/constants/enums';
+import { useTranslations } from 'next-intl';
 
 export interface ITicketStatusBadge {
   className?: string;
@@ -9,15 +10,17 @@ export interface ITicketStatusBadge {
 }
 
 export default function TicketStatusBadge({ className, status }: ITicketStatusBadge) {
+  const t = useTranslations();
+
   return (
     <div
       className={cn(
-        'inline-flex items-center rounded-full border border-neutral-200 px-2.5 py-0.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2 dark:border-neutral-800 dark:focus:ring-neutral-300',
+        'inline-flex items-center text-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold shadow-md',
         getTicketStatusColorClasses(status),
         className
       )}
     >
-      {status}
+      {t(getTicketStatusTranslationKey(status))}
     </div>
   );
 }

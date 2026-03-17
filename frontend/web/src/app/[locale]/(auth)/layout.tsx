@@ -1,4 +1,4 @@
-import { Typography } from '@/components/common/Typography';
+import Typography from '@/components/common/Typography';
 import { ReactNode } from 'react';
 import { Layers, CheckCircle, RefreshCw, Star, Heart, Bolt } from 'lucide-react';
 import AuthLeftBanner from '@assets/auth-left-banner.jpg';
@@ -36,7 +36,7 @@ export default function AuthLayout({ children }: IAuthLayout) {
 
           <Typography
             variant="h1"
-            className="bg-gradient-to-br from-chart-2 to-chart-6 bg-clip-text text-5xl text-transparent"
+            className="bg-gradient-to-br from-chart-2 to-chart-5 bg-clip-text text-5xl text-transparent"
           >
             {t('common.appTitle')}
           </Typography>
@@ -50,7 +50,7 @@ export default function AuthLayout({ children }: IAuthLayout) {
             {t('authLayout.title')}
           </Typography>
 
-          <Typography variant="lead" className="text-chart-6">
+          <Typography variant="lead" className="text-chart-5">
             {t('authLayout.subtitle')}
           </Typography>
         </div>
@@ -66,7 +66,7 @@ export default function AuthLayout({ children }: IAuthLayout) {
                   key={`${EFallbackKey.AUTH_FEATURE_LIST_ITEM}-${j}`}
                   className="flex items-center gap-4"
                 >
-                  <div className="flex rounded-full bg-chart-6 p-2">
+                  <div className="flex rounded-full bg-chart-5 p-2">
                     <item.icon className="text-black" />
                   </div>
 

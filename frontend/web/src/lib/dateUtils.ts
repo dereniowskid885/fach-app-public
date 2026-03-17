@@ -1,5 +1,7 @@
-export const getLocaleDateString = (date: string) => {
-  return new Date(date).toLocaleDateString('pl-PL', {
+export const getLocaleDateString = (date?: string, locale?: string) => {
+  if (!date) return '-';
+
+  return new Date(date).toLocaleDateString(locale, {
     month: 'long',
     day: 'numeric',
     hour: '2-digit',

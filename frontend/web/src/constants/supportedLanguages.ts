@@ -8,11 +8,13 @@ export const supportedLanguagesObj = {
   [ESupportedLanguages.PL]: {
     id: 'language-pl',
     iconPath: PolishFlag,
-    label: 'pl'
+    label: 'pl',
+    locale: 'pl-PL'
   },
   [ESupportedLanguages.EN]: {
     id: 'language-en',
     iconPath: EnglishFlag,
-    label: 'en'
+    label: 'en',
+    locale: 'en-US'
   }
 };
