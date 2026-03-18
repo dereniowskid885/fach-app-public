@@ -7,23 +7,26 @@ import { Separator } from '@/components/shadcn/separator';
 import TicketCategoriesFilter from '@/components/ui/TicketCategoriesFilter';
 import TicketCreateButton from '@/components/ui/TicketCreateButton';
 import TicketStatusFilter from '@/components/ui/TicketStatusFilter';
-import { ETicketStatus, EUserRole } from '@shared/constants/enums';
-import { useTranslations } from 'next-intl';
+import { ETicketStatus } from '@shared/enums/ticket';
+import { EUserRole } from '@shared/enums/role';
+import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import AmountBadge from '@/components/ui/AmountBadge';
-import DataTableMyTicketsPage from '@/components/ui/DataTableMyTicketsPage';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useSelector } from 'react-redux';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { TicketStatusFilterHelper } from '@/helpers/ticketStatusFilterHelper';
 import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
 import PageHeader from '@/components/common/PageHeader';
+import { getMyTicketsFilters } from '@/helpers/ticketStatusFilter';
+import { getMyTicketsColumns } from '@/helpers/dataTableColumns';
+import { DataTable } from '@/components/common/DataTable';
 
 export default function MyTickets() {
   const t = useTranslations();
   const { role } = useSelector(selectUserData);
+  const currentLocale = useLocale();
 
-  const ticketStatusFilterData = TicketStatusFilterHelper.getMyTicketsFilters(role as EUserRole);
+  const ticketStatusFilterData = getMyTicketsFilters(role as EUserRole);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<ETicketStatus | null>(null);
@@ -55,6 +58,8 @@ export default function MyTickets() {
 
       return matchesSearchQuery;
     }) ?? [];
+
+  const tableColumnsData = getMyTicketsColumns(t, currentLocale, role as EUserRole);
 
   return (
     <div className="space-y-6">
@@ -107,7 +112,7 @@ export default function MyTickets() {
         <LoadingSpinner className="m-auto" />
       ) : (
         <ContentCard index={1} className="p-0 sm:p-0">
-          <DataTableMyTicketsPage tableData={filteredTickets} role={role as EUserRole} />
+          <DataTable data={filteredTickets} columns={tableColumnsData} />
         </ContentCard>
       )}
     </div>
