@@ -1,7 +1,7 @@
 import { ZodError } from "zod";
 import { Response } from "express";
 import { handleAppError } from "./handleAppError";
-import { EResponseStatus } from "../constants/responseStatus";
+import { EResponseStatus } from "../enums/responseStatus";
 
 export const handleZodError = (res: Response, error: any) => {
   let message = "Invalid data provided.";

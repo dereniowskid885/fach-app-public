@@ -3,7 +3,7 @@ import { Response, Request } from 'express';
 import { z } from 'zod';
 import { handleZodError } from '@shared/helpers/handleZodError';
 import { cities } from '@shared/constants/mocks';
-import { ESupportedLanguages } from '@shared/constants/enums';
+import { ESupportedLanguages } from '@shared/enums/language';
 
 const registerUserSchema = z
   .object({

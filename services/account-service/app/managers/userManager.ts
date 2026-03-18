@@ -1,7 +1,8 @@
 import { safeUserProjection } from '@constants/projections';
-import { EResponseStatus } from '@shared/constants/responseStatus';
+import { EResponseStatus } from '@shared/enums/responseStatus';
 import { AppError } from '@shared/utils/AppError';
-import { ETicketStatus, EUserRole } from '@shared/constants/enums';
+import { ETicketStatus } from '@shared/enums/ticket';
+import { EUserRole } from '@shared/enums/role';
 import { CategoryManager } from './categoryManager';
 import User, { IUserModel } from '@models/User';
 import { printMongooseValidationErrors } from '@helpers/printMongooseValidationErrors';

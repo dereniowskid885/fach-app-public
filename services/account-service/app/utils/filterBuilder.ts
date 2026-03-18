@@ -1,7 +1,8 @@
 import { ICategoryModel } from '@models/Category';
 import { ITicketModel } from '@models/Ticket';
 import { IUserModel } from '@models/User';
-import { ETicketStatus, EUserRole } from '@shared/constants/enums';
+import { ETicketStatus } from '@shared/enums/ticket';
+import { EUserRole } from '@shared/enums/role';
 import { Request } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import { FilterQuery } from 'mongoose';

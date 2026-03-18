@@ -11,13 +11,13 @@ import {
 } from '../shadcn/dropdown-menu';
 import { Ticket } from '@/api/accountApi';
 import { useTranslations } from 'next-intl';
-import { ETicketStatus } from '@shared/constants/enums';
+import { ETicketStatus } from '@shared/enums/ticket';
 import { TicketDeleteDialog } from './TicketDeleteDialog';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import TicketFormDialog from './TicketFormDialog';
-import { EActionType } from '@/constants/enums';
+import { EActionType } from '@/enums/ui';
 
 export interface ITicketDropdownMenu {
   ticket: Ticket;

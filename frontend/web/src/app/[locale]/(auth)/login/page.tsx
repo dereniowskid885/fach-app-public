@@ -12,16 +12,16 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { isCookie } from '@/helpers/isCookie';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 import AuthCard from '@/components/ui/AuthCard';
-import { EResponseStatus } from '@shared/constants/responseStatus';
+import { EResponseStatus } from '@shared/enums/responseStatus';
 import { useTranslations } from 'next-intl';
 import { useDispatch } from 'react-redux';
 import { clearUserData } from '@/redux/slices/UserDataSlice';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { parseQueryError } from '@/lib/errorUtils';
+import { parseQueryError } from '@/utils/error';
+import { isCookie } from '@/utils/cookie';
 
 interface ILoginForm {
   email: string;

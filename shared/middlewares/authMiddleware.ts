@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { JwtPayload, verify } from "jsonwebtoken";
 import { AppError } from "../utils/AppError";
-import { EResponseStatus } from "../constants/responseStatus";
+import { EResponseStatus } from "../enums/responseStatus";
 
 // checks if request has valid cookie with access token and saves it on req.user for further use in endpoints
 export const checkAndParseAccessToken = async (req: Request, ACCESS_TOKEN_SECRET: string) => {
@@ -38,7 +38,7 @@ export const checkUserRole = async (req: Request, roles: string[]) => {
     throw new AppError(
       403,
       EResponseStatus.ERROR_USER_INVALID_ROLE,
-      "Required role that allows this action is missing"
+      "Required role that allows this action is missing",
     );
   }
 };

@@ -3,12 +3,12 @@ import { AppError } from '@shared/utils/AppError';
 import { UserManager } from './userManager';
 import jwt, { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 import { sendMail } from '@helpers/sendMail';
-import { EResponseStatus } from '@shared/constants/responseStatus';
+import { EResponseStatus } from '@shared/enums/responseStatus';
 import { printMongooseValidationErrors } from '@helpers/printMongooseValidationErrors';
 import { Error as MongooseError } from 'mongoose';
 import { handleAccessTokenError, handleRefreshTokenError } from '@shared/helpers/handleJwtError';
-import { ESupportedLanguages } from '@shared/constants/enums';
 import { VERIFY_PATH, PASSWORD_RESET_PATH } from '@web/constants/routes';
+import { ESupportedLanguages } from '@shared/enums/language';
 
 export const AuthManager = {
   handlePasswordReset: async (accessToken: string, newPassword: string) => {

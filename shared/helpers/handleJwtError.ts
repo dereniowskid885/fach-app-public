@@ -1,4 +1,4 @@
-import { EResponseStatus } from "../constants/responseStatus";
+import { EResponseStatus } from "../enums/responseStatus";
 import { AppError } from "../utils/AppError";
 
 export const handleJwtError = (errorTitle: string, errorMessage: string) => {

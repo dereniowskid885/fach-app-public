@@ -1,6 +1,7 @@
 import { Types, Document, Schema, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { EThemeType, EUserRole } from '@shared/constants/enums';
+import { EUserRole } from '@shared/enums/role';
+import { EThemeType } from '@shared/enums/theme';
 import { ISafeUserObject } from '@interfaces/user';
 
 export interface IUserModel extends IUserDocument {

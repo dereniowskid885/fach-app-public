@@ -1,7 +1,7 @@
 import { handleZodError } from '@shared/helpers/handleZodError';
 import z from 'zod';
 import { NextFunction, Request, Response } from 'express';
-import { ESupportedLanguages } from '@shared/constants/enums';
+import { ESupportedLanguages } from '@shared/enums/language';
 
 const sendEmailSchema = z
   .object({

@@ -1,6 +1,6 @@
-import { EErrorStrategy } from '@/constants/enums';
 import { LOGIN_PATH } from '@/constants/routes';
-import { parseQueryError, mapErrorStatusToMessageKey } from '@/lib/errorUtils';
+import { EErrorStrategy } from '@/enums/shared';
+import { parseQueryError, mapErrorStatusToMessageKey } from '@/utils/error';
 import { SerializedError } from '@reduxjs/toolkit';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { useTranslations } from 'next-intl';

@@ -1,5 +1,5 @@
 import { PASSWORD_RESET_PATH, VERIFY_PATH } from '@/constants/routes';
-import { ESupportedLanguages } from '@shared/constants/enums';
+import { ESupportedLanguages } from '@shared/enums/language';
 import { PROTECTED_ROUTES } from '@/constants/routes';
 import { HOME_PATH } from '@/constants/routes';
 import { supportedLanguages } from '@/constants/supportedLanguages';

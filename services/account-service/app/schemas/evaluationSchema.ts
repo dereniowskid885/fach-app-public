@@ -1,4 +1,4 @@
-import { ESupportedCurrency } from '@shared/constants/enums';
+import { ESupportedCurrency } from '@shared/enums/currency';
 import { Schema, Types } from 'mongoose';
 
 export interface IEvaluationSchema extends Document {

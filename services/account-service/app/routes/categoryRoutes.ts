@@ -13,7 +13,7 @@ const router = express.Router();
 
 import { createMiddleware } from '@shared/helpers/createMiddleware';
 import { checkAndParseAccessToken, checkUserRole } from '@shared/middlewares/authMiddleware';
-import { EUserRole } from '@shared/constants/enums';
+import { EUserRole } from '@shared/enums/role';
 import { validateCategoryBodyMiddleware } from '@middlewares/categoryValidationMiddleware';
 
 // Role middleware

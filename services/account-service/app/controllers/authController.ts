@@ -1,7 +1,7 @@
 import { TokenManager } from '@managers/tokenManager';
 import type { Request, Response } from 'express';
 import { AuthManager } from '@managers/authManager';
-import { EResponseStatus } from '@shared/constants/responseStatus';
+import { EResponseStatus } from '@shared/enums/responseStatus';
 import { IAppError } from '@shared/utils/AppError';
 import { handleAppError } from '@shared/helpers/handleAppError';
 import { UserManager } from '@managers/userManager';

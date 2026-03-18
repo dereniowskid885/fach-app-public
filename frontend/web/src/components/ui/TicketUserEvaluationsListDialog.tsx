@@ -6,11 +6,11 @@ import {
   PatchTicketsByIdAcceptEvaluationApiArg,
   usePatchTicketsByIdAcceptEvaluationMutation
 } from '@/api/accountApi';
-import { getFormattedPriceAmount, getUserFullName } from '@/lib/utils';
+import { getFormattedPriceAmount, getUserFullName } from '@/utils/shared';
 import { RowSelectionState } from '@tanstack/react-table';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
-import { getFormattedDate } from '@/lib/dateUtils';
+import { getFormattedDate } from '@/utils/date';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export interface ITicketUserEvaluationsListDialog {

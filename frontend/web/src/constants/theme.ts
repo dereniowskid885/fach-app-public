@@ -1,7 +1,7 @@
 import { Moon, Sun, MonitorCog } from 'lucide-react';
-import { EThemeType } from '@shared/constants/enums';
+import { EThemeType } from '@shared/enums/theme';
 
-export const themeTypesObj = {
+export const themeObj = {
   [EThemeType.SYSTEM]: {
     id: 'theme-variant-system',
     icon: MonitorCog,

@@ -3,10 +3,10 @@ import {
   getTicketStatusColorClasses,
   getTicketStatusIcon,
   getTicketStatusTranslationKey
-} from '@/lib/ticketUtils';
-import { cn } from '@/lib/utils';
+} from '@/utils/ticket';
+import { cn } from '@/utils/shared';
 import Typography from '../common/Typography';
-import { ETicketStatus } from '@shared/constants/enums';
+import { ETicketStatus } from '@shared/enums/ticket';
 import { useTranslations } from 'next-intl';
 
 export interface ITicketStatusIcon {

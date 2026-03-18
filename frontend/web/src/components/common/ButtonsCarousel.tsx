@@ -1,12 +1,12 @@
 import { useTranslations } from 'next-intl';
 import { Button } from '../shadcn/button';
 import Typography from './Typography';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/shared';
 import { Filter, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { Input } from '../shadcn/input';
 import { useRef, useEffect } from 'react';
-import { EArrowDirection } from '@/constants/enums';
+import { EArrowDirection } from '@/enums/ui';
 
 export interface IButtonsCarousel {
   isDataLoaded?: boolean;

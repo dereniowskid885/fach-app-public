@@ -1,7 +1,7 @@
 import Logger from '@shared/utils/Logger';
 import { transporter } from './transporter';
 import { AppError } from '@shared/utils/AppError';
-import { EResponseStatus } from '@shared/constants/responseStatus';
+import { EResponseStatus } from '@shared/enums/responseStatus';
 
 export interface IEmailOptions {
   email: string;

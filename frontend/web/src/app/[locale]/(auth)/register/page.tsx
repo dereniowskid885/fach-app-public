@@ -15,7 +15,7 @@ import { useForm } from 'react-hook-form';
 import { PostAuthRegisterApiArg, usePostAuthRegisterMutation } from '@/api/accountApi';
 import AuthCard from '@/components/ui/AuthCard';
 import { useLocale, useTranslations } from 'next-intl';
-import { ESupportedLanguages } from '@shared/constants/enums';
+import { ESupportedLanguages } from '@shared/enums/language';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 interface IRegisterForm {

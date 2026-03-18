@@ -1,5 +1,5 @@
+import { ENotificationType } from '@/enums/notification';
 import { BiBell, BiMessageDetail, BiWrench, BiUser } from 'react-icons/bi';
-import { ENotificationType } from '@/constants/notification';
 
 export interface INotificationIcon {
   type: ENotificationType;

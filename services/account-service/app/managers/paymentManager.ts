@@ -1,6 +1,7 @@
 import Payment from '@models/Payment';
-import { EPaymentIntentEvent, EPaymentIntentType, EPaymentStatus, ESupportedCurrency } from '@shared/constants/enums';
-import { EResponseStatus } from '@shared/constants/responseStatus';
+import { EPaymentIntentEvent, EPaymentIntentType, EPaymentStatus } from '@shared/enums/payment';
+import { ESupportedCurrency } from '@shared/enums/currency';
+import { EResponseStatus } from '@shared/enums/responseStatus';
 import { AppError } from '@shared/utils/AppError';
 import { JwtPayload } from 'jsonwebtoken';
 import { handleStripeError } from '@shared/helpers/handleStripeError';

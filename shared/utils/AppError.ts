@@ -1,4 +1,4 @@
-import { EResponseStatus } from "../constants/responseStatus";
+import { EResponseStatus } from "../enums/responseStatus";
 
 export interface IAppError {
   code: number;
@@ -9,11 +9,7 @@ export class AppError extends Error {
   code: number;
   status: EResponseStatus;
 
-  constructor(
-    code = 500,
-    status = EResponseStatus.SERVER_ERROR,
-    message = "Server error"
-  ) {
+  constructor(code = 500, status = EResponseStatus.SERVER_ERROR, message = "Server error") {
     super(message);
     this.code = code;
     this.status = status;

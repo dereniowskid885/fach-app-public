@@ -1,7 +1,7 @@
 import { Ticket } from '@/api/accountApi';
 import Typography from '../common/Typography';
 import TicketStatusIcon from './TicketStatusIcon';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/shared';
 
 export interface ITicketSummaryInfo {
   ticket: Ticket;

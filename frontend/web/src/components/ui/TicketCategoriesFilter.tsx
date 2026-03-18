@@ -2,8 +2,8 @@ import { Dispatch, SetStateAction } from 'react';
 import { Category, useGetCategoriesQuery } from '@/api/accountApi';
 import CategoryIcon from './CategoryIcon';
 import ButtonsCarousel from '../common/ButtonsCarousel';
-import { EFallbackKey } from '@/constants/enums';
 import { useTranslations } from 'next-intl';
+import { EFallbackKey } from '@/enums/ui';
 
 export interface ITicketCategoriesFilter {
   selectedCategoryId: string | null;

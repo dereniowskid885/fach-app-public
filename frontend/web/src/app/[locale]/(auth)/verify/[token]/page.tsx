@@ -9,12 +9,12 @@ import {
   usePostAuthEmailVerificationMutation
 } from '@/api/accountApi';
 import { HOME_PATH, LOGIN_PATH } from '@/constants/routes';
-import { parseQueryError } from '@/lib/errorUtils';
-import { EAccountVerificationResult } from '@/constants/enums';
+import { parseQueryError } from '@/utils/error';
 import AuthCard from '@/components/ui/AuthCard';
 import { useTranslations } from 'next-intl';
-import { getLastPathSegment } from '@/lib/pathnameUtils';
+import { getLastPathSegment } from '@/utils/pathname';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { EAccountVerificationResult } from '@/enums/auth';
 
 export default function AccountVerifyPage() {
   const t = useTranslations();

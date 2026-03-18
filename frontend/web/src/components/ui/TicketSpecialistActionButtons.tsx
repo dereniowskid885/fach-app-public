@@ -4,10 +4,10 @@ import { Button } from '../shadcn/button';
 import { TStatusActionButton } from './TicketUserActionButtons';
 import { useState } from 'react';
 import TicketSpecialistEvaluationDialog from './TicketSpecialistEvaluationDialog';
-import { ETicketStatus } from '@shared/constants/enums';
-import { EActionType } from '@/constants/enums';
+import { ETicketStatus } from '@shared/enums/ticket';
 import { Evaluation, Ticket } from '@/api/accountApi';
 import { useTranslations } from 'next-intl';
+import { EActionType } from '@/enums/ui';
 
 export interface ITicketSpecialistActionButtons {
   ticket: Ticket;

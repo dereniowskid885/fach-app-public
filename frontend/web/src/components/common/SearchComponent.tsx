@@ -1,9 +1,9 @@
 import { Search, X } from 'lucide-react';
 import { Input } from '../shadcn/input';
 import { useTranslations } from 'next-intl';
-import { ESearchComponentVariant } from '@/constants/enums';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/shared';
 import { Button } from '../shadcn/button';
+import { ESearchComponentVariant } from '@/enums/ui';
 
 export interface ISearchComponent {
   variant?: ESearchComponentVariant;

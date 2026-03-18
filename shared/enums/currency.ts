@@ -1,3 +1,3 @@
 export enum ESupportedCurrency {
-  PLN = 'PLN'
+  PLN = "PLN",
 }

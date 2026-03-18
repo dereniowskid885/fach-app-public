@@ -2,7 +2,7 @@ import { User } from '@/api/accountApi';
 import { Skeleton } from '../shadcn/skeleton';
 import Typography from '../common/Typography';
 import { useTranslations } from 'next-intl';
-import { cn, getUserFullName } from '@/lib/utils';
+import { cn, getUserFullName } from '@/utils/shared';
 
 export interface IUserCard {
   user?: Partial<User>;

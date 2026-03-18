@@ -1,4 +1,4 @@
-import { EResponseStatus } from "../constants/responseStatus";
+import { EResponseStatus } from "../enums/responseStatus";
 import { AppError } from "../utils/AppError";
 
 export const handleStripeError = (error: any) => {

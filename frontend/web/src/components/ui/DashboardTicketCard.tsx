@@ -1,7 +1,7 @@
 import Typography from '../common/Typography';
 import { Separator } from '../shadcn/separator';
 import { Clock, Layers } from 'lucide-react';
-import { getLocaleDateString } from '@/lib/dateUtils';
+import { getLocaleDateString } from '@/utils/date';
 import { Ticket } from '@/api/accountApi';
 import TicketStatusIcon from './TicketStatusIcon';
 import { useLocale } from 'next-intl';

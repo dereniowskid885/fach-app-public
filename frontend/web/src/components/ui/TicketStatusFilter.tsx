@@ -1,9 +1,9 @@
-import { ETicketStatus } from '@shared/constants/enums';
+import { ETicketStatus } from '@shared/enums/ticket';
 import ButtonsCarousel from '../common/ButtonsCarousel';
 import TicketStatusIcon from './TicketStatusIcon';
 import { useTranslations } from 'next-intl';
-import { getTicketStatusTranslationKey } from '@/lib/ticketUtils';
-import { EFallbackKey } from '@/constants/enums';
+import { getTicketStatusTranslationKey } from '@/utils/ticket';
+import { EFallbackKey } from '@/enums/ui';
 
 export interface ITicketStatusFilter {
   statuses: ETicketStatus[];

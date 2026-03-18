@@ -8,7 +8,7 @@ import {
   ClipboardCheck
 } from 'lucide-react';
 import { AVAILABLE_TICKETS_PATH, HOME_PATH, ROUTES, TICKETS_PATH } from './routes';
-import { EUserRole } from '@shared/constants/enums';
+import { EUserRole } from '@shared/enums/role';
 
 const commonMenuItems = [
   {

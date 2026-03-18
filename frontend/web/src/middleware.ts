@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { LOGIN_PATH } from './constants/routes';
-import { isTokenExpired } from './lib/tokenUtils';
+import { isTokenExpired } from './utils/token';
 import axios from 'axios';
 import { API } from './constants/api';
 import { routing } from './i18n/routing';
 import createMiddleware from 'next-intl/middleware';
-import { isMiddlewareExcludedPath, isProtectedPath } from './lib/pathnameUtils';
+import { isMiddlewareExcludedPath, isProtectedPath } from './utils/pathname';
 
 const intlMiddleware = createMiddleware(routing);
 

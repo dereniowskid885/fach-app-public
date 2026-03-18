@@ -6,7 +6,7 @@ import { Label } from '@/components/shadcn/label';
 import PasswordInput from '@/components/common/PasswordInput';
 import Typography from '@/components/common/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
-import { getTokenPayload, isTokenExpired } from '@/lib/tokenUtils';
+import { getTokenPayload, isTokenExpired } from '@/utils/token';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -15,7 +15,7 @@ import { notFound } from 'next/navigation';
 import { PostAuthPasswordResetApiArg, usePostAuthPasswordResetMutation } from '@/api/accountApi';
 import AuthCard from '@/components/ui/AuthCard';
 import { useTranslations } from 'next-intl';
-import { getLastPathSegment } from '@/lib/pathnameUtils';
+import { getLastPathSegment } from '@/utils/pathname';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 interface IPasswordResetForm {

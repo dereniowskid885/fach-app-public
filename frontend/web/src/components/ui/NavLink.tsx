@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React, { ReactNode } from 'react';
 import Typography from '../common/Typography';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/shared';
 import AnimateCollapse from '../common/AnimateCollapse';
 
 export interface INavLink {

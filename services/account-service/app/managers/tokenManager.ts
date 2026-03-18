@@ -1,5 +1,5 @@
 import User, { IUserModel } from '@models/User';
-import { EEnvironmentType } from '@shared/constants/enums';
+import { EEnvironmentType } from '@shared/enums/shared';
 import { Request, Response } from 'express';
 import jwt, { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 import crypto from 'crypto';
@@ -7,7 +7,7 @@ import Logger from '@shared/utils/Logger';
 import { AppError } from '@shared/utils/AppError';
 import { Types } from 'mongoose';
 import { UserManager } from './userManager';
-import { EResponseStatus } from '@shared/constants/responseStatus';
+import { EResponseStatus } from '@shared/enums/responseStatus';
 import { handleRefreshTokenError } from '@shared/helpers/handleJwtError';
 
 export const TokenManager = {

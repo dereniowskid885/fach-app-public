@@ -3,8 +3,8 @@
 import { usePathname } from 'next/navigation';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useLocale } from 'next-intl';
-import { normalizePathname } from '@/lib/pathnameUtils';
-import { ESupportedLanguages } from '@shared/constants/enums';
+import { normalizePathname } from '@/utils/pathname';
+import { ESupportedLanguages } from '@shared/enums/language';
 import ThemeSwitcher from './ThemeSwitcher';
 
 export default function PreferencesButtons() {

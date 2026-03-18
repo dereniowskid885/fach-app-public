@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from 'react';
 import ButtonsCarousel from '../common/ButtonsCarousel';
-import { EFallbackKey } from '@/constants/enums';
 import { useTranslations } from 'next-intl';
 import { cities } from '@shared/constants/mocks';
+import { EFallbackKey } from '@/enums/ui';
 
 export interface ITicketCityFilter {
   selectedCity: string | null;
