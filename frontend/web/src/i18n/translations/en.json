@@ -165,9 +165,15 @@
     "errorTitle": "An error occurred during verification",
     "tokenInvalidTitle": "Account verification link is invalid"
   },
-  "ticketCreateDialog": {
-    "title": "New ticket",
-    "toastTitle": "Ticket created successfully",
+  "ticketFormDialog": {
+    "title": {
+      "edit": "Edit ticket",
+      "creation": "New ticket"
+    },
+    "toastTitle": {
+      "edit": "Your ticket has been updated",
+      "creation": "Ticket created successfully"
+    },
     "titleFormLabel": "Title",
     "descriptionFormLabel": "Description",
     "descriptionCharsAmount": "{amount} characters remaining",
@@ -191,10 +197,14 @@
     "city": "City"
   },
   "evaluationDialog": {
-    "creationTitle": "Ticket evaluation",
-    "creationSuccess": "Your evaluation has been sent to the author",
-    "editTitle": "Edit evaluation",
-    "editSuccess": "The evaluation has been updated",
+    "title": {
+      "edit": "Edit evaluation",
+      "creation": "Ticket evaluation"
+    },
+    "toastTitle": {
+      "edit": "Your evaluation has been updated",
+      "creation": "Your evaluation has been sent to the author"
+    },
     "daysLabel": "Days",
     "hoursLabel": "Hours",
     "minutesLabel": "Minutes",
