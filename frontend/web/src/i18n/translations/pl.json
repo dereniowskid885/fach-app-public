@@ -166,9 +166,15 @@
     "errorTitle": "Wystąpił błąd podczas weryfikacji",
     "tokenInvalidTitle": "Link do aktywacji konta jest nieprawidłowy"
   },
-  "ticketCreateDialog": {
-    "title": "Nowa sprawa",
-    "toastTitle": "Sprawa utworzona pomyślnie",
+  "ticketFormDialog": {
+    "title": {
+      "edit": "Edycja sprawy",
+      "creation": "Nowa sprawa"
+    },
+    "toastTitle": {
+      "edit": "Twoja sprawa została zaktualizowana",
+      "creation": "Twoja sprawa utworzona pomyślnie"
+    },
     "titleFormLabel": "Tytuł",
     "descriptionFormLabel": "Opis",
     "descriptionCharsAmount": "Pozostało: {amount} znaków",
@@ -192,10 +198,14 @@
     "city": "Miasto"
   },
   "evaluationDialog": {
-    "creationTitle": "Wycena sprawy",
-    "creationSuccess": "Twoja wycena została wysłana do autora",
-    "editTitle": "Edycja wyceny",
-    "editSuccess": "Wycena została zaktualizowana",
+    "title": {
+      "edit": "Edycja wyceny",
+      "creation": "Wycena sprawy"
+    },
+    "toastTitle": {
+      "edit": "Twoja wycena została zaktualizowana",
+      "creation": "Twoja wycena została wysłana do autora"
+    },
     "daysLabel": "Dni",
     "hoursLabel": "Godziny",
     "minutesLabel": "Minuty",

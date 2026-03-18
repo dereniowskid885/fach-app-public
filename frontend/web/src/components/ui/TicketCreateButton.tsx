@@ -6,8 +6,9 @@ import { useTranslations } from 'next-intl';
 import { useSelector } from 'react-redux';
 import { Button } from '../shadcn/button';
 import { ClipboardPlus } from 'lucide-react';
-import TicketCreateDialog from './TicketCreateDialog';
+import TicketFormDialog from './TicketFormDialog';
 import { useState } from 'react';
+import { EActionType } from '@/constants/enums';
 
 export default function TicketCreateButton() {
   const t = useTranslations();
@@ -24,8 +25,9 @@ export default function TicketCreateButton() {
         <span>{t('dashboard.createNewTicketButtonText')}</span>
       </Button>
 
-      <TicketCreateDialog
+      <TicketFormDialog
         open={ticketCreateDialog}
+        mode={EActionType.CREATION}
         closeDialog={() => setTicketCreateDialog(false)}
       />
     </>

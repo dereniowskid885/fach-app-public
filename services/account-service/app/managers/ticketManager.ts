@@ -237,23 +237,18 @@ export const TicketManager = {
       throw new AppError(400, EResponseStatus.ERROR_INVALID_DATA, 'No data provided for update');
     }
 
-    const { categoryId, city, status, assigneeId, title, description } = updateData;
+    const { city, status, assigneeId } = updateData;
+    const hasAdminOnlyFields = city !== undefined || status !== undefined || assigneeId !== undefined;
 
-    if (categoryId !== undefined || city !== undefined || status !== undefined || assigneeId !== undefined) {
-      if (!isAdmin) {
-        throw new AppError(
-          403,
-          EResponseStatus.ERROR_USER_INVALID_ROLE,
-          'Not enough permissions to update ticket category, city, status or assignee',
-        );
-      }
+    if (!isAdmin && hasAdminOnlyFields) {
+      throw new AppError(
+        403,
+        EResponseStatus.ERROR_USER_INVALID_ROLE,
+        'Not enough permissions to update ticket category, city, status or assignee',
+      );
+    }
 
-      if (categoryId !== undefined) {
-        const category = await CategoryManager.getCategoryById(categoryId);
-
-        ticket.category = category._id;
-      }
-
+    if (hasAdminOnlyFields) {
       if (city !== undefined) {
         ticket.city = city;
       }
@@ -275,12 +270,22 @@ export const TicketManager = {
       }
     }
 
+    const { title, description, categoryId } = updateData;
+
     if (title !== undefined) {
       ticket.title = title;
     }
 
     if (description !== undefined) {
       ticket.description = description;
+    }
+
+    if (categoryId !== undefined) {
+      const category = await CategoryManager.getCategoryById(categoryId);
+
+      // TODO: sent notification to specialists who evaluated the ticket
+      ticket.evaluations = [];
+      ticket.category = category._id;
     }
 
     ticket.updatedBy = user.userId;
