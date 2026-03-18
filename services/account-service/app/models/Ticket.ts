@@ -16,7 +16,7 @@ export interface ITicketModel extends Document {
   updatedAt: Date;
   title: string;
   description: string;
-  evaluations: [IEvaluationSchema];
+  evaluations: IEvaluationSchema[];
   acceptedEvaluation: IEvaluationSchema;
 }
 
