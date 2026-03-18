@@ -5,19 +5,20 @@ import Typography from '../common/Typography';
 import { usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { menuItemsObj } from '@/constants/menu';
-import { ESupportedLanguages, EUserRole } from '@shared/constants/enums';
+import { ESupportedLanguages } from '@shared/enums/language';
+import { EUserRole } from '@shared/enums/role';
 import { Bell, HelpCircle, Settings } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../shadcn/popover';
 import { Button } from '../shadcn/button';
 import { Separator } from '../shadcn/separator';
 import { motion } from 'framer-motion';
 import { useSidebarContext } from '@/contexts/SidebarContext';
-import { normalizePathname } from '@/lib/pathnameUtils';
+import { normalizePathname } from '@/utils/pathname';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { Skeleton } from '../shadcn/skeleton';
 import SearchComponent from '../common/SearchComponent';
-import { ESearchComponentVariant } from '@/constants/enums';
+import { ESearchComponentVariant } from '@/enums/ui';
 
 export default function Header() {
   const t = useTranslations();

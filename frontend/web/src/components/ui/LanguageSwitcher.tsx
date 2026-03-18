@@ -1,15 +1,15 @@
 import { Check, Globe } from 'lucide-react';
 import { Button } from '../shadcn/button';
 import { Popover, PopoverContent, PopoverTrigger } from '../shadcn/popover';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/shared';
 import { supportedLanguagesObj } from '@/constants/supportedLanguages';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import AnimateCollapse from '../common/AnimateCollapse';
-import { ESupportedLanguages } from '@shared/constants/enums';
-import { EPopoverContentDirection } from '@/constants/enums';
+import { ESupportedLanguages } from '@shared/enums/language';
 import Typography from '../common/Typography';
+import { EPopoverContentDirection } from '@/enums/ui';
 
 export interface ILanguageSwitcher {
   currentPath: string;

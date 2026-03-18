@@ -1,6 +1,6 @@
 import { TicketStatus } from '@/api/accountApi';
 import { ticketStatusObj } from '@/constants/ticketStatus';
-import { ETicketStatus } from '@shared/constants/enums';
+import { ETicketStatus } from '@shared/enums/ticket';
 import { ClipboardList } from 'lucide-react';
 
 export const getTicketStatusColorClasses = (status?: TicketStatus | ETicketStatus) => {

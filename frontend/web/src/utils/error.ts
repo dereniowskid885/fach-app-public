@@ -1,9 +1,9 @@
-import { EErrorStrategy } from '@/constants/enums';
-import { ERROR_STATUS_MAP } from '@/constants/errorStatusMap';
-import { IErrorData } from '@/constants/interfaces';
+import { EErrorStrategy } from '@/enums/shared';
+import { IErrorData } from '@/types/shared';
+import { ERROR_STATUS_MAP } from '@/mappings/errorStatus';
 import { SerializedError } from '@reduxjs/toolkit';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { EResponseStatus } from '@shared/constants/responseStatus';
+import { EResponseStatus } from '@shared/enums/responseStatus';
 
 export const parseQueryError = (error: FetchBaseQueryError | SerializedError) => {
   const errorDataObj = 'data' in error ? error.data : {};

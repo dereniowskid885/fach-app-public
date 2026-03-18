@@ -8,28 +8,10 @@ export const enum EFallbackKey {
   CONTENT_CARD = 'content-card'
 }
 
-export const enum EAccountVerificationResult {
-  TOKEN_INVALID = 'TOKEN_INVALID',
-  SUCCESS = 'SUCCESS',
-  ERROR = 'ERROR'
-}
-
 export const enum ETimePickerType {
   DAYS = 'DAYS',
   HOURS = 'HOURS',
   MINUTES = 'MINUTES'
-}
-
-export const enum EActionType {
-  EDIT = 'EDIT',
-  CREATION = 'CREATION'
-}
-
-export const enum EErrorStrategy {
-  TOAST = 'TOAST',
-  INLINE = 'INLINE',
-  REDIRECT = 'REDIRECT',
-  SILENT = 'SILENT'
 }
 
 export const enum ESearchComponentVariant {
@@ -47,4 +29,9 @@ export const enum EPopoverContentDirection {
 export const enum EArrowDirection {
   LEFT = 'left',
   RIGHT = 'right'
+}
+
+export const enum EActionType {
+  EDIT = 'EDIT',
+  CREATION = 'CREATION'
 }

@@ -18,7 +18,7 @@ import { useTranslations } from 'next-intl';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { EActionType } from '@/constants/enums';
+import { EActionType } from '@/enums/ui';
 
 interface ITicketForm {
   title: string;

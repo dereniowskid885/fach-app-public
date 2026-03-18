@@ -14,7 +14,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import AuthCard from '@/components/ui/AuthCard';
 import { useLocale, useTranslations } from 'next-intl';
-import { ESupportedLanguages } from '@shared/constants/enums';
+import { ESupportedLanguages } from '@shared/enums/language';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 interface IPasswordResetRequestForm {

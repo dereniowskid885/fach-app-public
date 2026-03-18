@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '../shadcn/card';
 import { ReactNode } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/shared';
 
 export interface IContentCard {
   children: ReactNode;

@@ -1,4 +1,4 @@
-import { EResponseStatus } from "../constants/responseStatus";
+import { EResponseStatus } from "../enums/responseStatus";
 import type { Response } from "express";
 import { IAppError } from "../utils/AppError";
 

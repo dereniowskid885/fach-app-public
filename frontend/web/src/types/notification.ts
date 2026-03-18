@@ -1,10 +1,6 @@
-// TODO: temporary enum - to be discussed
-export enum ENotificationType {
-  RESPONSE = 'RESPONSE',
-  STATUS = 'STATUS',
-  NEW = 'NEW'
-}
+import { ENotificationType } from '@/enums/notification';
 
+// TODO: temporary interface
 export interface INotification {
   id: string;
   ticketId: string;

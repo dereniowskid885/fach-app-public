@@ -11,7 +11,8 @@ import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { menuItemsObj } from '@/constants/menu';
 import LanguageSwitcher from './LanguageSwitcher';
-import { ESupportedLanguages, EUserRole } from '@shared/constants/enums';
+import { ESupportedLanguages } from '@shared/enums/language';
+import { EUserRole } from '@shared/enums/role';
 import Logo from './Logo';
 import { Skeleton } from '../shadcn/skeleton';
 import ThemeSwitcher from './ThemeSwitcher';
@@ -19,10 +20,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeftFromLine, ArrowRightFromLine } from 'lucide-react';
 import AnimateCollapse from '../common/AnimateCollapse';
 import { useSidebarContext } from '@/contexts/SidebarContext';
-import { normalizePathname } from '@/lib/pathnameUtils';
+import { normalizePathname } from '@/utils/pathname';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { EPopoverContentDirection } from '@/constants/enums';
 import UserCard from './UserCard';
+import { EPopoverContentDirection } from '@/enums/ui';
 
 export default function Sidebar() {
   const t = useTranslations();

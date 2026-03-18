@@ -1,4 +1,5 @@
-import { EPaymentStatus, ESupportedCurrency } from '@shared/constants/enums';
+import { EPaymentStatus } from '@shared/enums/payment';
+import { ESupportedCurrency } from '@shared/enums/currency';
 import { model, Schema, Types } from 'mongoose';
 
 export interface IPaymentModel extends Document {

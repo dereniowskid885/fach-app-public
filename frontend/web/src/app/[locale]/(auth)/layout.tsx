@@ -4,7 +4,7 @@ import { Layers, CheckCircle, RefreshCw, Star, Heart, Bolt } from 'lucide-react'
 import AuthLeftBanner from '@assets/auth-left-banner.jpg';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { EFallbackKey } from '@/constants/enums';
+import { EFallbackKey } from '@/enums/ui';
 import PreferencesButtons from '@/components/ui/PreferencesButtons';
 import Logo from '@/components/ui/Logo';
 

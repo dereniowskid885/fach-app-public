@@ -1,5 +1,5 @@
-import { EResponseStatus } from '@shared/constants/responseStatus';
-import { EErrorStrategy } from './enums';
+import { EResponseStatus } from '@shared/enums/responseStatus';
+import { EErrorStrategy } from '@/enums/shared';
 
 type TErrorMapping = {
   messageKey: string;

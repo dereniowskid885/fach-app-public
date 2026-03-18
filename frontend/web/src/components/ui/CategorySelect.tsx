@@ -12,10 +12,10 @@ import {
   CommandList
 } from '@/components/shadcn/command';
 import { Check } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/shared';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Category, useGetCategoriesQuery } from '@/api/accountApi';
-import { EFallbackKey } from '@/constants/enums';
+import { EFallbackKey } from '@/enums/ui';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 

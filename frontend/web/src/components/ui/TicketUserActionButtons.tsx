@@ -1,11 +1,11 @@
 import { ReactElement, useCallback, useState } from 'react';
 import { Button } from '../shadcn/button';
 import { accountApi, Ticket } from '@/api/accountApi';
-import { ETicketStatus } from '@shared/constants/enums';
+import { ETicketStatus } from '@shared/enums/ticket';
 import AmountIcon from './AmountIcon';
 import TicketUserEvaluationsListDialog from './TicketUserEvaluationsListDialog';
 import TicketUserPaymentDialog from './TicketUserPaymentDialog';
-import { ESupportedCurrency } from '@/constants/supportedCurrency';
+import { ESupportedCurrency } from '@shared/enums/currency';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { useTranslations } from 'next-intl';
 

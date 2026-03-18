@@ -19,7 +19,7 @@ import {
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Checkbox } from '../shadcn/checkbox';
 import { useTranslations } from 'next-intl';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/shared';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

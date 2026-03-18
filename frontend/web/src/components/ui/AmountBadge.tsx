@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/shared';
 import { Badge } from '../shadcn/badge';
 import { ReactNode } from 'react';
 

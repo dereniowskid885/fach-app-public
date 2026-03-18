@@ -1,4 +1,5 @@
-import { ENotificationType, INotification } from '@/constants/notification';
+import { ENotificationType } from '@/enums/notification';
+import { INotification } from '@/types/notification';
 
 export const notifications: INotification[] = [
   {

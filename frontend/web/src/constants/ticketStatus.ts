@@ -1,4 +1,4 @@
-import { ETicketStatus } from '@shared/constants/enums';
+import { ETicketStatus } from '@shared/enums/ticket';
 import {
   CheckCircle,
   CheckCircle2,

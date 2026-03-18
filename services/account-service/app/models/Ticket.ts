@@ -1,4 +1,4 @@
-import { ETicketStatus } from '@shared/constants/enums';
+import { ETicketStatus } from '@shared/enums/ticket';
 import { Types, Document, Schema, model } from 'mongoose';
 import { ICategoryModel } from './Category';
 import { IUserModel } from './User';

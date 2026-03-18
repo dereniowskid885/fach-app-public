@@ -1,4 +1,4 @@
-import { EEnvironmentType } from "../constants/enums";
+import { EEnvironmentType } from "../enums/shared";
 
 class Logger {
   static log(message: string) {

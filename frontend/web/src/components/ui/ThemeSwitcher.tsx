@@ -1,9 +1,9 @@
 import { Button } from '../shadcn/button';
 import { Popover, PopoverContent, PopoverTrigger } from '../shadcn/popover';
 import { Check, Palette } from 'lucide-react';
-import { themeTypesObj } from '@/constants/theme';
+import { themeObj } from '@/constants/theme';
 import { useTranslations } from 'next-intl';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/shared';
 import AnimateCollapse from '../common/AnimateCollapse';
 import { PatchUsersByIdApiArg, ThemeType, usePatchUsersByIdMutation } from '@/api/accountApi';
 import { useDispatch, useSelector } from 'react-redux';
@@ -90,22 +90,22 @@ export default function ThemeSwitcher({
         </div>
 
         <div className="grid gap-0.5">
-          {Object.values(themeTypesObj).map(themeObj => {
-            const isCurrentTheme = theme === themeObj.className;
+          {Object.values(themeObj).map(themeObjItem => {
+            const isCurrentTheme = theme === themeObjItem.className;
 
             return (
               <Button
-                key={themeObj.id}
+                key={themeObjItem.id}
                 disabled={isCurrentTheme}
-                onClick={() => handleThemeChange(themeObj.className)}
+                onClick={() => handleThemeChange(themeObjItem.className)}
                 variant="ghost"
                 className={cn(
                   'animation-base animation-idle animation-interactive group flex w-full items-center justify-start gap-3 px-3 py-2 text-sm',
                   isCurrentTheme ? 'font-bold' : ''
                 )}
               >
-                <themeObj.icon size={12} />
-                <span className="flex-1 text-left">{t(`theme.${themeObj.label}`)}</span>
+                <themeObjItem.icon size={12} />
+                <span className="flex-1 text-left">{t(`theme.${themeObjItem.label}`)}</span>
 
                 {isCurrentTheme && <Check size={12} className="text-primary" />}
               </Button>

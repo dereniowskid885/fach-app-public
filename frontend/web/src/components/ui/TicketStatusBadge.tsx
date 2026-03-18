@@ -1,7 +1,7 @@
 import { TicketStatus } from '@/api/accountApi';
-import { getTicketStatusColorClasses, getTicketStatusTranslationKey } from '@/lib/ticketUtils';
-import { cn } from '@/lib/utils';
-import { ETicketStatus } from '@shared/constants/enums';
+import { getTicketStatusColorClasses, getTicketStatusTranslationKey } from '@/utils/ticket';
+import { cn } from '@/utils/shared';
+import { ETicketStatus } from '@shared/enums/ticket';
 import { useTranslations } from 'next-intl';
 
 export interface ITicketStatusBadge {

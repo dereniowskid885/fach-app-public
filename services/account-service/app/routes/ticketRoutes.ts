@@ -25,7 +25,7 @@ import {
   validateTicketPaymentMiddleware,
   validateTicketUpdateMiddleware,
 } from '@middlewares/ticketValidationMiddleware';
-import { EUserRole } from '@shared/constants/enums';
+import { EUserRole } from '@shared/enums/role';
 
 // Role middleware
 const checkSpecialistRole = createMiddleware(checkUserRole, [EUserRole.SPECIALIST]);

@@ -10,7 +10,7 @@ import {
   validateUserRoleUpdateMiddleware,
   validateUserUpdateMiddleware,
 } from 'middlewares/userValidationMiddleware';
-import { EUserRole } from '@shared/constants/enums';
+import { EUserRole } from '@shared/enums/role';
 
 // Role middleware
 const checkAdminRole = createMiddleware(checkUserRole, [EUserRole.ADMIN]);

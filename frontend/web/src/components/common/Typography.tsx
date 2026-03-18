@@ -1,5 +1,5 @@
 import React, { ElementType } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/shared';
 
 interface TypographyProps<T extends ElementType> extends React.HTMLAttributes<HTMLElement> {
   as?: T;

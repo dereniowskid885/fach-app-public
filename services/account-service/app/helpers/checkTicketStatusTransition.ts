@@ -1,4 +1,4 @@
-import { ETicketStatus } from '@shared/constants/enums';
+import { ETicketStatus } from '@shared/enums/ticket';
 
 // TODO: https://github.com/dereniowskid885/fach-app/issues/10
 export const checkTicketStatusTransition = (fromStatus: string, toStatus: string) => {

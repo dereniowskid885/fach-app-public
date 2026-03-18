@@ -1,8 +1,10 @@
 import { AppError } from '@shared/utils/AppError';
 import Ticket, { ITicketModel } from '@models/Ticket';
 import { JwtPayload } from 'jsonwebtoken';
-import { ESupportedCurrency, ETicketStatus, EUserRole } from '@shared/constants/enums';
-import { EResponseStatus } from '@shared/constants/responseStatus';
+import { ETicketStatus } from '@shared/enums/ticket';
+import { ESupportedCurrency } from '@shared/enums/currency';
+import { EUserRole } from '@shared/enums/role';
+import { EResponseStatus } from '@shared/enums/responseStatus';
 import { CategoryManager } from './categoryManager';
 import { UserManager } from './userManager';
 import { checkTicketStatusTransition } from '@helpers/checkTicketStatusTransition';

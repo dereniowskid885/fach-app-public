@@ -4,9 +4,7 @@ import { Label } from '@/components/shadcn/label';
 import { TimePickerInput } from '../common/TimePicker';
 import Typography from '../common/Typography';
 import { Slider } from '../shadcn/slider';
-import { EActionType, ETimePickerType } from '@/constants/enums';
 import PriceInput from '../common/PriceInput';
-import { ESupportedCurrency } from '@/constants/supportedCurrency';
 import {
   usePatchTicketsByIdEvaluationMutation,
   accountApi,
@@ -14,10 +12,12 @@ import {
   usePatchTicketsByIdEditEvaluationMutation,
   Evaluation
 } from '@/api/accountApi';
-import { getFormattedPriceAmount } from '@/lib/utils';
+import { getFormattedPriceAmount } from '@/utils/shared';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { EActionType, ETimePickerType } from '@/enums/ui';
+import { ESupportedCurrency } from '@shared/enums/currency';
 
 export interface ITicketSpecialistEvaluationDialog {
   open: boolean;

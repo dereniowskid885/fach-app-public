@@ -2,8 +2,8 @@ import Category, { ICategoryModel } from '@models/Category';
 import { AppError } from '@shared/utils/AppError';
 import { handleTransactionError } from '@shared/helpers/handleTransactionError';
 import { UserManager } from './userManager';
-import { EUserRole } from '@shared/constants/enums';
-import { EResponseStatus } from '@shared/constants/responseStatus';
+import { EUserRole } from '@shared/enums/role';
+import { EResponseStatus } from '@shared/enums/responseStatus';
 import mongoose, { FilterQuery, Types } from 'mongoose';
 
 const USER_KEYS = ['email', 'role', 'name', 'surname', 'city', 'isVerified'];
