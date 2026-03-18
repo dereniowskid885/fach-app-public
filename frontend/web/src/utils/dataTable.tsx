@@ -9,9 +9,8 @@ import { getLocaleDateString } from './date';
 import UserCard from '@/components/ui/UserCard';
 import { ETicketStatus } from '@shared/enums/ticket';
 import { EUserRole } from '@shared/enums/role';
-import { TicketSpecialistActionButtons } from '@/components/ui/TicketSpecialistActionButtons';
-import TicketUserActionButtons from '@/components/ui/TicketUserActionButtons';
 import TicketDropdownMenu from '@/components/ui/TicketDropdownMenu';
+import TicketActionButtons from '@/components/ui/TicketActionButtons';
 
 /**
  * Shared column definition factories for ticket-related data tables.
@@ -135,23 +134,7 @@ export const getActionColumn = (role: EUserRole, userId?: string) => ({
   cell: (item: CellContext<Ticket, unknown>) => {
     const ticket = item.row.original as Ticket;
 
-    switch (role) {
-      case EUserRole.SPECIALIST: {
-        const currentUserEvaluation = ticket.evaluations?.find(
-          evaluation => evaluation.user?._id === userId
-        );
-
-        return (
-          <TicketSpecialistActionButtons
-            ticket={ticket}
-            currentUserEvaluation={currentUserEvaluation}
-          />
-        );
-      }
-
-      case EUserRole.USER:
-        return <TicketUserActionButtons ticket={ticket} />;
-    }
+    return <TicketActionButtons ticket={ticket} role={role} userId={userId} />;
   }
 });
 

@@ -1,13 +1,13 @@
 'use client';
 
 import { Button } from '../shadcn/button';
-import { TStatusActionButton } from './TicketUserActionButtons';
 import { useState } from 'react';
 import TicketSpecialistEvaluationDialog from './TicketSpecialistEvaluationDialog';
 import { ETicketStatus } from '@shared/enums/ticket';
 import { Evaluation, Ticket } from '@/api/accountApi';
 import { useTranslations } from 'next-intl';
 import { EActionType } from '@/enums/ui';
+import { TStatusActionButton } from '@/types/ticket';
 
 export interface ITicketSpecialistActionButtons {
   ticket: Ticket;
