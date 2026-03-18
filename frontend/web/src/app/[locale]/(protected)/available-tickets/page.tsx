@@ -2,7 +2,7 @@
 
 import ContentCard from '@/components/common/ContentCard';
 import SearchComponent from '@/components/common/SearchComponent';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import AmountBadge from '@/components/ui/AmountBadge';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
@@ -10,14 +10,16 @@ import { useSelector } from 'react-redux';
 import { useGetTicketsSpecialistAvailableQuery } from '@/api/accountApi';
 import { Separator } from '@/components/shadcn/separator';
 import TicketCityFilter from '@/components/ui/TicketCityFilter';
-import DataTableSpecialistAvailableTicketsPage from '@/components/ui/DataTableSpecialistAvailableTicketsPage';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
 import PageHeader from '@/components/common/PageHeader';
+import { getAvailableTicketsColumns } from '@/helpers/dataTableColumns';
+import { DataTable } from '@/components/common/DataTable';
 
 export default function AvailableTickets() {
   const t = useTranslations();
-  const { city } = useSelector(selectUserData);
+  const currentLocale = useLocale();
+  const { userId, city } = useSelector(selectUserData);
 
   // TODO: fix redundant query triggering
   // probably usage of api will fix the issue
@@ -55,6 +57,8 @@ export default function AvailableTickets() {
       return matchesSearchQuery;
     }) ?? [];
 
+  const tableColumnsData = getAvailableTicketsColumns(t, currentLocale, userId);
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -88,7 +92,7 @@ export default function AvailableTickets() {
         <LoadingSpinner className="m-auto" />
       ) : (
         <ContentCard index={1} className="p-0 sm:p-0">
-          <DataTableSpecialistAvailableTicketsPage tableData={filteredTickets} />
+          <DataTable data={filteredTickets} columns={tableColumnsData} />
         </ContentCard>
       )}
     </div>
