@@ -35,16 +35,6 @@ export default function TicketSpecialistEvaluationDialog({
   closeDialog
 }: ITicketSpecialistEvaluationDialog) {
   const t = useTranslations();
-  const labels = {
-    [EActionType.CREATION]: {
-      dialogTitle: t('evaluationDialog.creationTitle'),
-      toastMessage: t('evaluationDialog.creationSuccess')
-    },
-    [EActionType.EDIT]: {
-      dialogTitle: t('evaluationDialog.editTitle'),
-      toastMessage: t('evaluationDialog.editSuccess')
-    }
-  };
   const maxMinutes = 1440; // 1 day
 
   const [priceInCents, setPriceInCents] = useState<number>(
@@ -126,15 +116,12 @@ export default function TicketSpecialistEvaluationDialog({
       city: ticket.city
     });
 
-    toast.success(labels[mode].toastMessage);
+    toast.success(t(`evaluationDialog.toastTitle.${mode.toLowerCase()}`));
   };
 
   useEffect(() => {
     setErrorMessage('');
   }, [minutes, priceInCents]);
-
-  // TODO:
-  // add similar code to TicketCreateDialog
 
   const ticketEvaluationForm = (
     <form>
@@ -219,7 +206,7 @@ export default function TicketSpecialistEvaluationDialog({
   return (
     <DialogComponent
       open={open}
-      title={labels[mode].dialogTitle}
+      title={t(`evaluationDialog.title.${mode.toLowerCase()}`)}
       cancelButtonText={t('common.cancel')}
       confirmButtonText={t('common.confirm')}
       confirmButtonHandler={submitHandler}
@@ -227,8 +214,7 @@ export default function TicketSpecialistEvaluationDialog({
       cancelButtonHandler={closeDialog}
       content={ticketEvaluationForm}
       errorMessage={errorMessage}
-      // TODO: fix disabled confirm button
-      // confirmButtonDisabled={!!errorMessage}
+      confirmButtonDisabled={!!errorMessage}
     />
   );
 }

@@ -20,8 +20,8 @@ import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export interface ICategorySelect {
-  selectedCategory: Category | null;
-  setSelectedCategory: Dispatch<SetStateAction<Category | null>>;
+  selectedCategory: Category | undefined;
+  setSelectedCategory: Dispatch<SetStateAction<Category | undefined>>;
 }
 
 export default function CategorySelect({ selectedCategory, setSelectedCategory }: ICategorySelect) {
