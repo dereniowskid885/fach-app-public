@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Button } from '../shadcn/button';
 import { accountApi, Ticket } from '@/api/accountApi';
 import { ETicketStatus } from '@shared/enums/ticket';
@@ -8,15 +8,7 @@ import TicketUserPaymentDialog from './TicketUserPaymentDialog';
 import { ESupportedCurrency } from '@shared/enums/currency';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { useTranslations } from 'next-intl';
-
-export type TStatusActionButton = Partial<{
-  [key in ETicketStatus]: {
-    title: string;
-    handler: () => void;
-    element?: ReactElement;
-    isLoading?: boolean;
-  };
-}>;
+import { TStatusActionButton } from '@/types/ticket';
 
 export interface ITicketUserActionButtons {
   ticket: Ticket;

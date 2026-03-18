@@ -5,11 +5,14 @@ import { getLocaleDateString } from '@/utils/date';
 import { Ticket } from '@/api/accountApi';
 import TicketStatusIcon from './TicketStatusIcon';
 import { useLocale } from 'next-intl';
-import TicketUserActionButtons from './TicketUserActionButtons';
 import DashboardTicketDropdownMenu from './TicketDropdownMenu';
 import ContentCard from '../common/ContentCard';
 import UserCard from './UserCard';
 import TicketSummaryInfo from './TicketSummaryInfo';
+import TicketActionButtons from './TicketActionButtons';
+import { useSelector } from 'react-redux';
+import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { EUserRole } from '@shared/enums/role';
 
 export interface IDashboardTicketCard {
   ticket: Ticket;
@@ -18,6 +21,7 @@ export interface IDashboardTicketCard {
 
 export default function DashboardTicketCard({ ticket, index }: IDashboardTicketCard) {
   const currentLocale = useLocale();
+  const { role, userId } = useSelector(selectUserData);
 
   return (
     <ContentCard index={index}>
@@ -63,7 +67,7 @@ export default function DashboardTicketCard({ ticket, index }: IDashboardTicketC
         <TicketSummaryInfo ticket={ticket} />
 
         <div className="flex items-center justify-between gap-4">
-          <TicketUserActionButtons ticket={ticket} />
+          <TicketActionButtons ticket={ticket} role={role as EUserRole} userId={userId} />
 
           <UserCard user={ticket.assignee} />
         </div>
