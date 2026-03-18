@@ -283,6 +283,8 @@ export const TicketManager = {
     if (categoryId !== undefined) {
       const category = await CategoryManager.getCategoryById(categoryId);
 
+      // TODO: sent notification to specialists who evaluated the ticket
+      ticket.evaluations = [];
       ticket.category = category._id;
     }
 
