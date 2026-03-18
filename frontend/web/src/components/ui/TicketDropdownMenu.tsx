@@ -16,6 +16,8 @@ import { TicketDeleteDialog } from './TicketDeleteDialog';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
+import TicketFormDialog from './TicketFormDialog';
+import { EActionType } from '@/constants/enums';
 
 export interface ITicketDropdownMenu {
   ticket: Ticket;
@@ -30,6 +32,7 @@ export default function TicketDropdownMenu({ ticket }: ITicketDropdownMenu) {
   const isEligibleForEdit = ticketStatus === ETicketStatus.AWAITING_EVALUATION;
 
   const [ticketDeleteDialog, setTicketDeleteDialog] = useState<boolean>(false);
+  const [ticketEditDialog, setTicketEditDialog] = useState<boolean>(false);
 
   return ticket._id ? (
     <DropdownMenu modal={false}>
@@ -54,7 +57,11 @@ export default function TicketDropdownMenu({ ticket }: ITicketDropdownMenu) {
 
         {isTicketOwner ? (
           <DropdownMenuGroup>
-            <DropdownMenuItem className="cursor-pointer" disabled={!isEligibleForEdit}>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onSelect={() => setTicketEditDialog(true)}
+              disabled={!isEligibleForEdit}
+            >
               <PencilIcon size={16} />
 
               {t('common.edit')}
@@ -82,6 +89,13 @@ export default function TicketDropdownMenu({ ticket }: ITicketDropdownMenu) {
         open={ticketDeleteDialog}
         closeDialog={() => setTicketDeleteDialog(false)}
         ticketId={ticket._id}
+      />
+
+      <TicketFormDialog
+        open={ticketEditDialog}
+        closeDialog={() => setTicketEditDialog(false)}
+        currentTicketData={ticket}
+        mode={EActionType.EDIT}
       />
     </DropdownMenu>
   ) : null;
