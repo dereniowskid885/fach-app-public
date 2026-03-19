@@ -11,7 +11,6 @@ import { useGetTicketsSpecialistAvailableQuery } from '@/api/accountApi';
 import { Separator } from '@/components/shadcn/separator';
 import TicketCityFilter from '@/components/ui/TicketCityFilter';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
 import PageHeader from '@/components/common/PageHeader';
 import { getAvailableTicketsColumns } from '@/helpers/dataTableColumns';
 import { DataTable } from '@/components/common/DataTable';
@@ -88,13 +87,13 @@ export default function AvailableTickets() {
         />
       </ContentCard>
 
-      {isLoadingTickets ? (
-        <LoadingSpinner className="m-auto" />
-      ) : (
-        <ContentCard index={1} className="p-0 sm:p-0">
-          <DataTable data={filteredTickets} columns={tableColumnsData} />
-        </ContentCard>
-      )}
+      <ContentCard index={1} className="p-0 sm:p-0">
+        <DataTable
+          isLoadingData={isLoadingTickets}
+          data={filteredTickets}
+          columns={tableColumnsData}
+        />
+      </ContentCard>
     </div>
   );
 }
