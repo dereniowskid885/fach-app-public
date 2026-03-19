@@ -4,28 +4,23 @@ import { Check, Palette } from 'lucide-react';
 import { themeObj } from '@/constants/theme';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/utils/shared';
-import AnimateCollapse from '../common/AnimateCollapse';
 import { PatchUsersByIdApiArg, ThemeType, usePatchUsersByIdMutation } from '@/api/accountApi';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUserData, setUserTheme } from '@/redux/slices/UserDataSlice';
 import { useTheme } from 'next-themes';
 import { useEffect } from 'react';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import Typography from '../common/Typography';
+import { EPopoverContentDirection } from '@/enums/ui';
 
 export interface IThemeSwitcher {
-  popoverContentDirection?: 'top' | 'bottom' | 'left' | 'right';
+  popoverContentDirection?: EPopoverContentDirection;
   triggerPatchUserMutation?: boolean;
-  isSidebarCollapsed?: boolean;
-  hideButtonText?: boolean;
   wrapperClassName?: string;
 }
 
 export default function ThemeSwitcher({
-  popoverContentDirection = 'right',
+  popoverContentDirection = EPopoverContentDirection.BOTTOM,
   triggerPatchUserMutation = true,
-  isSidebarCollapsed = false,
-  hideButtonText = false,
   wrapperClassName = ''
 }: IThemeSwitcher) {
   const t = useTranslations();
@@ -64,23 +59,13 @@ export default function ThemeSwitcher({
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
-          size="sm"
+          size="icon"
           className={cn(
-            'animation-base animation-idle animation-interactive h-9 w-full items-center justify-between px-2',
+            'animation-base animation-idle animation-interactive h-10 w-10 rounded-xl',
             wrapperClassName
           )}
         >
-          {hideButtonText ? (
-            <Palette strokeWidth={2.5} />
-          ) : (
-            <div className="flex items-center gap-3">
-              <Palette strokeWidth={2.5} className="ml-2" />
-
-              <AnimateCollapse isHidden={isSidebarCollapsed}>
-                <Typography variant="small">{t('theme.sidebarButtonText')}</Typography>
-              </AnimateCollapse>
-            </div>
-          )}
+          <Palette size={24} strokeWidth={2.5} />
         </Button>
       </PopoverTrigger>
 
