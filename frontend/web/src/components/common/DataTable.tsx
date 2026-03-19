@@ -20,6 +20,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Checkbox } from '../shadcn/checkbox';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/utils/shared';
+import { LoadingSpinner } from '../shadcn/loading-spinner';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -29,6 +30,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   tableClassName?: string;
   headClassName?: string;
+  isLoadingData?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -38,7 +40,8 @@ export function DataTable<TData, TValue>({
   oneSelectableRow = false,
   setSelectedRow,
   tableClassName,
-  headClassName
+  headClassName,
+  isLoadingData = false
 }: DataTableProps<TData, TValue>) {
   const t = useTranslations();
   const [rowSelection, setRowSelection] = useState({});
@@ -120,7 +123,7 @@ export function DataTable<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                {t('common.noResults')}
+                {isLoadingData ? <LoadingSpinner className="m-auto" /> : t('common.noResults')}
               </TableCell>
             </TableRow>
           )}

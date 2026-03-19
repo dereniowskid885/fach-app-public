@@ -15,7 +15,6 @@ import AmountBadge from '@/components/ui/AmountBadge';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useSelector } from 'react-redux';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
 import PageHeader from '@/components/common/PageHeader';
 import { getMyTicketsFilters } from '@/helpers/ticketStatusFilter';
 import { getMyTicketsColumns } from '@/helpers/dataTableColumns';
@@ -108,13 +107,13 @@ export default function MyTickets() {
         />
       </ContentCard>
 
-      {isLoadingTickets ? (
-        <LoadingSpinner className="m-auto" />
-      ) : (
-        <ContentCard index={1} className="p-0 sm:p-0">
-          <DataTable data={filteredTickets} columns={tableColumnsData} />
-        </ContentCard>
-      )}
+      <ContentCard index={1} className="p-0 sm:p-0">
+        <DataTable
+          isLoadingData={isLoadingTickets}
+          data={filteredTickets}
+          columns={tableColumnsData}
+        />
+      </ContentCard>
     </div>
   );
 }
