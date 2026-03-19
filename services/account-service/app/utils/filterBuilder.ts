@@ -53,7 +53,7 @@ export const FilterBuilder = {
     return filterObj;
   },
   getMyTickets: (req: Request, user: JwtPayload) => {
-    const { categoryId, status } = req.query;
+    const { categoryId, status, city } = req.query;
 
     const filterObj: FilterQuery<ITicketModel> = {};
 
@@ -64,9 +64,11 @@ export const FilterBuilder = {
       if (categoryId) filterObj.category = categoryId.toString();
     }
 
-    // specialist role - show tickets where acceptedEvaluation belongs to the specialist
+    // specialist role - show tickets where acceptedEvaluation belongs to the specialist, and allow filtering by city
     if (user.role === EUserRole.SPECIALIST) {
       filterObj['acceptedEvaluation.user'] = user.userId;
+
+      if (city) filterObj.city = city.toString();
     }
 
     if (status) {
