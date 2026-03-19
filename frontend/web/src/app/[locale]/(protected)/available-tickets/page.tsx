@@ -4,7 +4,6 @@ import ContentCard from '@/components/common/ContentCard';
 import SearchComponent from '@/components/common/SearchComponent';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import AmountBadge from '@/components/ui/AmountBadge';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useSelector } from 'react-redux';
 import { useGetTicketsSpecialistAvailableQuery } from '@/api/accountApi';
@@ -14,21 +13,33 @@ import { useErrorHandler } from '@/hooks/useErrorHandler';
 import PageHeader from '@/components/common/PageHeader';
 import { getAvailableTicketsColumns } from '@/helpers/dataTableColumns';
 import { DataTable } from '@/components/common/DataTable';
+import { Badge } from '@/components/shadcn/badge';
+import { TTicketCityFilter } from '@/types/ticket';
+import { Skeleton } from '@/components/shadcn/skeleton';
+import UserBadge from '@/components/ui/UserBadge';
+import { EUserBadgeVariant } from '@/enums/ui';
 
 export default function AvailableTickets() {
   const t = useTranslations();
   const currentLocale = useLocale();
-  const { userId, city } = useSelector(selectUserData);
-
-  // TODO: fix redundant query triggering
-  // probably usage of api will fix the issue
+  const {
+    userId,
+    city,
+    categoryName,
+    isInitialized: isUserStateInitialized
+  } = useSelector(selectUserData);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCity, setSelectedCity] = useState<string | null>(city);
+  const [selectedCity, setSelectedCity] = useState<TTicketCityFilter>(undefined);
 
   useEffect(() => {
-    setSelectedCity(city);
-  }, [city]);
+    // set initial selectedCity value from user state
+    if (isUserStateInitialized && selectedCity === undefined) {
+      setSelectedCity(city ?? null);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUserStateInitialized]);
 
   const {
     data: ticketsData,
@@ -37,10 +48,11 @@ export default function AvailableTickets() {
     isFetching
   } = useGetTicketsSpecialistAvailableQuery(
     {
-      city: selectedCity ?? undefined
+      city: selectedCity || undefined
     },
     {
-      skip: !city
+      skip: selectedCity === undefined,
+      refetchOnMountOrArgChange: true
     }
   );
   const isLoadingTickets = isLoading || isFetching;
@@ -60,10 +72,18 @@ export default function AvailableTickets() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title={t('availableTicketsPage.headerTitle')}
-        description={t('availableTicketsPage.headerDescription')}
-      />
+      <div className="space-y-2">
+        <PageHeader
+          title={t('availableTicketsPage.headerTitle')}
+          description={t('availableTicketsPage.headerDescription')}
+        />
+
+        {isUserStateInitialized ? (
+          <UserBadge variant={EUserBadgeVariant.CATEGORY} text={categoryName} />
+        ) : (
+          <Skeleton className="h-[22px] w-[80px]" />
+        )}
+      </div>
 
       <ContentCard index={0} className="space-y-6 p-6 sm:p-8">
         <div className="flex w-full items-center gap-4">
@@ -73,9 +93,9 @@ export default function AvailableTickets() {
             placeholder={t('ticket.searchPlaceholder')}
           />
 
-          <AmountBadge className="text-sm">
+          <Badge variant="amount" className="text-sm">
             {t('ticket.ticketsAmount', { count: filteredTickets.length ?? 0 })}
-          </AmountBadge>
+          </Badge>
         </div>
 
         <Separator className="bg-border" />

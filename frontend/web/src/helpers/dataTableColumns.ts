@@ -22,7 +22,7 @@ import { EUserRole } from '@shared/enums/role';
 export const getMyTicketsColumns = (t: TFunction, currentLocale: string, role: EUserRole) => [
   getTicketColumn(t),
   getStatusColumn(t),
-  getCategoryColumn(t),
+  role !== EUserRole.SPECIALIST ? getCategoryColumn(t) : getCityColumn(t),
   getCreatedAtColumn(t, currentLocale),
   getAssigneeColumn(t),
   getConversationColumn(t),

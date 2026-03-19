@@ -1,6 +1,6 @@
 import Typography from '../common/Typography';
 import { Separator } from '../shadcn/separator';
-import { Clock, Layers } from 'lucide-react';
+import { Clock, Layers, MapPin } from 'lucide-react';
 import { getLocaleDateString } from '@/utils/date';
 import { Ticket } from '@/api/accountApi';
 import TicketStatusIcon from './TicketStatusIcon';
@@ -31,16 +31,23 @@ export default function DashboardTicketCard({ ticket, index }: IDashboardTicketC
 
           <Separator orientation="vertical" className="h-4 bg-tertiary" />
 
-          <div className="flex items-center gap-2">
-            <Layers size={14} strokeWidth={2.5} className="text-tertiary" />
+          {role !== EUserRole.SPECIALIST ? (
+            <div className="flex items-center gap-2">
+              <Layers size={14} strokeWidth={2.5} className="text-tertiary" />
 
-            <Typography
-              variant="note"
-              className="font-mono font-bold uppercase tracking-widest text-tertiary"
-            >
-              {ticket.category?.name}
-            </Typography>
-          </div>
+              <Typography variant="note" className="font-bold uppercase text-tertiary">
+                {ticket.category?.name}
+              </Typography>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <MapPin size={14} strokeWidth={2.5} className="text-tertiary" />
+
+              <Typography variant="note" className="font-bold uppercase text-tertiary">
+                {ticket.city}
+              </Typography>
+            </div>
+          )}
 
           {ticket.updatedAt ? (
             <>
@@ -49,10 +56,7 @@ export default function DashboardTicketCard({ ticket, index }: IDashboardTicketC
               <div className="flex items-center gap-2">
                 <Clock size={14} strokeWidth={2.5} className="text-tertiary" />
 
-                <Typography
-                  variant="note"
-                  className="font-bold uppercase tracking-tighter text-tertiary"
-                >
+                <Typography variant="note" className="font-bold uppercase text-tertiary">
                   {getLocaleDateString(ticket.updatedAt, currentLocale)}
                 </Typography>
               </div>

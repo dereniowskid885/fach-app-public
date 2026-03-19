@@ -3,10 +3,11 @@ import ButtonsCarousel from '../common/ButtonsCarousel';
 import { useTranslations } from 'next-intl';
 import { cities } from '@shared/constants/mocks';
 import { EFallbackKey } from '@/enums/ui';
+import { TTicketCityFilter } from '@/types/ticket';
 
 export interface ITicketCityFilter {
-  selectedCity: string | null;
-  setSelectedCity: Dispatch<SetStateAction<string | null>>;
+  selectedCity: TTicketCityFilter;
+  setSelectedCity: Dispatch<SetStateAction<TTicketCityFilter>>;
   showHeader?: boolean;
 }
 

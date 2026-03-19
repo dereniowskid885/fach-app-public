@@ -35,7 +35,9 @@
     "edit": "Edit",
     "delete": "Delete",
     "unknownUser": "Unknown user",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "city": "City",
+    "category": "Category"
   },
   "userRole": {
     "admin": "Admin",
@@ -97,10 +99,6 @@
     "completedTickets": "Completed tickets",
     "inbox": "Inbox",
     "settings": "Settings"
-  },
-  "userCard": {
-    "city": "City",
-    "category": "Category"
   },
   "category": {
     "select": "Select category",

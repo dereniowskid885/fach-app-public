@@ -10,8 +10,7 @@ import TicketStatusFilter from '@/components/ui/TicketStatusFilter';
 import { ETicketStatus } from '@shared/enums/ticket';
 import { EUserRole } from '@shared/enums/role';
 import { useLocale, useTranslations } from 'next-intl';
-import { useState } from 'react';
-import AmountBadge from '@/components/ui/AmountBadge';
+import { useEffect, useState } from 'react';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useSelector } from 'react-redux';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
@@ -19,10 +18,22 @@ import PageHeader from '@/components/common/PageHeader';
 import { getMyTicketsFilters } from '@/helpers/ticketStatusFilter';
 import { getMyTicketsColumns } from '@/helpers/dataTableColumns';
 import { DataTable } from '@/components/common/DataTable';
+import { Badge } from '@/components/shadcn/badge';
+import TicketCityFilter from '@/components/ui/TicketCityFilter';
+import { TTicketCityFilter } from '@/types/ticket';
+import { Skeleton } from '@/components/shadcn/skeleton';
+import UserBadge from '@/components/ui/UserBadge';
+import { EUserBadgeVariant } from '@/enums/ui';
 
 export default function MyTickets() {
   const t = useTranslations();
-  const { role } = useSelector(selectUserData);
+  const {
+    role,
+    city,
+    categoryName,
+    isLoading: isLoadingUserState,
+    isInitialized: isUserStateInitialized
+  } = useSelector(selectUserData);
   const currentLocale = useLocale();
 
   const ticketStatusFilterData = getMyTicketsFilters(role as EUserRole);
@@ -30,6 +41,18 @@ export default function MyTickets() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<ETicketStatus | null>(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const [selectedCity, setSelectedCity] = useState<TTicketCityFilter>(undefined);
+
+  useEffect(() => {
+    if (role !== EUserRole.SPECIALIST) return;
+
+    // set initial selectedCity value from user state
+    if (isUserStateInitialized && selectedCity === undefined) {
+      setSelectedCity(city ?? null);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUserStateInitialized]);
 
   const {
     data: ticketsData,
@@ -38,10 +61,12 @@ export default function MyTickets() {
     isFetching
   } = useGetTicketsMyQuery(
     {
-      categoryId: selectedCategoryId ?? undefined,
-      status: selectedStatus ?? undefined
+      categoryId: selectedCategoryId || undefined,
+      status: selectedStatus || undefined,
+      city: selectedCity || undefined
     },
     {
+      skip: isLoadingUserState || (role === EUserRole.SPECIALIST && selectedCity === undefined),
       refetchOnMountOrArgChange: true
     }
   );
@@ -62,11 +87,27 @@ export default function MyTickets() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        isDataLoaded={Boolean(role)}
-        title={role ? t(`myTicketsPage.headerTitle.${role}`) : ''}
-        description={role ? t(`myTicketsPage.headerDescription.${role}`) : ''}
-      />
+      <div className="space-y-2">
+        <PageHeader
+          isDataLoaded={isUserStateInitialized}
+          title={role ? t(`myTicketsPage.headerTitle.${role}`) : ''}
+          description={role ? t(`myTicketsPage.headerDescription.${role}`) : ''}
+        />
+
+        {isUserStateInitialized ? (
+          <div className="space-x-2">
+            {role === EUserRole.USER ? (
+              <UserBadge variant={EUserBadgeVariant.CITY} text={city} />
+            ) : null}
+
+            {role === EUserRole.SPECIALIST ? (
+              <UserBadge variant={EUserBadgeVariant.CATEGORY} text={categoryName} />
+            ) : null}
+          </div>
+        ) : (
+          <Skeleton className="h-[22px] w-[80px]" />
+        )}
+      </div>
 
       <ContentCard index={0} className="space-y-6 p-6 sm:p-8">
         <div className="flex justify-between gap-4">
@@ -77,9 +118,9 @@ export default function MyTickets() {
               placeholder={t('ticket.searchPlaceholder')}
             />
 
-            <AmountBadge className="text-nowrap text-sm">
+            <Badge variant="amount" className="text-sm">
               {t('ticket.ticketsAmount', { count: filteredTickets.length ?? 0 })}
-            </AmountBadge>
+            </Badge>
           </div>
 
           <TicketCreateButton />
@@ -93,6 +134,18 @@ export default function MyTickets() {
               showHeader={true}
               selectedCategoryId={selectedCategoryId}
               setSelectedCategoryId={setSelectedCategoryId}
+            />
+          </>
+        ) : null}
+
+        {role === EUserRole.SPECIALIST ? (
+          <>
+            <Separator className="bg-border" />
+
+            <TicketCityFilter
+              showHeader={true}
+              selectedCity={selectedCity}
+              setSelectedCity={setSelectedCity}
             />
           </>
         ) : null}

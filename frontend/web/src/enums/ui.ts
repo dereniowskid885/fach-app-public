@@ -35,3 +35,8 @@ export const enum EActionType {
   EDIT = 'EDIT',
   CREATION = 'CREATION'
 }
+
+export const enum EUserBadgeVariant {
+  CITY = 'CITY',
+  CATEGORY = 'CATEGORY'
+}
