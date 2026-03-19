@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { menuItemsObj } from '@/constants/menu';
 import { ESupportedLanguages } from '@shared/enums/language';
 import { EUserRole } from '@shared/enums/role';
-import { Bell, HelpCircle, Settings } from 'lucide-react';
+import { Bell, HelpCircle } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../shadcn/popover';
 import { Button } from '../shadcn/button';
 import { Separator } from '../shadcn/separator';
@@ -19,6 +19,8 @@ import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { Skeleton } from '../shadcn/skeleton';
 import SearchComponent from '../common/SearchComponent';
 import { ESearchComponentVariant } from '@/enums/ui';
+import LanguageSwitcher from './LanguageSwitcher';
+import ThemeSwitcher from './ThemeSwitcher';
 
 export default function Header() {
   const t = useTranslations();
@@ -60,7 +62,7 @@ export default function Header() {
         </div>
 
         <div className="relative flex w-1/2 items-center justify-end gap-3">
-          <div className="absolute left-0 -translate-x-1/2">
+          <div className="left-0 lg:absolute lg:-translate-x-1/2">
             {/* TODO to be improved - header search component */}
             <SearchComponent
               inputValue=""
@@ -85,20 +87,19 @@ export default function Header() {
 
             <Separator orientation="vertical" className="mx-2 h-[20px]" />
 
-            <Button
-              variant="ghost"
-              size="icon"
-              className="animation-base animation-idle animation-interactive h-10 w-10 rounded-xl"
-            >
-              <HelpCircle size={24} />
-            </Button>
+            <LanguageSwitcher
+              currentPath={normalizedPath}
+              currentLang={currentLocale as ESupportedLanguages}
+            />
+
+            <ThemeSwitcher />
 
             <Button
               variant="ghost"
               size="icon"
               className="animation-base animation-idle animation-interactive h-10 w-10 rounded-xl"
             >
-              <Settings size={24} />
+              <HelpCircle size={24} />
             </Button>
           </div>
         </div>

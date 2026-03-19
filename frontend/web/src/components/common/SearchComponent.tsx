@@ -26,7 +26,7 @@ export default function SearchComponent({
 
   switch (variant) {
     case ESearchComponentVariant.BIG:
-      variantClasses = 'w-32 lg:w-64 xl:w-[500px]';
+      variantClasses = 'w-48 lg:w-64 xl:w-[500px]';
       break;
     case ESearchComponentVariant.DEFAULT:
     default:

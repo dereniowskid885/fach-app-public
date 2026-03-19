@@ -6,9 +6,7 @@ import { supportedLanguagesObj } from '@/constants/supportedLanguages';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import AnimateCollapse from '../common/AnimateCollapse';
 import { ESupportedLanguages } from '@shared/enums/language';
-import Typography from '../common/Typography';
 import { EPopoverContentDirection } from '@/enums/ui';
 
 export interface ILanguageSwitcher {
@@ -16,17 +14,13 @@ export interface ILanguageSwitcher {
   currentLang: ESupportedLanguages;
   wrapperClassName?: string;
   popoverContentDirection?: EPopoverContentDirection;
-  hideButtonText?: boolean;
-  isSidebarCollapsed?: boolean;
 }
 
 export default function LanguageSwitcher({
   currentPath,
   currentLang,
   wrapperClassName = '',
-  popoverContentDirection = EPopoverContentDirection.RIGHT,
-  hideButtonText = false,
-  isSidebarCollapsed = false
+  popoverContentDirection = EPopoverContentDirection.BOTTOM
 }: ILanguageSwitcher) {
   const t = useTranslations();
 
@@ -35,23 +29,13 @@ export default function LanguageSwitcher({
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
-          size="sm"
+          size="icon"
           className={cn(
-            'animation-base animation-idle animation-interactive h-9 w-full items-center justify-between px-2',
+            'animation-base animation-idle animation-interactive h-10 w-10 rounded-xl',
             wrapperClassName
           )}
         >
-          {hideButtonText ? (
-            <Globe strokeWidth={2.5} />
-          ) : (
-            <div className="flex items-center gap-3">
-              <Globe strokeWidth={2.5} className="ml-2" />
-
-              <AnimateCollapse isHidden={isSidebarCollapsed}>
-                <Typography variant="small">{t('lang.sidebarButtonText')}</Typography>
-              </AnimateCollapse>
-            </div>
-          )}
+          <Globe size={24} strokeWidth={2.5} />
         </Button>
       </PopoverTrigger>
 

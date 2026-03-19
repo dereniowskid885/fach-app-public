@@ -10,12 +10,10 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { menuItemsObj } from '@/constants/menu';
-import LanguageSwitcher from './LanguageSwitcher';
 import { ESupportedLanguages } from '@shared/enums/language';
 import { EUserRole } from '@shared/enums/role';
 import Logo from './Logo';
 import { Skeleton } from '../shadcn/skeleton';
-import ThemeSwitcher from './ThemeSwitcher';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeftFromLine, ArrowRightFromLine } from 'lucide-react';
 import AnimateCollapse from '../common/AnimateCollapse';
@@ -23,7 +21,7 @@ import { useSidebarContext } from '@/contexts/SidebarContext';
 import { normalizePathname } from '@/utils/pathname';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import UserCard from './UserCard';
-import { EPopoverContentDirection } from '@/enums/ui';
+import { Separator } from '../shadcn/separator';
 
 export default function Sidebar() {
   const t = useTranslations();
@@ -34,7 +32,7 @@ export default function Sidebar() {
   const normalizedPath = normalizePathname(currentPath, currentLocale);
 
   const router = useRouter();
-  const { role, name, surname } = useSelector(selectUserData);
+  const { role, name, surname, city, categoryName } = useSelector(selectUserData);
 
   const [triggerLogout, { isLoading, error }] = usePostAuthLogoutMutation();
 
@@ -53,7 +51,7 @@ export default function Sidebar() {
       animate={{
         width: sidebarWidth
       }}
-      className={`fixed flex h-screen flex-col border-r bg-sidebar shadow-md w-[${sidebarWidth}px] no-scrollbar z-50 overflow-auto`}
+      className={`fixed flex h-screen flex-col border-r bg-sidebar shadow-md w-[${sidebarWidth}px] z-50`}
     >
       <motion.div
         animate={{
@@ -84,7 +82,7 @@ export default function Sidebar() {
         )}
       </AnimatePresence>
 
-      <nav className="flex-1 space-y-2 p-3">
+      <nav className="flex-1 space-y-2 overflow-y-auto overflow-x-hidden p-3">
         {role
           ? menuItemsObj[role as EUserRole].map(item => (
               <NavLink
@@ -105,6 +103,8 @@ export default function Sidebar() {
               <Skeleton key={`menu-item-skeleton-${item}-${index}`} className="h-[36px]" />
             ))}
       </nav>
+
+      <Separator className="mt-2 bg-border" />
 
       <div className="p-3">
         <Button
@@ -129,20 +129,15 @@ export default function Sidebar() {
           user={{
             name,
             surname,
-            role: role as UserRole
+            role: role as UserRole,
+            city,
+            category: {
+              name: categoryName
+            }
           }}
           showBackground={true}
           isSidebarCollapsed={isSidebarCollapsed}
         />
-
-        <LanguageSwitcher
-          currentPath={normalizedPath}
-          currentLang={currentLocale as ESupportedLanguages}
-          popoverContentDirection={EPopoverContentDirection.RIGHT}
-          isSidebarCollapsed={isSidebarCollapsed}
-        />
-
-        <ThemeSwitcher isSidebarCollapsed={isSidebarCollapsed} />
 
         <Button
           className="animation-base animation-idle animation-interactive h-9 w-full justify-start gap-2.5 px-2 hover:text-destructive"
