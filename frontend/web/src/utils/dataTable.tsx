@@ -91,7 +91,15 @@ export const getAssigneeColumn = (t: TFunction) => ({
   cell: (item: CellContext<Ticket, unknown>) => {
     const ticket = item.row.original as Ticket;
 
-    return <UserCard user={ticket.assignee} />;
+    return (
+      <UserCard
+        user={{
+          name: ticket.assignee?.name,
+          surname: ticket.assignee?.surname,
+          role: ticket.assignee?.role
+        }}
+      />
+    );
   }
 });
 
@@ -167,6 +175,14 @@ export const getCreatedByColumn = (t: TFunction) => ({
   cell: (item: CellContext<Ticket, unknown>) => {
     const ticket = item.row.original as Ticket;
 
-    return <UserCard user={ticket.createdBy} />;
+    return (
+      <UserCard
+        user={{
+          name: ticket.createdBy?.name,
+          surname: ticket.createdBy?.surname,
+          role: ticket.createdBy?.role
+        }}
+      />
+    );
   }
 });

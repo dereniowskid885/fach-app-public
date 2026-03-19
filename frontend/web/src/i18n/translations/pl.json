@@ -99,6 +99,10 @@
     "inbox": "Wiadomości",
     "settings": "Ustawienia"
   },
+  "userCard": {
+    "city": "Miasto",
+    "category": "Kategoria"
+  },
   "category": {
     "select": "Wybierz kategorie",
     "search": "Wyszukaj kategorię",
