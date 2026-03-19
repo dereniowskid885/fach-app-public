@@ -10,10 +10,16 @@ import { useErrorHandler } from '@/hooks/useErrorHandler';
 import DashboardTicketCard from './DashboardTicketCard';
 import { TICKETS_PATH } from '@/constants/routes';
 import Link from 'next/link';
-import AmountBadge from './AmountBadge';
+import { Badge } from '../shadcn/badge';
+import { useSelector } from 'react-redux';
+import { selectUserData } from '@/redux/slices/UserDataSlice';
+import UserBadge from './UserBadge';
+import { EUserRole } from '@shared/enums/role';
+import { EUserBadgeVariant } from '@/enums/ui';
 
 export default function DashboardRecentTickets() {
   const t = useTranslations();
+  const { role, city, categoryName, isLoading: isLoadingUserState } = useSelector(selectUserData);
 
   const {
     data: getTicketsResponse,
@@ -41,12 +47,23 @@ export default function DashboardRecentTickets() {
             </Typography>
           )}
 
-          {isUninitialized ? (
+          {isLoadingUserState ? (
             <Skeleton className="h-[22px] w-[40px]" />
           ) : (
-            <AmountBadge className="text-nowrap">
+            <UserBadge
+              variant={
+                role === EUserRole.SPECIALIST ? EUserBadgeVariant.CATEGORY : EUserBadgeVariant.CITY
+              }
+              text={role === EUserRole.SPECIALIST ? categoryName : city}
+            />
+          )}
+
+          {isLoadingUserState ? (
+            <Skeleton className="h-[22px] w-[40px]" />
+          ) : (
+            <Badge variant="amount">
               {t('ticket.ticketsAmount', { count: userTickets.length ?? 0 })}
-            </AmountBadge>
+            </Badge>
           )}
         </div>
 

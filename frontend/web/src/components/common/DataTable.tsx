@@ -95,7 +95,7 @@ export function DataTable<TData, TValue>({
                   <TableHead
                     key={header.id}
                     className={cn(
-                      'text-xs font-bold uppercase tracking-wide text-muted-foreground',
+                      'text-center text-xs font-bold uppercase tracking-wide text-muted-foreground',
                       headClassName
                     )}
                   >

@@ -4,7 +4,7 @@ import TicketStatusBadge from '@/components/ui/TicketStatusBadge';
 import TicketSummaryInfo from '@/components/ui/TicketSummaryInfo';
 import { TFunction } from '@/types/i18n';
 import { CellContext } from '@tanstack/react-table';
-import { ChartColumn, Clock, Layers, MessageSquare } from 'lucide-react';
+import { ChartColumn, Layers, MessageSquare } from 'lucide-react';
 import { getLocaleDateString } from './date';
 import UserCard from '@/components/ui/UserCard';
 import { ETicketStatus } from '@shared/enums/ticket';
@@ -52,7 +52,7 @@ export const getCategoryColumn = (t: TFunction) => ({
 
     return (
       <div className="flex items-center gap-2">
-        <Layers size={18} strokeWidth={2.5} className="text-muted-foreground" />
+        <Layers size={14} strokeWidth={2.5} className="text-muted-foreground" />
 
         <Typography variant="note" className="font-bold uppercase text-muted-foreground">
           {ticket.category?.name}
@@ -70,13 +70,8 @@ export const getCreatedAtColumn = (t: TFunction, currentLocale: string) => ({
     const ticket = item.row.original as Ticket;
 
     return (
-      <div className="flex items-center justify-center gap-2 text-center">
-        <Clock size={18} strokeWidth={2.5} className="text-muted-foreground" />
-
-        <Typography
-          variant="note"
-          className="font-bold uppercase tracking-tighter text-muted-foreground"
-        >
+      <div className="text-center">
+        <Typography variant="note" className="font-bold uppercase text-muted-foreground">
           {getLocaleDateString(ticket.createdAt, currentLocale)}
         </Typography>
       </div>
@@ -127,7 +122,7 @@ export const getConversationColumn = (t: TFunction) => ({
 
     return (
       <div className="flex items-center gap-1 text-muted-foreground">
-        {<ConversationIcon size={18} strokeWidth={2.5} />}
+        {<ConversationIcon size={14} strokeWidth={2.5} />}
 
         <Typography variant="note" className="font-bold">
           {conversationAmount}

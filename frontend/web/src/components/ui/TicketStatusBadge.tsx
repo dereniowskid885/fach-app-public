@@ -3,6 +3,7 @@ import { getTicketStatusColorClasses, getTicketStatusTranslationKey } from '@/ut
 import { cn } from '@/utils/shared';
 import { ETicketStatus } from '@shared/enums/ticket';
 import { useTranslations } from 'next-intl';
+import { Badge } from '../shadcn/badge';
 
 export interface ITicketStatusBadge {
   className?: string;
@@ -13,7 +14,8 @@ export default function TicketStatusBadge({ className, status }: ITicketStatusBa
   const t = useTranslations();
 
   return (
-    <div
+    <Badge
+      variant="outline"
       className={cn(
         'inline-flex items-center text-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold shadow-md',
         getTicketStatusColorClasses(status),
@@ -21,6 +23,6 @@ export default function TicketStatusBadge({ className, status }: ITicketStatusBa
       )}
     >
       {t(getTicketStatusTranslationKey(status))}
-    </div>
+    </Badge>
   );
 }

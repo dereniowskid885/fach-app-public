@@ -129,6 +129,7 @@ const injectedRtkApi = api.injectEndpoints({
         url: `/tickets/my`,
         params: {
           categoryId: queryArg.categoryId,
+          city: queryArg.city,
           status: queryArg.status
         }
       })
@@ -458,6 +459,8 @@ export type GetTicketsMyApiResponse = /** status 200 Array of tickets */ {
 export type GetTicketsMyApiArg = {
   /** Filter by categoryId */
   categoryId?: string;
+  /** Filter by city */
+  city?: string;
   /** Filter by one or multiple ticket statuses.
     You can pass a single value or a comma-separated list.
     Example: awaiting_evaluation,in_progress

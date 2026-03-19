@@ -14,7 +14,9 @@ const initialState = {
     surname: '',
     fullName: '',
     theme: ''
-  }
+  },
+  isLoading: true,
+  isInitialized: false
 };
 
 const userData = createSlice({
@@ -47,6 +49,9 @@ const userData = createSlice({
         fullName: `${name} ${surname}`,
         theme
       };
+
+      state.isLoading = false;
+      state.isInitialized = true;
     },
     setUserTheme(state, action: PayloadAction<ThemeType | null>) {
       if (!action.payload) return;
@@ -55,17 +60,27 @@ const userData = createSlice({
         ...state.user,
         theme: action.payload
       };
+
+      state.isLoading = false;
+      state.isInitialized = true;
     },
     clearUserData(state) {
       state.user = initialState.user;
+    },
+    setUserLoading(state, action: PayloadAction<boolean>) {
+      state.isLoading = action.payload;
     }
   }
 });
 
 // selectors
 const selectSelf = (state: RootState) => state.userDataSlice;
-const selectUserData = createSelector(selectSelf, state => state.user);
+const selectUserData = createSelector(selectSelf, state => ({
+  ...state.user,
+  isLoading: state.isLoading,
+  isInitialized: state.isInitialized
+}));
 
-export const { setUserData, setUserTheme, clearUserData } = userData.actions;
+export const { setUserData, setUserTheme, clearUserData, setUserLoading } = userData.actions;
 export { selectUserData };
 export default userData.reducer;

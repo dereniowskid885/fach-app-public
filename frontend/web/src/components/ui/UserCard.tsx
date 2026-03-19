@@ -75,7 +75,7 @@ export default function UserCard({
               <div className="flex flex-col gap-1">
                 {user?.city ? (
                   <Typography variant="note" className="text-nowrap font-bold">
-                    {t('userCard.city')}
+                    {t('common.city')}
                   </Typography>
                 ) : (
                   <Skeleton className="h-[16px] w-[60px]" />
@@ -99,7 +99,7 @@ export default function UserCard({
 
                 <div className="flex flex-col gap-1">
                   <Typography variant="note" className="text-nowrap font-bold">
-                    {t('userCard.category')}
+                    {t('common.category')}
                   </Typography>
 
                   <Typography variant="note" className="font-semibold text-muted-foreground">
