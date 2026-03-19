@@ -69,7 +69,13 @@ export default function DashboardTicketCard({ ticket, index }: IDashboardTicketC
         <div className="flex items-center justify-between gap-4">
           <TicketActionButtons ticket={ticket} role={role as EUserRole} userId={userId} />
 
-          <UserCard user={ticket.assignee} />
+          <UserCard
+            user={{
+              name: ticket.assignee?.name,
+              surname: ticket.assignee?.surname,
+              role: ticket.assignee?.role
+            }}
+          />
         </div>
       </div>
     </ContentCard>

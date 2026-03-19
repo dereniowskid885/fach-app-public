@@ -98,6 +98,10 @@
     "inbox": "Inbox",
     "settings": "Settings"
   },
+  "userCard": {
+    "city": "City",
+    "category": "Category"
+  },
   "category": {
     "select": "Select category",
     "search": "Search category",
