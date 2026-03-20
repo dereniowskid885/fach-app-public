@@ -3,10 +3,7 @@
 import { useGetTicketsMyQuery } from '@/api/accountApi';
 import ContentCard from '@/components/common/ContentCard';
 import SearchComponent from '@/components/common/SearchComponent';
-import { Separator } from '@/components/shadcn/separator';
-import TicketCategoriesFilter from '@/components/ui/TicketCategoriesFilter';
 import TicketCreateButton from '@/components/ui/TicketCreateButton';
-import TicketStatusFilter from '@/components/ui/TicketStatusFilter';
 import { ETicketStatus } from '@shared/enums/ticket';
 import { EUserRole } from '@shared/enums/role';
 import { useLocale, useTranslations } from 'next-intl';
@@ -15,15 +12,14 @@ import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useSelector } from 'react-redux';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import PageHeader from '@/components/common/PageHeader';
-import { getMyTicketsFilters } from '@/helpers/ticketStatusFilter';
 import { getMyTicketsColumns } from '@/helpers/dataTableColumns';
 import { DataTable } from '@/components/common/DataTable';
 import { Badge } from '@/components/shadcn/badge';
-import TicketCityFilter from '@/components/ui/TicketCityFilter';
 import { TTicketCityFilter } from '@/types/ticket';
 import { Skeleton } from '@/components/shadcn/skeleton';
 import UserBadge from '@/components/ui/UserBadge';
 import { EUserBadgeVariant } from '@/enums/ui';
+import MyTicketsPageFilters from '@/components/ui/MyTicketsPageFilters';
 
 export default function MyTickets() {
   const t = useTranslations();
@@ -35,8 +31,6 @@ export default function MyTickets() {
     isInitialized: isUserStateInitialized
   } = useSelector(selectUserData);
   const currentLocale = useLocale();
-
-  const ticketStatusFilterData = getMyTicketsFilters(role as EUserRole);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<ETicketStatus | null>(null);
@@ -126,35 +120,12 @@ export default function MyTickets() {
           <TicketCreateButton />
         </div>
 
-        {role === EUserRole.USER ? (
-          <>
-            <Separator className="bg-border" />
-
-            <TicketCategoriesFilter
-              showHeader={true}
-              selectedCategoryId={selectedCategoryId}
-              setSelectedCategoryId={setSelectedCategoryId}
-            />
-          </>
-        ) : null}
-
-        {role === EUserRole.SPECIALIST ? (
-          <>
-            <Separator className="bg-border" />
-
-            <TicketCityFilter
-              showHeader={true}
-              selectedCity={selectedCity}
-              setSelectedCity={setSelectedCity}
-            />
-          </>
-        ) : null}
-
-        <Separator className="bg-border" />
-
-        <TicketStatusFilter
-          statuses={ticketStatusFilterData}
-          showHeader={true}
+        <MyTicketsPageFilters
+          role={role as EUserRole}
+          selectedCity={selectedCity}
+          setSelectedCity={setSelectedCity}
+          selectedCategoryId={selectedCategoryId}
+          setSelectedCategoryId={setSelectedCategoryId}
           selectedStatus={selectedStatus}
           setSelectedStatus={setSelectedStatus}
         />

@@ -1,5 +1,6 @@
 import { ETicketStatus } from '@shared/enums/ticket';
 import { EUserRole } from '@shared/enums/role';
+import { ticketStatuses } from '@/constants/ticketStatus';
 
 // My Evaluations page (specialist)
 export const MY_EVALUATIONS_TICKETS_FILTERS = [
@@ -38,6 +39,6 @@ export const getMyTicketsFilters = (role: EUserRole): ETicketStatus[] => {
     case EUserRole.SPECIALIST:
       return [...MY_TICKETS_SPECIALIST_FILTERS];
     default:
-      return [];
+      return ticketStatuses;
   }
 };
