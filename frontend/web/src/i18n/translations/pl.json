@@ -96,6 +96,7 @@
     "dashboard": "Pulpit",
     "availableTickets": "Dostępne sprawy",
     "tickets": "Moje sprawy",
+    "ticketsADMIN": "Wszystkie sprawy",
     "evaluations": "Moje ewaluacje",
     "completedTickets": "Ukończone sprawy",
     "inbox": "Wiadomości",
@@ -257,12 +258,12 @@
     "headerTitle": {
       "user": "Twoje sprawy",
       "specialist": "Sprawy przypisane do Ciebie",
-      "admin": "admin"
+      "admin": "Zarządzanie sprawami"
     },
     "headerDescription": {
       "user": "Śledź status swoich spraw, przeglądaj wyceny i kontynuuj współpracę ze specjalistą.",
       "specialist": "Zarządzaj sprawami, nad którymi aktualnie pracujesz, i komunikuj się z ich twórcami.",
-      "admin": "admin"
+      "admin": "Pełny podgląd wszystkich spraw – podejmuj działania administracyjne tam, gdzie są potrzebne."
     }
   },
   "completedTicketsPage": {

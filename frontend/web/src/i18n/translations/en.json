@@ -95,6 +95,7 @@
     "dashboard": "Dashboard",
     "availableTickets": "Available tickets",
     "tickets": "My tickets",
+    "ticketsADMIN": "All tickets",
     "evaluations": "My evaluations",
     "completedTickets": "Completed tickets",
     "inbox": "Inbox",
@@ -256,24 +257,24 @@
     "headerTitle": {
       "user": "Your support requests",
       "specialist": "Tickets assigned to you",
-      "admin": "admin"
+      "admin": "Ticket management"
     },
     "headerDescription": {
       "user": "Track the status of tickets you have submitted and continue working with the assigned specialist.",
       "specialist": "Manage tickets you are currently working on and communicate with their creators.",
-      "admin": "admin"
+      "admin": "Full overview of all submitted tickets - take administrative action where needed."
     }
   },
   "completedTicketsPage": {
     "headerTitle": {
       "user": "Finished tickets",
       "specialist": "Finished tickets",
-      "admin": "admin"
+      "admin": ""
     },
     "headerDescription": {
       "user": "Review tickets that have been completed or cancelled.",
       "specialist": "Review tickets you have worked on that are now completed or cancelled.",
-      "admin": "admin"
+      "admin": ""
     }
   },
   "availableTicketsPage": {

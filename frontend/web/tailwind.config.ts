@@ -22,6 +22,7 @@ export default {
 
         primary: 'oklch(var(--primary))',
         'primary-foreground': 'oklch(var(--primary-foreground))',
+        'primary-constant': 'oklch(var(--primary-constant))',
 
         secondary: 'oklch(var(--secondary))',
         'secondary-foreground': 'oklch(var(--secondary-foreground))',
