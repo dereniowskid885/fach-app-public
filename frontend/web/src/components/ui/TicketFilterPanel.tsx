@@ -1,4 +1,3 @@
-import { getMyTicketsFilters } from '@/helpers/ticketStatusFilter';
 import { EUserRole } from '@shared/enums/role';
 import { ETicketStatus } from '@shared/enums/ticket';
 import { Dispatch, SetStateAction } from 'react';
@@ -15,6 +14,7 @@ export interface ITicketFilterPanel {
   setSelectedCity?: Dispatch<SetStateAction<string | EFilterButton.ALL | undefined>>;
   selectedCategoryId?: string | EFilterButton.ALL;
   setSelectedCategoryId?: Dispatch<SetStateAction<string | EFilterButton.ALL>>;
+  ticketStatusFilters?: ETicketStatus[];
   selectedStatus?: ETicketStatus | EFilterButton.ALL;
   setSelectedStatus?: (status: ETicketStatus | EFilterButton.ALL) => void;
 }
@@ -25,6 +25,7 @@ export default function TicketFilterPanel({
   setSelectedCity,
   selectedCategoryId,
   setSelectedCategoryId,
+  ticketStatusFilters = [],
   selectedStatus,
   setSelectedStatus
 }: ITicketFilterPanel) {
@@ -63,7 +64,7 @@ export default function TicketFilterPanel({
           <Separator className="bg-border" />
 
           <TicketStatusFilter
-            statuses={getMyTicketsFilters(role)}
+            statuses={ticketStatusFilters}
             showHeader={true}
             selectedStatus={selectedStatus}
             setSelectedStatus={setSelectedStatus}

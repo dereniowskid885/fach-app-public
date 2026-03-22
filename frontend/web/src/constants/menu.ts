@@ -10,6 +10,7 @@ import {
 import {
   ALL_TICKETS_PATH,
   AVAILABLE_TICKETS_PATH,
+  COMPLETED_TICKETS_PATH,
   HOME_PATH,
   ROUTES,
   TICKETS_PATH
@@ -30,6 +31,13 @@ const commonMenuItems = [
     icon: ClipboardList,
     href: TICKETS_PATH,
     path: ROUTES[TICKETS_PATH]
+  },
+  {
+    id: 'completed-tickets',
+    translationKey: 'pages.completedTickets',
+    icon: ClipboardCheck,
+    href: COMPLETED_TICKETS_PATH,
+    path: ROUTES[COMPLETED_TICKETS_PATH]
   }
 ];
 
@@ -57,20 +65,7 @@ const otherMenuItems = [
 ];
 
 export const menuItemsObj = {
-  [EUserRole.USER]: [
-    ...commonMenuItems,
-    {
-      id: 'completed-tickets',
-      translationKey: 'pages.completedTickets',
-      icon: ClipboardCheck,
-      href: '#',
-      path: {
-        en: '',
-        pl: ''
-      }
-    },
-    ...otherMenuItems
-  ],
+  [EUserRole.USER]: [...commonMenuItems, ...otherMenuItems],
   [EUserRole.ADMIN]: [
     {
       id: 'dashboard',
@@ -101,16 +96,6 @@ export const menuItemsObj = {
       id: 'evaluations',
       translationKey: 'pages.evaluations',
       icon: ChartColumn,
-      href: '#',
-      path: {
-        en: '',
-        pl: ''
-      }
-    },
-    {
-      id: 'completed-tickets',
-      translationKey: 'pages.completedTickets',
-      icon: ClipboardCheck,
       href: '#',
       path: {
         en: '',

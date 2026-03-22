@@ -9,17 +9,18 @@ import { Badge } from '@/components/shadcn/badge';
 import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
 import { EFilterButton } from '@/enums/ui';
 import { getAllTicketsColumns } from '@/helpers/dataTableColumns';
+import { getAllTicketsStatusFilters } from '@/helpers/ticketStatusFilter';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { ETicketStatus } from '@shared/enums/ticket';
 import { isAdmin } from '@shared/utils/role';
 import { useLocale, useTranslations } from 'next-intl';
 import { notFound } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 export default function AllTickets() {
-  const { role, city, isInitialized: isUserStateInitialized } = useSelector(selectUserData);
+  const { role, isInitialized: isUserStateInitialized } = useSelector(selectUserData);
 
   const isInvalidRole = isUserStateInitialized && !isAdmin(role);
   if (isInvalidRole) {
@@ -37,17 +38,8 @@ export default function AllTickets() {
     EFilterButton.ALL
   );
   const [selectedCity, setSelectedCity] = useState<string | EFilterButton.ALL | undefined>(
-    undefined
+    EFilterButton.ALL
   );
-
-  useEffect(() => {
-    // set initial selectedCity value from user state
-    if (isUserStateInitialized && selectedCity === undefined) {
-      setSelectedCity(city ?? EFilterButton.ALL);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isUserStateInitialized]);
 
   const {
     data: ticketsData,
@@ -79,6 +71,7 @@ export default function AllTickets() {
     }) ?? [];
 
   const tableColumnsData = getAllTicketsColumns(t, currentLocale);
+  const ticketStatusFilters = getAllTicketsStatusFilters();
 
   return (
     <div className="space-y-6">
@@ -107,6 +100,7 @@ export default function AllTickets() {
 
         <TicketFilterPanel
           role={role}
+          ticketStatusFilters={ticketStatusFilters}
           selectedCity={selectedCity}
           setSelectedCity={setSelectedCity}
           selectedCategoryId={selectedCategoryId}
