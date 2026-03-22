@@ -1,48 +1,49 @@
 'use client';
 
-import { useGetTicketsMyQuery } from '@/api/accountApi';
+import { useGetTicketsQuery } from '@/api/accountApi';
 import ContentCard from '@/components/common/ContentCard';
-import SearchComponent from '@/components/common/SearchComponent';
-import TicketCreateButton from '@/components/ui/TicketCreateButton';
-import { ETicketStatus } from '@shared/enums/ticket';
-import { EUserRole } from '@shared/enums/role';
-import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
-import { useSelector } from 'react-redux';
-import { useErrorHandler } from '@/hooks/useErrorHandler';
-import PageHeader from '@/components/common/PageHeader';
-import { getMyTicketsColumns } from '@/helpers/dataTableColumns';
 import { DataTable } from '@/components/common/DataTable';
+import PageHeader from '@/components/common/PageHeader';
+import SearchComponent from '@/components/common/SearchComponent';
 import { Badge } from '@/components/shadcn/badge';
-import { TTicketCityFilter } from '@/types/ticket';
-import { Skeleton } from '@/components/shadcn/skeleton';
-import UserBadge from '@/components/ui/UserBadge';
-import { EUserBadgeVariant } from '@/enums/ui';
-import MyTicketsPageFilters from '@/components/ui/MyTicketsPageFilters';
+import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
+import { EFilterButton } from '@/enums/ui';
+import { getAllTicketsColumns } from '@/helpers/dataTableColumns';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { ETicketStatus } from '@shared/enums/ticket';
+import { isAdmin } from '@shared/utils/role';
+import { useLocale, useTranslations } from 'next-intl';
+import { notFound } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-export default function MyTickets() {
+export default function AllTickets() {
+  const { role, city, isInitialized: isUserStateInitialized } = useSelector(selectUserData);
+
+  const isInvalidRole = isUserStateInitialized && !isAdmin(role);
+  if (isInvalidRole) {
+    notFound();
+  }
+
   const t = useTranslations();
-  const {
-    role,
-    city,
-    categoryName,
-    isLoading: isLoadingUserState,
-    isInitialized: isUserStateInitialized
-  } = useSelector(selectUserData);
   const currentLocale = useLocale();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState<ETicketStatus | null>(null);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
-  const [selectedCity, setSelectedCity] = useState<TTicketCityFilter>(undefined);
+  const [selectedStatus, setSelectedStatus] = useState<ETicketStatus | EFilterButton.ALL>(
+    EFilterButton.ALL
+  );
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | EFilterButton.ALL>(
+    EFilterButton.ALL
+  );
+  const [selectedCity, setSelectedCity] = useState<string | EFilterButton.ALL | undefined>(
+    undefined
+  );
 
   useEffect(() => {
-    if (role !== EUserRole.SPECIALIST) return;
-
     // set initial selectedCity value from user state
     if (isUserStateInitialized && selectedCity === undefined) {
-      setSelectedCity(city ?? null);
+      setSelectedCity(city ?? EFilterButton.ALL);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -53,14 +54,14 @@ export default function MyTickets() {
     error: getTicketsError,
     isLoading,
     isFetching
-  } = useGetTicketsMyQuery(
+  } = useGetTicketsQuery(
     {
-      categoryId: selectedCategoryId || undefined,
-      status: selectedStatus || undefined,
-      city: selectedCity || undefined
+      categoryId: selectedCategoryId === EFilterButton.ALL ? undefined : selectedCategoryId,
+      status: selectedStatus === EFilterButton.ALL ? undefined : selectedStatus,
+      city: selectedCity === EFilterButton.ALL ? undefined : selectedCity
     },
     {
-      skip: isLoadingUserState || (role === EUserRole.SPECIALIST && selectedCity === undefined),
+      skip: selectedCity === undefined,
       refetchOnMountOrArgChange: true
     }
   );
@@ -77,7 +78,7 @@ export default function MyTickets() {
       return matchesSearchQuery;
     }) ?? [];
 
-  const tableColumnsData = getMyTicketsColumns(t, currentLocale, role as EUserRole);
+  const tableColumnsData = getAllTicketsColumns(t, currentLocale);
 
   return (
     <div className="space-y-6">
@@ -87,20 +88,6 @@ export default function MyTickets() {
           title={role ? t(`myTicketsPage.headerTitle.${role}`) : ''}
           description={role ? t(`myTicketsPage.headerDescription.${role}`) : ''}
         />
-
-        {isUserStateInitialized ? (
-          <div className="space-x-2">
-            {role === EUserRole.USER ? (
-              <UserBadge variant={EUserBadgeVariant.CITY} text={city} />
-            ) : null}
-
-            {role === EUserRole.SPECIALIST ? (
-              <UserBadge variant={EUserBadgeVariant.CATEGORY} text={categoryName} />
-            ) : null}
-          </div>
-        ) : (
-          <Skeleton className="h-[22px] w-[80px]" />
-        )}
       </div>
 
       <ContentCard index={0} className="space-y-6 p-6 sm:p-8">
@@ -116,12 +103,10 @@ export default function MyTickets() {
               {t('ticket.ticketsAmount', { count: filteredTickets.length ?? 0 })}
             </Badge>
           </div>
-
-          <TicketCreateButton />
         </div>
 
-        <MyTicketsPageFilters
-          role={role as EUserRole}
+        <TicketFilterPanel
+          role={role}
           selectedCity={selectedCity}
           setSelectedCity={setSelectedCity}
           selectedCategoryId={selectedCategoryId}
