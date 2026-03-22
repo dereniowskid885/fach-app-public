@@ -14,8 +14,8 @@ import { Badge } from '../shadcn/badge';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import UserBadge from './UserBadge';
-import { EUserRole } from '@shared/enums/role';
 import { EUserBadgeVariant } from '@/enums/ui';
+import { isAdmin, isSpecialist } from '@shared/utils/role';
 
 export default function DashboardRecentTickets() {
   const t = useTranslations();
@@ -47,14 +47,12 @@ export default function DashboardRecentTickets() {
             </Typography>
           )}
 
-          {isLoadingUserState ? (
+          {isAdmin(role) ? null : isLoadingUserState ? (
             <Skeleton className="h-[22px] w-[40px]" />
           ) : (
             <UserBadge
-              variant={
-                role === EUserRole.SPECIALIST ? EUserBadgeVariant.CATEGORY : EUserBadgeVariant.CITY
-              }
-              text={role === EUserRole.SPECIALIST ? categoryName : city}
+              variant={isSpecialist(role) ? EUserBadgeVariant.CATEGORY : EUserBadgeVariant.CITY}
+              text={isSpecialist(role) ? categoryName : city}
             />
           )}
 

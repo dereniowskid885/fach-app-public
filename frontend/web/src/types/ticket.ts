@@ -9,8 +9,3 @@ export type TStatusActionButton = Partial<{
     isLoading?: boolean;
   };
 }>;
-
-// undefined = not yet initialized
-// null      = user selected "All"
-// string    = specific city selected
-export type TTicketCityFilter = string | null | undefined;

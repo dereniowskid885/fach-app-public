@@ -6,16 +6,16 @@ import { Filter, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { Input } from '../shadcn/input';
 import { useRef, useEffect } from 'react';
-import { EArrowDirection } from '@/enums/ui';
+import { EArrowDirection, EFilterButton } from '@/enums/ui';
 
 export interface IButtonsCarousel {
   isDataLoaded?: boolean;
   headerText?: string;
   allButtonText?: string;
   searchQuery?: string;
-  selectedItemId: string | null;
+  selectedItemId: string | EFilterButton.ALL;
   items?: { id: string; name?: string; icon?: React.ReactNode }[];
-  selectItemHandler: (id: string | null) => void;
+  selectItemHandler: (id: string | EFilterButton.ALL) => void;
   setSearchQuery?: (query: string) => void;
 }
 
@@ -164,8 +164,8 @@ export default function ButtonsCarousel({
           className="no-scrollbar -ml-1 flex cursor-grab items-center gap-2 overflow-x-auto p-1 active:cursor-grabbing"
         >
           <Button
-            variant={selectedItemId ? 'ghost' : 'special-1'}
-            onClick={() => selectItemHandler(null)}
+            variant={selectedItemId === EFilterButton.ALL ? 'special-1' : 'ghost'}
+            onClick={() => selectItemHandler(EFilterButton.ALL)}
             className={buttonClassName}
           >
             {allButtonText ? allButtonText : t('common.all')}
