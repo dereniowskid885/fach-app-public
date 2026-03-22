@@ -4,6 +4,7 @@ import CategoryIcon from './CategoryIcon';
 import ButtonsCarousel from '../common/ButtonsCarousel';
 import { useTranslations } from 'next-intl';
 import { EFallbackKey, EFilterButton } from '@/enums/ui';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export interface ITicketCategoryFilter {
   selectedCategoryId: string | EFilterButton.ALL;
@@ -18,7 +19,13 @@ export default function TicketCategoryFilter({
 }: ITicketCategoryFilter) {
   const t = useTranslations();
 
-  const { data: getCategoriesResponse, isError } = useGetCategoriesQuery({ hasSpecialists: true });
+  const {
+    data: getCategoriesResponse,
+    error,
+    isLoading
+  } = useGetCategoriesQuery({ hasSpecialists: true });
+
+  useErrorHandler(error);
 
   const carouselData =
     getCategoriesResponse?.data?.map((category: Category, index: number) => ({
@@ -37,8 +44,9 @@ export default function TicketCategoryFilter({
 
   return (
     <ButtonsCarousel
-      isDataLoaded={!isError}
+      isDataLoading={isLoading}
       items={carouselData}
+      itemFallbackKey={EFallbackKey.TICKET_CATEGORY_FILTER_ITEM}
       selectedItemId={selectedCategoryId}
       selectItemHandler={selectCategoryHandler}
       headerText={showHeader ? t('buttonsCarousel.categoryFilterHeader') : undefined}

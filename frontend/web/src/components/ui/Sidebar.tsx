@@ -22,6 +22,7 @@ import { normalizePathname } from '@/utils/pathname';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import UserCard from './UserCard';
 import { Separator } from '../shadcn/separator';
+import { EFallbackKey } from '@/enums/ui';
 
 export default function Sidebar() {
   const t = useTranslations();
@@ -100,7 +101,10 @@ export default function Sidebar() {
               </NavLink>
             ))
           : Array.from({ length: 4 }).map((item, index) => (
-              <Skeleton key={`menu-item-skeleton-${item}-${index}`} className="h-[36px]" />
+              <Skeleton
+                key={`${EFallbackKey.MENU_ITEM_SKELETON}-${item}-${index}`}
+                className="h-[36px]"
+              />
             ))}
       </nav>
 

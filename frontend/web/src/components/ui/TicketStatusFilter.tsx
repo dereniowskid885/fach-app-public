@@ -42,6 +42,7 @@ export default function TicketStatusFilter({
   return (
     <ButtonsCarousel
       items={carouselData}
+      itemFallbackKey={EFallbackKey.TICKET_STATUS_FILTER_ITEM}
       selectedItemId={selectedStatusData?.id ?? EFilterButton.ALL}
       selectItemHandler={selectStatusHandler}
       headerText={showHeader ? t('buttonsCarousel.statusFilterHeader') : undefined}

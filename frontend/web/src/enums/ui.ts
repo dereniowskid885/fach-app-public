@@ -5,7 +5,9 @@ export const enum EFallbackKey {
   TICKET_CITY_FILTER_ITEM = 'ticket-city-filter-item',
   AUTH_FEATURE_LIST = 'auth-feature-list',
   AUTH_FEATURE_LIST_ITEM = 'auth-feature-list-item',
-  CONTENT_CARD = 'content-card'
+  CONTENT_CARD = 'content-card',
+  MENU_ITEM_SKELETON = 'menu-item-skeleton',
+  FILTER_ITEM_SKELETON = 'filter-item-skeleton'
 }
 
 export const enum ETimePickerType {
