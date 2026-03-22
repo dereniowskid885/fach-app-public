@@ -39,6 +39,7 @@ export default function TicketCityFilter({
   return (
     <ButtonsCarousel
       items={carouselData}
+      itemFallbackKey={EFallbackKey.TICKET_CITY_FILTER_ITEM}
       selectedItemId={selectedCityData?.id ?? EFilterButton.ALL}
       selectItemHandler={selectCityHandler}
       headerText={showHeader ? t('buttonsCarousel.cityFilterHeader') : undefined}

@@ -6,25 +6,28 @@ import { Filter, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { Input } from '../shadcn/input';
 import { useRef, useEffect } from 'react';
-import { EArrowDirection, EFilterButton } from '@/enums/ui';
+import { EArrowDirection, EFallbackKey, EFilterButton } from '@/enums/ui';
+import { Skeleton } from '../shadcn/skeleton';
 
 export interface IButtonsCarousel {
-  isDataLoaded?: boolean;
+  isDataLoading?: boolean;
   headerText?: string;
   allButtonText?: string;
   searchQuery?: string;
   selectedItemId: string | EFilterButton.ALL;
   items?: { id: string; name?: string; icon?: React.ReactNode }[];
+  itemFallbackKey: EFallbackKey;
   selectItemHandler: (id: string | EFilterButton.ALL) => void;
   setSearchQuery?: (query: string) => void;
 }
 
 export default function ButtonsCarousel({
-  isDataLoaded = true,
+  isDataLoading = false,
   headerText,
   allButtonText,
   selectedItemId,
   items,
+  itemFallbackKey,
   selectItemHandler
 }: IButtonsCarousel) {
   const t = useTranslations();
@@ -98,7 +101,7 @@ export default function ButtonsCarousel({
     };
   }, [filteredItems]);
 
-  return isDataLoaded ? (
+  return (
     <div className="space-y-1">
       {headerText ? (
         <div className="flex items-center gap-2">
@@ -171,20 +174,27 @@ export default function ButtonsCarousel({
             {allButtonText ? allButtonText : t('common.all')}
           </Button>
 
-          {filteredItems?.map(item => (
-            <Button
-              variant={selectedItemId === item.id ? 'special-1' : 'ghost'}
-              key={item.id}
-              disabled={!item.name}
-              onClick={() => selectItemHandler(item.id)}
-              className={buttonClassName}
-            >
-              {item.icon}
-              <span>{item.name ? item.name : t('common.unknown')}</span>
-            </Button>
-          ))}
+          {!isDataLoading
+            ? filteredItems?.map(item => (
+                <Button
+                  variant={selectedItemId === item.id ? 'special-1' : 'ghost'}
+                  key={item.id}
+                  disabled={!item.name}
+                  onClick={() => selectItemHandler(item.id)}
+                  className={buttonClassName}
+                >
+                  {item.icon}
+                  <span>{item.name ? item.name : t('common.unknown')}</span>
+                </Button>
+              ))
+            : Array.from({ length: 3 }).map((item, index) => (
+                <Skeleton
+                  key={`${EFallbackKey.MENU_ITEM_SKELETON}-${itemFallbackKey}-${item}-${index}`}
+                  className="h-[40px] w-[80px] rounded-full"
+                />
+              ))}
         </div>
       </div>
     </div>
-  ) : null;
+  );
 }
