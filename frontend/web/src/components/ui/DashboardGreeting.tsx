@@ -5,10 +5,11 @@ import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import TicketCreateButton from './TicketCreateButton';
 import PageHeader from '../common/PageHeader';
+import { isUser } from '@shared/utils/role';
 
 export default function DashboardGreeting() {
   const t = useTranslations();
-  const { name } = useSelector(selectUserData);
+  const { name, role, isInitialized: isUserStateInitialized } = useSelector(selectUserData);
 
   const getTimeOfDayGreeting = () => {
     const hour = new Date().getHours();
@@ -20,7 +21,7 @@ export default function DashboardGreeting() {
   return (
     <div className="flex items-center justify-between">
       <PageHeader
-        isDataLoaded={Boolean(name)}
+        isDataLoaded={isUserStateInitialized}
         title={t('dashboard.greeting', {
           timeOfDayGreeting: getTimeOfDayGreeting(),
           userName: name
@@ -28,7 +29,7 @@ export default function DashboardGreeting() {
         description={t('dashboard.greetingMessage')}
       />
 
-      <TicketCreateButton />
+      {isUser(role) ? <TicketCreateButton /> : null}
     </div>
   );
 }

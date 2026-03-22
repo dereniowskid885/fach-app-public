@@ -16,8 +16,8 @@ const badgeVariants = cva(
           'border-transparent bg-red-500 text-neutral-50 hover:bg-red-500/80 dark:bg-red-900 dark:text-neutral-50 dark:hover:bg-red-900/80',
         outline: 'text-neutral-950 dark:text-neutral-50',
         amount: 'text-nowrap bg-secondary text-muted-foreground',
-        city: 'space-x-2 border border-emerald-200 bg-emerald-50',
-        category: 'space-x-2 border border-blue-200 bg-blue-50'
+        city: 'space-x-2 border border-emerald-200 bg-emerald-50 text-primary-constant',
+        category: 'space-x-2 border border-blue-200 bg-blue-50 text-primary-constant'
       }
     },
     defaultVariants: {

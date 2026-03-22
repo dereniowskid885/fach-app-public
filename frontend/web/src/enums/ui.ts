@@ -40,3 +40,7 @@ export const enum EUserBadgeVariant {
   CITY = 'CITY',
   CATEGORY = 'CATEGORY'
 }
+
+export const enum EFilterButton {
+  ALL = 'ALL'
+}
