@@ -134,6 +134,16 @@ const injectedRtkApi = api.injectEndpoints({
         }
       })
     }),
+    getTicketsCompleted: build.query<GetTicketsCompletedApiResponse, GetTicketsCompletedApiArg>({
+      query: queryArg => ({
+        url: `/tickets/completed`,
+        params: {
+          categoryId: queryArg.categoryId,
+          city: queryArg.city,
+          status: queryArg.status
+        }
+      })
+    }),
     getTicketsSpecialistAvailable: build.query<
       GetTicketsSpecialistAvailableApiResponse,
       GetTicketsSpecialistAvailableApiArg
@@ -467,6 +477,22 @@ export type GetTicketsMyApiArg = {
      */
   status?: string;
 };
+export type GetTicketsCompletedApiResponse = /** status 200 Array of tickets */ {
+  success?: boolean;
+  dataLength?: number;
+  data?: Ticket[];
+};
+export type GetTicketsCompletedApiArg = {
+  /** Filter by categoryId */
+  categoryId?: string;
+  /** Filter by city */
+  city?: string;
+  /** Filter by one or multiple ticket statuses.
+    You can pass a single value or a comma-separated list.
+    Example: awaiting_evaluation,in_progress
+     */
+  status?: string;
+};
 export type GetTicketsSpecialistAvailableApiResponse = /** status 200 Array of tickets */ {
   success?: boolean;
   dataLength?: number;
@@ -737,6 +763,7 @@ export const {
   useGetTicketsQuery,
   usePostTicketsByIdPaymentMutation,
   useGetTicketsMyQuery,
+  useGetTicketsCompletedQuery,
   useGetTicketsSpecialistAvailableQuery,
   useGetTicketsByIdQuery,
   useDeleteTicketsByIdMutation,

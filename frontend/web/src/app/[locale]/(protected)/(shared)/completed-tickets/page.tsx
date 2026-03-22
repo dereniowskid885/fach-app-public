@@ -1,29 +1,27 @@
 'use client';
 
-import { useGetTicketsMyQuery } from '@/api/accountApi';
+import { useGetTicketsCompletedQuery } from '@/api/accountApi';
 import ContentCard from '@/components/common/ContentCard';
-import SearchComponent from '@/components/common/SearchComponent';
-import TicketCreateButton from '@/components/ui/TicketCreateButton';
-import { ETicketStatus } from '@shared/enums/ticket';
-import { EUserRole } from '@shared/enums/role';
-import { useLocale, useTranslations } from 'next-intl';
-import { useState } from 'react';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
-import { useSelector } from 'react-redux';
-import { useErrorHandler } from '@/hooks/useErrorHandler';
-import PageHeader from '@/components/common/PageHeader';
-import { getMyTicketsColumns } from '@/helpers/dataTableColumns';
 import { DataTable } from '@/components/common/DataTable';
+import PageHeader from '@/components/common/PageHeader';
+import SearchComponent from '@/components/common/SearchComponent';
 import { Badge } from '@/components/shadcn/badge';
 import { Skeleton } from '@/components/shadcn/skeleton';
+import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
 import UserBadge from '@/components/ui/UserBadge';
 import { EFilterButton, EUserBadgeVariant } from '@/enums/ui';
-import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
+import { getMyTicketsColumns } from '@/helpers/dataTableColumns';
+import { getCompletedTicketsStatusFilters } from '@/helpers/ticketStatusFilter';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { ETicketStatus } from '@shared/enums/ticket';
+import { isAdmin, isSpecialist, isUser } from '@shared/utils/role';
+import { useLocale, useTranslations } from 'next-intl';
 import { notFound } from 'next/navigation';
-import { isRoleAllowed, isSpecialist, isUser } from '@shared/utils/role';
-import { getMyTicketsStatusFilters } from '@/helpers/ticketStatusFilter';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
-export default function MyTickets() {
+export default function CompletedTickets() {
   const {
     role,
     city,
@@ -31,8 +29,7 @@ export default function MyTickets() {
     isInitialized: isUserStateInitialized
   } = useSelector(selectUserData);
 
-  const isInvalidRole =
-    isUserStateInitialized && !isRoleAllowed(role, [EUserRole.SPECIALIST, EUserRole.USER]);
+  const isInvalidRole = isUserStateInitialized && isAdmin(role);
   if (isInvalidRole) {
     notFound();
   }
@@ -56,7 +53,7 @@ export default function MyTickets() {
     error: getTicketsError,
     isLoading,
     isFetching
-  } = useGetTicketsMyQuery(
+  } = useGetTicketsCompletedQuery(
     {
       categoryId: selectedCategoryId === EFilterButton.ALL ? undefined : selectedCategoryId,
       status: selectedStatus === EFilterButton.ALL ? undefined : selectedStatus,
@@ -80,15 +77,15 @@ export default function MyTickets() {
     }) ?? [];
 
   const tableColumnsData = getMyTicketsColumns(t, currentLocale, role);
-  const ticketStatusFilters = getMyTicketsStatusFilters(role);
+  const ticketStatusFilters = getCompletedTicketsStatusFilters();
 
   return (
     <div className="space-y-6">
       <div className="space-y-2">
         <PageHeader
           isDataLoaded={isUserStateInitialized}
-          title={role ? t(`myTicketsPage.headerTitle.${role}`) : ''}
-          description={role ? t(`myTicketsPage.headerDescription.${role}`) : ''}
+          title={role ? t(`completedTicketsPage.headerTitle.${role}`) : ''}
+          description={role ? t(`completedTicketsPage.headerDescription.${role}`) : ''}
         />
 
         {isUserStateInitialized ? (
@@ -105,20 +102,16 @@ export default function MyTickets() {
       </div>
 
       <ContentCard index={0} className="space-y-6 p-6 sm:p-8">
-        <div className="flex justify-between gap-4">
-          <div className="flex w-full items-center gap-4">
-            <SearchComponent
-              inputValue={searchQuery}
-              inputOnChangeHandler={setSearchQuery}
-              placeholder={t('ticket.searchPlaceholder')}
-            />
+        <div className="flex w-full items-center gap-4">
+          <SearchComponent
+            inputValue={searchQuery}
+            inputOnChangeHandler={setSearchQuery}
+            placeholder={t('ticket.searchPlaceholder')}
+          />
 
-            <Badge variant="amount" className="text-sm">
-              {t('ticket.ticketsAmount', { count: filteredTickets.length ?? 0 })}
-            </Badge>
-          </div>
-
-          {isUser(role) ? <TicketCreateButton /> : null}
+          <Badge variant="amount" className="text-sm">
+            {t('ticket.ticketsAmount', { count: filteredTickets.length ?? 0 })}
+          </Badge>
         </div>
 
         <TicketFilterPanel
