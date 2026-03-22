@@ -722,7 +722,7 @@ router.get('/:id', checkAdminRole, getTicketByID);
  *                   type: string
  *                   example: Server error
  */
-router.delete('/:id', deleteTicket);
+router.delete('/:id', checkAdminRole, deleteTicket);
 
 /**
  * @swagger

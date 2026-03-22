@@ -3,7 +3,6 @@ import Ticket, { ITicketModel } from '@models/Ticket';
 import { JwtPayload } from 'jsonwebtoken';
 import { ETicketStatus } from '@shared/enums/ticket';
 import { ESupportedCurrency } from '@shared/enums/currency';
-import { EUserRole } from '@shared/enums/role';
 import { EResponseStatus } from '@shared/enums/responseStatus';
 import { CategoryManager } from './categoryManager';
 import { UserManager } from './userManager';
@@ -94,17 +93,7 @@ export const TicketManager = {
 
     return ticket;
   },
-  deleteTicket: async (ticketId: string, user: JwtPayload) => {
-    if (!user) {
-      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
-    }
-
-    // TODO: modify while doing superadmin role ticket
-    // https://github.com/dereniowskid885/fach-app/issues/7
-    if (user.role !== EUserRole.ADMIN) {
-      throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'Not enough permissions to delete the ticket');
-    }
-
+  deleteTicket: async (ticketId: string) => {
     const ticket = await TicketManager.getTicketByID(ticketId);
 
     if (!ticket) {
