@@ -10,6 +10,7 @@ import {
   updateTicket,
   ticketPaymentHandler,
   ticketEvaluationEdit,
+  getCompletedTickets,
 } from '@controllers/ticketController';
 
 import express from 'express';
@@ -420,6 +421,81 @@ router.get('/', checkAdminRole, getTickets);
  *                   example: Server error
  */
 router.get('/my', getMyTickets);
+
+/**
+ * @swagger
+ * /tickets/completed:
+ *   get:
+ *     summary: Get tickets with filtering options (only completed and canceled status for completed tickets page)
+ *     description: Returns completed and canceled tickets (user role - tickets created by user, and allow filtering by category, specialist role - tickets where acceptedEvaluation belongs to the specialist, and allow filtering by city)
+ *     tags:
+ *       - Ticketing
+ *     parameters:
+ *       - in: query
+ *         name: categoryId
+ *         schema:
+ *           type: string
+ *         description: Filter by categoryId
+ *         example: "66df7gh8sasd6f66767rt6"
+ *       - in: query
+ *         name: city
+ *         schema:
+ *           type: string
+ *         description: Filter by city
+ *         example: "Warszawa"
+ *       - $ref: '#/components/parameters/TicketStatusQuery'
+ *     responses:
+ *       200:
+ *         description: Array of tickets
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 dataLength:
+ *                   type: number
+ *                   example: 24
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Ticket'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: Missing user data
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.get('/completed', getCompletedTickets);
 
 /**
  * @swagger

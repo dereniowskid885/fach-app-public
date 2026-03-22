@@ -100,4 +100,41 @@ export const FilterBuilder = {
 
     return filterObj;
   },
+  getCompletedTickets: (req: Request, user: JwtPayload) => {
+    const { categoryId, status, city } = req.query;
+
+    const filterObj: FilterQuery<ITicketModel> = {};
+
+    // user role - show tickets created by user, and allow filtering by category
+    if (isUser(user.role)) {
+      filterObj.createdBy = user.userId;
+
+      if (categoryId) filterObj.category = categoryId.toString();
+    }
+
+    // specialist role - show tickets where acceptedEvaluation belongs to the specialist, and allow filtering by city
+    if (isSpecialist(user.role)) {
+      filterObj['acceptedEvaluation.user'] = user.userId;
+
+      if (city) filterObj.city = city.toString();
+    }
+
+    const allowedStatuses = [ETicketStatus.COMPLETED, ETicketStatus.CANCELED];
+
+    filterObj.status = { $in: allowedStatuses };
+
+    if (status) {
+      const statuses = Array.isArray(status)
+        ? status
+        : String(status)
+            .split(',')
+            .map((s) => s.trim());
+
+      const filteredStatuses = statuses.filter((status) => allowedStatuses.includes(status as ETicketStatus));
+
+      filterObj.status = { $in: filteredStatuses };
+    }
+
+    return filterObj;
+  },
 };
