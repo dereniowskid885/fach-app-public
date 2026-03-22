@@ -84,7 +84,7 @@ export const updateTicket = async (req: Request, res: Response) => {
 
 export const deleteTicket = async (req: Request, res: Response) => {
   try {
-    await TicketManager.deleteTicket(req.params.id, req.user);
+    await TicketManager.deleteTicket(req.params.id);
 
     return res.status(200).json({ success: true, message: 'Ticket deleted successfully' });
   } catch (err) {
