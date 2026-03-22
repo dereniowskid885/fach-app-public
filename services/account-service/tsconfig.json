@@ -25,6 +25,6 @@
     },
     "typeRoots": ["../../shared/types", "./node_modules/@types"]
   },
-  "include": ["app/**/*", "../../shared/*", "../../frontend/web/src/*"],
+  "include": ["app/**/*", "../../shared/*"],
   "exclude": ["dist"]
 }
