@@ -38,6 +38,17 @@ export const getMyTickets = async (req: Request, res: Response) => {
   }
 };
 
+export const getCompletedTickets = async (req: Request, res: Response) => {
+  try {
+    const filter = FilterBuilder.getCompletedTickets(req, req.user);
+    const tickets = await TicketManager.getTickets(filter);
+
+    return res.status(200).json({ success: true, dataLength: tickets.length, data: tickets });
+  } catch (err) {
+    handleAppError(res, err as IAppError);
+  }
+};
+
 export const getSpecialistAvailableTickets = async (req: Request, res: Response) => {
   try {
     const categoryId = (await UserManager.getUserById(req.user.userId)).category?._id.toString();
@@ -73,7 +84,7 @@ export const updateTicket = async (req: Request, res: Response) => {
 
 export const deleteTicket = async (req: Request, res: Response) => {
   try {
-    await TicketManager.deleteTicket(req.params.id, req.user);
+    await TicketManager.deleteTicket(req.params.id);
 
     return res.status(200).json({ success: true, message: 'Ticket deleted successfully' });
   } catch (err) {

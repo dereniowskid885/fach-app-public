@@ -132,7 +132,7 @@ export const getConversationColumn = (t: TFunction) => ({
   }
 });
 
-export const getActionColumn = (role: EUserRole, userId?: string) => ({
+export const getActionColumn = (role: EUserRole | string, userId?: string) => ({
   id: 'action',
   cell: (item: CellContext<Ticket, unknown>) => {
     const ticket = item.row.original as Ticket;

@@ -2,12 +2,11 @@ import { Dispatch, SetStateAction } from 'react';
 import ButtonsCarousel from '../common/ButtonsCarousel';
 import { useTranslations } from 'next-intl';
 import { cities } from '@shared/constants/mocks';
-import { EFallbackKey } from '@/enums/ui';
-import { TTicketCityFilter } from '@/types/ticket';
+import { EFallbackKey, EFilterButton } from '@/enums/ui';
 
 export interface ITicketCityFilter {
-  selectedCity: TTicketCityFilter;
-  setSelectedCity: Dispatch<SetStateAction<TTicketCityFilter>>;
+  selectedCity: string | EFilterButton.ALL;
+  setSelectedCity: Dispatch<SetStateAction<string | EFilterButton.ALL | undefined>>;
   showHeader?: boolean;
 }
 
@@ -27,20 +26,20 @@ export default function TicketCityFilter({
 
   const selectedCityData = carouselData.find(item => item.name === selectedCity);
 
-  const selectCityHandler = (newCityId: string | null) => {
+  const selectCityHandler = (newCityId: string | EFilterButton.ALL) => {
     const isCityChange = newCityId !== selectedCityData?.id;
 
     if (isCityChange) {
       const newSelectedCityData = carouselData.find(item => item.id === newCityId);
 
-      setSelectedCity(newSelectedCityData?.name ?? null);
+      setSelectedCity(newSelectedCityData?.name ?? EFilterButton.ALL);
     }
   };
 
   return (
     <ButtonsCarousel
       items={carouselData}
-      selectedItemId={selectedCityData?.id ?? null}
+      selectedItemId={selectedCityData?.id ?? EFilterButton.ALL}
       selectItemHandler={selectCityHandler}
       headerText={showHeader ? t('buttonsCarousel.cityFilterHeader') : undefined}
     />

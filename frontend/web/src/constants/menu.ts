@@ -7,7 +7,14 @@ import {
   ChartColumn,
   ClipboardCheck
 } from 'lucide-react';
-import { AVAILABLE_TICKETS_PATH, HOME_PATH, ROUTES, TICKETS_PATH } from './routes';
+import {
+  ALL_TICKETS_PATH,
+  AVAILABLE_TICKETS_PATH,
+  COMPLETED_TICKETS_PATH,
+  HOME_PATH,
+  ROUTES,
+  TICKETS_PATH
+} from './routes';
 import { EUserRole } from '@shared/enums/role';
 
 const commonMenuItems = [
@@ -29,11 +36,8 @@ const commonMenuItems = [
     id: 'completed-tickets',
     translationKey: 'pages.completedTickets',
     icon: ClipboardCheck,
-    href: '#',
-    path: {
-      en: '',
-      pl: ''
-    }
+    href: COMPLETED_TICKETS_PATH,
+    path: ROUTES[COMPLETED_TICKETS_PATH]
   }
 ];
 
@@ -60,31 +64,44 @@ const otherMenuItems = [
   }
 ];
 
-const baseMenuItems = [...commonMenuItems, ...otherMenuItems];
-const specialistMenuItems = [
-  ...commonMenuItems,
-  {
-    id: 'available-tickets',
-    translationKey: 'pages.availableTickets',
-    icon: BriefcaseBusiness,
-    href: AVAILABLE_TICKETS_PATH,
-    path: ROUTES[AVAILABLE_TICKETS_PATH]
-  },
-  {
-    id: 'evaluations',
-    translationKey: 'pages.evaluations',
-    icon: ChartColumn,
-    href: '#',
-    path: {
-      en: '',
-      pl: ''
-    }
-  },
-  ...otherMenuItems
-];
-
 export const menuItemsObj = {
-  [EUserRole.USER]: baseMenuItems,
-  [EUserRole.ADMIN]: baseMenuItems,
-  [EUserRole.SPECIALIST]: specialistMenuItems
+  [EUserRole.USER]: [...commonMenuItems, ...otherMenuItems],
+  [EUserRole.ADMIN]: [
+    {
+      id: 'dashboard',
+      translationKey: 'pages.dashboard',
+      icon: LayoutDashboard,
+      href: HOME_PATH,
+      path: ROUTES[HOME_PATH]
+    },
+    {
+      id: 'all-tickets',
+      translationKey: 'pages.allTickets',
+      icon: ClipboardList,
+      href: ALL_TICKETS_PATH,
+      path: ROUTES[ALL_TICKETS_PATH]
+    },
+    ...otherMenuItems
+  ],
+  [EUserRole.SPECIALIST]: [
+    ...commonMenuItems,
+    {
+      id: 'available-tickets',
+      translationKey: 'pages.availableTickets',
+      icon: BriefcaseBusiness,
+      href: AVAILABLE_TICKETS_PATH,
+      path: ROUTES[AVAILABLE_TICKETS_PATH]
+    },
+    {
+      id: 'evaluations',
+      translationKey: 'pages.evaluations',
+      icon: ChartColumn,
+      href: '#',
+      path: {
+        en: '',
+        pl: ''
+      }
+    },
+    ...otherMenuItems
+  ]
 };

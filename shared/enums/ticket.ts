@@ -5,5 +5,5 @@ export enum ETicketStatus {
   SOLUTION_REVIEW = "solution_review",
   MODERATOR_INVESTIGATION = "moderator_investigation",
   COMPLETED = "completed",
-  CANCELLED = "canceled",
+  CANCELED = "canceled",
 }

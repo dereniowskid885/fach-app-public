@@ -6,6 +6,8 @@ export const PASSWORD_RESET_FORM_PATH = `${PASSWORD_RESET_PATH}/[token]`;
 export const TICKETS_PATH = '/tickets';
 export const AVAILABLE_TICKETS_PATH = '/available-tickets';
 export const VERIFY_PATH = '/verify';
+export const ALL_TICKETS_PATH = '/all-tickets';
+export const COMPLETED_TICKETS_PATH = '/completed-tickets';
 
 export const ROUTES = {
   [HOME_PATH]: {
@@ -35,6 +37,14 @@ export const ROUTES = {
   [AVAILABLE_TICKETS_PATH]: {
     pl: '/dostepne-sprawy',
     en: AVAILABLE_TICKETS_PATH
+  },
+  [ALL_TICKETS_PATH]: {
+    pl: '/wszystkie-sprawy',
+    en: ALL_TICKETS_PATH
+  },
+  [COMPLETED_TICKETS_PATH]: {
+    pl: '/ukonczone-sprawy',
+    en: COMPLETED_TICKETS_PATH
   },
   [VERIFY_PATH]: {
     pl: '/weryfikacja',

@@ -3,56 +3,53 @@
 import { useGetTicketsMyQuery } from '@/api/accountApi';
 import ContentCard from '@/components/common/ContentCard';
 import SearchComponent from '@/components/common/SearchComponent';
-import { Separator } from '@/components/shadcn/separator';
-import TicketCategoriesFilter from '@/components/ui/TicketCategoriesFilter';
 import TicketCreateButton from '@/components/ui/TicketCreateButton';
-import TicketStatusFilter from '@/components/ui/TicketStatusFilter';
 import { ETicketStatus } from '@shared/enums/ticket';
 import { EUserRole } from '@shared/enums/role';
 import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useSelector } from 'react-redux';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import PageHeader from '@/components/common/PageHeader';
-import { getMyTicketsFilters } from '@/helpers/ticketStatusFilter';
 import { getMyTicketsColumns } from '@/helpers/dataTableColumns';
 import { DataTable } from '@/components/common/DataTable';
 import { Badge } from '@/components/shadcn/badge';
-import TicketCityFilter from '@/components/ui/TicketCityFilter';
-import { TTicketCityFilter } from '@/types/ticket';
 import { Skeleton } from '@/components/shadcn/skeleton';
 import UserBadge from '@/components/ui/UserBadge';
-import { EUserBadgeVariant } from '@/enums/ui';
+import { EFilterButton, EUserBadgeVariant } from '@/enums/ui';
+import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
+import { notFound } from 'next/navigation';
+import { isRoleAllowed, isSpecialist, isUser } from '@shared/utils/role';
+import { getMyTicketsStatusFilters } from '@/helpers/ticketStatusFilter';
 
 export default function MyTickets() {
-  const t = useTranslations();
   const {
     role,
     city,
     categoryName,
-    isLoading: isLoadingUserState,
     isInitialized: isUserStateInitialized
   } = useSelector(selectUserData);
+
+  const isInvalidRole =
+    isUserStateInitialized && !isRoleAllowed(role, [EUserRole.SPECIALIST, EUserRole.USER]);
+  if (isInvalidRole) {
+    notFound();
+  }
+
+  const t = useTranslations();
   const currentLocale = useLocale();
 
-  const ticketStatusFilterData = getMyTicketsFilters(role as EUserRole);
-
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState<ETicketStatus | null>(null);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
-  const [selectedCity, setSelectedCity] = useState<TTicketCityFilter>(undefined);
-
-  useEffect(() => {
-    if (role !== EUserRole.SPECIALIST) return;
-
-    // set initial selectedCity value from user state
-    if (isUserStateInitialized && selectedCity === undefined) {
-      setSelectedCity(city ?? null);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isUserStateInitialized]);
+  const [selectedStatus, setSelectedStatus] = useState<ETicketStatus | EFilterButton.ALL>(
+    EFilterButton.ALL
+  );
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | EFilterButton.ALL>(
+    EFilterButton.ALL
+  );
+  const [selectedCity, setSelectedCity] = useState<string | EFilterButton.ALL | undefined>(
+    EFilterButton.ALL
+  );
 
   const {
     data: ticketsData,
@@ -61,12 +58,11 @@ export default function MyTickets() {
     isFetching
   } = useGetTicketsMyQuery(
     {
-      categoryId: selectedCategoryId || undefined,
-      status: selectedStatus || undefined,
-      city: selectedCity || undefined
+      categoryId: selectedCategoryId === EFilterButton.ALL ? undefined : selectedCategoryId,
+      status: selectedStatus === EFilterButton.ALL ? undefined : selectedStatus,
+      city: selectedCity === EFilterButton.ALL ? undefined : selectedCity
     },
     {
-      skip: isLoadingUserState || (role === EUserRole.SPECIALIST && selectedCity === undefined),
       refetchOnMountOrArgChange: true
     }
   );
@@ -83,7 +79,8 @@ export default function MyTickets() {
       return matchesSearchQuery;
     }) ?? [];
 
-  const tableColumnsData = getMyTicketsColumns(t, currentLocale, role as EUserRole);
+  const tableColumnsData = getMyTicketsColumns(t, currentLocale, role);
+  const ticketStatusFilters = getMyTicketsStatusFilters(role);
 
   return (
     <div className="space-y-6">
@@ -96,11 +93,9 @@ export default function MyTickets() {
 
         {isUserStateInitialized ? (
           <div className="space-x-2">
-            {role === EUserRole.USER ? (
-              <UserBadge variant={EUserBadgeVariant.CITY} text={city} />
-            ) : null}
+            {isUser(role) ? <UserBadge variant={EUserBadgeVariant.CITY} text={city} /> : null}
 
-            {role === EUserRole.SPECIALIST ? (
+            {isSpecialist(role) ? (
               <UserBadge variant={EUserBadgeVariant.CATEGORY} text={categoryName} />
             ) : null}
           </div>
@@ -123,38 +118,16 @@ export default function MyTickets() {
             </Badge>
           </div>
 
-          <TicketCreateButton />
+          {isUser(role) ? <TicketCreateButton /> : null}
         </div>
 
-        {role === EUserRole.USER ? (
-          <>
-            <Separator className="bg-border" />
-
-            <TicketCategoriesFilter
-              showHeader={true}
-              selectedCategoryId={selectedCategoryId}
-              setSelectedCategoryId={setSelectedCategoryId}
-            />
-          </>
-        ) : null}
-
-        {role === EUserRole.SPECIALIST ? (
-          <>
-            <Separator className="bg-border" />
-
-            <TicketCityFilter
-              showHeader={true}
-              selectedCity={selectedCity}
-              setSelectedCity={setSelectedCity}
-            />
-          </>
-        ) : null}
-
-        <Separator className="bg-border" />
-
-        <TicketStatusFilter
-          statuses={ticketStatusFilterData}
-          showHeader={true}
+        <TicketFilterPanel
+          role={role}
+          ticketStatusFilters={ticketStatusFilters}
+          selectedCity={selectedCity}
+          setSelectedCity={setSelectedCity}
+          selectedCategoryId={selectedCategoryId}
+          setSelectedCategoryId={setSelectedCategoryId}
           selectedStatus={selectedStatus}
           setSelectedStatus={setSelectedStatus}
         />

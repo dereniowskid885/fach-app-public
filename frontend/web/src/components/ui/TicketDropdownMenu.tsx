@@ -18,6 +18,8 @@ import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import TicketFormDialog from './TicketFormDialog';
 import { EActionType } from '@/enums/ui';
+import { TicketCancelDialog } from './TicketCancelDialog';
+import { isAdmin } from '@shared/utils/role';
 
 export interface ITicketDropdownMenu {
   ticket: Ticket;
@@ -27,11 +29,14 @@ export default function TicketDropdownMenu({ ticket }: ITicketDropdownMenu) {
   const ticketStatus = ticket.status as ETicketStatus;
 
   const t = useTranslations();
-  const { userId } = useSelector(selectUserData);
+  const { userId, role } = useSelector(selectUserData);
+
   const isTicketOwner = ticket.createdBy?._id === userId;
-  const isEligibleForEdit = ticketStatus === ETicketStatus.AWAITING_EVALUATION;
+  const isEligibleForModification =
+    isAdmin(role) || ticketStatus === ETicketStatus.AWAITING_EVALUATION;
 
   const [ticketDeleteDialog, setTicketDeleteDialog] = useState<boolean>(false);
+  const [ticketCancelDialog, setTicketCancelDialog] = useState<boolean>(false);
   const [ticketEditDialog, setTicketEditDialog] = useState<boolean>(false);
 
   return ticket._id ? (
@@ -55,12 +60,12 @@ export default function TicketDropdownMenu({ ticket }: ITicketDropdownMenu) {
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
-        {isTicketOwner ? (
+        {isAdmin(role) || isTicketOwner ? (
           <DropdownMenuGroup>
             <DropdownMenuItem
               className="cursor-pointer"
               onSelect={() => setTicketEditDialog(true)}
-              disabled={!isEligibleForEdit}
+              disabled={!isEligibleForModification}
             >
               <PencilIcon size={16} />
 
@@ -73,7 +78,8 @@ export default function TicketDropdownMenu({ ticket }: ITicketDropdownMenu) {
           <DropdownMenuGroup>
             <DropdownMenuItem
               className="cursor-pointer"
-              onSelect={() => setTicketDeleteDialog(true)}
+              onSelect={() => setTicketCancelDialog(true)}
+              disabled={!isEligibleForModification}
             >
               <div className="flex w-full items-center gap-2 text-destructive">
                 <TrashIcon size={16} />
@@ -83,20 +89,47 @@ export default function TicketDropdownMenu({ ticket }: ITicketDropdownMenu) {
             </DropdownMenuItem>
           </DropdownMenuGroup>
         ) : null}
+
+        {isAdmin(role) ? (
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onSelect={() => setTicketDeleteDialog(true)}
+            >
+              <div className="flex w-full items-center gap-2 text-destructive">
+                <TrashIcon size={16} />
+
+                {t('common.delete')}
+              </div>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        ) : null}
       </DropdownMenuContent>
 
-      <TicketDeleteDialog
-        open={ticketDeleteDialog}
-        closeDialog={() => setTicketDeleteDialog(false)}
-        ticketId={ticket._id}
-      />
+      {isAdmin(role) ? (
+        <TicketDeleteDialog
+          open={ticketDeleteDialog}
+          closeDialog={() => setTicketDeleteDialog(false)}
+          ticketId={ticket._id}
+        />
+      ) : null}
 
-      <TicketFormDialog
-        open={ticketEditDialog}
-        closeDialog={() => setTicketEditDialog(false)}
-        currentTicketData={ticket}
-        mode={EActionType.EDIT}
-      />
+      {isTicketOwner ? (
+        <TicketCancelDialog
+          open={ticketCancelDialog}
+          closeDialog={() => setTicketCancelDialog(false)}
+          ticketId={ticket._id}
+        />
+      ) : null}
+
+      {isAdmin(role) || isTicketOwner ? (
+        <TicketFormDialog
+          open={ticketEditDialog}
+          closeDialog={() => setTicketEditDialog(false)}
+          currentTicketData={ticket}
+          mode={EActionType.EDIT}
+        />
+      ) : null}
     </DropdownMenu>
   ) : null;
 }

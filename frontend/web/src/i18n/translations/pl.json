@@ -51,7 +51,7 @@
     "solutionReview": "Akceptacja rozwiązania",
     "moderatorInvestigation": "Badanie przez moderatora",
     "completed": "Ukończony",
-    "cancelled": "Anulowany",
+    "canceled": "Anulowany",
     "unknown": "Nieznany status"
   },
   "timeOfDay": {
@@ -96,6 +96,7 @@
     "dashboard": "Pulpit",
     "availableTickets": "Dostępne sprawy",
     "tickets": "Moje sprawy",
+    "allTickets": "Wszystkie sprawy",
     "evaluations": "Moje ewaluacje",
     "completedTickets": "Ukończone sprawy",
     "inbox": "Wiadomości",
@@ -187,9 +188,13 @@
     "errorDescriptionRequired": "Opis nie może być pusty",
     "errorDescriptionMinLength": "Opis musi mieć minimum {amount} znaków"
   },
-  "ticketDeleteDialog": {
+  "ticketCancelDialog": {
     "title": "Czy na pewno chcesz anulować sprawę?",
     "toastTitle": "Sprawa anulowana pomyślnie"
+  },
+  "ticketDeleteDialog": {
+    "title": "Czy na pewno chcesz usunąć sprawę?",
+    "toastTitle": "Sprawa usunięta pomyślnie"
   },
   "ticketPaymentDialog": {
     "title": "Wypełnij dane płatności"
@@ -257,12 +262,12 @@
     "headerTitle": {
       "user": "Twoje sprawy",
       "specialist": "Sprawy przypisane do Ciebie",
-      "admin": "admin"
+      "admin": "Zarządzanie sprawami"
     },
     "headerDescription": {
       "user": "Śledź status swoich spraw, przeglądaj wyceny i kontynuuj współpracę ze specjalistą.",
       "specialist": "Zarządzaj sprawami, nad którymi aktualnie pracujesz, i komunikuj się z ich twórcami.",
-      "admin": "admin"
+      "admin": "Pełny podgląd wszystkich spraw – podejmuj działania administracyjne tam, gdzie są potrzebne."
     }
   },
   "completedTicketsPage": {

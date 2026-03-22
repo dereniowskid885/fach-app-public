@@ -12,6 +12,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import Ticket from '@models/Ticket';
 import Category from '@models/Category';
 import { handleTransactionError } from '@shared/helpers/handleTransactionError';
+import { isAdmin } from '@shared/utils/role';
 
 export const UserManager = {
   getUsers: async (filter: FilterQuery<IUserModel>) => {
@@ -48,9 +49,7 @@ export const UserManager = {
       throw new AppError(400, EResponseStatus.ERROR_INVALID_DATA, 'No data provided for update');
     }
 
-    const isAdmin = currentUser.role === EUserRole.ADMIN;
-
-    if (!isAdmin) {
+    if (!isAdmin(currentUser.role)) {
       const isUpdatingSelf = currentUser.userId === userId;
 
       if (!isUpdatingSelf) {
