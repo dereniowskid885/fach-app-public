@@ -3,19 +3,19 @@ import { Category, useGetCategoriesQuery } from '@/api/accountApi';
 import CategoryIcon from './CategoryIcon';
 import ButtonsCarousel from '../common/ButtonsCarousel';
 import { useTranslations } from 'next-intl';
-import { EFallbackKey } from '@/enums/ui';
+import { EFallbackKey, EFilterButton } from '@/enums/ui';
 
-export interface ITicketCategoriesFilter {
-  selectedCategoryId: string | null;
-  setSelectedCategoryId: Dispatch<SetStateAction<string | null>>;
+export interface ITicketCategoryFilter {
+  selectedCategoryId: string | EFilterButton.ALL;
+  setSelectedCategoryId: Dispatch<SetStateAction<string | EFilterButton.ALL>>;
   showHeader?: boolean;
 }
 
-export default function TicketCategoriesFilter({
+export default function TicketCategoryFilter({
   selectedCategoryId,
   setSelectedCategoryId,
   showHeader = false
-}: ITicketCategoriesFilter) {
+}: ITicketCategoryFilter) {
   const t = useTranslations();
 
   const { data: getCategoriesResponse, isError } = useGetCategoriesQuery({ hasSpecialists: true });
@@ -27,7 +27,7 @@ export default function TicketCategoriesFilter({
       icon: <CategoryIcon categoryName={category.name} />
     })) ?? [];
 
-  const selectCategoryHandler = (newCategoryId: string | null) => {
+  const selectCategoryHandler = (newCategoryId: string | EFilterButton.ALL) => {
     const isCategoryChange = newCategoryId !== selectedCategoryId;
 
     if (isCategoryChange) {

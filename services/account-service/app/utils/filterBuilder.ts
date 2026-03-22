@@ -2,10 +2,10 @@ import { ICategoryModel } from '@models/Category';
 import { ITicketModel } from '@models/Ticket';
 import { IUserModel } from '@models/User';
 import { ETicketStatus } from '@shared/enums/ticket';
-import { EUserRole } from '@shared/enums/role';
 import { Request } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import { FilterQuery } from 'mongoose';
+import { isSpecialist, isUser } from '@shared/utils/role';
 
 export const FilterBuilder = {
   getUsers: (req: Request) => {
@@ -58,18 +58,20 @@ export const FilterBuilder = {
     const filterObj: FilterQuery<ITicketModel> = {};
 
     // user role - show tickets created by user, and allow filtering by category
-    if (user.role === EUserRole.USER) {
+    if (isUser(user.role)) {
       filterObj.createdBy = user.userId;
 
       if (categoryId) filterObj.category = categoryId.toString();
     }
 
     // specialist role - show tickets where acceptedEvaluation belongs to the specialist, and allow filtering by city
-    if (user.role === EUserRole.SPECIALIST) {
+    if (isSpecialist(user.role)) {
       filterObj['acceptedEvaluation.user'] = user.userId;
 
       if (city) filterObj.city = city.toString();
     }
+
+    filterObj.status = {};
 
     if (status) {
       const statuses = Array.isArray(status)
@@ -80,6 +82,9 @@ export const FilterBuilder = {
 
       filterObj.status = { $in: statuses as ETicketStatus[] };
     }
+
+    // filter out completed and canceled tickets - they are displayed in Completed Tickets page
+    filterObj.status.$nin = [ETicketStatus.COMPLETED, ETicketStatus.CANCELED];
 
     return filterObj;
   },

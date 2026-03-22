@@ -71,7 +71,7 @@ export default function DashboardTicketCard({ ticket, index }: IDashboardTicketC
         <TicketSummaryInfo ticket={ticket} />
 
         <div className="flex items-center justify-between gap-4">
-          <TicketActionButtons ticket={ticket} role={role as EUserRole} userId={userId} />
+          <TicketActionButtons ticket={ticket} role={role} userId={userId} />
 
           <UserCard
             user={{

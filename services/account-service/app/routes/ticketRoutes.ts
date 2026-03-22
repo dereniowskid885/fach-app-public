@@ -351,7 +351,7 @@ router.get('/', checkAdminRole, getTickets);
  * /tickets/my:
  *   get:
  *     summary: Get tickets with filtering options (for my tickets page)
- *     description: Returns all tickets (user role - tickets created by user, and allow filtering by category, specialist role - tickets where acceptedEvaluation belongs to the specialist, and allow filtering by city)
+ *     description: Returns all tickets excluding completed and canceled (user role - tickets created by user, and allow filtering by category, specialist role - tickets where acceptedEvaluation belongs to the specialist, and allow filtering by city)
  *     tags:
  *       - Ticketing
  *     parameters:

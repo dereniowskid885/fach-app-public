@@ -6,7 +6,7 @@ import TicketUserActionButtons from './TicketUserActionButtons';
 export interface ITicketActionButtons {
   ticket: Ticket;
   userId?: string;
-  role: EUserRole;
+  role: EUserRole | string;
 }
 
 export default function TicketActionButtons({ ticket, userId, role }: ITicketActionButtons) {

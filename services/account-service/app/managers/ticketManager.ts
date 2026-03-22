@@ -7,10 +7,11 @@ import { EUserRole } from '@shared/enums/role';
 import { EResponseStatus } from '@shared/enums/responseStatus';
 import { CategoryManager } from './categoryManager';
 import { UserManager } from './userManager';
-import { checkTicketStatusTransition } from '@helpers/checkTicketStatusTransition';
 import { FilterQuery } from 'mongoose';
 import { IEvaluationSchema } from '@schemas/evaluationSchema';
 import { safeUserProjection } from '@constants/projections';
+import { checkTicketStatusTransition } from '@helpers/checkTicketStatusTransition';
+import { isAdmin } from '@shared/utils/role';
 
 export const TicketManager = {
   getTicketByID: async (ticketId: string) => {
@@ -98,19 +99,16 @@ export const TicketManager = {
       throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
     }
 
+    // TODO: modify while doing superadmin role ticket
+    // https://github.com/dereniowskid885/fach-app/issues/7
+    if (user.role !== EUserRole.ADMIN) {
+      throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'Not enough permissions to delete the ticket');
+    }
+
     const ticket = await TicketManager.getTicketByID(ticketId);
 
     if (!ticket) {
       throw new AppError(404, EResponseStatus.ERROR_TICKET_NOT_FOUND, 'Ticket with provided id not found');
-    }
-
-    // TODO: modify while doing superadmin role ticket
-    // https://github.com/dereniowskid885/fach-app/issues/7
-    const isAdmin = user.role === EUserRole.ADMIN;
-    const isOwner = user.userId === ticket.createdBy.id.toString();
-
-    if (!isAdmin && !isOwner) {
-      throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'Not enough permissions to delete the ticket');
     }
 
     await Ticket.deleteOne({ _id: ticketId });
@@ -171,7 +169,7 @@ export const TicketManager = {
 
     const ticket = await TicketManager.getTicketByID(ticketId);
 
-    const isEligibleForEvaluation = ticket.status === ETicketStatus.AWAITING_EVALUATION;
+    const isEligibleForEvaluation = checkTicketStatusTransition(ticket.status, ETicketStatus.AWAITING_PAYMENT);
 
     if (!isEligibleForEvaluation) {
       throw new AppError(
@@ -183,10 +181,9 @@ export const TicketManager = {
 
     // TODO: modify while doing superadmin role ticket
     // https://github.com/dereniowskid885/fach-app/issues/7
-    const isAdmin = user.role === EUserRole.ADMIN;
     const isOwner = user.userId === ticket.createdBy.id.toString();
 
-    if (!isAdmin && !isOwner) {
+    if (!isAdmin(user.role) && !isOwner) {
       throw new AppError(
         403,
         EResponseStatus.ERROR_USER_INVALID_ROLE,
@@ -228,10 +225,10 @@ export const TicketManager = {
 
     // TODO: modify while doing superadmin role ticket
     // https://github.com/dereniowskid885/fach-app/issues/7
-    const isAdmin = user.role === EUserRole.ADMIN;
+    const isAdminRole = isAdmin(user.role);
     const isOwner = user.userId === ticket.createdBy.id.toString();
 
-    if (!isAdmin && !isOwner) {
+    if (!isAdminRole && !isOwner) {
       throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'Not enough permissions to update ticket');
     }
 
@@ -239,30 +236,21 @@ export const TicketManager = {
       throw new AppError(400, EResponseStatus.ERROR_INVALID_DATA, 'No data provided for update');
     }
 
-    const { city, status, assigneeId } = updateData;
-    const hasAdminOnlyFields = city !== undefined || status !== undefined || assigneeId !== undefined;
+    const { city, assigneeId } = updateData;
 
-    if (!isAdmin && hasAdminOnlyFields) {
+    const hasAdminOnlyFields = city !== undefined || assigneeId !== undefined;
+
+    if (!isAdminRole && hasAdminOnlyFields) {
       throw new AppError(
         403,
         EResponseStatus.ERROR_USER_INVALID_ROLE,
-        'Not enough permissions to update ticket category, city, status or assignee',
+        'Not enough permissions to update ticket city, or assignee',
       );
     }
 
     if (hasAdminOnlyFields) {
       if (city !== undefined) {
         ticket.city = city;
-      }
-
-      if (status !== undefined) {
-        const isStatusTransitionAllowed = checkTicketStatusTransition(ticket.status, status);
-
-        if (!isStatusTransitionAllowed) {
-          throw new AppError(400, EResponseStatus.ERROR_TICKET_INVALID_STATUS, 'Invalid status transition attempted');
-        }
-
-        ticket.status = status;
       }
 
       if (assigneeId !== undefined) {
@@ -272,22 +260,59 @@ export const TicketManager = {
       }
     }
 
-    const { title, description, categoryId } = updateData;
+    const { title, description, categoryId, status } = updateData;
+
+    const isInvalidUpdate = !isAdminRole && ticket.status !== ETicketStatus.AWAITING_EVALUATION;
 
     if (title !== undefined) {
+      if (isInvalidUpdate) {
+        throw new AppError(
+          400,
+          EResponseStatus.ERROR_TICKET_INVALID_STATUS,
+          'Ticket title cannot be updated in current status',
+        );
+      }
+
       ticket.title = title;
     }
 
     if (description !== undefined) {
+      if (isInvalidUpdate) {
+        throw new AppError(
+          400,
+          EResponseStatus.ERROR_TICKET_INVALID_STATUS,
+          'Ticket description cannot be updated in current status',
+        );
+      }
+
       ticket.description = description;
     }
 
     if (categoryId !== undefined) {
+      if (isInvalidUpdate) {
+        throw new AppError(
+          400,
+          EResponseStatus.ERROR_TICKET_INVALID_STATUS,
+          'Ticket category cannot be updated in current status',
+        );
+      }
+
       const category = await CategoryManager.getCategoryById(categoryId);
 
       // TODO: sent notification to specialists who evaluated the ticket
       ticket.evaluations = [];
       ticket.category = category._id;
+    }
+
+    if (status !== undefined) {
+      const isTicketCancellation =
+        ticket.status === ETicketStatus.AWAITING_EVALUATION && status === ETicketStatus.CANCELED;
+
+      if (isAdminRole || isTicketCancellation) {
+        ticket.status = status;
+      } else {
+        throw new AppError(400, EResponseStatus.ERROR_TICKET_INVALID_STATUS, 'Wrong ticket status transition');
+      }
     }
 
     ticket.updatedBy = user.userId;
@@ -362,6 +387,16 @@ export const TicketManager = {
         404,
         EResponseStatus.ERROR_TICKET_NOT_FOUND,
         'Ticket not found - wrong ticketId associated with payment',
+      );
+    }
+
+    const isInvalidStatus = checkTicketStatusTransition(ticket.status, ETicketStatus.IN_PROGRESS);
+
+    if (isInvalidStatus) {
+      throw new AppError(
+        400,
+        EResponseStatus.ERROR_TICKET_INVALID_STATUS,
+        'Ticket has wrong status to perform this action',
       );
     }
 

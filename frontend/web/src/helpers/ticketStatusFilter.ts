@@ -11,10 +11,7 @@ export const MY_EVALUATIONS_TICKETS_FILTERS = [
 ] as const;
 
 // Completed tickets page (user and specialist)
-export const COMPLETED_TICKETS_FILTERS = [
-  ETicketStatus.COMPLETED,
-  ETicketStatus.CANCELLED
-] as const;
+export const COMPLETED_TICKETS_FILTERS = [ETicketStatus.COMPLETED, ETicketStatus.CANCELED] as const;
 
 // My Tickets page (user and specialist)
 const MY_TICKETS_USER_FILTERS = [
@@ -32,7 +29,7 @@ const MY_TICKETS_SPECIALIST_FILTERS = [
   ETicketStatus.MODERATOR_INVESTIGATION
 ] as const;
 
-export const getMyTicketsFilters = (role: EUserRole): ETicketStatus[] => {
+export const getMyTicketsFilters = (role: EUserRole | string): ETicketStatus[] => {
   switch (role) {
     case EUserRole.USER:
       return [...MY_TICKETS_USER_FILTERS];

@@ -42,9 +42,9 @@ export const ticketStatusObj = {
     className: 'bg-emerald-50 text-emerald-600 dark:text-emerald-600 border-emerald-200',
     translationKey: 'ticketStatus.completed'
   },
-  [ETicketStatus.CANCELLED]: {
+  [ETicketStatus.CANCELED]: {
     icon: XCircle,
     className: 'bg-red-50 text-red-600 dark:text-red-600 border-red-200',
-    translationKey: 'ticketStatus.cancelled'
+    translationKey: 'ticketStatus.canceled'
   }
 };
