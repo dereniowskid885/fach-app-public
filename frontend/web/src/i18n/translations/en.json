@@ -51,7 +51,7 @@
     "solutionReview": "Solution review",
     "moderatorInvestigation": "Moderator investigation",
     "completed": "Completed",
-    "cancelled": "Cancelled",
+    "canceled": "Canceled",
     "unknown": "Unknown status"
   },
   "timeOfDay": {
@@ -95,7 +95,7 @@
     "dashboard": "Dashboard",
     "availableTickets": "Available tickets",
     "tickets": "My tickets",
-    "ticketsADMIN": "All tickets",
+    "allTickets": "All tickets",
     "evaluations": "My evaluations",
     "completedTickets": "Completed tickets",
     "inbox": "Inbox",
@@ -187,9 +187,13 @@
     "errorDescriptionRequired": "Description cannot be empty",
     "errorDescriptionMinLength": "Description must be at least {amount} characters"
   },
-  "ticketDeleteDialog": {
+  "ticketCancelDialog": {
     "title": "Are you sure you want to cancel this ticket?",
-    "toastTitle": "Ticket successfully cancelled"
+    "toastTitle": "Ticket successfully canceled"
+  },
+  "ticketDeleteDialog": {
+    "title": "Are you sure you want to delete this ticket?",
+    "toastTitle": "Ticket successfully deleted"
   },
   "ticketPaymentDialog": {
     "title": "Enter payment details"
@@ -272,8 +276,8 @@
       "admin": ""
     },
     "headerDescription": {
-      "user": "Review tickets that have been completed or cancelled.",
-      "specialist": "Review tickets you have worked on that are now completed or cancelled.",
+      "user": "Review tickets that have been completed or canceled.",
+      "specialist": "Review tickets you have worked on that are now completed or canceled.",
       "admin": ""
     }
   },

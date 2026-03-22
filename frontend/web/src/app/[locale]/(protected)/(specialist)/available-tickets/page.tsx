@@ -7,35 +7,44 @@ import { useEffect, useState } from 'react';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useSelector } from 'react-redux';
 import { useGetTicketsSpecialistAvailableQuery } from '@/api/accountApi';
-import { Separator } from '@/components/shadcn/separator';
-import TicketCityFilter from '@/components/ui/TicketCityFilter';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import PageHeader from '@/components/common/PageHeader';
 import { getAvailableTicketsColumns } from '@/helpers/dataTableColumns';
 import { DataTable } from '@/components/common/DataTable';
 import { Badge } from '@/components/shadcn/badge';
-import { TTicketCityFilter } from '@/types/ticket';
 import { Skeleton } from '@/components/shadcn/skeleton';
 import UserBadge from '@/components/ui/UserBadge';
-import { EUserBadgeVariant } from '@/enums/ui';
+import { EFilterButton, EUserBadgeVariant } from '@/enums/ui';
+import { notFound } from 'next/navigation';
+import { isSpecialist } from '@shared/utils/role';
+import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
 
 export default function AvailableTickets() {
-  const t = useTranslations();
-  const currentLocale = useLocale();
   const {
     userId,
     city,
     categoryName,
+    role,
     isInitialized: isUserStateInitialized
   } = useSelector(selectUserData);
 
+  const isInvalidRole = isUserStateInitialized && !isSpecialist(role);
+  if (isInvalidRole) {
+    notFound();
+  }
+
+  const t = useTranslations();
+  const currentLocale = useLocale();
+
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCity, setSelectedCity] = useState<TTicketCityFilter>(undefined);
+  const [selectedCity, setSelectedCity] = useState<string | EFilterButton.ALL | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     // set initial selectedCity value from user state
     if (isUserStateInitialized && selectedCity === undefined) {
-      setSelectedCity(city ?? null);
+      setSelectedCity(city ?? EFilterButton.ALL);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,7 +57,7 @@ export default function AvailableTickets() {
     isFetching
   } = useGetTicketsSpecialistAvailableQuery(
     {
-      city: selectedCity || undefined
+      city: selectedCity === EFilterButton.ALL ? undefined : selectedCity
     },
     {
       skip: selectedCity === undefined,
@@ -74,6 +83,7 @@ export default function AvailableTickets() {
     <div className="space-y-6">
       <div className="space-y-2">
         <PageHeader
+          isDataLoaded={isUserStateInitialized}
           title={t('availableTicketsPage.headerTitle')}
           description={t('availableTicketsPage.headerDescription')}
         />
@@ -98,12 +108,10 @@ export default function AvailableTickets() {
           </Badge>
         </div>
 
-        <Separator className="bg-border" />
-
-        <TicketCityFilter
+        <TicketFilterPanel
+          role={role}
           selectedCity={selectedCity}
           setSelectedCity={setSelectedCity}
-          showHeader={true}
         />
       </ContentCard>
 

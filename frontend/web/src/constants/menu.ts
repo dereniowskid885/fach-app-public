@@ -7,7 +7,13 @@ import {
   ChartColumn,
   ClipboardCheck
 } from 'lucide-react';
-import { AVAILABLE_TICKETS_PATH, HOME_PATH, ROUTES, TICKETS_PATH } from './routes';
+import {
+  ALL_TICKETS_PATH,
+  AVAILABLE_TICKETS_PATH,
+  HOME_PATH,
+  ROUTES,
+  TICKETS_PATH
+} from './routes';
 import { EUserRole } from '@shared/enums/role';
 
 const commonMenuItems = [
@@ -74,11 +80,11 @@ export const menuItemsObj = {
       path: ROUTES[HOME_PATH]
     },
     {
-      id: 'tickets',
-      translationKey: 'pages.ticketsADMIN',
+      id: 'all-tickets',
+      translationKey: 'pages.allTickets',
       icon: ClipboardList,
-      href: TICKETS_PATH,
-      path: ROUTES[TICKETS_PATH]
+      href: ALL_TICKETS_PATH,
+      path: ROUTES[ALL_TICKETS_PATH]
     },
     ...otherMenuItems
   ],
