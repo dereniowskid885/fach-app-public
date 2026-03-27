@@ -15,7 +15,6 @@ import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export interface ITicketUserEvaluationsListDialog {
   open: boolean;
-  refetchTickets: () => void;
   closeDialog: () => void;
   ticketId?: string;
   ticketEvaluations?: Evaluation[];
@@ -23,7 +22,6 @@ export interface ITicketUserEvaluationsListDialog {
 
 export default function TicketUserEvaluationsListDialog({
   open,
-  refetchTickets,
   closeDialog,
   ticketId,
   ticketEvaluations = []
@@ -122,7 +120,6 @@ export default function TicketUserEvaluationsListDialog({
     if (error) return;
 
     closeDialog();
-    refetchTickets();
     toast.success(t('evaluationListDialog.toastTitle'));
   };
 

@@ -7,7 +7,6 @@ import CategorySelect from './CategorySelect';
 import { useEffect, useState } from 'react';
 import Typography from '../common/Typography';
 import {
-  accountApi,
   Category,
   Ticket,
   usePatchTicketsByIdMutation,
@@ -71,10 +70,7 @@ export default function TicketFormDialog({
     usePatchTicketsByIdMutation();
   const isLoading = isLoadingCreate || isLoadingEdit;
 
-  const [triggerTicketsRefetch, { error: errorTicketsRefetch }] =
-    accountApi.endpoints.getTicketsMy.useLazyQuery({});
-
-  useErrorHandler(errorTicketCreate || errorTicketEdit || errorTicketsRefetch, {
+  useErrorHandler(errorTicketCreate || errorTicketEdit, {
     setInlineError: message => setErrorMessage(message)
   });
 
@@ -142,7 +138,6 @@ export default function TicketFormDialog({
 
     closeDialog();
     resetForm();
-    triggerTicketsRefetch({});
     toast.success(t(`ticketFormDialog.toastTitle.${mode.toLowerCase()}`));
   };
 

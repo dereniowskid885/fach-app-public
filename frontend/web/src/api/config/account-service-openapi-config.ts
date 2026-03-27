@@ -6,7 +6,8 @@ const config: ConfigFile = {
   apiImport: 'api',
   outputFile: '../accountApi.ts',
   exportName: 'accountApi',
-  hooks: true
+  hooks: true,
+  tag: true
 };
 
 export default config;

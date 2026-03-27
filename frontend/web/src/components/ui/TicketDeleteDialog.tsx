@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import DialogComponent from '../common/DialogComponent';
-import { accountApi, useDeleteTicketsByIdMutation } from '@/api/accountApi';
+import { useDeleteTicketsByIdMutation } from '@/api/accountApi';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
@@ -18,10 +18,7 @@ export const TicketDeleteDialog = ({ open, ticketId, closeDialog }: ITicketDelet
 
   const [triggerDelete, { isLoading, error: errorDelete }] = useDeleteTicketsByIdMutation();
 
-  const [triggerTicketsRefetch, { error: errorTicketsRefetch }] =
-    accountApi.endpoints.getTicketsMy.useLazyQuery({});
-
-  useErrorHandler(errorDelete || errorTicketsRefetch, {
+  useErrorHandler(errorDelete, {
     setInlineError: message => setErrorMessage(message)
   });
 
@@ -32,7 +29,6 @@ export const TicketDeleteDialog = ({ open, ticketId, closeDialog }: ITicketDelet
 
     if (error) return;
 
-    triggerTicketsRefetch({});
     toast.success(t('ticketDeleteDialog.toastTitle'));
   };
 

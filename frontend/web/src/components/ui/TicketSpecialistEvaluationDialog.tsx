@@ -7,7 +7,6 @@ import { Slider } from '../shadcn/slider';
 import PriceInput from '../common/PriceInput';
 import {
   usePatchTicketsByIdEvaluationMutation,
-  accountApi,
   Ticket,
   usePatchTicketsByIdEditEvaluationMutation,
   Evaluation
@@ -53,10 +52,7 @@ export default function TicketSpecialistEvaluationDialog({
     usePatchTicketsByIdEditEvaluationMutation();
   const isLoading = isLoadingCreate || isLoadingEdit;
 
-  const [refetchPendingTickets, { error: refetchTicketsError }] =
-    accountApi.endpoints.getTicketsSpecialistAvailable.useLazyQuery({});
-
-  useErrorHandler(createError || editError || refetchTicketsError);
+  useErrorHandler(createError || editError);
 
   const submitHandler = async () => {
     if (!ticket._id) return;
@@ -112,10 +108,6 @@ export default function TicketSpecialistEvaluationDialog({
     if (error) return;
 
     closeDialog();
-    refetchPendingTickets({
-      city: ticket.city
-    });
-
     toast.success(t(`evaluationDialog.toastTitle.${mode.toLowerCase()}`));
   };
 
