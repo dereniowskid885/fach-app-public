@@ -139,7 +139,6 @@ export const TicketManager = {
     const dateOfResponse = new Date(currentDate.getTime() + evaluatedMinutes * 60000);
 
     ticket.updatedBy = user.userId;
-    ticket.updatedAt = currentDate;
 
     ticket.evaluations.push({
       user: user.userId,
@@ -188,7 +187,6 @@ export const TicketManager = {
 
     ticket.acceptedEvaluation = evaluation;
     ticket.updatedBy = user.userId;
-    ticket.updatedAt = new Date();
     ticket.status = ETicketStatus.AWAITING_PAYMENT;
     await ticket.save();
 
@@ -305,7 +303,6 @@ export const TicketManager = {
     }
 
     ticket.updatedBy = user.userId;
-    ticket.updatedAt = new Date();
     await ticket.save();
 
     return ticket.populate({ path: 'updatedBy', select: 'email' });
