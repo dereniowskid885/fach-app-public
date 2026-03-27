@@ -1,12 +1,11 @@
 import { useCallback, useState } from 'react';
 import { Button } from '../shadcn/button';
-import { accountApi, Ticket } from '@/api/accountApi';
+import { Ticket } from '@/api/accountApi';
 import { ETicketStatus } from '@shared/enums/ticket';
 import AmountIcon from './AmountIcon';
 import TicketUserEvaluationsListDialog from './TicketUserEvaluationsListDialog';
 import TicketUserPaymentDialog from './TicketUserPaymentDialog';
 import { ESupportedCurrency } from '@shared/enums/currency';
-import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { useTranslations } from 'next-intl';
 import { TStatusActionButton } from '@/types/ticket';
 
@@ -26,10 +25,6 @@ export default function TicketUserActionButtons({ ticket }: ITicketUserActionBut
 
   const paymentDialogLoadingStart = useCallback(() => setTicketPaymentDialogLoading(true), []);
   const paymentDialogLoadingEnd = useCallback(() => setTicketPaymentDialogLoading(false), []);
-
-  const [triggerTicketsRefetch, { error }] = accountApi.endpoints.getTicketsMy.useLazyQuery({});
-
-  useErrorHandler(error);
 
   const statusActionButton: TStatusActionButton = {
     [ETicketStatus.AWAITING_PAYMENT]: {
@@ -79,7 +74,6 @@ export default function TicketUserActionButtons({ ticket }: ITicketUserActionBut
 
       <TicketUserEvaluationsListDialog
         open={evaluationListDialog}
-        refetchTickets={() => triggerTicketsRefetch({})}
         closeDialog={() => setEvaluationListDialog(false)}
         ticketId={ticket._id}
         ticketEvaluations={ticket.evaluations}
