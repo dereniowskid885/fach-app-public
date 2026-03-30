@@ -33,7 +33,7 @@ const ticketSchema = new Schema<ITicketModel>(
     },
     status: {
       type: String,
-      enum: [...Object.values(ETicketStatus)],
+      enum: ETicketStatus,
       required: false,
       default: ETicketStatus.AWAITING_EVALUATION,
     },

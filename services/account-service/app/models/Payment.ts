@@ -29,7 +29,7 @@ const paymentSchema = new Schema<IPaymentModel>(
       type: Number,
       required: true,
     },
-    currency: { type: String, enum: [ESupportedCurrency.PLN], required: true },
+    currency: { type: String, enum: ESupportedCurrency, required: true },
     paymentMethod: {
       type: String,
       required: true,
@@ -37,7 +37,7 @@ const paymentSchema = new Schema<IPaymentModel>(
     },
     status: {
       type: String,
-      enum: [EPaymentStatus.PENDING],
+      enum: EPaymentStatus,
       required: true,
     },
   },
