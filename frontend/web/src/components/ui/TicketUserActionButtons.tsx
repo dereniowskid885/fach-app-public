@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { Button } from '../shadcn/button';
-import { Ticket } from '@/api/accountApi';
+import { Ticket } from '@/services/api/generated/accountApi';
 import { ETicketStatus } from '@shared/enums/ticket';
 import AmountIcon from './AmountIcon';
 import TicketUserEvaluationsListDialog from './TicketUserEvaluationsListDialog';
@@ -49,18 +49,19 @@ export default function TicketUserActionButtons({ ticket }: ITicketUserActionBut
 
   return (
     <>
-      <div className="flex flex-col gap-2">
-        {statusActionButton[ticketStatus] ? (
-          <Button
-            variant="outline"
-            onClick={statusActionButton[ticketStatus].handler}
-            loading={statusActionButton[ticketStatus].isLoading ?? false}
-          >
-            {statusActionButton[ticketStatus].title}
-            {statusActionButton[ticketStatus].element}
-          </Button>
-        ) : null}
-      </div>
+      {statusActionButton[ticketStatus] ? (
+        <Button
+          variant="outline"
+          className={
+            statusActionButton[ticketStatus].isLoading !== undefined ? 'min-w-[120px]' : ''
+          }
+          onClick={statusActionButton[ticketStatus].handler}
+          loading={statusActionButton[ticketStatus].isLoading ?? false}
+        >
+          {statusActionButton[ticketStatus].title}
+          {statusActionButton[ticketStatus].element}
+        </Button>
+      ) : null}
 
       <TicketUserPaymentDialog
         open={ticketPaymentDialog}
