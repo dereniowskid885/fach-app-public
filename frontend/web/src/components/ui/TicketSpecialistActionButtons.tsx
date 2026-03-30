@@ -4,7 +4,7 @@ import { Button } from '../shadcn/button';
 import { useState } from 'react';
 import TicketSpecialistEvaluationDialog from './TicketSpecialistEvaluationDialog';
 import { ETicketStatus } from '@shared/enums/ticket';
-import { Evaluation, Ticket } from '@/api/accountApi';
+import { Evaluation, Ticket } from '@/services/api/generated/accountApi';
 import { useTranslations } from 'next-intl';
 import { EActionType } from '@/enums/ui';
 import { TStatusActionButton } from '@/types/ticket';
@@ -51,13 +51,17 @@ export const TicketSpecialistActionButtons = ({
 
   return (
     <>
-      <div className="flex flex-col gap-2">
-        {statusActionButton[ticketStatus] ? (
-          <Button variant="outline" onClick={statusActionButton[ticketStatus].handler}>
-            {statusActionButton[ticketStatus].title}
-          </Button>
-        ) : null}
-      </div>
+      {statusActionButton[ticketStatus] ? (
+        <Button
+          variant="outline"
+          className={
+            statusActionButton[ticketStatus].isLoading !== undefined ? 'min-w-[120px]' : ''
+          }
+          onClick={statusActionButton[ticketStatus].handler}
+        >
+          {statusActionButton[ticketStatus].title}
+        </Button>
+      ) : null}
 
       <TicketSpecialistEvaluationDialog
         open={priceEvaluationDialog}

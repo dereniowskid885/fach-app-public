@@ -4,7 +4,11 @@ import { Check, Palette } from 'lucide-react';
 import { themeObj } from '@/constants/theme';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/utils/shared';
-import { PatchUsersByIdApiArg, ThemeType, usePatchUsersByIdMutation } from '@/api/accountApi';
+import {
+  PatchUsersByIdApiArg,
+  ThemeType,
+  usePatchUsersByIdMutation
+} from '@/services/api/generated/accountApi';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUserData, setUserTheme } from '@/redux/slices/UserDataSlice';
 import { useTheme } from 'next-themes';

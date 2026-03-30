@@ -8,8 +8,12 @@ import {
   getCreatedAtColumn,
   getCreatedByColumn,
   getDropdownMenuColumn,
+  getPriceColumn,
+  getDateOfResponseColumn,
+  getSpecialistColumn,
   getStatusColumn,
-  getTicketColumn
+  getTicketColumn,
+  getResponseTimeColumn
 } from '@/utils/dataTable';
 import { EUserRole } from '@shared/enums/role';
 
@@ -54,4 +58,14 @@ export const getAllTicketsColumns = (t: TFunction, currentLocale: string) => [
   getAssigneeColumn(t),
   getConversationColumn(t),
   getDropdownMenuColumn()
+];
+
+// @/src/components/ui/TicketUserEvaluationsListDialog.tsx
+
+export const getEvaluationsListColumns = (t: TFunction, currentLocale: string) => [
+  getSpecialistColumn(t),
+  getCityColumn(t),
+  getResponseTimeColumn(t),
+  getDateOfResponseColumn(t, currentLocale),
+  getPriceColumn(t)
 ];

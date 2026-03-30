@@ -200,7 +200,8 @@
     "title": "Wypełnij dane płatności"
   },
   "evaluation": {
-    "dateOfResponse": "Czas odpowiedzi",
+    "dateOfResponse": "Termin odpowiedzi",
+    "responseTime": "Czas odpowiedzi",
     "price": "Cena",
     "city": "Miasto"
   },
@@ -217,7 +218,9 @@
     "hoursLabel": "Godziny",
     "minutesLabel": "Minuty",
     "errorMinutes": "Czas odpowiedzi nie może być krótszy niż {amount} min",
-    "errorPrice": "Cena nie może być mniejsza niż {amount} {currency}"
+    "errorPrice": "Cena nie może być mniejsza niż {amount} {currency}",
+    "currentEvaluationTitle": "Obecna wycena",
+    "currentEvaluationPrice": "Obecna cena"
   },
   "evaluationListDialog": {
     "title": "Aktualne wyceny sprawy",
@@ -289,5 +292,10 @@
   "myEvaluationsPage": {
     "headerTitle": "Twoje wyceny",
     "headerDescription": "Śledź sprawy, dla których wysłałeś już swoją wycenę."
+  },
+  "responseTime": {
+    "days": "{count, plural, =1 {# dzień} few {# dni} many {# dni} other {# dni}}",
+    "hours": "{count, plural, =1 {# godzina} few {# godziny} many {# godzin} other {# godzin}}",
+    "minutes": "{count, plural, =1 {# minuta} few {# minuty} many {# minut} other {# minut}}"
   }
 }

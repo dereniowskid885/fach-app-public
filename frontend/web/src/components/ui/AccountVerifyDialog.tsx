@@ -3,7 +3,7 @@ import DialogComponent from '../common/DialogComponent';
 import {
   PostAuthRequestEmailVerificationApiArg,
   usePostAuthRequestEmailVerificationMutation
-} from '@/api/accountApi';
+} from '@/services/api/generated/accountApi';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 

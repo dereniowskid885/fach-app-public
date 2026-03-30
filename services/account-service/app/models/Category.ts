@@ -11,29 +11,22 @@ export interface ICategoryModel extends Document {
   updatedAt: Date;
 }
 
-const categorySchema = new Schema<ICategoryModel>({
-  name: {
-    type: String,
-    required: true,
-    unique: true,
+const categorySchema = new Schema<ICategoryModel>(
+  {
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    specialists: [{ type: Types.ObjectId, ref: 'User' }],
+    updatedBy: {
+      type: Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
   },
-  specialists: [{ type: Types.ObjectId, ref: 'User' }],
-  createdAt: {
-    type: Date,
-    required: true,
-    default: new Date(),
-  },
-  updatedBy: {
-    type: Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  updatedAt: {
-    type: Date,
-    required: true,
-    default: new Date(),
-  },
-});
+  { timestamps: true },
+);
 
 categorySchema.pre('deleteOne', { document: true, query: false }, async function (next) {
   const categoryId = this._id;

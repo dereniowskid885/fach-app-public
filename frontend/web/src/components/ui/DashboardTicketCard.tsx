@@ -2,7 +2,7 @@ import Typography from '../common/Typography';
 import { Separator } from '../shadcn/separator';
 import { Clock, Layers, MapPin } from 'lucide-react';
 import { getLocaleDateString } from '@/utils/date';
-import { Ticket } from '@/api/accountApi';
+import { Ticket } from '@/services/api/generated/accountApi';
 import TicketStatusIcon from './TicketStatusIcon';
 import { useLocale } from 'next-intl';
 import DashboardTicketDropdownMenu from './TicketDropdownMenu';
@@ -35,7 +35,7 @@ export default function DashboardTicketCard({ ticket, index }: IDashboardTicketC
             <div className="flex items-center gap-2">
               <Layers size={14} strokeWidth={2.5} className="text-tertiary" />
 
-              <Typography variant="note" className="font-bold uppercase text-tertiary">
+              <Typography variant="note" className="font-bold text-tertiary">
                 {ticket.category?.name}
               </Typography>
             </div>
@@ -43,7 +43,7 @@ export default function DashboardTicketCard({ ticket, index }: IDashboardTicketC
             <div className="flex items-center gap-2">
               <MapPin size={14} strokeWidth={2.5} className="text-tertiary" />
 
-              <Typography variant="note" className="font-bold uppercase text-tertiary">
+              <Typography variant="note" className="font-bold text-tertiary">
                 {ticket.city}
               </Typography>
             </div>
@@ -56,7 +56,7 @@ export default function DashboardTicketCard({ ticket, index }: IDashboardTicketC
               <div className="flex items-center gap-2">
                 <Clock size={14} strokeWidth={2.5} className="text-tertiary" />
 
-                <Typography variant="note" className="font-bold uppercase text-tertiary">
+                <Typography variant="note" className="font-bold text-tertiary">
                   {getLocaleDateString(ticket.updatedAt, currentLocale)}
                 </Typography>
               </div>

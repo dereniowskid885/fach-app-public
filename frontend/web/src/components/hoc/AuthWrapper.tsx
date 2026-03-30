@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetAuthMeQuery } from '@/api/accountApi';
+import { useGetAuthMeQuery } from '@/services/api/generated/accountApi';
 import { useAppDispatch } from '@/redux/hooks';
 import { clearUserData, setUserData, setUserLoading } from '@/redux/slices/UserDataSlice';
 import { ReactNode, useEffect } from 'react';

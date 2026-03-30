@@ -13,37 +13,35 @@ export interface IPaymentModel extends Document {
   createdAt: Date;
 }
 
-const paymentSchema = new Schema<IPaymentModel>({
-  user: {
-    type: Types.ObjectId,
-    ref: 'User',
-    required: true,
+const paymentSchema = new Schema<IPaymentModel>(
+  {
+    user: {
+      type: Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    ticket: {
+      type: Types.ObjectId,
+      ref: 'Ticket',
+      required: true,
+    },
+    amount: {
+      type: Number,
+      required: true,
+    },
+    currency: { type: String, enum: ESupportedCurrency, required: true },
+    paymentMethod: {
+      type: String,
+      required: true,
+      default: 'BLIK',
+    },
+    status: {
+      type: String,
+      enum: EPaymentStatus,
+      required: true,
+    },
   },
-  ticket: {
-    type: Types.ObjectId,
-    ref: 'Ticket',
-    required: true,
-  },
-  amount: {
-    type: Number,
-    required: true,
-  },
-  currency: { type: String, enum: [ESupportedCurrency.PLN], required: true },
-  paymentMethod: {
-    type: String,
-    required: true,
-    default: 'BLIK',
-  },
-  status: {
-    type: String,
-    enum: [EPaymentStatus.PENDING],
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    required: true,
-    default: new Date(),
-  },
-});
+  { timestamps: true },
+);
 
 export default model('Payment', paymentSchema);

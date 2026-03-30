@@ -1,4 +1,4 @@
-import { TicketStatus } from '@/api/accountApi';
+import { TicketStatus } from '@/services/api/generated/accountApi';
 import { ticketStatusObj } from '@/constants/ticketStatus';
 import { ETicketStatus } from '@shared/enums/ticket';
 import { ClipboardList } from 'lucide-react';
