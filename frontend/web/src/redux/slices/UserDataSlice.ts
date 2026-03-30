@@ -1,6 +1,6 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import { GetAuthMeApiResponse, ThemeType } from '@/api/accountApi';
+import { GetAuthMeApiResponse, ThemeType } from '@/services/api/generated/accountApi';
 
 const initialState = {
   user: {

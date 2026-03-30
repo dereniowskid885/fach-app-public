@@ -199,7 +199,8 @@
     "title": "Enter payment details"
   },
   "evaluation": {
-    "dateOfResponse": "Date of response",
+    "dateOfResponse": "Response deadline",
+    "responseTime": "Response time",
     "price": "Price",
     "city": "City"
   },
@@ -216,7 +217,9 @@
     "hoursLabel": "Hours",
     "minutesLabel": "Minutes",
     "errorMinutes": "Response time cannot be shorter than {amount} min",
-    "errorPrice": "Price cannot be less than {amount} {currency}"
+    "errorPrice": "Price cannot be less than {amount} {currency}",
+    "currentEvaluationTitle": "Current evaluation",
+    "currentEvaluationPrice": "Current price"
   },
   "evaluationListDialog": {
     "title": "Current ticket evaluations",
@@ -288,5 +291,10 @@
   "myEvaluationsPage": {
     "headerTitle": "Your evaluations",
     "headerDescription": "Track tickets where you have already submitted your evaluation."
+  },
+  "responseTime": {
+    "days": "{count, plural, =1 {# day} other {# days}}",
+    "hours": "{count, plural, =1 {# hour} other {# hours}}",
+    "minutes": "{count, plural, =1 {# minute} other {# minutes}}"
   }
 }

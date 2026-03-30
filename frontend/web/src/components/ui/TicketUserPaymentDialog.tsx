@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import DialogComponent from '../common/DialogComponent';
-import { usePostTicketsByIdPaymentMutation } from '@/api/accountApi';
+import { usePostTicketsByIdPaymentMutation } from '@/services/api/enhanced/enhancedAccountApi';
 import { ESupportedCurrency } from '@shared/enums/currency';
 import { StripePaymentForm } from './StripePaymentForm';
 import { StripeProvider } from '../providers/StripeProvider';
@@ -62,7 +62,9 @@ export default function TicketUserPaymentDialog({
 
     loadingStartHandler();
     submitHandler();
-  }, [open, amount, currency, ticketId, trigger, loadingEndHandler, loadingStartHandler]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   if (!clientSecret) return;
 

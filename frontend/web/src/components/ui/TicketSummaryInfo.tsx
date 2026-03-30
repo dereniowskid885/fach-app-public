@@ -1,4 +1,4 @@
-import { Ticket } from '@/api/accountApi';
+import { Ticket } from '@/services/api/generated/accountApi';
 import Typography from '../common/Typography';
 import TicketStatusIcon from './TicketStatusIcon';
 import { cn } from '@/utils/shared';

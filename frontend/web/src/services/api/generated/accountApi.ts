@@ -1,233 +1,283 @@
-import { api } from './services/account/index';
-const injectedRtkApi = api.injectEndpoints({
-  endpoints: build => ({
-    getAuthMe: build.query<GetAuthMeApiResponse, GetAuthMeApiArg>({
-      query: () => ({ url: `/auth/me` })
-    }),
-    postAuthRegister: build.mutation<PostAuthRegisterApiResponse, PostAuthRegisterApiArg>({
-      query: queryArg => ({ url: `/auth/register`, method: 'POST', body: queryArg.body })
-    }),
-    postAuthLogin: build.mutation<PostAuthLoginApiResponse, PostAuthLoginApiArg>({
-      query: queryArg => ({ url: `/auth/login`, method: 'POST', body: queryArg.body })
-    }),
-    postAuthRefreshToken: build.mutation<
-      PostAuthRefreshTokenApiResponse,
-      PostAuthRefreshTokenApiArg
-    >({
-      query: () => ({ url: `/auth/refresh-token`, method: 'POST' })
-    }),
-    postAuthLogout: build.mutation<PostAuthLogoutApiResponse, PostAuthLogoutApiArg>({
-      query: () => ({ url: `/auth/logout`, method: 'POST' })
-    }),
-    postAuthRequestEmailVerification: build.mutation<
-      PostAuthRequestEmailVerificationApiResponse,
-      PostAuthRequestEmailVerificationApiArg
-    >({
-      query: queryArg => ({
-        url: `/auth/request-email-verification`,
-        method: 'POST',
-        body: queryArg.body
+import { api } from '../services/account-service/index';
+export const addTagTypes = ['Authentication', 'Categories', 'Ticketing', 'Users'] as const;
+const injectedRtkApi = api
+  .enhanceEndpoints({
+    addTagTypes
+  })
+  .injectEndpoints({
+    endpoints: build => ({
+      getAuthMe: build.query<GetAuthMeApiResponse, GetAuthMeApiArg>({
+        query: () => ({ url: `/auth/me` }),
+        providesTags: ['Authentication']
+      }),
+      postAuthRegister: build.mutation<PostAuthRegisterApiResponse, PostAuthRegisterApiArg>({
+        query: queryArg => ({ url: `/auth/register`, method: 'POST', body: queryArg.body }),
+        invalidatesTags: ['Authentication']
+      }),
+      postAuthLogin: build.mutation<PostAuthLoginApiResponse, PostAuthLoginApiArg>({
+        query: queryArg => ({ url: `/auth/login`, method: 'POST', body: queryArg.body }),
+        invalidatesTags: ['Authentication']
+      }),
+      postAuthRefreshToken: build.mutation<
+        PostAuthRefreshTokenApiResponse,
+        PostAuthRefreshTokenApiArg
+      >({
+        query: () => ({ url: `/auth/refresh-token`, method: 'POST' }),
+        invalidatesTags: ['Authentication']
+      }),
+      postAuthLogout: build.mutation<PostAuthLogoutApiResponse, PostAuthLogoutApiArg>({
+        query: () => ({ url: `/auth/logout`, method: 'POST' }),
+        invalidatesTags: ['Authentication']
+      }),
+      postAuthRequestEmailVerification: build.mutation<
+        PostAuthRequestEmailVerificationApiResponse,
+        PostAuthRequestEmailVerificationApiArg
+      >({
+        query: queryArg => ({
+          url: `/auth/request-email-verification`,
+          method: 'POST',
+          body: queryArg.body
+        }),
+        invalidatesTags: ['Authentication']
+      }),
+      postAuthEmailVerification: build.mutation<
+        PostAuthEmailVerificationApiResponse,
+        PostAuthEmailVerificationApiArg
+      >({
+        query: queryArg => ({
+          url: `/auth/email-verification`,
+          method: 'POST',
+          body: queryArg.body
+        }),
+        invalidatesTags: ['Authentication']
+      }),
+      postAuthRequestPasswordReset: build.mutation<
+        PostAuthRequestPasswordResetApiResponse,
+        PostAuthRequestPasswordResetApiArg
+      >({
+        query: queryArg => ({
+          url: `/auth/request-password-reset`,
+          method: 'POST',
+          body: queryArg.body
+        }),
+        invalidatesTags: ['Authentication']
+      }),
+      postAuthPasswordReset: build.mutation<
+        PostAuthPasswordResetApiResponse,
+        PostAuthPasswordResetApiArg
+      >({
+        query: queryArg => ({ url: `/auth/password-reset`, method: 'POST', body: queryArg.body }),
+        invalidatesTags: ['Authentication']
+      }),
+      postCategories: build.mutation<PostCategoriesApiResponse, PostCategoriesApiArg>({
+        query: queryArg => ({ url: `/categories`, method: 'POST', body: queryArg.body }),
+        invalidatesTags: ['Categories']
+      }),
+      getCategories: build.query<GetCategoriesApiResponse, GetCategoriesApiArg>({
+        query: queryArg => ({
+          url: `/categories`,
+          params: {
+            name: queryArg.name,
+            hasSpecialists: queryArg.hasSpecialists
+          }
+        }),
+        providesTags: ['Categories']
+      }),
+      getCategoriesById: build.query<GetCategoriesByIdApiResponse, GetCategoriesByIdApiArg>({
+        query: queryArg => ({ url: `/categories/${queryArg.id}` }),
+        providesTags: ['Categories']
+      }),
+      deleteCategoriesById: build.mutation<
+        DeleteCategoriesByIdApiResponse,
+        DeleteCategoriesByIdApiArg
+      >({
+        query: queryArg => ({ url: `/categories/${queryArg.id}`, method: 'DELETE' }),
+        invalidatesTags: ['Categories']
+      }),
+      patchCategoriesById: build.mutation<
+        PatchCategoriesByIdApiResponse,
+        PatchCategoriesByIdApiArg
+      >({
+        query: queryArg => ({
+          url: `/categories/${queryArg.id}`,
+          method: 'PATCH',
+          body: queryArg.body
+        }),
+        invalidatesTags: ['Categories']
+      }),
+      patchCategoriesByIdSpecialistAssign: build.mutation<
+        PatchCategoriesByIdSpecialistAssignApiResponse,
+        PatchCategoriesByIdSpecialistAssignApiArg
+      >({
+        query: queryArg => ({
+          url: `/categories/${queryArg.id}/specialist/assign`,
+          method: 'PATCH',
+          body: queryArg.body
+        }),
+        invalidatesTags: ['Categories']
+      }),
+      patchCategoriesByIdSpecialistRemove: build.mutation<
+        PatchCategoriesByIdSpecialistRemoveApiResponse,
+        PatchCategoriesByIdSpecialistRemoveApiArg
+      >({
+        query: queryArg => ({
+          url: `/categories/${queryArg.id}/specialist/remove`,
+          method: 'PATCH',
+          body: queryArg.body
+        }),
+        invalidatesTags: ['Categories']
+      }),
+      postTickets: build.mutation<PostTicketsApiResponse, PostTicketsApiArg>({
+        query: queryArg => ({ url: `/tickets`, method: 'POST', body: queryArg.body }),
+        invalidatesTags: ['Ticketing']
+      }),
+      getTickets: build.query<GetTicketsApiResponse, GetTicketsApiArg>({
+        query: queryArg => ({
+          url: `/tickets`,
+          params: {
+            categoryId: queryArg.categoryId,
+            city: queryArg.city,
+            status: queryArg.status,
+            assignee: queryArg.assignee,
+            createdBy: queryArg.createdBy
+          }
+        }),
+        providesTags: ['Ticketing']
+      }),
+      postTicketsByIdPayment: build.mutation<
+        PostTicketsByIdPaymentApiResponse,
+        PostTicketsByIdPaymentApiArg
+      >({
+        query: queryArg => ({
+          url: `/tickets/${queryArg.id}/payment`,
+          method: 'POST',
+          body: queryArg.body
+        }),
+        invalidatesTags: ['Ticketing']
+      }),
+      getTicketsMy: build.query<GetTicketsMyApiResponse, GetTicketsMyApiArg>({
+        query: queryArg => ({
+          url: `/tickets/my`,
+          params: {
+            categoryId: queryArg.categoryId,
+            city: queryArg.city,
+            status: queryArg.status
+          }
+        }),
+        providesTags: ['Ticketing']
+      }),
+      getTicketsCompleted: build.query<GetTicketsCompletedApiResponse, GetTicketsCompletedApiArg>({
+        query: queryArg => ({
+          url: `/tickets/completed`,
+          params: {
+            categoryId: queryArg.categoryId,
+            city: queryArg.city,
+            status: queryArg.status
+          }
+        }),
+        providesTags: ['Ticketing']
+      }),
+      getTicketsSpecialistAvailable: build.query<
+        GetTicketsSpecialistAvailableApiResponse,
+        GetTicketsSpecialistAvailableApiArg
+      >({
+        query: queryArg => ({
+          url: `/tickets/specialist/available`,
+          params: {
+            city: queryArg.city
+          }
+        }),
+        providesTags: ['Ticketing']
+      }),
+      getTicketsById: build.query<GetTicketsByIdApiResponse, GetTicketsByIdApiArg>({
+        query: queryArg => ({ url: `/tickets/${queryArg.id}` }),
+        providesTags: ['Ticketing']
+      }),
+      deleteTicketsById: build.mutation<DeleteTicketsByIdApiResponse, DeleteTicketsByIdApiArg>({
+        query: queryArg => ({ url: `/tickets/${queryArg.id}`, method: 'DELETE' }),
+        invalidatesTags: ['Ticketing']
+      }),
+      patchTicketsById: build.mutation<PatchTicketsByIdApiResponse, PatchTicketsByIdApiArg>({
+        query: queryArg => ({
+          url: `/tickets/${queryArg.id}`,
+          method: 'PATCH',
+          body: queryArg.body
+        }),
+        invalidatesTags: ['Ticketing']
+      }),
+      patchTicketsByIdEvaluation: build.mutation<
+        PatchTicketsByIdEvaluationApiResponse,
+        PatchTicketsByIdEvaluationApiArg
+      >({
+        query: queryArg => ({
+          url: `/tickets/${queryArg.id}/evaluation`,
+          method: 'PATCH',
+          body: queryArg.body
+        }),
+        invalidatesTags: ['Ticketing']
+      }),
+      patchTicketsByIdAcceptEvaluation: build.mutation<
+        PatchTicketsByIdAcceptEvaluationApiResponse,
+        PatchTicketsByIdAcceptEvaluationApiArg
+      >({
+        query: queryArg => ({
+          url: `/tickets/${queryArg.id}/accept-evaluation`,
+          method: 'PATCH',
+          body: queryArg.body
+        }),
+        invalidatesTags: ['Ticketing']
+      }),
+      patchTicketsByIdEditEvaluation: build.mutation<
+        PatchTicketsByIdEditEvaluationApiResponse,
+        PatchTicketsByIdEditEvaluationApiArg
+      >({
+        query: queryArg => ({
+          url: `/tickets/${queryArg.id}/edit-evaluation`,
+          method: 'PATCH',
+          body: queryArg.body
+        }),
+        invalidatesTags: ['Ticketing']
+      }),
+      postUsers: build.mutation<PostUsersApiResponse, PostUsersApiArg>({
+        query: queryArg => ({ url: `/users`, method: 'POST', body: queryArg.body }),
+        invalidatesTags: ['Users']
+      }),
+      getUsers: build.query<GetUsersApiResponse, GetUsersApiArg>({
+        query: queryArg => ({
+          url: `/users`,
+          params: {
+            email: queryArg.email,
+            role: queryArg.role,
+            category: queryArg.category,
+            city: queryArg.city,
+            verified: queryArg.verified
+          }
+        }),
+        providesTags: ['Users']
+      }),
+      getUsersById: build.query<GetUsersByIdApiResponse, GetUsersByIdApiArg>({
+        query: queryArg => ({ url: `/users/${queryArg.id}` }),
+        providesTags: ['Users']
+      }),
+      patchUsersById: build.mutation<PatchUsersByIdApiResponse, PatchUsersByIdApiArg>({
+        query: queryArg => ({ url: `/users/${queryArg.id}`, method: 'PATCH', body: queryArg.body }),
+        invalidatesTags: ['Users']
+      }),
+      deleteUsersById: build.mutation<DeleteUsersByIdApiResponse, DeleteUsersByIdApiArg>({
+        query: queryArg => ({ url: `/users/${queryArg.id}`, method: 'DELETE' }),
+        invalidatesTags: ['Users']
+      }),
+      patchUsersByIdRole: build.mutation<PatchUsersByIdRoleApiResponse, PatchUsersByIdRoleApiArg>({
+        query: queryArg => ({
+          url: `/users/${queryArg.id}/role`,
+          method: 'PATCH',
+          body: queryArg.body
+        }),
+        invalidatesTags: ['Users']
       })
     }),
-    postAuthEmailVerification: build.mutation<
-      PostAuthEmailVerificationApiResponse,
-      PostAuthEmailVerificationApiArg
-    >({
-      query: queryArg => ({ url: `/auth/email-verification`, method: 'POST', body: queryArg.body })
-    }),
-    postAuthRequestPasswordReset: build.mutation<
-      PostAuthRequestPasswordResetApiResponse,
-      PostAuthRequestPasswordResetApiArg
-    >({
-      query: queryArg => ({
-        url: `/auth/request-password-reset`,
-        method: 'POST',
-        body: queryArg.body
-      })
-    }),
-    postAuthPasswordReset: build.mutation<
-      PostAuthPasswordResetApiResponse,
-      PostAuthPasswordResetApiArg
-    >({
-      query: queryArg => ({ url: `/auth/password-reset`, method: 'POST', body: queryArg.body })
-    }),
-    postCategories: build.mutation<PostCategoriesApiResponse, PostCategoriesApiArg>({
-      query: queryArg => ({ url: `/categories`, method: 'POST', body: queryArg.body })
-    }),
-    getCategories: build.query<GetCategoriesApiResponse, GetCategoriesApiArg>({
-      query: queryArg => ({
-        url: `/categories`,
-        params: {
-          name: queryArg.name,
-          hasSpecialists: queryArg.hasSpecialists
-        }
-      })
-    }),
-    getCategoriesById: build.query<GetCategoriesByIdApiResponse, GetCategoriesByIdApiArg>({
-      query: queryArg => ({ url: `/categories/${queryArg.id}` })
-    }),
-    deleteCategoriesById: build.mutation<
-      DeleteCategoriesByIdApiResponse,
-      DeleteCategoriesByIdApiArg
-    >({
-      query: queryArg => ({ url: `/categories/${queryArg.id}`, method: 'DELETE' })
-    }),
-    patchCategoriesById: build.mutation<PatchCategoriesByIdApiResponse, PatchCategoriesByIdApiArg>({
-      query: queryArg => ({
-        url: `/categories/${queryArg.id}`,
-        method: 'PATCH',
-        body: queryArg.body
-      })
-    }),
-    patchCategoriesByIdSpecialistAssign: build.mutation<
-      PatchCategoriesByIdSpecialistAssignApiResponse,
-      PatchCategoriesByIdSpecialistAssignApiArg
-    >({
-      query: queryArg => ({
-        url: `/categories/${queryArg.id}/specialist/assign`,
-        method: 'PATCH',
-        body: queryArg.body
-      })
-    }),
-    patchCategoriesByIdSpecialistRemove: build.mutation<
-      PatchCategoriesByIdSpecialistRemoveApiResponse,
-      PatchCategoriesByIdSpecialistRemoveApiArg
-    >({
-      query: queryArg => ({
-        url: `/categories/${queryArg.id}/specialist/remove`,
-        method: 'PATCH',
-        body: queryArg.body
-      })
-    }),
-    postTickets: build.mutation<PostTicketsApiResponse, PostTicketsApiArg>({
-      query: queryArg => ({ url: `/tickets`, method: 'POST', body: queryArg.body })
-    }),
-    getTickets: build.query<GetTicketsApiResponse, GetTicketsApiArg>({
-      query: queryArg => ({
-        url: `/tickets`,
-        params: {
-          categoryId: queryArg.categoryId,
-          city: queryArg.city,
-          status: queryArg.status,
-          assignee: queryArg.assignee,
-          createdBy: queryArg.createdBy
-        }
-      })
-    }),
-    postTicketsByIdPayment: build.mutation<
-      PostTicketsByIdPaymentApiResponse,
-      PostTicketsByIdPaymentApiArg
-    >({
-      query: queryArg => ({
-        url: `/tickets/${queryArg.id}/payment`,
-        method: 'POST',
-        body: queryArg.body
-      })
-    }),
-    getTicketsMy: build.query<GetTicketsMyApiResponse, GetTicketsMyApiArg>({
-      query: queryArg => ({
-        url: `/tickets/my`,
-        params: {
-          categoryId: queryArg.categoryId,
-          city: queryArg.city,
-          status: queryArg.status
-        }
-      })
-    }),
-    getTicketsCompleted: build.query<GetTicketsCompletedApiResponse, GetTicketsCompletedApiArg>({
-      query: queryArg => ({
-        url: `/tickets/completed`,
-        params: {
-          categoryId: queryArg.categoryId,
-          city: queryArg.city,
-          status: queryArg.status
-        }
-      })
-    }),
-    getTicketsSpecialistAvailable: build.query<
-      GetTicketsSpecialistAvailableApiResponse,
-      GetTicketsSpecialistAvailableApiArg
-    >({
-      query: queryArg => ({
-        url: `/tickets/specialist/available`,
-        params: {
-          city: queryArg.city
-        }
-      })
-    }),
-    getTicketsById: build.query<GetTicketsByIdApiResponse, GetTicketsByIdApiArg>({
-      query: queryArg => ({ url: `/tickets/${queryArg.id}` })
-    }),
-    deleteTicketsById: build.mutation<DeleteTicketsByIdApiResponse, DeleteTicketsByIdApiArg>({
-      query: queryArg => ({ url: `/tickets/${queryArg.id}`, method: 'DELETE' })
-    }),
-    patchTicketsById: build.mutation<PatchTicketsByIdApiResponse, PatchTicketsByIdApiArg>({
-      query: queryArg => ({ url: `/tickets/${queryArg.id}`, method: 'PATCH', body: queryArg.body })
-    }),
-    patchTicketsByIdEvaluation: build.mutation<
-      PatchTicketsByIdEvaluationApiResponse,
-      PatchTicketsByIdEvaluationApiArg
-    >({
-      query: queryArg => ({
-        url: `/tickets/${queryArg.id}/evaluation`,
-        method: 'PATCH',
-        body: queryArg.body
-      })
-    }),
-    patchTicketsByIdAcceptEvaluation: build.mutation<
-      PatchTicketsByIdAcceptEvaluationApiResponse,
-      PatchTicketsByIdAcceptEvaluationApiArg
-    >({
-      query: queryArg => ({
-        url: `/tickets/${queryArg.id}/accept-evaluation`,
-        method: 'PATCH',
-        body: queryArg.body
-      })
-    }),
-    patchTicketsByIdEditEvaluation: build.mutation<
-      PatchTicketsByIdEditEvaluationApiResponse,
-      PatchTicketsByIdEditEvaluationApiArg
-    >({
-      query: queryArg => ({
-        url: `/tickets/${queryArg.id}/edit-evaluation`,
-        method: 'PATCH',
-        body: queryArg.body
-      })
-    }),
-    postUsers: build.mutation<PostUsersApiResponse, PostUsersApiArg>({
-      query: queryArg => ({ url: `/users`, method: 'POST', body: queryArg.body })
-    }),
-    getUsers: build.query<GetUsersApiResponse, GetUsersApiArg>({
-      query: queryArg => ({
-        url: `/users`,
-        params: {
-          email: queryArg.email,
-          role: queryArg.role,
-          category: queryArg.category,
-          city: queryArg.city,
-          verified: queryArg.verified
-        }
-      })
-    }),
-    getUsersById: build.query<GetUsersByIdApiResponse, GetUsersByIdApiArg>({
-      query: queryArg => ({ url: `/users/${queryArg.id}` })
-    }),
-    patchUsersById: build.mutation<PatchUsersByIdApiResponse, PatchUsersByIdApiArg>({
-      query: queryArg => ({ url: `/users/${queryArg.id}`, method: 'PATCH', body: queryArg.body })
-    }),
-    deleteUsersById: build.mutation<DeleteUsersByIdApiResponse, DeleteUsersByIdApiArg>({
-      query: queryArg => ({ url: `/users/${queryArg.id}`, method: 'DELETE' })
-    }),
-    patchUsersByIdRole: build.mutation<PatchUsersByIdRoleApiResponse, PatchUsersByIdRoleApiArg>({
-      query: queryArg => ({
-        url: `/users/${queryArg.id}/role`,
-        method: 'PATCH',
-        body: queryArg.body
-      })
-    })
-  }),
-  overrideExisting: false
-});
+    overrideExisting: false
+  });
 export { injectedRtkApi as accountApi };
 export type GetAuthMeApiResponse = /** status 200 Single user object. */ {
   success?: boolean;
@@ -457,8 +507,7 @@ export type PostTicketsByIdPaymentApiArg = {
   body: {
     /** Numeric value of the price */
     amount: number;
-    /** Currency code (e.g., PLN) */
-    currency: string;
+    currency: Currency;
   };
 };
 export type GetTicketsMyApiResponse = /** status 200 Array of tickets */ {
@@ -554,8 +603,7 @@ export type PatchTicketsByIdEvaluationApiArg = {
     price: {
       /** Numeric value of the price */
       amountInCents?: number;
-      /** Currency code (e.g., PLN) */
-      currency?: string;
+      currency?: Currency;
     };
     /** Evaluated minutes as the time of first response */
     minutes: number;
@@ -589,8 +637,7 @@ export type PatchTicketsByIdEditEvaluationApiArg = {
     price?: {
       /** Numeric value of the price */
       amountInCents?: number;
-      /** Currency code (e.g., PLN) */
-      currency?: string;
+      currency?: Currency;
     };
     /** Evaluated minutes as the time of first response */
     minutes?: number;
@@ -706,13 +753,15 @@ export type TicketStatus =
   | 'moderator_investigation'
   | 'completed'
   | 'canceled';
+export type Currency = 'PLN' | 'EUR';
 export type Evaluation = {
   _id?: string;
   user?: User;
   dateOfResponse?: string;
+  minutes?: number;
   price?: {
     amountInCents?: number;
-    currency?: 'PLN';
+    currency?: Currency;
   };
 };
 export type Ticket = {
@@ -736,7 +785,7 @@ export type Payment = {
   user?: User;
   ticket?: Ticket;
   amount?: number;
-  currency?: 'PLN';
+  currency?: Currency;
   paymentMethod?: string;
   status?: PaymentStatus;
   createdAt?: string;

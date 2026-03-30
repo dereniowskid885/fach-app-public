@@ -184,9 +184,7 @@ router.post('/', validateCreateTicketMiddleware, checkIsUserRole, createTicket);
  *                 description: Numeric value of the price
  *                 example: 250.5
  *               currency:
- *                 type: string
- *                 description: Currency code (e.g., PLN)
- *                 example: "PLN"
+ *                 $ref: '#/components/schemas/Currency'
  *     responses:
  *       200:
  *         description: Ticket payment successfull
@@ -885,9 +883,7 @@ router.patch('/:id', validateTicketUpdateMiddleware, updateTicket);
  *                     description: Numeric value of the price
  *                     example: 250.5
  *                   currency:
- *                     type: string
- *                     description: Currency code (e.g., PLN)
- *                     example: "PLN"
+ *                     $ref: '#/components/schemas/Currency'
  *               minutes:
  *                 type: number
  *                 description: Evaluated minutes as the time of first response
@@ -1121,9 +1117,7 @@ router.patch('/:id/accept-evaluation', validateTicketEvaluationAcceptMiddleware,
  *                     description: Numeric value of the price
  *                     example: 250.5
  *                   currency:
- *                     type: string
- *                     description: Currency code (e.g., PLN)
- *                     example: "PLN"
+ *                     $ref: '#/components/schemas/Currency'
  *               minutes:
  *                 type: number
  *                 description: Evaluated minutes as the time of first response

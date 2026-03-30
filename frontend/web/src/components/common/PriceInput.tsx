@@ -2,13 +2,14 @@ import React, { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import { Input } from '../shadcn/input';
 import Typography from './Typography';
 import { ESupportedCurrency } from '@shared/enums/currency';
+import { Currency } from '@/services/api/generated/accountApi';
 
 export interface IPriceInput {
   className: string;
   max: number;
   defaultInputValue?: string;
   setPrice: Dispatch<SetStateAction<number>>;
-  currency: ESupportedCurrency;
+  currency: Currency | ESupportedCurrency;
 }
 
 export default function PriceInput({

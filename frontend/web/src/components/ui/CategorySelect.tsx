@@ -14,7 +14,7 @@ import {
 import { Check } from 'lucide-react';
 import { cn } from '@/utils/shared';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { Category, useGetCategoriesQuery } from '@/api/accountApi';
+import { Category, useGetCategoriesQuery } from '@/services/api/generated/accountApi';
 import { EFallbackKey } from '@/enums/ui';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';

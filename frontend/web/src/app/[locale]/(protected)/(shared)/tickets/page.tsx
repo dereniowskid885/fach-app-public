@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetTicketsMyQuery } from '@/api/accountApi';
+import { useGetTicketsMyQuery } from '@/services/api/generated/accountApi';
 import ContentCard from '@/components/common/ContentCard';
 import SearchComponent from '@/components/common/SearchComponent';
 import TicketCreateButton from '@/components/ui/TicketCreateButton';

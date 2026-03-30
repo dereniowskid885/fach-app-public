@@ -7,7 +7,7 @@ import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
 import {
   PostAuthEmailVerificationApiArg,
   usePostAuthEmailVerificationMutation
-} from '@/api/accountApi';
+} from '@/services/api/generated/accountApi';
 import { HOME_PATH, LOGIN_PATH } from '@/constants/routes';
 import { parseQueryError } from '@/utils/error';
 import AuthCard from '@/components/ui/AuthCard';
