@@ -143,6 +143,7 @@ export const TicketManager = {
     ticket.evaluations.push({
       user: user.userId,
       price: evaluatedPrice,
+      minutes: evaluatedMinutes,
       dateOfResponse,
     } as IEvaluationSchema);
 
@@ -352,6 +353,7 @@ export const TicketManager = {
       const dateOfResponse = new Date(currentDate.getTime() + minutes * 60000);
 
       evaluation.dateOfResponse = dateOfResponse;
+      evaluation.minutes = minutes;
     }
 
     if (price) {
@@ -359,8 +361,6 @@ export const TicketManager = {
     }
 
     ticket.updatedBy = user.userId;
-    ticket.updatedAt = new Date();
-
     await ticket.save();
 
     return ticket;
@@ -376,9 +376,9 @@ export const TicketManager = {
       );
     }
 
-    const isInvalidStatus = checkTicketStatusTransition(ticket.status, ETicketStatus.IN_PROGRESS);
+    const isValidStatus = checkTicketStatusTransition(ticket.status, ETicketStatus.IN_PROGRESS);
 
-    if (isInvalidStatus) {
+    if (!isValidStatus) {
       throw new AppError(
         400,
         EResponseStatus.ERROR_TICKET_INVALID_STATUS,
@@ -397,7 +397,6 @@ export const TicketManager = {
     }
 
     ticket.updatedBy = ticket.createdBy;
-    ticket.updatedAt = new Date();
     ticket.assignee = acceptedEvaluation.user;
     ticket.status = ETicketStatus.IN_PROGRESS;
 

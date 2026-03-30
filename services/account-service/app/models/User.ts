@@ -48,7 +48,7 @@ const userSchema = new Schema<IUserModel>(
     },
     role: {
       type: String,
-      enum: [EUserRole.USER, EUserRole.SPECIALIST, EUserRole.ADMIN],
+      enum: EUserRole,
       default: EUserRole.USER,
     },
     category: { type: Types.ObjectId, ref: 'Category' },
@@ -84,7 +84,7 @@ const userSchema = new Schema<IUserModel>(
     },
     theme: {
       type: String,
-      enum: [EThemeType.DARK, EThemeType.LIGHT, EThemeType.SYSTEM],
+      enum: EThemeType,
       default: EThemeType.SYSTEM,
     },
   },

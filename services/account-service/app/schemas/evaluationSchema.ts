@@ -5,6 +5,7 @@ export interface IEvaluationSchema extends Document {
   _id: Types.ObjectId;
   user: Types.ObjectId;
   dateOfResponse: Date;
+  minutes: number;
   price: {
     amountInCents: number;
     currency: ESupportedCurrency;
@@ -18,9 +19,10 @@ const evaluationSchema = new Schema<IEvaluationSchema>(
       type: Date,
       required: true,
     },
+    minutes: { type: Number, required: true, default: 0 },
     price: {
       amountInCents: { type: Number, required: true },
-      currency: { type: String, enum: [ESupportedCurrency.PLN], required: true },
+      currency: { type: String, enum: ESupportedCurrency, required: true },
     },
   },
   {

@@ -27,6 +27,9 @@
  *           type: string
  *           format: date-time
  *           example: "2023-12-25T10:00:00Z"
+ *         minutes:
+ *           type: number
+ *           example: 30
  *         price:
  *           type: object
  *           properties:
@@ -35,9 +38,7 @@
  *               format: float
  *               example: 250.5
  *             currency:
- *               type: string
- *               enum: [PLN]
- *               example: "PLN"
+ *               $ref: '#/components/schemas/Currency'
  *     User:
  *       type: object
  *       properties:
@@ -89,6 +90,11 @@
  *       enum:
  *         - pl
  *         - en
+ *     Currency:
+ *       type: string
+ *       enum:
+ *         - PLN
+ *         - EUR
  *     TicketStatus:
  *       type: string
  *       enum:
@@ -163,9 +169,7 @@
  *           format: float
  *           example: 20
  *         currency:
- *           type: string
- *           enum: [PLN]
- *           example: "PLN"
+ *           $ref: '#/components/schemas/Currency'
  *         paymentMethod:
  *           type: string
  *           example: "BLIK"
