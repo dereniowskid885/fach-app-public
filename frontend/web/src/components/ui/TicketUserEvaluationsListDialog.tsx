@@ -5,13 +5,12 @@ import {
   Evaluation,
   PatchTicketsByIdAcceptEvaluationApiArg,
   usePatchTicketsByIdAcceptEvaluationMutation
-} from '@/api/accountApi';
-import { getFormattedPriceAmount, getUserFullName } from '@/utils/shared';
+} from '@/services/api/generated/accountApi';
 import { RowSelectionState } from '@tanstack/react-table';
 import { toast } from 'sonner';
-import { useTranslations } from 'next-intl';
-import { getFormattedDate } from '@/utils/date';
+import { useLocale, useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { getEvaluationsListColumns } from '@/helpers/dataTableColumns';
 
 export interface ITicketUserEvaluationsListDialog {
   open: boolean;
@@ -27,6 +26,7 @@ export default function TicketUserEvaluationsListDialog({
   ticketEvaluations = []
 }: ITicketUserEvaluationsListDialog) {
   const t = useTranslations();
+  const currentLocale = useLocale();
 
   const [selectedEvaluationRow, setSelectedEvaluationRow] = useState<RowSelectionState>({});
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -39,58 +39,6 @@ export default function TicketUserEvaluationsListDialog({
   });
 
   if (!ticketEvaluations) return;
-
-  const isEvaluationSelected = Object.keys(selectedEvaluationRow).length > 0;
-
-  const evaluationsTableData = ticketEvaluations?.map(evaluation => {
-    const formattedDate = getFormattedDate(evaluation.dateOfResponse);
-    const formattedAmount = getFormattedPriceAmount(evaluation.price?.amountInCents);
-
-    return {
-      specialistName: getUserFullName(evaluation.user, t('common.unknownUser')),
-      specialistEmail: evaluation.user?.email,
-      dateOfResponse: formattedDate,
-      price: `${formattedAmount} ${evaluation.price?.currency}`,
-      city: evaluation.user?.city,
-      disabled: !evaluation.user
-    };
-  });
-
-  const evaluationsTable = (
-    <DataTable
-      data={evaluationsTableData}
-      selectableRows={true}
-      oneSelectableRow={true}
-      setSelectedRow={setSelectedEvaluationRow}
-      columns={[
-        {
-          id: 'evaluation-list-specialist-name',
-          accessorKey: 'specialistName',
-          header: t('userRole.specialist')
-        },
-        {
-          id: 'evaluation-list-specialist-email',
-          accessorKey: 'specialistEmail',
-          header: t('authForm.email')
-        },
-        {
-          id: 'evaluation-list-date-of-response',
-          accessorKey: 'dateOfResponse',
-          header: t('evaluation.dateOfResponse')
-        },
-        {
-          id: 'evaluation-list-price',
-          accessorKey: 'price',
-          header: t('evaluation.price')
-        },
-        {
-          id: 'evaluation-list-city',
-          accessorKey: 'city',
-          header: t('evaluation.city')
-        }
-      ]}
-    />
-  );
 
   const getSelectedEvaluation = () => {
     const selectedRows = Object.keys(selectedEvaluationRow);
@@ -123,12 +71,23 @@ export default function TicketUserEvaluationsListDialog({
     toast.success(t('evaluationListDialog.toastTitle'));
   };
 
+  const isEvaluationSelected = Object.keys(selectedEvaluationRow).length > 0;
+  const tableColumnsData = getEvaluationsListColumns(t, currentLocale);
+
   return (
     <DialogComponent
       open={open}
       contentClass="max-lg:max-w-none lg:max-w-[70%]"
       title={t('evaluationListDialog.title')}
-      content={evaluationsTable}
+      content={
+        <DataTable
+          data={ticketEvaluations}
+          selectableRows={true}
+          oneSelectableRow={true}
+          setSelectedRow={setSelectedEvaluationRow}
+          columns={tableColumnsData}
+        />
+      }
       cancelButtonText={t('common.back')}
       cancelButtonHandler={closeDialog}
       confirmButtonText={t('evaluationListDialog.confirmButtonText')}
