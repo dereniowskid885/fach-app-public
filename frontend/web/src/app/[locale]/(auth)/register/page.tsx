@@ -12,7 +12,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { PostAuthRegisterApiArg, usePostAuthRegisterMutation } from '@/api/accountApi';
+import {
+  PostAuthRegisterApiArg,
+  usePostAuthRegisterMutation
+} from '@/services/api/generated/accountApi';
 import AuthCard from '@/components/ui/AuthCard';
 import { useLocale, useTranslations } from 'next-intl';
 import { ESupportedLanguages } from '@shared/enums/language';

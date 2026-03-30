@@ -1,7 +1,7 @@
 'use client';
 
 import { ArrowRight } from 'lucide-react';
-import { useGetTicketsMyQuery } from '@/api/accountApi';
+import { useGetTicketsMyQuery } from '@/services/api/generated/accountApi';
 import Typography from '../common/Typography';
 import { LoadingSpinner } from '../shadcn/loading-spinner';
 import { Skeleton } from '../shadcn/skeleton';

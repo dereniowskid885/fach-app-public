@@ -12,7 +12,10 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { notFound } from 'next/navigation';
-import { PostAuthPasswordResetApiArg, usePostAuthPasswordResetMutation } from '@/api/accountApi';
+import {
+  PostAuthPasswordResetApiArg,
+  usePostAuthPasswordResetMutation
+} from '@/services/api/generated/accountApi';
 import AuthCard from '@/components/ui/AuthCard';
 import { useTranslations } from 'next-intl';
 import { getLastPathSegment } from '@/utils/pathname';

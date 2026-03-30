@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "api-account-generate": "npx @rtk-query/codegen-openapi src/api/config/account-service-openapi-config.ts",
+    "api-account-generate": "npx @rtk-query/codegen-openapi src/services/api/config/account-service-openapi-config.ts",
     "apis-generate": "npm run api-account-generate"
   },
   "dependencies": {

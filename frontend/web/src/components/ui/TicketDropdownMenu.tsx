@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '../shadcn/dropdown-menu';
-import { Ticket } from '@/api/accountApi';
+import { Ticket } from '@/services/api/generated/accountApi';
 import { useTranslations } from 'next-intl';
 import { ETicketStatus } from '@shared/enums/ticket';
 import { TicketDeleteDialog } from './TicketDeleteDialog';

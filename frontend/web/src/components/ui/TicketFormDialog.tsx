@@ -11,7 +11,7 @@ import {
   Ticket,
   usePatchTicketsByIdMutation,
   usePostTicketsMutation
-} from '@/api/accountApi';
+} from '@/services/api/generated/accountApi';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { useSelector } from 'react-redux';

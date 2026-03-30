@@ -1,4 +1,4 @@
-import { api } from './services/account/index';
+import { api } from '../services/account-service/index';
 export const addTagTypes = ['Authentication', 'Categories', 'Ticketing', 'Users'] as const;
 const injectedRtkApi = api
   .enhanceEndpoints({
@@ -507,8 +507,7 @@ export type PostTicketsByIdPaymentApiArg = {
   body: {
     /** Numeric value of the price */
     amount: number;
-    /** Currency code (e.g., PLN) */
-    currency: string;
+    currency: Currency;
   };
 };
 export type GetTicketsMyApiResponse = /** status 200 Array of tickets */ {
@@ -604,8 +603,7 @@ export type PatchTicketsByIdEvaluationApiArg = {
     price: {
       /** Numeric value of the price */
       amountInCents?: number;
-      /** Currency code (e.g., PLN) */
-      currency?: string;
+      currency?: Currency;
     };
     /** Evaluated minutes as the time of first response */
     minutes: number;
@@ -639,8 +637,7 @@ export type PatchTicketsByIdEditEvaluationApiArg = {
     price?: {
       /** Numeric value of the price */
       amountInCents?: number;
-      /** Currency code (e.g., PLN) */
-      currency?: string;
+      currency?: Currency;
     };
     /** Evaluated minutes as the time of first response */
     minutes?: number;
@@ -756,13 +753,15 @@ export type TicketStatus =
   | 'moderator_investigation'
   | 'completed'
   | 'canceled';
+export type Currency = 'PLN' | 'EUR';
 export type Evaluation = {
   _id?: string;
   user?: User;
   dateOfResponse?: string;
+  minutes?: number;
   price?: {
     amountInCents?: number;
-    currency?: 'PLN';
+    currency?: Currency;
   };
 };
 export type Ticket = {
@@ -786,7 +785,7 @@ export type Payment = {
   user?: User;
   ticket?: Ticket;
   amount?: number;
-  currency?: 'PLN';
+  currency?: Currency;
   paymentMethod?: string;
   status?: PaymentStatus;
   createdAt?: string;

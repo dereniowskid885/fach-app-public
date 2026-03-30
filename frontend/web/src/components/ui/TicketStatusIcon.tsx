@@ -1,4 +1,4 @@
-import { TicketStatus } from '@/api/accountApi';
+import { TicketStatus } from '@/services/api/generated/accountApi';
 import {
   getTicketStatusColorClasses,
   getTicketStatusIcon,
