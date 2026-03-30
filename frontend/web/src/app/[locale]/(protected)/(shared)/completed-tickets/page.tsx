@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetTicketsCompletedQuery } from '@/api/accountApi';
+import { useGetTicketsCompletedQuery } from '@/services/api/generated/accountApi';
 import ContentCard from '@/components/common/ContentCard';
 import { DataTable } from '@/components/common/DataTable';
 import PageHeader from '@/components/common/PageHeader';

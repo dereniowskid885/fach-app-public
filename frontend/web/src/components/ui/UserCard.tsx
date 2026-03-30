@@ -1,4 +1,4 @@
-import { User } from '@/api/accountApi';
+import { User } from '@/services/api/generated/accountApi';
 import { Skeleton } from '../shadcn/skeleton';
 import Typography from '../common/Typography';
 import { useTranslations } from 'next-intl';

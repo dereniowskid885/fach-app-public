@@ -3,7 +3,7 @@ import NavLink from './NavLink';
 import { LOGIN_PATH } from '@/constants/routes';
 import { useLocale, useTranslations } from 'next-intl';
 import LoadingOverlay from '../common/LoadingOverlay';
-import { usePostAuthLogoutMutation, UserRole } from '@/api/accountApi';
+import { usePostAuthLogoutMutation, UserRole } from '@/services/api/generated/accountApi';
 import { Button } from '../shadcn/button';
 import Typography from '../common/Typography';
 import { usePathname, useRouter } from 'next/navigation';
@@ -97,7 +97,7 @@ export default function Sidebar() {
                 isSidebarCollapsed={isSidebarCollapsed}
                 title={t(item.translationKey)}
               >
-                <item.icon size={18} strokeWidth={2.5} className="ml-1 shrink-0" />
+                <item.icon size={18} strokeWidth={2.5} className="ml-1" />
               </NavLink>
             ))
           : Array.from({ length: 4 }).map((item, index) => (

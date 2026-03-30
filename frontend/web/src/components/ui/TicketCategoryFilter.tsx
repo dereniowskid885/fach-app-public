@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { Category, useGetCategoriesQuery } from '@/api/accountApi';
+import { Category, useGetCategoriesQuery } from '@/services/api/generated/accountApi';
 import CategoryIcon from './CategoryIcon';
 import ButtonsCarousel from '../common/ButtonsCarousel';
 import { useTranslations } from 'next-intl';

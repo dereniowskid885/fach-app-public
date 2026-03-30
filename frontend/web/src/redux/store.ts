@@ -1,4 +1,4 @@
-import { accountApi } from '@/api/accountApi';
+import { accountApi } from '@/services/api/generated/accountApi';
 import { configureStore } from '@reduxjs/toolkit';
 import userDataSlice from './slices/UserDataSlice';
 

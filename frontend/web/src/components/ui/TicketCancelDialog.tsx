@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import DialogComponent from '../common/DialogComponent';
-import { usePatchTicketsByIdMutation } from '@/api/accountApi';
+import { usePatchTicketsByIdMutation } from '@/services/api/generated/accountApi';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
