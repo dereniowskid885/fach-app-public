@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import UserBadge from './UserBadge';
 import { EUserBadgeVariant } from '@/enums/ui';
-import { isAdmin, isSpecialist } from '@shared/utils/role';
+import { isAdmin, isSpecialist } from 'shared-types';
 
 export default function DashboardRecentTickets() {
   const t = useTranslations();

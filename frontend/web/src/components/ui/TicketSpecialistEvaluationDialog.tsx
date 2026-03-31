@@ -16,7 +16,7 @@ import { toast } from 'sonner';
 import { useLocale, useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { EActionType, ETimePickerType } from '@/enums/ui';
-import { ESupportedCurrency } from '@shared/enums/currency';
+import { ESupportedCurrency } from 'shared-types';
 import { Calendar, ChartColumn, Clock, DollarSign } from 'lucide-react';
 import { getLocaleDateString } from '@/utils/date';
 

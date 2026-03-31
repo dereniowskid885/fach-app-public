@@ -3,7 +3,7 @@
 import { Button } from '../shadcn/button';
 import { useState } from 'react';
 import TicketSpecialistEvaluationDialog from './TicketSpecialistEvaluationDialog';
-import { ETicketStatus } from '@shared/enums/ticket';
+import { ETicketStatus } from 'shared-types';
 import { Evaluation, Ticket } from '@/services/api/generated/accountApi';
 import { useTranslations } from 'next-intl';
 import { EActionType } from '@/enums/ui';

@@ -15,7 +15,7 @@ import {
   ROUTES,
   TICKETS_PATH
 } from './routes';
-import { EUserRole } from '@shared/enums/role';
+import { EUserRole } from 'shared-types';
 
 const commonMenuItems = [
   {

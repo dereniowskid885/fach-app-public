@@ -1,5 +1,5 @@
 import { Moon, Sun, MonitorCog } from 'lucide-react';
-import { EThemeType } from '@shared/enums/theme';
+import { EThemeType } from 'shared-types';
 
 export const themeObj = {
   [EThemeType.SYSTEM]: {

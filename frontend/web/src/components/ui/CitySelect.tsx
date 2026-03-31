@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/shadcn/select';
-import { cities } from '@shared/constants/mocks';
+import { cities } from 'shared-types';
 import { useTranslations } from 'next-intl';
 import { UseFormRegisterReturn } from 'react-hook-form';
 

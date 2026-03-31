@@ -1,4 +1,4 @@
-import { ETicketStatus } from '@shared/enums/ticket';
+import { ETicketStatus } from 'shared-types';
 
 // My Evaluations page (specialist)
 export const MY_EVALUATIONS_TICKETS_FILTERS = [

@@ -6,7 +6,7 @@ import { supportedLanguagesObj } from '@/constants/supportedLanguages';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { ESupportedLanguages } from '@shared/enums/language';
+import { ESupportedLanguages } from 'shared-types';
 import { EPopoverContentDirection } from '@/enums/ui';
 
 export interface ILanguageSwitcher {

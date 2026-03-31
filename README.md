@@ -4,7 +4,7 @@ Web-based platform designed to manage and streamline the process of reporting, t
 
 ## Repository Structure
 
-The repository is organized into the following directories:
+The monorepo is organized into the following directories:
 
 ```
 \frontend
@@ -14,6 +14,8 @@ The repository is organized into the following directories:
   \account-service
   ...
 \shared
+  \shared-types
+  \shared-backend
   ...
 ```
 
@@ -23,7 +25,6 @@ Use `Ctrl+Shift+P` and select `Tasks:Run Task`
 
 | Task | Result |
 | ------ | ------ |
-| Install All Dependencies | Install necessary dependencies in every application |
 | Start App | Runs all services and frontend in seperated terminals |
 | Start Frontend | Runs frontend web app |
 | Start Account Service | Runs account service |
@@ -32,10 +33,9 @@ Use `Ctrl+Shift+P` and select `Tasks:Run Task`
 
 ## First usage
 
-1. Use `Ctrl+Shift+P` and select `Tasks:Run Task`.
-2. Select `Install All Dependencies`.
-3. Use `Ctrl+Shift+P` and select `Tasks:Run Task`.
-4. Select `Start App`.
+1. Run `npm install` in root folder.
+2. Use `Ctrl+Shift+P` and select `Tasks:Run Task`.
+3. Select `Start App`.
 
 - Frontend will be available at http://localhost:3000.
 - Account service will be available at http://localhost:4000.

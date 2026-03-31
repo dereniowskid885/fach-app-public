@@ -11,7 +11,7 @@ import {
 } from '../shadcn/dropdown-menu';
 import { Ticket } from '@/services/api/generated/accountApi';
 import { useTranslations } from 'next-intl';
-import { ETicketStatus } from '@shared/enums/ticket';
+import { ETicketStatus, isAdmin } from 'shared-types';
 import { TicketDeleteDialog } from './TicketDeleteDialog';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -19,7 +19,6 @@ import { selectUserData } from '@/redux/slices/UserDataSlice';
 import TicketFormDialog from './TicketFormDialog';
 import { EActionType } from '@/enums/ui';
 import { TicketCancelDialog } from './TicketCancelDialog';
-import { isAdmin } from '@shared/utils/role';
 
 export interface ITicketDropdownMenu {
   ticket: Ticket;

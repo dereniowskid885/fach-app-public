@@ -16,7 +16,7 @@ import { Skeleton } from '@/components/shadcn/skeleton';
 import UserBadge from '@/components/ui/UserBadge';
 import { EFilterButton, EUserBadgeVariant } from '@/enums/ui';
 import { notFound } from 'next/navigation';
-import { isSpecialist } from '@shared/utils/role';
+import { isSpecialist } from 'shared-types';
 import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
 
 export default function AvailableTickets() {

@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useLocale } from 'next-intl';
 import { normalizePathname } from '@/utils/pathname';
-import { ESupportedLanguages } from '@shared/enums/language';
+import { ESupportedLanguages } from 'shared-types';
 import ThemeSwitcher from './ThemeSwitcher';
 import { EPopoverContentDirection } from '@/enums/ui';
 

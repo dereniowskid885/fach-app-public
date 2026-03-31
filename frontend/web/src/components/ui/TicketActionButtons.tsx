@@ -1,5 +1,5 @@
 import { Ticket } from '@/services/api/generated/accountApi';
-import { EUserRole } from '@shared/enums/role';
+import { EUserRole } from 'shared-types';
 import { TicketSpecialistActionButtons } from './TicketSpecialistActionButtons';
 import TicketUserActionButtons from './TicketUserActionButtons';
 

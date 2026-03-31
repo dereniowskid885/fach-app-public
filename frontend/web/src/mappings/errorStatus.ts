@@ -1,4 +1,4 @@
-import { EResponseStatus } from '@shared/enums/responseStatus';
+import { EResponseStatus } from 'shared-types';
 import { EErrorStrategy } from '@/enums/shared';
 
 type TErrorMapping = {

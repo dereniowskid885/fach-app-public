@@ -4,8 +4,7 @@ import { useGetTicketsMyQuery } from '@/services/api/generated/accountApi';
 import ContentCard from '@/components/common/ContentCard';
 import SearchComponent from '@/components/common/SearchComponent';
 import TicketCreateButton from '@/components/ui/TicketCreateButton';
-import { ETicketStatus } from '@shared/enums/ticket';
-import { EUserRole } from '@shared/enums/role';
+import { ETicketStatus, EUserRole, isRoleAllowed, isSpecialist, isUser } from 'shared-types';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
@@ -20,7 +19,6 @@ import UserBadge from '@/components/ui/UserBadge';
 import { EFilterButton, EUserBadgeVariant } from '@/enums/ui';
 import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
 import { notFound } from 'next/navigation';
-import { isRoleAllowed, isSpecialist, isUser } from '@shared/utils/role';
 import { getMyTicketsStatusFilters } from '@/helpers/ticketStatusFilter';
 
 export default function MyTickets() {

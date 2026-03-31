@@ -1,5 +1,4 @@
-import { ETicketStatus } from '@shared/enums/ticket';
-import { EUserRole } from '@shared/enums/role';
+import { ETicketStatus, EUserRole } from 'shared-types';
 import { ticketStatuses } from '@/constants/ticketStatus';
 import {
   COMPLETED_TICKETS_FILTERS,

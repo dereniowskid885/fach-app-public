@@ -1,6 +1,6 @@
 import * as EnglishFlag from '@assets/english-flag.svg';
 import * as PolishFlag from '@assets/polish-flag.svg';
-import { ESupportedLanguages } from '@shared/enums/language';
+import { ESupportedLanguages } from 'shared-types';
 
 export const supportedLanguages = Object.values(ESupportedLanguages);
 
