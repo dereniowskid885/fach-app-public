@@ -16,8 +16,7 @@ import {
 import express from 'express';
 const router = express.Router();
 
-import { createMiddleware } from '@shared/helpers/createMiddleware';
-import { checkAndParseAccessToken, checkUserRole } from '@shared/middlewares/authMiddleware';
+import { createMiddleware, checkAndParseAccessToken, checkUserRole } from 'shared-backend';
 import {
   validateCreateTicketMiddleware,
   validateTicketEvaluationAcceptMiddleware,
@@ -26,7 +25,7 @@ import {
   validateTicketPaymentMiddleware,
   validateTicketUpdateMiddleware,
 } from '@middlewares/ticketValidationMiddleware';
-import { EUserRole } from '@shared/enums/role';
+import { EUserRole } from 'shared-types';
 
 // Role middleware
 const checkSpecialistRole = createMiddleware(checkUserRole, [EUserRole.SPECIALIST]);

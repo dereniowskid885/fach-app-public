@@ -1,6 +1,5 @@
 import type { Request, Response } from 'express';
-import { IAppError } from '@shared/utils/AppError';
-import { handleAppError } from '@shared/helpers/handleAppError';
+import { IAppError, handleAppError } from 'shared-backend';
 import { CategoryManager } from '@managers/categoryManager';
 import { FilterBuilder } from '@utils/filterBuilder';
 
@@ -27,7 +26,7 @@ export const getCategories = async (req: Request, res: Response) => {
 
 export const getCategoryById = async (req: Request, res: Response) => {
   try {
-    const category = await CategoryManager.getCategoryById(req.params.id);
+    const category = await CategoryManager.getCategoryById(req.params.id as string);
 
     return res.status(200).json({ success: true, data: category });
   } catch (err) {
@@ -37,7 +36,7 @@ export const getCategoryById = async (req: Request, res: Response) => {
 
 export const deleteCategory = async (req: Request, res: Response) => {
   try {
-    await CategoryManager.deleteCategory(req.params.id);
+    await CategoryManager.deleteCategory(req.params.id as string);
 
     return res.status(200).json({ success: true, message: 'Category successfully removed' });
   } catch (err) {
@@ -47,7 +46,7 @@ export const deleteCategory = async (req: Request, res: Response) => {
 
 export const updateCategory = async (req: Request, res: Response) => {
   try {
-    const category = await CategoryManager.updateCategory(req.user.userId, req.params.id, req.body.name);
+    const category = await CategoryManager.updateCategory(req.user.userId, req.params.id as string, req.body.name);
 
     return res.status(200).json({ success: true, message: 'Category updated successfully', data: category });
   } catch (err) {
@@ -57,7 +56,11 @@ export const updateCategory = async (req: Request, res: Response) => {
 
 export const assignSpecialistToCategory = async (req: Request, res: Response) => {
   try {
-    const category = await CategoryManager.assignSpecialistToCategory(req.user.userId, req.params.id, req.body.userId);
+    const category = await CategoryManager.assignSpecialistToCategory(
+      req.user.userId,
+      req.params.id as string,
+      req.body.userId,
+    );
 
     return res
       .status(200)
@@ -71,7 +74,7 @@ export const removeSpecialistFromCategory = async (req: Request, res: Response) 
   try {
     const category = await CategoryManager.removeSpecialistFromCategory(
       req.user.userId,
-      req.params.id,
+      req.params.id as string,
       req.body.userId,
     );
 

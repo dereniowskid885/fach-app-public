@@ -1,6 +1,5 @@
 import { PaymentManager } from '@managers/paymentManager';
-import { handleAppError } from '@shared/helpers/handleAppError';
-import { IAppError } from '@shared/utils/AppError';
+import { IAppError, handleAppError } from 'shared-backend';
 import { Request, Response } from 'express';
 
 export const stripeWebhookHandler = async (req: Request, res: Response) => {

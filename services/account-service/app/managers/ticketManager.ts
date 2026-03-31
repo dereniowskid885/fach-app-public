@@ -1,16 +1,13 @@
-import { AppError } from '@shared/utils/AppError';
 import Ticket, { ITicketModel } from '@models/Ticket';
 import { JwtPayload } from 'jsonwebtoken';
-import { ETicketStatus } from '@shared/enums/ticket';
-import { ESupportedCurrency } from '@shared/enums/currency';
-import { EResponseStatus } from '@shared/enums/responseStatus';
 import { CategoryManager } from './categoryManager';
 import { UserManager } from './userManager';
 import { FilterQuery } from 'mongoose';
 import { IEvaluationSchema } from '@schemas/evaluationSchema';
 import { safeUserProjection } from '@constants/projections';
 import { checkTicketStatusTransition } from '@helpers/checkTicketStatusTransition';
-import { isAdmin } from '@shared/utils/role';
+import { AppError } from 'shared-backend';
+import { EResponseStatus, ESupportedCurrency, ETicketStatus, isAdmin } from 'shared-types';
 
 export const TicketManager = {
   getTicketByID: async (ticketId: string) => {

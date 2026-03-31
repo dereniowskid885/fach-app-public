@@ -1,12 +1,15 @@
 import Payment from '@models/Payment';
-import { EPaymentIntentEvent, EPaymentIntentType, EPaymentStatus } from '@shared/enums/payment';
-import { ESupportedCurrency } from '@shared/enums/currency';
-import { EResponseStatus } from '@shared/enums/responseStatus';
-import { AppError } from '@shared/utils/AppError';
-import { JwtPayload } from 'jsonwebtoken';
-import { handleStripeError } from '@shared/helpers/handleStripeError';
 import Stripe from 'stripe';
 import { TicketManager } from './ticketManager';
+import { JwtPayload } from 'jsonwebtoken';
+import {
+  EPaymentIntentEvent,
+  EPaymentIntentType,
+  EPaymentStatus,
+  EResponseStatus,
+  ESupportedCurrency,
+} from 'shared-types';
+import { AppError, handleStripeError } from 'shared-backend';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 

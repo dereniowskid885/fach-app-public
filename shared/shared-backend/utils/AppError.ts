@@ -1,10 +1,11 @@
-import { EResponseStatus } from "../enums/responseStatus";
+import { EResponseStatus } from "shared-types";
 
 export interface IAppError {
   code: number;
   status: EResponseStatus;
   message: string;
 }
+
 export class AppError extends Error {
   code: number;
   status: EResponseStatus;

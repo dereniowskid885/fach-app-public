@@ -3,14 +3,13 @@ import { createUser, deleteUser, getUsers, getUserById, updateUser, updateUserRo
 import express from 'express';
 const router = express.Router();
 
-import { createMiddleware } from '@shared/helpers/createMiddleware';
-import { checkAndParseAccessToken, checkUserRole } from '@shared/middlewares/authMiddleware';
+import { createMiddleware, checkAndParseAccessToken, checkUserRole } from 'shared-backend';
 import {
   validateCreateUserMiddleware,
   validateUserRoleUpdateMiddleware,
   validateUserUpdateMiddleware,
 } from 'middlewares/userValidationMiddleware';
-import { EUserRole } from '@shared/enums/role';
+import { EUserRole } from 'shared-types';
 
 // Role middleware
 const checkAdminRole = createMiddleware(checkUserRole, [EUserRole.ADMIN]);

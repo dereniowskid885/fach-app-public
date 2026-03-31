@@ -1,8 +1,4 @@
 import { safeUserProjection } from '@constants/projections';
-import { EResponseStatus } from '@shared/enums/responseStatus';
-import { AppError } from '@shared/utils/AppError';
-import { ETicketStatus } from '@shared/enums/ticket';
-import { EUserRole } from '@shared/enums/role';
 import { CategoryManager } from './categoryManager';
 import User, { IUserModel } from '@models/User';
 import { printMongooseValidationErrors } from '@helpers/printMongooseValidationErrors';
@@ -11,8 +7,8 @@ import { IUpdateUserData } from '@interfaces/user';
 import { JwtPayload } from 'jsonwebtoken';
 import Ticket from '@models/Ticket';
 import Category from '@models/Category';
-import { handleTransactionError } from '@shared/helpers/handleTransactionError';
-import { isAdmin } from '@shared/utils/role';
+import { EResponseStatus, ETicketStatus, EUserRole, isAdmin } from 'shared-types';
+import { AppError, handleTransactionError } from 'shared-backend';
 
 export const UserManager = {
   getUsers: async (filter: FilterQuery<IUserModel>) => {

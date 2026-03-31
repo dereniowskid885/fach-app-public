@@ -1,7 +1,7 @@
-import Logger from '@shared/utils/Logger';
+import { Logger } from 'shared-backend';
 import { transporter } from './transporter';
-import { AppError } from '@shared/utils/AppError';
-import { EResponseStatus } from '@shared/enums/responseStatus';
+import { AppError } from 'shared-backend';
+import { EResponseStatus } from 'shared-types';
 
 export interface IEmailOptions {
   email: string;

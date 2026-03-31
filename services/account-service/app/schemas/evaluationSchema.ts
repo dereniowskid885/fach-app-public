@@ -1,5 +1,5 @@
-import { ESupportedCurrency } from '@shared/enums/currency';
 import { Schema, Types } from 'mongoose';
+import { ESupportedCurrency } from 'shared-types';
 
 export interface IEvaluationSchema extends Document {
   _id: Types.ObjectId;
@@ -14,7 +14,7 @@ export interface IEvaluationSchema extends Document {
 
 const evaluationSchema = new Schema<IEvaluationSchema>(
   {
-    user: { type: Types.ObjectId, ref: 'User', required: true },
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     dateOfResponse: {
       type: Date,
       required: true,

@@ -13,8 +13,7 @@ import {
 import express from 'express';
 const router = express.Router();
 
-import { createMiddleware } from '@shared/helpers/createMiddleware';
-import { checkAndParseAccessToken, checkRefreshToken } from '@shared/middlewares/authMiddleware';
+import { createMiddleware, checkAndParseAccessToken, checkRefreshToken } from 'shared-backend';
 import {
   validateUserRegisterMiddleware,
   validateUserLoginMiddleware,
