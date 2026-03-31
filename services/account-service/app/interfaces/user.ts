@@ -1,5 +1,4 @@
-import { EUserRole } from '@shared/enums/role';
-import { EThemeType } from '@shared/enums/theme';
+import { EUserRole, EThemeType } from 'shared-types';
 
 export interface ISafeUserObject {
   _id: string;

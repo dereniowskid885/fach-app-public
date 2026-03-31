@@ -9,7 +9,6 @@
     "skipLibCheck": true,
     "baseUrl": "./app",
     "paths": {
-      "@shared/*": ["../../../shared/*"],
       "@web/*": ["../../../frontend/web/src/*"],
       "@constants/*": ["./constants/*"],
       "@aggregations/*": ["./aggregations/*"],
@@ -23,8 +22,8 @@
       "@middlewares/*": ["./middlewares/*"],
       "@schemas/*": ["./schemas/*"]
     },
-    "typeRoots": ["../../shared/types", "./node_modules/@types"]
+    "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["app/**/*", "../../shared/*"],
+  "include": ["app/**/*", "../../shared/shared-backend/types/**/*"],
   "exclude": ["dist"]
 }

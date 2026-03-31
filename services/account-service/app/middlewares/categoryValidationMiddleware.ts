@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
+import { handleZodError } from 'shared-backend';
 import { z } from 'zod';
-import { handleZodError } from '@shared/helpers/handleZodError';
 
 const categorySchema = z
   .object({

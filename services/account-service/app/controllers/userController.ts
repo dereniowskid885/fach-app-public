@@ -1,6 +1,5 @@
 import { UserManager } from '@managers/userManager';
-import { IAppError } from '@shared/utils/AppError';
-import { handleAppError } from '@shared/helpers/handleAppError';
+import { IAppError, handleAppError } from 'shared-backend';
 import type { Request, Response } from 'express';
 import { FilterBuilder } from '@utils/filterBuilder';
 
@@ -17,7 +16,7 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const getUserById = async (req: Request, res: Response) => {
   try {
-    const user = await UserManager.getUserById(req.params.id);
+    const user = await UserManager.getUserById(req.params.id as string);
 
     return res.status(200).json({ success: true, data: user });
   } catch (err) {
@@ -27,7 +26,7 @@ export const getUserById = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    const user = await UserManager.updateUser(req.user, req.params.id, req.body);
+    const user = await UserManager.updateUser(req.user, req.params.id as string, req.body);
 
     return res.status(200).json({ success: true, message: 'User updated successfully', data: user });
   } catch (err) {
@@ -37,7 +36,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const updateUserRole = async (req: Request, res: Response) => {
   try {
-    const user = await UserManager.updateUserRole(req.params.id, req.body.role);
+    const user = await UserManager.updateUserRole(req.params.id as string, req.body.role);
 
     return res.status(200).json({ success: true, message: 'User role updated successfully', data: user });
   } catch (err) {
@@ -47,7 +46,7 @@ export const updateUserRole = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
   try {
-    await UserManager.deleteUser(req.user.userId, req.params.id);
+    await UserManager.deleteUser(req.user.userId, req.params.id as string);
 
     return res.status(200).json({ success: true, message: 'User deleted successfully' });
   } catch (err) {

@@ -1,9 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
+import { handleZodError } from 'shared-backend';
+import { cities, ESupportedCurrency, ETicketStatus } from 'shared-types';
 import { z } from 'zod';
-import { handleZodError } from '@shared/helpers/handleZodError';
-import { ETicketStatus } from '@shared/enums/ticket';
-import { ESupportedCurrency } from '@shared/enums/currency';
-import { cities } from '@shared/constants/mocks';
 
 const createTicketSchema = z
   .object({

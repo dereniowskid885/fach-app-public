@@ -1,6 +1,5 @@
-import { EPaymentStatus } from '@shared/enums/payment';
-import { ESupportedCurrency } from '@shared/enums/currency';
 import { model, Schema, Types } from 'mongoose';
+import { EPaymentStatus, ESupportedCurrency } from 'shared-types';
 
 export interface IPaymentModel extends Document {
   _id: Types.ObjectId;
@@ -16,12 +15,12 @@ export interface IPaymentModel extends Document {
 const paymentSchema = new Schema<IPaymentModel>(
   {
     user: {
-      type: Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
     ticket: {
-      type: Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'Ticket',
       required: true,
     },

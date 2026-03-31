@@ -1,14 +1,11 @@
 import User, { IUserModel } from '@models/User';
-import { EEnvironmentType } from '@shared/enums/shared';
 import { Request, Response } from 'express';
 import jwt, { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 import crypto from 'crypto';
-import Logger from '@shared/utils/Logger';
-import { AppError } from '@shared/utils/AppError';
 import { Types } from 'mongoose';
 import { UserManager } from './userManager';
-import { EResponseStatus } from '@shared/enums/responseStatus';
-import { handleRefreshTokenError } from '@shared/helpers/handleJwtError';
+import { AppError, handleRefreshTokenError, Logger } from 'shared-backend';
+import { EEnvironmentType, EResponseStatus } from 'shared-types';
 
 export const TokenManager = {
   handleTokenRefresh: async (req: Request, res: Response) => {

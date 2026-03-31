@@ -1,8 +1,8 @@
-import { ETicketStatus } from '@shared/enums/ticket';
 import { Types, Document, Schema, model } from 'mongoose';
 import { ICategoryModel } from './Category';
 import { IUserModel } from './User';
 import EvaluationSchema, { IEvaluationSchema } from '@schemas/evaluationSchema';
+import { ETicketStatus } from 'shared-types';
 
 export interface ITicketModel extends Document {
   _id: Types.ObjectId;

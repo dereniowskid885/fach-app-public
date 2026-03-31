@@ -1,4 +1,4 @@
-import { EResponseStatus } from "../enums/responseStatus";
+import { EResponseStatus } from "../../shared-types/enums/responseStatus";
 import { ClientSession } from "mongoose";
 import { AppError } from "../utils/AppError";
 

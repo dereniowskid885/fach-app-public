@@ -1,10 +1,8 @@
 import { NextFunction } from 'express';
 import { Response, Request } from 'express';
+import { handleZodError } from 'shared-backend';
+import { cities, EThemeType, EUserRole } from 'shared-types';
 import { z } from 'zod';
-import { handleZodError } from '@shared/helpers/handleZodError';
-import { EUserRole } from '@shared/enums/role';
-import { EThemeType } from '@shared/enums/theme';
-import { cities } from '@shared/constants/mocks';
 
 const createUserSchema = z
   .object({

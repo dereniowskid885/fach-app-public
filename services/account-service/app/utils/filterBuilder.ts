@@ -1,11 +1,10 @@
 import { ICategoryModel } from '@models/Category';
 import { ITicketModel } from '@models/Ticket';
 import { IUserModel } from '@models/User';
-import { ETicketStatus } from '@shared/enums/ticket';
 import { Request } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import { FilterQuery } from 'mongoose';
-import { isSpecialist, isUser } from '@shared/utils/role';
+import { ETicketStatus, isSpecialist, isUser } from 'shared-types';
 
 export const FilterBuilder = {
   getUsers: (req: Request) => {

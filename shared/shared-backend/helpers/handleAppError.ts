@@ -1,4 +1,4 @@
-import { EResponseStatus } from "../enums/responseStatus";
+import { EResponseStatus } from "../../shared-types/enums/responseStatus";
 import type { Response } from "express";
 import { IAppError } from "../utils/AppError";
 

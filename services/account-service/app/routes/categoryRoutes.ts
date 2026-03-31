@@ -11,9 +11,8 @@ import {
 import express from 'express';
 const router = express.Router();
 
-import { createMiddleware } from '@shared/helpers/createMiddleware';
-import { checkAndParseAccessToken, checkUserRole } from '@shared/middlewares/authMiddleware';
-import { EUserRole } from '@shared/enums/role';
+import { createMiddleware, checkAndParseAccessToken, checkUserRole } from 'shared-backend';
+import { EUserRole } from 'shared-types';
 import { validateCategoryBodyMiddleware } from '@middlewares/categoryValidationMiddleware';
 
 // Role middleware

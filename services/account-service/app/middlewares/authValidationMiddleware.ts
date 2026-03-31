@@ -1,9 +1,8 @@
 import { NextFunction } from 'express';
 import { Response, Request } from 'express';
+import { handleZodError } from 'shared-backend';
+import { cities, ESupportedLanguages } from 'shared-types';
 import { z } from 'zod';
-import { handleZodError } from '@shared/helpers/handleZodError';
-import { cities } from '@shared/constants/mocks';
-import { ESupportedLanguages } from '@shared/enums/language';
 
 const registerUserSchema = z
   .object({

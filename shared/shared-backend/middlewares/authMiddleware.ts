@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { JwtPayload, verify } from "jsonwebtoken";
 import { AppError } from "../utils/AppError";
-import { EResponseStatus } from "../enums/responseStatus";
+import { EResponseStatus } from "shared-types";
 
 // checks if request has valid cookie with access token and saves it on req.user for further use in endpoints
 export const checkAndParseAccessToken = async (req: Request, ACCESS_TOKEN_SECRET: string) => {

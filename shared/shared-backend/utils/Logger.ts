@@ -1,6 +1,6 @@
-import { EEnvironmentType } from "../enums/shared";
+import { EEnvironmentType } from "shared-types";
 
-class Logger {
+export class Logger {
   static log(message: string) {
     console.log(`[LOG] ${new Date().toISOString()}: ${message}`);
   }
@@ -23,5 +23,3 @@ class Logger {
     }
   }
 }
-
-export default Logger;

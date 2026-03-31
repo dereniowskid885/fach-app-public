@@ -1,5 +1,5 @@
-import { SWAGGER_ROUTES } from '@shared/constants/routes';
-import { dbConnect } from '@shared/helpers/dbConnect';
+import { SWAGGER_ROUTES } from 'shared-types';
+import { dbConnect } from 'shared-backend';
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import ticketRoutes from './routes/ticketRoutes';
