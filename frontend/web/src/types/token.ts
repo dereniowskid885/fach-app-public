@@ -1,4 +1,4 @@
-import { EUserRole } from '@shared/enums/role';
+import { EUserRole } from 'shared-types';
 
 export interface ITokenPayload {
   userId: string;

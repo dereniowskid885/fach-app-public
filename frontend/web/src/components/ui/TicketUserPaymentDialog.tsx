@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import DialogComponent from '../common/DialogComponent';
 import { usePostTicketsByIdPaymentMutation } from '@/services/api/enhanced/enhancedAccountApi';
-import { ESupportedCurrency } from '@shared/enums/currency';
+import { ESupportedCurrency } from 'shared-types';
 import { StripePaymentForm } from './StripePaymentForm';
 import { StripeProvider } from '../providers/StripeProvider';
 import { useTranslations } from 'next-intl';

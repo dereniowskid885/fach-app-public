@@ -18,7 +18,7 @@ import {
 } from '@/services/api/generated/accountApi';
 import AuthCard from '@/components/ui/AuthCard';
 import { useLocale, useTranslations } from 'next-intl';
-import { ESupportedLanguages } from '@shared/enums/language';
+import { ESupportedLanguages } from 'shared-types';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 interface IRegisterForm {

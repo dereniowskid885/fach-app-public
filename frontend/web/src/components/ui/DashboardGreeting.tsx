@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import TicketCreateButton from './TicketCreateButton';
 import PageHeader from '../common/PageHeader';
-import { isUser } from '@shared/utils/role';
+import { isUser } from 'shared-types';
 
 export default function DashboardGreeting() {
   const t = useTranslations();

@@ -6,7 +6,7 @@ import {
 } from '@/utils/ticket';
 import { cn } from '@/utils/shared';
 import Typography from '../common/Typography';
-import { ETicketStatus } from '@shared/enums/ticket';
+import { ETicketStatus } from 'shared-types';
 import { useTranslations } from 'next-intl';
 
 export interface ITicketStatusIcon {

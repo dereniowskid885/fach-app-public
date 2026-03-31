@@ -12,7 +12,7 @@ import TicketSummaryInfo from './TicketSummaryInfo';
 import TicketActionButtons from './TicketActionButtons';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
-import { EUserRole } from '@shared/enums/role';
+import { EUserRole } from 'shared-types';
 
 export interface IDashboardTicketCard {
   ticket: Ticket;

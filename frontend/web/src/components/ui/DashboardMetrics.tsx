@@ -1,7 +1,7 @@
 import { Clock, CheckCircle, ClipboardList, MessageSquare, Bell, CreditCard } from 'lucide-react';
 import { cn } from '@/utils/shared';
 import { getTicketStatusColorClasses } from '@/utils/ticket';
-import { ETicketStatus } from '@shared/enums/ticket';
+import { ETicketStatus } from 'shared-types';
 import ContentCard from '../common/ContentCard';
 import Typography from '../common/Typography';
 

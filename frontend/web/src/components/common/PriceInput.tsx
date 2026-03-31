@@ -1,7 +1,7 @@
 import React, { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import { Input } from '../shadcn/input';
 import Typography from './Typography';
-import { ESupportedCurrency } from '@shared/enums/currency';
+import { ESupportedCurrency } from 'shared-types';
 import { Currency } from '@/services/api/generated/accountApi';
 
 export interface IPriceInput {

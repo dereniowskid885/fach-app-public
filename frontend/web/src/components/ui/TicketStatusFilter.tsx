@@ -1,4 +1,4 @@
-import { ETicketStatus } from '@shared/enums/ticket';
+import { ETicketStatus } from 'shared-types';
 import ButtonsCarousel from '../common/ButtonsCarousel';
 import TicketStatusIcon from './TicketStatusIcon';
 import { useTranslations } from 'next-intl';

@@ -1,11 +1,10 @@
 import { useCallback, useState } from 'react';
 import { Button } from '../shadcn/button';
 import { Ticket } from '@/services/api/generated/accountApi';
-import { ETicketStatus } from '@shared/enums/ticket';
+import { ETicketStatus, ESupportedCurrency } from 'shared-types';
 import AmountIcon from './AmountIcon';
 import TicketUserEvaluationsListDialog from './TicketUserEvaluationsListDialog';
 import TicketUserPaymentDialog from './TicketUserPaymentDialog';
-import { ESupportedCurrency } from '@shared/enums/currency';
 import { useTranslations } from 'next-intl';
 import { TStatusActionButton } from '@/types/ticket';
 

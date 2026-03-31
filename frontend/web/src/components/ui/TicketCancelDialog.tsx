@@ -4,7 +4,7 @@ import { usePatchTicketsByIdMutation } from '@/services/api/generated/accountApi
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { ETicketStatus } from '@shared/enums/ticket';
+import { ETicketStatus } from 'shared-types';
 
 export interface ITicketCancelDialog {
   open: boolean;

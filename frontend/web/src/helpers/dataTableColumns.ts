@@ -15,7 +15,7 @@ import {
   getTicketColumn,
   getResponseTimeColumn
 } from '@/utils/dataTable';
-import { EUserRole } from '@shared/enums/role';
+import { EUserRole } from 'shared-types';
 
 /**
  * Column definition helpers for ticket-related data tables.

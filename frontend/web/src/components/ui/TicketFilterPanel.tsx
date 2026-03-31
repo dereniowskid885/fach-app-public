@@ -1,11 +1,9 @@
-import { EUserRole } from '@shared/enums/role';
-import { ETicketStatus } from '@shared/enums/ticket';
+import { EUserRole, ETicketStatus, isAdmin, isSpecialist, isUser } from 'shared-types';
 import { Dispatch, SetStateAction } from 'react';
 import { Separator } from '../shadcn/separator';
 import TicketCategoryFilter from './TicketCategoryFilter';
 import TicketCityFilter from './TicketCityFilter';
 import TicketStatusFilter from './TicketStatusFilter';
-import { isAdmin, isSpecialist, isUser } from '@shared/utils/role';
 import { EFilterButton } from '@/enums/ui';
 
 export interface ITicketFilterPanel {

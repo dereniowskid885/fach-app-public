@@ -15,7 +15,7 @@ import { useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 import AuthCard from '@/components/ui/AuthCard';
-import { EResponseStatus } from '@shared/enums/responseStatus';
+import { EResponseStatus } from 'shared-types';
 import { useTranslations } from 'next-intl';
 import { useDispatch } from 'react-redux';
 import { clearUserData } from '@/redux/slices/UserDataSlice';
