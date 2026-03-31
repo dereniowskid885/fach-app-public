@@ -29,7 +29,7 @@ Use `Ctrl+Shift+P` and select `Tasks:Run Task`
 | Start Frontend | Runs frontend web app |
 | Start Account Service | Runs account service |
 | Start Stripe CLI | Runs stripe CLI |
-| Generate all APIs | Runs npm script, which generates all API hooks for frontend |
+| Generate all APIs in web | Runs npm script, which generates all API hooks for frontend |
 
 ## First usage
 

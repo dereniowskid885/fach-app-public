@@ -29,7 +29,7 @@
       }
     },
     {
-      "label": "Generate all RTK Query APIs in web",
+      "label": "Generate all APIs in web",
       "type": "shell",
       "command": "npm run apis-generate --prefix frontend/web",
       "problemMatcher": []
