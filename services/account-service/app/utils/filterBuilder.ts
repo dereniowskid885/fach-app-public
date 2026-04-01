@@ -136,4 +136,20 @@ export const FilterBuilder = {
 
     return filterObj;
   },
+  getSpecialistTicketsEvaluations: (req: Request, userId: string, categoryId?: string) => {
+    const { city } = req.query;
+
+    const filterObj: FilterQuery<ITicketModel> = {
+      status: ETicketStatus.AWAITING_EVALUATION,
+      category: categoryId,
+    };
+
+    if (city) filterObj.city = city.toString();
+
+    filterObj.evaluations = {
+      $elemMatch: { user: userId },
+    };
+
+    return filterObj;
+  },
 };

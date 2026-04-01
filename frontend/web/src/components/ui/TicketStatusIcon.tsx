@@ -36,7 +36,7 @@ export default function TicketStatusIcon({
       <Icon size={size} />
 
       {showStatusText ? (
-        <Typography variant="note" className="text-center font-semibold">
+        <Typography variant="note" className="text-nowrap text-center font-semibold">
           {t(getTicketStatusTranslationKey(status))}
         </Typography>
       ) : null}

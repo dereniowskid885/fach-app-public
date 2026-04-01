@@ -8,6 +8,7 @@ export const AVAILABLE_TICKETS_PATH = '/available-tickets';
 export const VERIFY_PATH = '/verify';
 export const ALL_TICKETS_PATH = '/all-tickets';
 export const COMPLETED_TICKETS_PATH = '/completed-tickets';
+export const EVALUATIONS_PATH = '/evaluations';
 
 export const ROUTES = {
   [HOME_PATH]: {
@@ -37,6 +38,10 @@ export const ROUTES = {
   [AVAILABLE_TICKETS_PATH]: {
     pl: '/dostepne-sprawy',
     en: AVAILABLE_TICKETS_PATH
+  },
+  [EVALUATIONS_PATH]: {
+    pl: '/ewaluacje',
+    en: EVALUATIONS_PATH
   },
   [ALL_TICKETS_PATH]: {
     pl: '/wszystkie-sprawy',

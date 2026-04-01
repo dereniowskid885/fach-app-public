@@ -61,6 +61,19 @@ export const getSpecialistAvailableTickets = async (req: Request, res: Response)
   }
 };
 
+export const getSpecialistTicketsEvaluations = async (req: Request, res: Response) => {
+  try {
+    const categoryId = (await UserManager.getUserById(req.user.userId)).category?._id.toString();
+
+    const filter = FilterBuilder.getSpecialistTicketsEvaluations(req, req.user.userId, categoryId);
+    const tickets = await TicketManager.getTickets(filter);
+
+    return res.status(200).json({ success: true, dataLength: tickets.length, data: tickets });
+  } catch (err) {
+    handleAppError(res, err as IAppError);
+  }
+};
+
 export const getTicketByID = async (req: Request, res: Response) => {
   try {
     const ticket = await TicketManager.getTicketByID(req.params.id as string);

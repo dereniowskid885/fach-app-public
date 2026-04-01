@@ -62,7 +62,7 @@ export const getAllTicketsColumns = (t: TFunction, currentLocale: string) => [
 
 // @/src/components/ui/TicketUserEvaluationsListDialog.tsx
 
-export const getEvaluationsListColumns = (t: TFunction, currentLocale: string) => [
+export const getEvaluationsListDialogColumns = (t: TFunction, currentLocale: string) => [
   getSpecialistColumn(t),
   getCityColumn(t),
   getResponseTimeColumn(t),
