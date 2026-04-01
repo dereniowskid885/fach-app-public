@@ -11,6 +11,7 @@ import {
   ALL_TICKETS_PATH,
   AVAILABLE_TICKETS_PATH,
   COMPLETED_TICKETS_PATH,
+  EVALUATIONS_PATH,
   HOME_PATH,
   ROUTES,
   TICKETS_PATH
@@ -96,11 +97,8 @@ export const menuItemsObj = {
       id: 'evaluations',
       translationKey: 'pages.evaluations',
       icon: ChartColumn,
-      href: '#',
-      path: {
-        en: '',
-        pl: ''
-      }
+      href: EVALUATIONS_PATH,
+      path: ROUTES[EVALUATIONS_PATH]
     },
     ...otherMenuItems
   ]

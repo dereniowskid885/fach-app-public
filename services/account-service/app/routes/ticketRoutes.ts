@@ -11,6 +11,7 @@ import {
   ticketPaymentHandler,
   ticketEvaluationEdit,
   getCompletedTickets,
+  getSpecialistTicketsEvaluations,
 } from '@controllers/ticketController';
 
 import express from 'express';
@@ -561,6 +562,74 @@ router.get('/completed', getCompletedTickets);
  *                   example: Server error
  */
 router.get('/specialist/available', checkSpecialistRole, getSpecialistAvailableTickets);
+
+/**
+ * @swagger
+ * /tickets/specialist/evaluations:
+ *   get:
+ *     summary: Get tickets with city filtering (for specialist my evaluations tickets page)
+ *     description: Returns all tickets with awaiting_evaluation status and specialist category, where user has already put an evaluation
+ *     tags:
+ *       - Ticketing
+ *     parameters:
+ *       - in: query
+ *         name: city
+ *         schema:
+ *           type: string
+ *         description: Filter by city
+ *         example: "Warszawa"
+ *     responses:
+ *       200:
+ *         description: Array of tickets
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 dataLength:
+ *                   type: number
+ *                   example: 24
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Ticket'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: Missing user data
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.get('/specialist/evaluations', checkSpecialistRole, getSpecialistTicketsEvaluations);
 
 /**
  * @swagger
