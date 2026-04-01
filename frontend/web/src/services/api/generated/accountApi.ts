@@ -189,6 +189,18 @@ const injectedRtkApi = api
         }),
         providesTags: ['Ticketing']
       }),
+      getTicketsSpecialistEvaluations: build.query<
+        GetTicketsSpecialistEvaluationsApiResponse,
+        GetTicketsSpecialistEvaluationsApiArg
+      >({
+        query: queryArg => ({
+          url: `/tickets/specialist/evaluations`,
+          params: {
+            city: queryArg.city
+          }
+        }),
+        providesTags: ['Ticketing']
+      }),
       getTicketsById: build.query<GetTicketsByIdApiResponse, GetTicketsByIdApiArg>({
         query: queryArg => ({ url: `/tickets/${queryArg.id}` }),
         providesTags: ['Ticketing']
@@ -551,6 +563,15 @@ export type GetTicketsSpecialistAvailableApiArg = {
   /** Filter by city */
   city?: string;
 };
+export type GetTicketsSpecialistEvaluationsApiResponse = /** status 200 Array of tickets */ {
+  success?: boolean;
+  dataLength?: number;
+  data?: Ticket[];
+};
+export type GetTicketsSpecialistEvaluationsApiArg = {
+  /** Filter by city */
+  city?: string;
+};
 export type GetTicketsByIdApiResponse = /** status 200 Successfully retrieved the ticket */ {
   success?: boolean;
   data?: Ticket;
@@ -814,6 +835,7 @@ export const {
   useGetTicketsMyQuery,
   useGetTicketsCompletedQuery,
   useGetTicketsSpecialistAvailableQuery,
+  useGetTicketsSpecialistEvaluationsQuery,
   useGetTicketsByIdQuery,
   useDeleteTicketsByIdMutation,
   usePatchTicketsByIdMutation,

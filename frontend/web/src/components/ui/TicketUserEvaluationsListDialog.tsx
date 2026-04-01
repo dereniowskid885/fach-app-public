@@ -10,7 +10,7 @@ import { RowSelectionState } from '@tanstack/react-table';
 import { toast } from 'sonner';
 import { useLocale, useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { getEvaluationsListColumns } from '@/helpers/dataTableColumns';
+import { getEvaluationsListDialogColumns } from '@/helpers/dataTableColumns';
 
 export interface ITicketUserEvaluationsListDialog {
   open: boolean;
@@ -72,7 +72,7 @@ export default function TicketUserEvaluationsListDialog({
   };
 
   const isEvaluationSelected = Object.keys(selectedEvaluationRow).length > 0;
-  const tableColumnsData = getEvaluationsListColumns(t, currentLocale);
+  const tableColumnsData = getEvaluationsListDialogColumns(t, currentLocale);
 
   return (
     <DialogComponent
