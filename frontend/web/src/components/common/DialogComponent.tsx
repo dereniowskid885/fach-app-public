@@ -10,11 +10,18 @@ import {
 import Typography from '../common/Typography';
 import { Button } from '../shadcn/button';
 import { ReactNode } from 'react';
+import CloseIcon from '../ui/CloseIcon';
+import { cn } from '@/utils/shared';
 
 export interface IDialogComponent {
   open: boolean;
-  title: string;
+  title?: string;
+  titleClass?: string;
+  headerContent?: ReactNode;
+  headerClass?: string;
   description?: string | ReactNode;
+  showCloseIcon?: boolean;
+  closeIconHandler?: () => void;
   cancelButtonText?: string;
   cancelButtonHandler?: () => void;
   confirmButtonText?: string;
@@ -29,7 +36,12 @@ export interface IDialogComponent {
 export default function DialogComponent({
   open,
   title,
+  titleClass,
+  headerContent,
+  headerClass,
   description,
+  showCloseIcon = false,
+  closeIconHandler,
   cancelButtonText,
   cancelButtonHandler,
   confirmButtonText,
@@ -43,15 +55,31 @@ export default function DialogComponent({
   return (
     <AlertDialog open={open}>
       <AlertDialogContent className={contentClass}>
-        <AlertDialogHeader className="items-center">
-          <AlertDialogTitle>{title}</AlertDialogTitle>
+        <AlertDialogHeader className={cn('items-center space-y-0', headerClass)}>
+          {headerContent}
 
-          <AlertDialogDescription className={`${description ? '' : 'hidden'}`}>
+          <AlertDialogTitle className={cn(title ? '' : 'hidden', titleClass)}>
+            {title}
+          </AlertDialogTitle>
+
+          <AlertDialogDescription className={cn(description ? '' : 'hidden')}>
             {description}
           </AlertDialogDescription>
+
+          {showCloseIcon ? (
+            <CloseIcon
+              className="absolute right-1 top-1"
+              onClick={() => {
+                if (closeIconHandler) closeIconHandler();
+                else cancelButtonHandler?.();
+              }}
+            />
+          ) : null}
         </AlertDialogHeader>
 
-        {content ? content : null}
+        {content ? (
+          <div className="max-h-[70dvh] overflow-y-auto overflow-x-hidden py-4 pr-1">{content}</div>
+        ) : null}
 
         {errorMessage ? (
           <Typography variant="p" className="text-center font-bold text-destructive">

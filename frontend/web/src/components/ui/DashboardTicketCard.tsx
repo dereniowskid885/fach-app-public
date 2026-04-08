@@ -1,11 +1,10 @@
 import Typography from '../common/Typography';
 import { Separator } from '../shadcn/separator';
 import { Clock, Layers, MapPin } from 'lucide-react';
-import { getLocaleDateString } from '@/utils/date';
+import { getFormattedDate, getRelativeTime } from '@/utils/date';
 import { Ticket } from '@/services/api/generated/accountApi';
 import TicketStatusIcon from './TicketStatusIcon';
-import { useLocale } from 'next-intl';
-import DashboardTicketDropdownMenu from './TicketDropdownMenu';
+import TicketDropdownMenu from './TicketDropdownMenu';
 import ContentCard from '../common/ContentCard';
 import UserCard from './UserCard';
 import TicketSummaryInfo from './TicketSummaryInfo';
@@ -13,6 +12,7 @@ import TicketActionButtons from './TicketActionButtons';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { EUserRole } from 'shared-types';
+import { useTranslations } from 'next-intl';
 
 export interface IDashboardTicketCard {
   ticket: Ticket;
@@ -20,7 +20,7 @@ export interface IDashboardTicketCard {
 }
 
 export default function DashboardTicketCard({ ticket, index }: IDashboardTicketCard) {
-  const currentLocale = useLocale();
+  const t = useTranslations();
   const { role, userId } = useSelector(selectUserData);
 
   return (
@@ -56,15 +56,19 @@ export default function DashboardTicketCard({ ticket, index }: IDashboardTicketC
               <div className="flex items-center gap-2">
                 <Clock size={14} strokeWidth={2.5} className="text-tertiary" />
 
-                <Typography variant="note" className="font-bold text-tertiary">
-                  {getLocaleDateString(ticket.updatedAt, currentLocale)}
+                <Typography
+                  variant="note"
+                  className="font-bold text-tertiary"
+                  title={getFormattedDate(ticket.updatedAt)}
+                >
+                  {getRelativeTime(t, ticket.updatedAt)}
                 </Typography>
               </div>
             </>
           ) : null}
 
           <div className="ml-auto">
-            <DashboardTicketDropdownMenu ticket={ticket} />
+            <TicketDropdownMenu ticket={ticket} />
           </div>
         </div>
 
@@ -74,6 +78,7 @@ export default function DashboardTicketCard({ ticket, index }: IDashboardTicketC
           <TicketActionButtons ticket={ticket} role={role} userId={userId} />
 
           <UserCard
+            className="ml-auto"
             user={{
               name: ticket.assignee?.name,
               surname: ticket.assignee?.surname,

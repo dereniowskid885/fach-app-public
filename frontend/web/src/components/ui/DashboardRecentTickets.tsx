@@ -13,8 +13,8 @@ import Link from 'next/link';
 import { Badge } from '../shadcn/badge';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
-import UserBadge from './UserBadge';
-import { EUserBadgeVariant } from '@/enums/ui';
+import IconBadge from './IconBadge';
+import { EIconBadgeVariant } from '@/enums/ui';
 import { isAdmin, isSpecialist } from 'shared-types';
 
 export default function DashboardRecentTickets() {
@@ -50,8 +50,8 @@ export default function DashboardRecentTickets() {
           {isAdmin(role) ? null : isLoadingUserState ? (
             <Skeleton className="h-[22px] w-[40px]" />
           ) : (
-            <UserBadge
-              variant={isSpecialist(role) ? EUserBadgeVariant.CATEGORY : EUserBadgeVariant.CITY}
+            <IconBadge
+              variant={isSpecialist(role) ? EIconBadgeVariant.CATEGORY : EIconBadgeVariant.CITY}
               text={isSpecialist(role) ? categoryName : city}
             />
           )}

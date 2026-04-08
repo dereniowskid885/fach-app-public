@@ -38,11 +38,24 @@ export const enum EActionType {
   CREATION = 'CREATION'
 }
 
-export const enum EUserBadgeVariant {
-  CITY = 'CITY',
-  CATEGORY = 'CATEGORY'
-}
-
 export const enum EFilterButton {
   ALL = 'ALL'
+}
+
+export const enum ESectionItemType {
+  CITY = 'CITY',
+  CATEGORY = 'CATEGORY',
+  USER = 'USER',
+  PRICE = 'PRICE',
+  DATE_OF_RESPONSE = 'DATE_OF_RESPONSE',
+  RESPONSE_TIME = 'RESPONSE_TIME',
+  SPECIALIST = 'SPECIALIST'
+}
+
+export const enum EIconBadgeVariant {
+  CITY = 'CITY',
+  CATEGORY = 'CATEGORY',
+  USER = 'USER',
+  SPECIALIST = 'SPECIALIST',
+  ADMIN = 'ADMIN'
 }

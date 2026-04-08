@@ -1,9 +1,9 @@
-import { Search, X } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Input } from '../shadcn/input';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/utils/shared';
-import { Button } from '../shadcn/button';
 import { ESearchComponentVariant } from '@/enums/ui';
+import CloseIcon from '../ui/CloseIcon';
 
 export interface ISearchComponent {
   variant?: ESearchComponentVariant;
@@ -46,14 +46,10 @@ export default function SearchComponent({
       />
 
       {inputValue ? (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="animation-base animation-idle animation-interactive absolute right-3 top-1/2 h-[24px] w-[24px] -translate-y-1/2 hover:bg-transparent"
+        <CloseIcon
+          className="absolute right-3 top-1/2 -translate-y-1/2"
           onClick={() => inputOnChangeHandler('')}
-        >
-          <X />
-        </Button>
+        />
       ) : null}
     </div>
   );
