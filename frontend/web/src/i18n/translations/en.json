@@ -37,7 +37,10 @@
     "unknownUser": "Unknown user",
     "unknown": "Unknown",
     "city": "City",
-    "category": "Category"
+    "category": "Category",
+    "assignee": "Assignee",
+    "createdBy": "Created by",
+    "send": "Send"
   },
   "userRole": {
     "admin": "Admin",
@@ -237,8 +240,6 @@
     "statusHeader": "Status",
     "categoryHeader": "Category",
     "createdAtHeader": "Creation date",
-    "assigneeHeader": "Assignee",
-    "createdByHeader": "Created by",
     "conversationHeader": "Conversation",
     "cityHeader": "City"
   },
@@ -296,5 +297,21 @@
     "days": "{count, plural, =1 {# day} other {# days}}",
     "hours": "{count, plural, =1 {# hour} other {# hours}}",
     "minutes": "{count, plural, =1 {# minute} other {# minutes}}"
+  },
+  "ticketDetailsDialog": {
+    "createdAt": "Created: {date}",
+    "updatedAt": "Updated: {date}",
+    "detailsSectionTitle": "Details",
+    "descriptionSectionTitle": "Description",
+    "acceptedEvaluationSectionTitle": "Accepted evaluation",
+    "noAcceptedEvaluationText": "Browse the available evaluations submitted by specialists and accept the one that best fits your needs to move forward with your ticket.",
+    "conversationSectionTitle": "Conversation",
+    "addMessageSectionTitle": "Add Message"
+  },
+  "getRelativeTime": {
+    "justNow": "just now",
+    "minutesAgo": "{amount}m ago",
+    "hoursAgo": "{amount}h ago",
+    "minutesAndHoursAgo": "{hours}h {minutes}m ago"
   }
 }
