@@ -19,6 +19,7 @@ import { selectUserData } from '@/redux/slices/UserDataSlice';
 import TicketFormDialog from './TicketFormDialog';
 import { EActionType } from '@/enums/ui';
 import { TicketCancelDialog } from './TicketCancelDialog';
+import TicketDetailsDialog from './TicketDetailsDialog';
 
 export interface ITicketDropdownMenu {
   ticket: Ticket;
@@ -37,6 +38,7 @@ export default function TicketDropdownMenu({ ticket }: ITicketDropdownMenu) {
   const [ticketDeleteDialog, setTicketDeleteDialog] = useState<boolean>(false);
   const [ticketCancelDialog, setTicketCancelDialog] = useState<boolean>(false);
   const [ticketEditDialog, setTicketEditDialog] = useState<boolean>(false);
+  const [ticketDetailsDialog, setTicketDetailsDialog] = useState<boolean>(false);
 
   return ticket._id ? (
     <DropdownMenu modal={false}>
@@ -52,7 +54,10 @@ export default function TicketDropdownMenu({ ticket }: ITicketDropdownMenu) {
 
       <DropdownMenuContent align="end">
         <DropdownMenuGroup>
-          <DropdownMenuItem className="cursor-pointer" onSelect={() => null}>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onSelect={() => setTicketDetailsDialog(true)}
+          >
             <Info size={16} />
 
             {t('ticketDropdownMenu.showDetails')}
@@ -129,6 +134,12 @@ export default function TicketDropdownMenu({ ticket }: ITicketDropdownMenu) {
           mode={EActionType.EDIT}
         />
       ) : null}
+
+      <TicketDetailsDialog
+        open={ticketDetailsDialog}
+        ticket={ticket}
+        closeDialog={() => setTicketDetailsDialog(false)}
+      />
     </DropdownMenu>
   ) : null;
 }

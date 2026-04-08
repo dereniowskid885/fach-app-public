@@ -84,20 +84,18 @@ export const getCreatedAtColumn = (t: TFunction, currentLocale: string) => ({
 export const getAssigneeColumn = (t: TFunction) => ({
   id: 'assignee',
   accessorKey: 'assignee',
-  header: t('ticketDataTable.assigneeHeader'),
+  header: t('common.assignee'),
   cell: (item: CellContext<Ticket, unknown>) => {
     const ticket = item.row.original as Ticket;
 
     return (
-      <div className="flex items-center justify-center">
-        <UserCard
-          user={{
-            name: ticket.assignee?.name,
-            surname: ticket.assignee?.surname,
-            role: ticket.assignee?.role
-          }}
-        />
-      </div>
+      <UserCard
+        user={{
+          name: ticket.assignee?.name,
+          surname: ticket.assignee?.surname,
+          role: ticket.assignee?.role
+        }}
+      />
     );
   }
 });
@@ -179,7 +177,7 @@ export const getCityColumn = (t: TFunction) => ({
 export const getCreatedByColumn = (t: TFunction) => ({
   id: 'createdBy',
   accessorKey: 'createdBy',
-  header: t('ticketDataTable.createdByHeader'),
+  header: t('common.createdBy'),
   cell: (item: CellContext<Ticket, unknown>) => {
     const ticket = item.row.original as Ticket;
 

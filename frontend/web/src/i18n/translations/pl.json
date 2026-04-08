@@ -37,7 +37,10 @@
     "unknownUser": "Nieznany użytkownik",
     "unknown": "Nieznany",
     "city": "Miasto",
-    "category": "Kategoria"
+    "category": "Kategoria",
+    "assignee": "Przypisany",
+    "createdBy": "Twórca",
+    "send": "Wyślij"
   },
   "userRole": {
     "admin": "Admin",
@@ -238,8 +241,6 @@
     "statusHeader": "Status",
     "categoryHeader": "Kategoria",
     "createdAtHeader": "Data utworzenia",
-    "assigneeHeader": "Przypisany",
-    "createdByHeader": "Twórca",
     "conversationHeader": "Konwersacja",
     "cityHeader": "Miasto"
   },
@@ -297,5 +298,21 @@
     "days": "{count, plural, =1 {# dzień} few {# dni} many {# dni} other {# dni}}",
     "hours": "{count, plural, =1 {# godzina} few {# godziny} many {# godzin} other {# godzin}}",
     "minutes": "{count, plural, =1 {# minuta} few {# minuty} many {# minut} other {# minut}}"
+  },
+  "ticketDetailsDialog": {
+    "createdAt": "Utworzono: {date}",
+    "updatedAt": "Zaktualizowano: {date}",
+    "detailsSectionTitle": "Szczegóły",
+    "descriptionSectionTitle": "Opis",
+    "acceptedEvaluationSectionTitle": "Zaakceptowana wycena",
+    "noAcceptedEvaluationText": "Przeglądaj dostępne wyceny przesłane przez specjalistów i zaakceptuj tę, która najlepiej odpowiada Twoim potrzebom, aby kontynuować realizację sprawy.",
+    "conversationSectionTitle": "Konwersacja",
+    "addMessageSectionTitle": "Dodaj wiadomość"
+  },
+  "getRelativeTime": {
+    "justNow": "przed chwilą",
+    "minutesAgo": "{minutes, plural, =1 {# minutę temu} few {# minuty temu} many {# minut temu} other {# minut temu}}",
+    "hoursAgo": "{hours, plural, =1 {# godzinę temu} few {# godziny temu} many {# godzin temu} other {# godzin temu}}",
+    "hoursAndMinutesAgo": "{hours, plural, =1 {# godzinę} few {# godziny} many {# godzin} other {# godzin}} {minutes, plural, =1 {# minutę temu} few {# minuty temu} many {# minut temu} other {# minut temu}}"
   }
 }

@@ -13,8 +13,8 @@ import { getAvailableTicketsColumns } from '@/helpers/dataTableColumns';
 import { DataTable } from '@/components/common/DataTable';
 import { Badge } from '@/components/shadcn/badge';
 import { Skeleton } from '@/components/shadcn/skeleton';
-import UserBadge from '@/components/ui/UserBadge';
-import { EFilterButton, EUserBadgeVariant } from '@/enums/ui';
+import IconBadge from '@/components/ui/IconBadge';
+import { EFilterButton, EIconBadgeVariant } from '@/enums/ui';
 import { notFound } from 'next/navigation';
 import { isSpecialist } from 'shared-types';
 import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
@@ -89,7 +89,7 @@ export default function AvailableTickets() {
         />
 
         {isUserStateInitialized ? (
-          <UserBadge variant={EUserBadgeVariant.CATEGORY} text={categoryName} />
+          <IconBadge variant={EIconBadgeVariant.CATEGORY} text={categoryName} />
         ) : (
           <Skeleton className="h-[22px] w-[80px]" />
         )}

@@ -11,14 +11,16 @@ import {
   usePatchTicketsByIdEditEvaluationMutation,
   Evaluation
 } from '@/services/api/generated/accountApi';
-import { getFormattedPriceAmount, getFormattedResponseTime } from '@/utils/shared';
+import { getFormattedPriceAmount, getFormattedResponseTime, getUserFullName } from '@/utils/shared';
 import { toast } from 'sonner';
 import { useLocale, useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { EActionType, ETimePickerType } from '@/enums/ui';
+import { EActionType, ESectionItemType, ETimePickerType } from '@/enums/ui';
 import { ESupportedCurrency } from 'shared-types';
-import { Calendar, ChartColumn, Clock, DollarSign } from 'lucide-react';
+import { ChartColumn } from 'lucide-react';
 import { getLocaleDateString } from '@/utils/date';
+import ContentSection from '../common/ContentSection';
+import ContentSectionItem from '../common/ContentSectionItem';
 
 export interface ITicketSpecialistEvaluationDialog {
   open: boolean;
@@ -120,70 +122,40 @@ export default function TicketSpecialistEvaluationDialog({
 
   const currentEvaluation =
     mode === EActionType.EDIT ? (
-      <div className="space-y-4 rounded-xl bg-background p-4">
-        <div className="flex gap-2">
-          <ChartColumn size={16} strokeWidth={2.5} className="text-muted-foreground" />
+      <ContentSection
+        title={t('evaluationDialog.currentEvaluationTitle')}
+        Icon={ChartColumn}
+        className="shadow-none"
+      >
+        <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+          <ContentSectionItem
+            title={t('evaluation.responseTime')}
+            description={getFormattedResponseTime(currentUserEvaluation?.minutes, t)}
+            variant={ESectionItemType.RESPONSE_TIME}
+          />
 
-          <Typography variant="note-wide">
-            {t('evaluationDialog.currentEvaluationTitle')}
-          </Typography>
+          <ContentSectionItem
+            title={t('evaluation.dateOfResponse')}
+            description={getLocaleDateString(currentUserEvaluation?.dateOfResponse, currentLocale)}
+            variant={ESectionItemType.DATE_OF_RESPONSE}
+          />
+
+          <ContentSectionItem
+            title={t('evaluationDialog.currentEvaluationPrice')}
+            description={getFormattedPriceAmount(
+              currentUserEvaluation?.price?.amountInCents,
+              currentUserEvaluation?.price?.currency
+            )}
+            variant={ESectionItemType.PRICE}
+          />
+
+          <ContentSectionItem
+            title={t('userRole.specialist')}
+            description={getUserFullName(currentUserEvaluation?.user)}
+            variant={ESectionItemType.SPECIALIST}
+          />
         </div>
-
-        <div className="space-y-3">
-          <div className="flex gap-12">
-            <div className="flex items-center gap-3">
-              <div className="mr-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-blue-200 bg-blue-50">
-                <Clock size={12} className="text-blue-600" />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <Typography variant="note" className="text-nowrap font-bold">
-                  {t('evaluation.responseTime')}
-                </Typography>
-
-                <Typography variant="note" className="font-semibold text-muted-foreground">
-                  {getFormattedResponseTime(currentUserEvaluation?.minutes, t)}
-                </Typography>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="mr-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-blue-200 bg-blue-50">
-                <Calendar size={12} className="text-blue-600" />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <Typography variant="note" className="text-nowrap font-bold">
-                  {t('evaluation.dateOfResponse')}
-                </Typography>
-
-                <Typography variant="note" className="font-semibold text-muted-foreground">
-                  {getLocaleDateString(currentUserEvaluation?.dateOfResponse, currentLocale)}
-                </Typography>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="mr-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-emerald-200 bg-emerald-50">
-              <DollarSign size={12} className="text-emerald-600" />
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <Typography variant="note" className="text-nowrap font-bold">
-                {t('evaluationDialog.currentEvaluationPrice')}
-              </Typography>
-
-              <Typography variant="note" className="font-semibold text-muted-foreground">
-                {getFormattedPriceAmount(
-                  currentUserEvaluation?.price?.amountInCents,
-                  currentUserEvaluation?.price?.currency
-                )}
-              </Typography>
-            </div>
-          </div>
-        </div>
-      </div>
+      </ContentSection>
     ) : null;
 
   const ticketEvaluationForm = (
@@ -277,11 +249,11 @@ export default function TicketSpecialistEvaluationDialog({
       isLoadingConfirmButton={isLoading}
       cancelButtonHandler={closeDialog}
       content={
-        <>
+        <div className="space-y-8">
           {currentEvaluation}
 
           {ticketEvaluationForm}
-        </>
+        </div>
       }
       errorMessage={errorMessage}
       confirmButtonDisabled={!!errorMessage}

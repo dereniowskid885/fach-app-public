@@ -150,6 +150,7 @@ export default function TicketFormDialog({
             setSelectedCategory={setTicketCategory}
           />
         </div>
+
         <div className="flex flex-col space-y-1.5">
           <Label htmlFor="title">{t('ticketFormDialog.titleFormLabel')}</Label>
 
@@ -168,6 +169,7 @@ export default function TicketFormDialog({
             required
           />
         </div>
+
         <div className="flex flex-col space-y-1.5">
           <Label htmlFor="description">{t('ticketFormDialog.descriptionFormLabel')}</Label>
 
@@ -180,7 +182,7 @@ export default function TicketFormDialog({
               }
             })}
             id="description"
-            className="min-h-60 resize-none"
+            className="min-h-80 resize-none"
             minLength={7}
             maxLength={descriptionMaxLength}
             required
@@ -197,6 +199,7 @@ export default function TicketFormDialog({
   return (
     <DialogComponent
       open={open}
+      contentClass="max-w-5xl"
       title={t(`ticketFormDialog.title.${mode.toLowerCase()}`)}
       cancelButtonText={t('common.cancel')}
       confirmButtonText={t('common.confirm')}

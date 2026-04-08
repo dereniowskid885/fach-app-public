@@ -15,8 +15,8 @@ import { getMyTicketsColumns } from '@/helpers/dataTableColumns';
 import { DataTable } from '@/components/common/DataTable';
 import { Badge } from '@/components/shadcn/badge';
 import { Skeleton } from '@/components/shadcn/skeleton';
-import UserBadge from '@/components/ui/UserBadge';
-import { EFilterButton, EUserBadgeVariant } from '@/enums/ui';
+import IconBadge from '@/components/ui/IconBadge';
+import { EFilterButton, EIconBadgeVariant } from '@/enums/ui';
 import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
 import { notFound } from 'next/navigation';
 import { getMyTicketsStatusFilters } from '@/helpers/ticketStatusFilter';
@@ -30,7 +30,7 @@ export default function MyTickets() {
   } = useSelector(selectUserData);
 
   const isInvalidRole =
-    isUserStateInitialized && !isRoleAllowed(role, [EUserRole.SPECIALIST, EUserRole.USER]);
+    isUserStateInitialized && !isRoleAllowed([EUserRole.SPECIALIST, EUserRole.USER], role);
   if (isInvalidRole) {
     notFound();
   }
@@ -91,10 +91,10 @@ export default function MyTickets() {
 
         {isUserStateInitialized ? (
           <div className="space-x-2">
-            {isUser(role) ? <UserBadge variant={EUserBadgeVariant.CITY} text={city} /> : null}
+            {isUser(role) ? <IconBadge variant={EIconBadgeVariant.CITY} text={city} /> : null}
 
             {isSpecialist(role) ? (
-              <UserBadge variant={EUserBadgeVariant.CATEGORY} text={categoryName} />
+              <IconBadge variant={EIconBadgeVariant.CATEGORY} text={categoryName} />
             ) : null}
           </div>
         ) : (
