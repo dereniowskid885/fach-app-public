@@ -8,8 +8,8 @@ import SearchComponent from '@/components/common/SearchComponent';
 import { Badge } from '@/components/shadcn/badge';
 import { Skeleton } from '@/components/shadcn/skeleton';
 import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
-import UserBadge from '@/components/ui/UserBadge';
-import { EFilterButton, EUserBadgeVariant } from '@/enums/ui';
+import IconBadge from '@/components/ui/IconBadge';
+import { EFilterButton, EIconBadgeVariant } from '@/enums/ui';
 import { getMyTicketsColumns } from '@/helpers/dataTableColumns';
 import { getCompletedTicketsStatusFilters } from '@/helpers/ticketStatusFilter';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
@@ -89,10 +89,10 @@ export default function CompletedTickets() {
 
         {isUserStateInitialized ? (
           <div className="space-x-2">
-            {isUser(role) ? <UserBadge variant={EUserBadgeVariant.CITY} text={city} /> : null}
+            {isUser(role) ? <IconBadge variant={EIconBadgeVariant.CITY} text={city} /> : null}
 
             {isSpecialist(role) ? (
-              <UserBadge variant={EUserBadgeVariant.CATEGORY} text={categoryName} />
+              <IconBadge variant={EIconBadgeVariant.CATEGORY} text={categoryName} />
             ) : null}
           </div>
         ) : (

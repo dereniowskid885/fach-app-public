@@ -7,8 +7,8 @@ import SearchComponent from '@/components/common/SearchComponent';
 import { Badge } from '@/components/shadcn/badge';
 import { Skeleton } from '@/components/shadcn/skeleton';
 import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
-import UserBadge from '@/components/ui/UserBadge';
-import { EFilterButton, EUserBadgeVariant } from '@/enums/ui';
+import IconBadge from '@/components/ui/IconBadge';
+import { EFilterButton, EIconBadgeVariant } from '@/enums/ui';
 import { getAvailableTicketsColumns } from '@/helpers/dataTableColumns';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
@@ -72,7 +72,7 @@ export default function MyEvaluations() {
         />
 
         {isUserStateInitialized ? (
-          <UserBadge variant={EUserBadgeVariant.CATEGORY} text={categoryName} />
+          <IconBadge variant={EIconBadgeVariant.CATEGORY} text={categoryName} />
         ) : (
           <Skeleton className="h-[22px] w-[80px]" />
         )}
