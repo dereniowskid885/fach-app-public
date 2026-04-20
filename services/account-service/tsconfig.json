@@ -14,6 +14,7 @@
       "@aggregations/*": ["./aggregations/*"],
       "@controllers/*": ["./controllers/*"],
       "@helpers/*": ["./helpers/*"],
+      "@services/*": ["./services/*"],
       "@managers/*": ["./managers/*"],
       "@models/*": ["./models/*"],
       "@routes/*": ["./routes/*"],

@@ -1,5 +1,5 @@
 import swaggerJsDoc from 'swagger-jsdoc';
-import { ROUTES } from '../constants/routeConstants';
+import { ROUTES } from './routeConstants';
 import { SWAGGER_ROUTES } from 'shared-types';
 
 const swaggerConfig = {
