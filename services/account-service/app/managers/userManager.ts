@@ -1,7 +1,7 @@
 import { safeUserProjection } from '@constants/projections';
 import { CategoryManager } from './categoryManager';
 import User, { IUserModel } from '@models/User';
-import { printMongooseValidationErrors } from '@helpers/printMongooseValidationErrors';
+import { printMongooseValidationErrors } from '@helpers/mongoose';
 import mongoose, { FilterQuery, Error as MongooseError } from 'mongoose';
 import { IUpdateUserData } from '@interfaces/user';
 import { JwtPayload } from 'jsonwebtoken';
