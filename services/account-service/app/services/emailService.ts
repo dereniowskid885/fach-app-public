@@ -1,5 +1,5 @@
 import { Logger } from 'shared-backend';
-import { transporter } from './transporter';
+import { nodemailerTransporter } from '../utils/nodemailerTransporter';
 import { AppError } from 'shared-backend';
 import { EResponseStatus } from 'shared-types';
 
@@ -12,7 +12,7 @@ export interface IEmailOptions {
 export const sendMail = async (options: IEmailOptions) => {
   const { email, subject, html } = options;
 
-  await transporter
+  await nodemailerTransporter
     .sendMail({
       from: process.env.APP_NAME,
       to: email,

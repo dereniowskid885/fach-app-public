@@ -15,6 +15,16 @@ export const createTicket = async (req: Request, res: Response) => {
   }
 };
 
+export const createTicketComment = async (req: Request, res: Response) => {
+  try {
+    const comment = await TicketManager.createTicketComment(req.user, req.params.id as string, req.body);
+
+    return res.status(200).json({ success: true, message: 'Ticket comment created successfully', data: comment });
+  } catch (err) {
+    handleAppError(res, err as IAppError);
+  }
+};
+
 export const getTickets = async (req: Request, res: Response) => {
   try {
     const filter = FilterBuilder.getTickets(req);
@@ -84,6 +94,16 @@ export const getTicketByID = async (req: Request, res: Response) => {
   }
 };
 
+export const getTicketComments = async (req: Request, res: Response) => {
+  try {
+    const comments = await TicketManager.getTicketComments(req.user, req.params.id as string);
+
+    return res.status(200).json({ success: true, dataLength: comments.length, data: comments });
+  } catch (err) {
+    handleAppError(res, err as IAppError);
+  }
+};
+
 export const updateTicket = async (req: Request, res: Response) => {
   try {
     const ticket = await TicketManager.updateTicket(req.params.id as string, req.body, req.user);
@@ -99,6 +119,16 @@ export const deleteTicket = async (req: Request, res: Response) => {
     await TicketManager.deleteTicket(req.params.id as string);
 
     return res.status(200).json({ success: true, message: 'Ticket deleted successfully' });
+  } catch (err) {
+    handleAppError(res, err as IAppError);
+  }
+};
+
+export const deleteTicketComment = async (req: Request, res: Response) => {
+  try {
+    await TicketManager.deleteTicketComment(req.user, req.params.id as string);
+
+    return res.status(200).json({ success: true, message: 'Ticket comment deleted successfully' });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }

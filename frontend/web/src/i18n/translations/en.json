@@ -40,7 +40,8 @@
     "category": "Category",
     "assignee": "Assignee",
     "createdBy": "Created by",
-    "send": "Send"
+    "send": "Send",
+    "charsAmount": "{amount} characters remaining"
   },
   "userRole": {
     "admin": "Admin",
@@ -182,7 +183,6 @@
     },
     "titleFormLabel": "Title",
     "descriptionFormLabel": "Description",
-    "descriptionCharsAmount": "{amount} characters remaining",
     "errorMissingCategory": "Please select ticket category",
     "errorInvalidCategory": "Invalid category, please select other one.",
     "errorTitleRequired": "Title cannot be empty",
@@ -197,6 +197,10 @@
   "ticketDeleteDialog": {
     "title": "Are you sure you want to delete this ticket?",
     "toastTitle": "Ticket successfully deleted"
+  },
+  "ticketCommentDeleteDialog": {
+    "title": "Are you sure you want to delete this comment?",
+    "toastTitle": "Comment deleted successfully"
   },
   "ticketPaymentDialog": {
     "title": "Enter payment details"
@@ -252,11 +256,14 @@
   "ticketSpecialistActionButtons": {
     "reply": "Reply",
     "editEvaluation": "Edit evaluation",
-    "evaluate": "Evaluate"
+    "evaluate": "Evaluate",
+    "sendForReview": "Send for review"
   },
   "ticketUserActionButtons": {
     "pay": "Pay",
-    "showEvaluations": "Show evaluations"
+    "addComment": "Comment",
+    "showEvaluations": "Show evaluations",
+    "solutionReview": "Resolve the ticket"
   },
   "ticketDropdownMenu": {
     "showDetails": "Show details"
@@ -304,14 +311,32 @@
     "detailsSectionTitle": "Details",
     "descriptionSectionTitle": "Description",
     "acceptedEvaluationSectionTitle": "Accepted evaluation",
-    "noAcceptedEvaluationText": "Browse the available evaluations submitted by specialists and accept the one that best fits your needs to move forward with your ticket.",
     "conversationSectionTitle": "Conversation",
-    "addMessageSectionTitle": "Add Message"
+    "noCommentsText": "No comments yet. Be the first!",
+    "addMessageSectionTitle": "Add Message",
+    "toastTitle": {
+      "comment": "Comment added",
+      "sendForReview": "Ticket has been sent for solution review",
+      "solutionAccept": "Great, glad your issue is resolved! The ticket has been closed.",
+      "moderatorInvestigation": "Your ticket has been sent for moderator review. We will look into the issue and get back to you shortly."
+    },
+    "noAcceptedEvaluationText": {
+      "user": "Browse the available evaluations submitted by specialists and accept the one that best fits your needs to move forward with your ticket.",
+      "admin": "No evaluation has been accepted yet.",
+      "specialist": "Submit your evaluation or update your existing one to help the user move forward with their ticket."
+    }
   },
   "getRelativeTime": {
     "justNow": "just now",
-    "minutesAgo": "{amount}m ago",
-    "hoursAgo": "{amount}h ago",
+    "minutesAgo": "{minutes}m ago",
+    "hoursAgo": "{hours}h ago",
     "minutesAndHoursAgo": "{hours}h {minutes}m ago"
+  },
+  "ticketSolutionReviewDialog": {
+    "title": "How would you like to close the ticket?",
+    "resolvedTitle": "Accept the solution",
+    "resolvedDescription": "The specialist has resolved your issue. Click to close the ticket and release the payment to the specialist.",
+    "reportIssueTitle": "Report an issue",
+    "reportIssueDescription": "Not satisfied with the solution? Escalate the case to a moderator who will look into the situation."
   }
 }

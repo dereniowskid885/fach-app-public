@@ -7,7 +7,7 @@ import { LoadingSpinner } from '../shadcn/loading-spinner';
 import { Skeleton } from '../shadcn/skeleton';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import DashboardTicketCard from './DashboardTicketCard';
+import TicketCard from './TicketCard';
 import { TICKETS_PATH } from '@/constants/routes';
 import Link from 'next/link';
 import { Badge } from '../shadcn/badge';
@@ -83,7 +83,7 @@ export default function DashboardRecentTickets() {
       ) : (
         <div className="grid grid-cols-2 gap-3">
           {userTickets.map((ticket, i) => (
-            <DashboardTicketCard key={ticket._id} index={i} ticket={ticket} />
+            <TicketCard key={ticket._id} index={i} ticket={ticket} />
           ))}
         </div>
       )}

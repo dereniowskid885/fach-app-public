@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const transporter = nodemailer.createTransport({
+export const nodemailerTransporter = nodemailer.createTransport({
   // @ts-expect-error - nodemailer irrelevant type error
   host: process.env.SMTP_HOST ?? 'smtp.gmail.com',
   port: process.env.SMTP_PORT ?? '465',

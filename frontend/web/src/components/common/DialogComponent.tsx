@@ -28,6 +28,7 @@ export interface IDialogComponent {
   confirmButtonHandler?: () => void;
   confirmButtonDisabled?: boolean;
   isLoadingConfirmButton?: boolean;
+  customConfirmButton?: ReactNode;
   errorMessage?: string;
   content?: ReactNode;
   contentClass?: string;
@@ -48,6 +49,7 @@ export default function DialogComponent({
   confirmButtonHandler,
   confirmButtonDisabled,
   isLoadingConfirmButton,
+  customConfirmButton,
   errorMessage,
   content,
   contentClass
@@ -94,7 +96,9 @@ export default function DialogComponent({
             </AlertDialogCancel>
           ) : null}
 
-          {confirmButtonHandler && confirmButtonText ? (
+          {customConfirmButton ? (
+            customConfirmButton
+          ) : confirmButtonHandler && confirmButtonText ? (
             <Button
               loading={isLoadingConfirmButton}
               onClick={confirmButtonHandler}

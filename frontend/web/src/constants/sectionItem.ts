@@ -1,5 +1,5 @@
 import { ESectionItemType } from '@/enums/ui';
-import { Calendar, Clock, DollarSign, Layers, MapPin, User, Wrench } from 'lucide-react';
+import { Calendar, Clock, DollarSign, Layers, MapPin, Search, User, Wrench } from 'lucide-react';
 import { EUserRole } from 'shared-types/enums/role';
 import { roleObj } from './role';
 
@@ -27,6 +27,12 @@ export const sectionItemObj = {
     iconWrapperClass: roleObj[EUserRole.SPECIALIST].wrapperClass,
     iconClass: roleObj[EUserRole.SPECIALIST].textClass,
     icon: Wrench
+  },
+  [ESectionItemType.ADMIN]: {
+    variantName: 'admin',
+    iconWrapperClass: roleObj[EUserRole.ADMIN].wrapperClass,
+    iconClass: roleObj[EUserRole.ADMIN].textClass,
+    icon: Search
   },
   [ESectionItemType.DATE_OF_RESPONSE]: {
     variantName: 'dateOfResponse',
