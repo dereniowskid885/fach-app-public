@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { useGetTicketsSpecialistAvailableQuery } from '@/services/api/generated/accountApi';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import PageHeader from '@/components/common/PageHeader';
-import { getAvailableTicketsColumns } from '@/helpers/dataTableColumns';
+import { getAvailableTicketsColumns } from '@/helpers/dataTable';
 import { DataTable } from '@/components/common/DataTable';
 import { Badge } from '@/components/shadcn/badge';
 import { Skeleton } from '@/components/shadcn/skeleton';

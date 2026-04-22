@@ -11,7 +11,7 @@ import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useSelector } from 'react-redux';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import PageHeader from '@/components/common/PageHeader';
-import { getMyTicketsColumns } from '@/helpers/dataTableColumns';
+import { getMyTicketsColumns } from '@/helpers/dataTable';
 import { DataTable } from '@/components/common/DataTable';
 import { Badge } from '@/components/shadcn/badge';
 import { Skeleton } from '@/components/shadcn/skeleton';
@@ -19,7 +19,7 @@ import IconBadge from '@/components/ui/IconBadge';
 import { EFilterButton, EIconBadgeVariant } from '@/enums/ui';
 import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
 import { notFound } from 'next/navigation';
-import { getMyTicketsStatusFilters } from '@/helpers/ticketStatusFilter';
+import { getMyTicketsStatusFilters } from '@/helpers/ticket';
 
 export default function MyTickets() {
   const {

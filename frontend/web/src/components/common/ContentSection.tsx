@@ -34,7 +34,7 @@ export default function ContentSection({
 
           {title ? <Typography variant="note-wide">{title}</Typography> : null}
 
-          {amount ? (
+          {amount !== undefined ? (
             <Badge variant="amount" className="px-2 text-xs">
               {amount}
             </Badge>
