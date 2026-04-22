@@ -46,10 +46,11 @@ export const enum ESectionItemType {
   CITY = 'CITY',
   CATEGORY = 'CATEGORY',
   USER = 'USER',
+  SPECIALIST = 'SPECIALIST',
+  ADMIN = 'ADMIN',
   PRICE = 'PRICE',
   DATE_OF_RESPONSE = 'DATE_OF_RESPONSE',
-  RESPONSE_TIME = 'RESPONSE_TIME',
-  SPECIALIST = 'SPECIALIST'
+  RESPONSE_TIME = 'RESPONSE_TIME'
 }
 
 export const enum EIconBadgeVariant {
