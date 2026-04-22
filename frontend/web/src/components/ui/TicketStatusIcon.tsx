@@ -3,7 +3,7 @@ import {
   getTicketStatusColorClasses,
   getTicketStatusIcon,
   getTicketStatusTranslationKey
-} from '@/utils/ticket';
+} from '@/helpers/ticket';
 import { cn } from '@/utils/shared';
 import Typography from '../common/Typography';
 import { ETicketStatus } from 'shared-types';
