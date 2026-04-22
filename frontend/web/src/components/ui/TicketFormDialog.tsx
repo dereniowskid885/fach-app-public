@@ -189,7 +189,7 @@ export default function TicketFormDialog({
           />
 
           <Typography variant="note" className="text-right text-muted-foreground">
-            {t('ticketFormDialog.descriptionCharsAmount', { amount: descriptionCharsLeft })}
+            {t('common.charsAmount', { amount: descriptionCharsLeft })}
           </Typography>
         </div>
       </div>

@@ -10,7 +10,7 @@ import { RowSelectionState } from '@tanstack/react-table';
 import { toast } from 'sonner';
 import { useLocale, useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { getEvaluationsListDialogColumns } from '@/helpers/dataTableColumns';
+import { getEvaluationsListDialogColumns } from '@/helpers/dataTable';
 
 export interface ITicketUserEvaluationsListDialog {
   open: boolean;
