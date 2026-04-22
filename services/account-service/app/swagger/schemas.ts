@@ -154,6 +154,42 @@
  *             $ref: '#/components/schemas/Evaluation'
  *         acceptedEvaluation:
  *           $ref: '#/components/schemas/Evaluation'
+ *         commentsCount:
+ *           type: number
+ *           example: 0
+ *         specialistCommentsCount:
+ *           type: number
+ *           example: 0
+ *     Comment:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "64f3b12a6f4c1e9d3a7b5678"
+ *         user:
+ *           $ref: '#/components/schemas/User'
+ *         userRole:
+ *           $ref: '#/components/schemas/UserRole'
+ *         ticket:
+ *           $ref: '#/components/schemas/Ticket'
+ *         content:
+ *           type: string
+ *           example: "This is a comment on the ticket"
+ *         attachments:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example:
+ *             - "https://cdn.com/attachment1.jpg"
+ *             - "https://cdn.com/attachment2.pdf"
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2023-12-25T10:00:00Z"
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2023-12-25T10:00:00Z"
  *     Payment:
  *       type: object
  *       properties:
@@ -179,4 +215,5 @@
  *           type: string
  *           format: date-time
  *           example: "2023-12-25T10:00:00Z"
+ *
  */
