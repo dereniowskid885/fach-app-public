@@ -1,13 +1,14 @@
 import Ticket, { ITicketModel } from '@models/Ticket';
+import Comment from '@models/Comment';
 import { JwtPayload } from 'jsonwebtoken';
 import { CategoryManager } from './categoryManager';
 import { UserManager } from './userManager';
 import { FilterQuery } from 'mongoose';
 import { IEvaluationSchema } from '@schemas/evaluationSchema';
 import { safeUserProjection } from '@constants/projections';
-import { checkTicketStatusTransition } from '@helpers/checkTicketStatusTransition';
 import { AppError } from 'shared-backend';
-import { EResponseStatus, ESupportedCurrency, ETicketStatus, isAdmin } from 'shared-types';
+import { EResponseStatus, ESupportedCurrency, ETicketStatus, isAdmin, isSpecialist } from 'shared-types';
+import { canDeleteTicketComment, canViewTicketComments, checkTicketStatusTransition } from '@helpers/ticket';
 
 export const TicketManager = {
   getTicketByID: async (ticketId: string) => {
@@ -93,11 +94,7 @@ export const TicketManager = {
   deleteTicket: async (ticketId: string) => {
     const ticket = await TicketManager.getTicketByID(ticketId);
 
-    if (!ticket) {
-      throw new AppError(404, EResponseStatus.ERROR_TICKET_NOT_FOUND, 'Ticket with provided id not found');
-    }
-
-    await Ticket.deleteOne({ _id: ticketId });
+    await ticket.deleteOne();
   },
   ticketEvaluationHandler: async (
     ticketId: string,
@@ -155,9 +152,7 @@ export const TicketManager = {
 
     const ticket = await TicketManager.getTicketByID(ticketId);
 
-    const isEligibleForEvaluation = checkTicketStatusTransition(ticket.status, ETicketStatus.AWAITING_PAYMENT);
-
-    if (!isEligibleForEvaluation) {
+    if (ticket.status !== ETicketStatus.AWAITING_EVALUATION) {
       throw new AppError(
         400,
         EResponseStatus.ERROR_TICKET_INVALID_STATUS,
@@ -211,9 +206,10 @@ export const TicketManager = {
     // TODO: modify while doing superadmin role ticket
     // https://github.com/dereniowskid885/fach-app/issues/7
     const isAdminRole = isAdmin(user.role);
+    const isSpecialistRole = isSpecialist(user.role);
     const isOwner = user.userId === ticket.createdBy.id.toString();
 
-    if (!isAdminRole && !isOwner) {
+    if (!isAdminRole && !isSpecialistRole && !isOwner) {
       throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'Not enough permissions to update ticket');
     }
 
@@ -223,9 +219,9 @@ export const TicketManager = {
 
     const { city, assigneeId } = updateData;
 
-    const hasAdminOnlyFields = city !== undefined || assigneeId !== undefined;
+    const isAdminOnlyFields = city !== undefined || assigneeId !== undefined;
 
-    if (!isAdminRole && hasAdminOnlyFields) {
+    if (!isAdminRole && isAdminOnlyFields) {
       throw new AppError(
         403,
         EResponseStatus.ERROR_USER_INVALID_ROLE,
@@ -233,11 +229,8 @@ export const TicketManager = {
       );
     }
 
-    if (hasAdminOnlyFields) {
-      if (city !== undefined) {
-        ticket.city = city;
-      }
-
+    if (isAdminOnlyFields) {
+      if (city !== undefined) ticket.city = city;
       if (assigneeId !== undefined) {
         const assignee = await UserManager.getUserById(assigneeId);
 
@@ -247,41 +240,20 @@ export const TicketManager = {
 
     const { title, description, categoryId, status } = updateData;
 
-    const isInvalidUpdate = !isAdminRole && ticket.status !== ETicketStatus.AWAITING_EVALUATION;
+    const isEditableFields = title !== undefined || description !== undefined || categoryId !== undefined;
+    const isInvalidUpdate = !isAdminRole && (!isOwner || ticket.status !== ETicketStatus.AWAITING_EVALUATION);
 
-    if (title !== undefined) {
-      if (isInvalidUpdate) {
-        throw new AppError(
-          400,
-          EResponseStatus.ERROR_TICKET_INVALID_STATUS,
-          'Ticket title cannot be updated in current status',
-        );
-      }
-
-      ticket.title = title;
+    if (isEditableFields && isInvalidUpdate) {
+      throw new AppError(
+        400,
+        EResponseStatus.ERROR_TICKET_INVALID_STATUS,
+        'Ticket cannot be updated in current status',
+      );
     }
 
-    if (description !== undefined) {
-      if (isInvalidUpdate) {
-        throw new AppError(
-          400,
-          EResponseStatus.ERROR_TICKET_INVALID_STATUS,
-          'Ticket description cannot be updated in current status',
-        );
-      }
-
-      ticket.description = description;
-    }
-
+    if (title !== undefined) ticket.title = title;
+    if (description !== undefined) ticket.description = description;
     if (categoryId !== undefined) {
-      if (isInvalidUpdate) {
-        throw new AppError(
-          400,
-          EResponseStatus.ERROR_TICKET_INVALID_STATUS,
-          'Ticket category cannot be updated in current status',
-        );
-      }
-
       const category = await CategoryManager.getCategoryById(categoryId);
 
       // TODO: sent notification to specialists who evaluated the ticket
@@ -290,14 +262,19 @@ export const TicketManager = {
     }
 
     if (status !== undefined) {
-      const isTicketCancellation =
-        ticket.status === ETicketStatus.AWAITING_EVALUATION && status === ETicketStatus.CANCELED;
-
-      if (isAdminRole || isTicketCancellation) {
-        ticket.status = status;
-      } else {
+      if (!checkTicketStatusTransition(ticket.status, status, user.role)) {
         throw new AppError(400, EResponseStatus.ERROR_TICKET_INVALID_STATUS, 'Wrong ticket status transition');
       }
+
+      if (status === ETicketStatus.SOLUTION_REVIEW && ticket.specialistCommentsCount === 0) {
+        throw new AppError(
+          400,
+          EResponseStatus.ERROR_TICKET_INVALID_STATUS,
+          'Specialist must comment before submitting for review',
+        );
+      }
+
+      ticket.status = status;
     }
 
     ticket.updatedBy = user.userId;
@@ -373,9 +350,7 @@ export const TicketManager = {
       );
     }
 
-    const isValidStatus = checkTicketStatusTransition(ticket.status, ETicketStatus.IN_PROGRESS);
-
-    if (!isValidStatus) {
+    if (ticket.status !== ETicketStatus.AWAITING_PAYMENT) {
       throw new AppError(
         400,
         EResponseStatus.ERROR_TICKET_INVALID_STATUS,
@@ -398,5 +373,73 @@ export const TicketManager = {
     ticket.status = ETicketStatus.IN_PROGRESS;
 
     await ticket.save();
+  },
+  createTicketComment: async (
+    user: JwtPayload,
+    ticketId: string,
+    commentData: {
+      content: string;
+      attachments: string[];
+    },
+  ) => {
+    if (!user) {
+      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
+    }
+
+    const ticket = await TicketManager.getTicketByID(ticketId);
+
+    const hasAccessToComments = canViewTicketComments(user, ticket);
+
+    if (!hasAccessToComments) {
+      throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'You cannot create a ticket comment');
+    }
+
+    const { content, attachments } = commentData;
+
+    const comment = new Comment({
+      user: user.userId,
+      userRole: user.role,
+      ticket: ticket._id,
+      content,
+      attachments,
+    });
+
+    await comment.save();
+
+    return comment;
+  },
+  deleteTicketComment: async (user: JwtPayload, commentId: string) => {
+    if (!user) {
+      throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
+    }
+
+    const comment = await Comment.findById({ _id: commentId }).populate('user');
+
+    if (!comment) {
+      throw new AppError(404, EResponseStatus.ERROR_INVALID_DATA, 'Comment does not exist');
+    }
+
+    const isEligibleToDelete = canDeleteTicketComment(user, comment);
+
+    if (!isEligibleToDelete) {
+      throw new AppError(403, EResponseStatus.ERROR_USER_INVALID_ROLE, 'You cannot delete this ticket comment');
+    }
+
+    await comment.deleteOne();
+  },
+  getTicketComments: async (user: JwtPayload, ticketId: string) => {
+    const ticket = await TicketManager.getTicketByID(ticketId);
+
+    const hasAccessToComments = canViewTicketComments(user, ticket);
+
+    if (!hasAccessToComments) {
+      return [];
+    }
+
+    const comments = await Comment.find({ ticket: ticket._id })
+      .sort({ createdAt: 1 })
+      .populate([{ path: 'user', select: safeUserProjection }, { path: 'ticket' }]);
+
+    return comments;
   },
 };

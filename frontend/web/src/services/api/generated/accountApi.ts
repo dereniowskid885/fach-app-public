@@ -1,5 +1,11 @@
 import { api } from '../services/account-service/index';
-export const addTagTypes = ['Authentication', 'Categories', 'Ticketing', 'Users'] as const;
+export const addTagTypes = [
+  'Authentication',
+  'Categories',
+  'Ticketing',
+  'Comments',
+  'Users'
+] as const;
 const injectedRtkApi = api
   .enhanceEndpoints({
     addTagTypes
@@ -144,6 +150,24 @@ const injectedRtkApi = api
         }),
         providesTags: ['Ticketing']
       }),
+      postTicketsByIdComments: build.mutation<
+        PostTicketsByIdCommentsApiResponse,
+        PostTicketsByIdCommentsApiArg
+      >({
+        query: queryArg => ({
+          url: `/tickets/${queryArg.id}/comments`,
+          method: 'POST',
+          body: queryArg.body
+        }),
+        invalidatesTags: ['Comments']
+      }),
+      getTicketsByIdComments: build.query<
+        GetTicketsByIdCommentsApiResponse,
+        GetTicketsByIdCommentsApiArg
+      >({
+        query: queryArg => ({ url: `/tickets/${queryArg.id}/comments` }),
+        providesTags: ['Comments']
+      }),
       postTicketsByIdPayment: build.mutation<
         PostTicketsByIdPaymentApiResponse,
         PostTicketsByIdPaymentApiArg
@@ -216,6 +240,13 @@ const injectedRtkApi = api
           body: queryArg.body
         }),
         invalidatesTags: ['Ticketing']
+      }),
+      deleteTicketsCommentById: build.mutation<
+        DeleteTicketsCommentByIdApiResponse,
+        DeleteTicketsCommentByIdApiArg
+      >({
+        query: queryArg => ({ url: `/tickets/comment/${queryArg.id}`, method: 'DELETE' }),
+        invalidatesTags: ['Comments']
       }),
       patchTicketsByIdEvaluation: build.mutation<
         PatchTicketsByIdEvaluationApiResponse,
@@ -505,6 +536,32 @@ export type GetTicketsApiArg = {
   /** Filter by author (userId) */
   createdBy?: string;
 };
+export type PostTicketsByIdCommentsApiResponse =
+  /** status 200 Ticket comment created successfully */ {
+    success?: boolean;
+    message?: string;
+    data?: Comment;
+  };
+export type PostTicketsByIdCommentsApiArg = {
+  /** Unique ID of the ticket */
+  id: string;
+  body: {
+    /** Content of the comment */
+    content: string;
+    /** Array of attachment URLs */
+    attachments?: string[];
+  };
+};
+export type GetTicketsByIdCommentsApiResponse =
+  /** status 200 Successfully retrieved ticket comments */ {
+    success?: boolean;
+    dataLength?: number;
+    data?: Comment[];
+  };
+export type GetTicketsByIdCommentsApiArg = {
+  /** Unique ID of the ticket */
+  id: string;
+};
 export type PostTicketsByIdPaymentApiResponse = /** status 200 Ticket payment successfull */ {
   success?: boolean;
   message?: string;
@@ -609,6 +666,14 @@ export type PatchTicketsByIdApiArg = {
     /** User ID of the assignee */
     assigneeId?: string;
   };
+};
+export type DeleteTicketsCommentByIdApiResponse = /** status 200 Comment deleted successfully */ {
+  success?: boolean;
+  message?: string;
+};
+export type DeleteTicketsCommentByIdApiArg = {
+  /** Unique ID of the comment */
+  id: string;
 };
 export type PatchTicketsByIdEvaluationApiResponse =
   /** status 200 Ticket evaluated successfully */ {
@@ -799,6 +864,18 @@ export type Ticket = {
   description?: string;
   evaluations?: Evaluation[];
   acceptedEvaluation?: Evaluation;
+  commentsCount?: number;
+  specialistCommentsCount?: number;
+};
+export type Comment = {
+  _id?: string;
+  user?: User;
+  userRole?: UserRole;
+  ticket?: Ticket;
+  content?: string;
+  attachments?: string[];
+  createdAt?: string;
+  updatedAt?: string;
 };
 export type PaymentStatus = 'pending' | 'succeeded' | 'failed' | 'canceled' | 'refunded';
 export type Payment = {
@@ -831,6 +908,8 @@ export const {
   usePatchCategoriesByIdSpecialistRemoveMutation,
   usePostTicketsMutation,
   useGetTicketsQuery,
+  usePostTicketsByIdCommentsMutation,
+  useGetTicketsByIdCommentsQuery,
   usePostTicketsByIdPaymentMutation,
   useGetTicketsMyQuery,
   useGetTicketsCompletedQuery,
@@ -839,6 +918,7 @@ export const {
   useGetTicketsByIdQuery,
   useDeleteTicketsByIdMutation,
   usePatchTicketsByIdMutation,
+  useDeleteTicketsCommentByIdMutation,
   usePatchTicketsByIdEvaluationMutation,
   usePatchTicketsByIdAcceptEvaluationMutation,
   usePatchTicketsByIdEditEvaluationMutation,

@@ -1,5 +1,5 @@
 import { TicketStatus } from '@/services/api/generated/accountApi';
-import { getTicketStatusColorClasses, getTicketStatusTranslationKey } from '@/utils/ticket';
+import { getTicketStatusColorClasses, getTicketStatusTranslationKey } from '@/helpers/ticket';
 import { cn } from '@/utils/shared';
 import { ETicketStatus } from 'shared-types';
 import { useTranslations } from 'next-intl';

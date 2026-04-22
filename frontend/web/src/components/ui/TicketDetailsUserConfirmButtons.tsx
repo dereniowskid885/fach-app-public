@@ -1,24 +1,27 @@
-import { useCallback, useState } from 'react';
+'use client';
+
 import { Button } from '../shadcn/button';
+import { useCallback, useState } from 'react';
+import { ETicketStatus } from 'shared-types';
 import { Ticket } from '@/services/api/generated/accountApi';
-import { ETicketStatus, ESupportedCurrency } from 'shared-types';
+import { useTranslations } from 'next-intl';
+import { TStatusActionButton } from '@/types/ticket';
 import AmountIcon from './AmountIcon';
 import TicketUserEvaluationsListDialog from './TicketUserEvaluationsListDialog';
 import TicketUserPaymentDialog from './TicketUserPaymentDialog';
-import { useTranslations } from 'next-intl';
-import { TStatusActionButton } from '@/types/ticket';
+import TicketUserSolutionReviewDialog from './TicketUserSolutionReviewDialog';
 
-export interface ITicketUserActionButtons {
+export interface ITicketDetailsUserConfirmButtons {
   ticket: Ticket;
 }
 
-export default function TicketUserActionButtons({ ticket }: ITicketUserActionButtons) {
+export const TicketDetailsUserConfirmButtons = ({ ticket }: ITicketDetailsUserConfirmButtons) => {
   const ticketStatus = ticket.status as ETicketStatus;
 
   const t = useTranslations();
 
   const [evaluationListDialog, setEvaluationListDialog] = useState<boolean>(false);
-
+  const [ticketSolutionReviewDialog, setTicketSolutionReviewDialog] = useState<boolean>(false);
   const [ticketPaymentDialog, setTicketPaymentDialog] = useState<boolean>(false);
   const [ticketPaymentDialogLoading, setTicketPaymentDialogLoading] = useState<boolean>(false);
 
@@ -26,6 +29,10 @@ export default function TicketUserActionButtons({ ticket }: ITicketUserActionBut
   const paymentDialogLoadingEnd = useCallback(() => setTicketPaymentDialogLoading(false), []);
 
   const statusActionButton: TStatusActionButton = {
+    [ETicketStatus.SOLUTION_REVIEW]: {
+      title: t('ticketUserActionButtons.solutionReview'),
+      handler: () => setTicketSolutionReviewDialog(true)
+    },
     [ETicketStatus.AWAITING_PAYMENT]: {
       title: t('ticketUserActionButtons.pay'),
       handler: () => setTicketPaymentDialog(true),
@@ -50,12 +57,11 @@ export default function TicketUserActionButtons({ ticket }: ITicketUserActionBut
     <>
       {statusActionButton[ticketStatus] ? (
         <Button
-          variant="outline"
+          variant="default"
           className={
             statusActionButton[ticketStatus].isLoading !== undefined ? 'min-w-[120px]' : ''
           }
           onClick={statusActionButton[ticketStatus].handler}
-          loading={statusActionButton[ticketStatus].isLoading ?? false}
         >
           {statusActionButton[ticketStatus].title}
           {statusActionButton[ticketStatus].element}
@@ -69,7 +75,7 @@ export default function TicketUserActionButtons({ ticket }: ITicketUserActionBut
         loadingEndHandler={paymentDialogLoadingEnd}
         ticketId={ticket._id}
         amount={ticket.acceptedEvaluation?.price?.amountInCents}
-        currency={ticket.acceptedEvaluation?.price?.currency as ESupportedCurrency}
+        currency={ticket.acceptedEvaluation?.price?.currency}
       />
 
       <TicketUserEvaluationsListDialog
@@ -78,6 +84,12 @@ export default function TicketUserActionButtons({ ticket }: ITicketUserActionBut
         ticketId={ticket._id}
         ticketEvaluations={ticket.evaluations}
       />
+
+      <TicketUserSolutionReviewDialog
+        open={ticketSolutionReviewDialog}
+        ticket={ticket}
+        closeDialog={() => setTicketSolutionReviewDialog(false)}
+      />
     </>
   );
-}
+};

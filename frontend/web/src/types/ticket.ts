@@ -7,5 +7,6 @@ export type TStatusActionButton = Partial<{
     handler: () => void;
     element?: ReactElement;
     isLoading?: boolean;
+    isDisabled?: boolean;
   };
 }>;

@@ -6,6 +6,7 @@ import { StripePaymentForm } from './StripePaymentForm';
 import { StripeProvider } from '../providers/StripeProvider';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { Currency } from '@/services/api/generated/accountApi';
 
 export interface ITicketUserPaymentDialog {
   open: boolean;
@@ -14,7 +15,7 @@ export interface ITicketUserPaymentDialog {
   loadingEndHandler: () => void;
   ticketId?: string;
   amount?: number;
-  currency?: ESupportedCurrency;
+  currency?: ESupportedCurrency | Currency;
 }
 
 export default function TicketUserPaymentDialog({

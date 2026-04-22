@@ -12,6 +12,9 @@ import {
   ticketEvaluationEdit,
   getCompletedTickets,
   getSpecialistTicketsEvaluations,
+  getTicketComments,
+  createTicketComment,
+  deleteTicketComment,
 } from '@controllers/ticketController';
 
 import express from 'express';
@@ -19,6 +22,7 @@ const router = express.Router();
 
 import { createMiddleware, checkAndParseAccessToken, checkUserRole } from 'shared-backend';
 import {
+  validateCreateTicketCommentMiddleware,
   validateCreateTicketMiddleware,
   validateTicketEvaluationAcceptMiddleware,
   validateTicketEvaluationEditMiddleware,
@@ -154,6 +158,122 @@ router.use(accessTokenMiddleware);
  *                   example: Server error
  */
 router.post('/', validateCreateTicketMiddleware, checkIsUserRole, createTicket);
+
+/**
+ * @swagger
+ * /tickets/{id}/comments:
+ *   post:
+ *     summary: Create ticket comment
+ *     tags:
+ *       - Comments
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the ticket
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - content
+ *             properties:
+ *               content:
+ *                 type: string
+ *                 description: Content of the comment
+ *                 example: "This is a comment on the ticket"
+ *               attachments:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Array of attachment URLs
+ *                 example: ["https://cdn.com/attachment1.jpg", "https://cdn.com/attachment2.jpg"]
+ *     responses:
+ *       200:
+ *         description: Ticket comment created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Ticket comment created successfully
+ *                 data:
+ *                   $ref: '#/components/schemas/Comment'
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_INVALID_DATA"
+ *                 message:
+ *                   type: string
+ *                   example: Invalid data provided
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: Missing user data
+ *       403:
+ *         description: Forbidden due to invalid access to ticket comments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_INVALID_ROLE"
+ *                 message:
+ *                   type: string
+ *                   example: You cannot create a ticket comment
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.post('/:id/comments', validateCreateTicketCommentMiddleware, createTicketComment);
 
 /**
  * @swagger
@@ -344,6 +464,74 @@ router.post('/:id/payment', validateTicketPaymentMiddleware, ticketPaymentHandle
  *                   example: Server error
  */
 router.get('/', checkAdminRole, getTickets);
+
+/**
+ * @swagger
+ * /tickets/{id}/comments:
+ *   get:
+ *     summary: Get ticket comments by ticket ID
+ *     description: Fetches comments for a specific ticket
+ *     tags:
+ *       - Comments
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the ticket
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved ticket comments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 dataLength:
+ *                   type: number
+ *                   example: 24
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Comment'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: Missing user data
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.get('/:id/comments', getTicketComments);
 
 /**
  * @swagger
@@ -789,6 +977,102 @@ router.get('/:id', checkAdminRole, getTicketByID);
  *                   example: Server error
  */
 router.delete('/:id', checkAdminRole, deleteTicket);
+
+/**
+ * @swagger
+ * /tickets/comment/{id}:
+ *   delete:
+ *     summary: Delete ticket comment by ID
+ *     description: Deletes a ticket comment with the provided unique ID
+ *     tags:
+ *       - Comments
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the comment
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Comment deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Ticket comment deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: Missing user data
+ *       403:
+ *         description: Forbidden due to invalid permissions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_INVALID_ROLE"
+ *                 message:
+ *                   type: string
+ *                   example: You cannot delete this comment
+ *       404:
+ *         description: Comment not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_COMMENT_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: Comment with provided ID not found
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.delete('/comment/:id', deleteTicketComment);
 
 /**
  * @swagger

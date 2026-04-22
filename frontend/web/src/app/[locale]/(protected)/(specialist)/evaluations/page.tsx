@@ -9,7 +9,7 @@ import { Skeleton } from '@/components/shadcn/skeleton';
 import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
 import IconBadge from '@/components/ui/IconBadge';
 import { EFilterButton, EIconBadgeVariant } from '@/enums/ui';
-import { getAvailableTicketsColumns } from '@/helpers/dataTableColumns';
+import { getAvailableTicketsColumns } from '@/helpers/dataTable';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useGetTicketsSpecialistEvaluationsQuery } from '@/services/api/generated/accountApi';

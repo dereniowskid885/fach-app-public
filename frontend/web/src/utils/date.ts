@@ -46,7 +46,7 @@ export const getRelativeTime = (t: TFunction, isoString?: string): string => {
   if (diffHours < 24) {
     const remainingMinutes = diffMinutes % 60;
     return remainingMinutes > 0
-      ? t('getRelativeTime.minutesAndHoursAgo', { hours: diffHours, minutes: diffMinutes })
+      ? t('getRelativeTime.minutesAndHoursAgo', { hours: diffHours, minutes: remainingMinutes })
       : t('getRelativeTime.hoursAgo', { hours: diffHours });
   }
 

@@ -40,7 +40,8 @@
     "category": "Kategoria",
     "assignee": "Przypisany",
     "createdBy": "Twórca",
-    "send": "Wyślij"
+    "send": "Wyślij",
+    "charsAmount": "Pozostało: {amount} znaków"
   },
   "userRole": {
     "admin": "Admin",
@@ -183,7 +184,6 @@
     },
     "titleFormLabel": "Tytuł",
     "descriptionFormLabel": "Opis",
-    "descriptionCharsAmount": "Pozostało: {amount} znaków",
     "errorMissingCategory": "Wybierz kategorię sprawy",
     "errorInvalidCategory": "Nieprawidłowa kategoria, proszę wybrać inną.",
     "errorTitleRequired": "Tytuł nie może być pusty",
@@ -198,6 +198,10 @@
   "ticketDeleteDialog": {
     "title": "Czy na pewno chcesz usunąć sprawę?",
     "toastTitle": "Sprawa usunięta pomyślnie"
+  },
+  "ticketCommentDeleteDialog": {
+    "title": "Czy na pewno chcesz usunąć komentarz?",
+    "toastTitle": "Komentarz usunięty pomyślnie"
   },
   "ticketPaymentDialog": {
     "title": "Wypełnij dane płatności"
@@ -253,11 +257,14 @@
   "ticketSpecialistActionButtons": {
     "reply": "Odpowiedz",
     "editEvaluation": "Edytuj wycenę",
-    "evaluate": "Wyceń"
+    "evaluate": "Wyceń",
+    "sendForReview": "Zgłoś rozwiązanie"
   },
   "ticketUserActionButtons": {
     "pay": "Opłać",
-    "showEvaluations": "Zobacz wyceny"
+    "addComment": "Skomentuj",
+    "showEvaluations": "Zobacz wyceny",
+    "solutionReview": "Zakończ sprawę"
   },
   "ticketDropdownMenu": {
     "showDetails": "Zobacz szczegóły"
@@ -305,14 +312,32 @@
     "detailsSectionTitle": "Szczegóły",
     "descriptionSectionTitle": "Opis",
     "acceptedEvaluationSectionTitle": "Zaakceptowana wycena",
-    "noAcceptedEvaluationText": "Przeglądaj dostępne wyceny przesłane przez specjalistów i zaakceptuj tę, która najlepiej odpowiada Twoim potrzebom, aby kontynuować realizację sprawy.",
     "conversationSectionTitle": "Konwersacja",
-    "addMessageSectionTitle": "Dodaj wiadomość"
+    "noCommentsText": "Brak komentarzy. Napisz pierwszy!",
+    "addMessageSectionTitle": "Dodaj wiadomość",
+    "toastTitle": {
+      "comment": "Komentarz dodany",
+      "sendForReview": "Rozwiązanie zostało przesłane do weryfikacji",
+      "solutionAccept": "Świetnie, cieszymy się, że problem został rozwiązany! Sprawa została zamknięta.",
+      "moderatorInvestigation": "Twoje zgłoszenie zostało przekazane do weryfikacji moderatora. Przyjrzymy się sprawie i wkrótce się odezwiemy."
+    },
+    "noAcceptedEvaluationText": {
+      "user": "Przeglądaj dostępne wyceny przesłane przez specjalistów i zaakceptuj tę, która najlepiej odpowiada Twoim potrzebom, aby kontynuować realizację sprawy.",
+      "admin": "Żadna wycena nie została jeszcze zaakceptowana.",
+      "specialist": "Prześlij swoją wycenę lub zaktualizuj istniejącą, aby pomóc użytkownikowi przejść do kolejnego etapu realizacji sprawy."
+    }
   },
   "getRelativeTime": {
     "justNow": "przed chwilą",
     "minutesAgo": "{minutes, plural, =1 {# minutę temu} few {# minuty temu} many {# minut temu} other {# minut temu}}",
     "hoursAgo": "{hours, plural, =1 {# godzinę temu} few {# godziny temu} many {# godzin temu} other {# godzin temu}}",
-    "hoursAndMinutesAgo": "{hours, plural, =1 {# godzinę} few {# godziny} many {# godzin} other {# godzin}} {minutes, plural, =1 {# minutę temu} few {# minuty temu} many {# minut temu} other {# minut temu}}"
+    "minutesAndHoursAgo": "{hours, plural, =1 {# godzinę} few {# godziny} many {# godzin} other {# godzin}} {minutes, plural, =1 {# minutę temu} few {# minuty temu} many {# minut temu} other {# minut temu}}"
+  },
+  "ticketSolutionReviewDialog": {
+    "title": "Jak chcesz zamknąć sprawę?",
+    "resolvedTitle": "Zaakceptuj rozwiązanie",
+    "resolvedDescription": "Specjalista rozwiązał Twój problem. Kliknij aby zamknąć ticket i wypłacić wynagrodzenie specjaliście.",
+    "reportIssueTitle": "Zgłoś problem",
+    "reportIssueDescription": "Rozwiązanie nie jest satysfakcjonujące? Przekaż sprawę moderatorowi, który przyjrzy się sytuacji."
   }
 }

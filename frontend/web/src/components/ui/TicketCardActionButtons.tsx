@@ -1,15 +1,19 @@
 import { Ticket } from '@/services/api/generated/accountApi';
 import { EUserRole } from 'shared-types';
-import { TicketSpecialistActionButtons } from './TicketSpecialistActionButtons';
-import TicketUserActionButtons from './TicketUserActionButtons';
+import TicketCardSpecialistActionButtons from './TicketCardSpecialistActionButtons';
+import TicketUserActionButtons from './TicketCardUserActionButtons';
 
-export interface ITicketActionButtons {
+export interface ITicketCardActionButtons {
   ticket: Ticket;
   userId?: string;
   role: EUserRole | string;
 }
 
-export default function TicketActionButtons({ ticket, userId, role }: ITicketActionButtons) {
+export default function TicketCardActionButtons({
+  ticket,
+  userId,
+  role
+}: ITicketCardActionButtons) {
   switch (role) {
     case EUserRole.SPECIALIST: {
       const currentUserEvaluation = ticket.evaluations?.find(
@@ -17,7 +21,7 @@ export default function TicketActionButtons({ ticket, userId, role }: ITicketAct
       );
 
       return (
-        <TicketSpecialistActionButtons
+        <TicketCardSpecialistActionButtons
           ticket={ticket}
           currentUserEvaluation={currentUserEvaluation}
         />
