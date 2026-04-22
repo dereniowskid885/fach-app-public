@@ -8,18 +8,18 @@ import TicketDropdownMenu from './TicketDropdownMenu';
 import ContentCard from '../common/ContentCard';
 import UserCard from './UserCard';
 import TicketSummaryInfo from './TicketSummaryInfo';
-import TicketActionButtons from './TicketActionButtons';
+import TicketCardActionButtons from './TicketCardActionButtons';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { EUserRole } from 'shared-types';
 import { useTranslations } from 'next-intl';
 
-export interface IDashboardTicketCard {
+export interface ITicketCard {
   ticket: Ticket;
   index?: number;
 }
 
-export default function DashboardTicketCard({ ticket, index }: IDashboardTicketCard) {
+export default function TicketCard({ ticket, index }: ITicketCard) {
   const t = useTranslations();
   const { role, userId } = useSelector(selectUserData);
 
@@ -75,7 +75,7 @@ export default function DashboardTicketCard({ ticket, index }: IDashboardTicketC
         <TicketSummaryInfo ticket={ticket} />
 
         <div className="flex items-center justify-between gap-4">
-          <TicketActionButtons ticket={ticket} role={role} userId={userId} />
+          <TicketCardActionButtons ticket={ticket} role={role} userId={userId} />
 
           <UserCard
             className="ml-auto"

@@ -2,7 +2,7 @@ import { ETicketStatus } from 'shared-types';
 import ButtonsCarousel from '../common/ButtonsCarousel';
 import TicketStatusIcon from './TicketStatusIcon';
 import { useTranslations } from 'next-intl';
-import { getTicketStatusTranslationKey } from '@/utils/ticket';
+import { getTicketStatusTranslationKey } from '@/helpers/ticket';
 import { EFallbackKey, EFilterButton } from '@/enums/ui';
 
 export interface ITicketStatusFilter {

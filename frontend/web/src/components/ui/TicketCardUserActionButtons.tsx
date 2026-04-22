@@ -1,12 +1,13 @@
 import { useCallback, useState } from 'react';
 import { Button } from '../shadcn/button';
 import { Ticket } from '@/services/api/generated/accountApi';
-import { ETicketStatus, ESupportedCurrency } from 'shared-types';
+import { ETicketStatus } from 'shared-types';
 import AmountIcon from './AmountIcon';
 import TicketUserEvaluationsListDialog from './TicketUserEvaluationsListDialog';
 import TicketUserPaymentDialog from './TicketUserPaymentDialog';
 import { useTranslations } from 'next-intl';
 import { TStatusActionButton } from '@/types/ticket';
+import TicketDetailsDialog from './TicketDetailsDialog';
 
 export interface ITicketUserActionButtons {
   ticket: Ticket;
@@ -18,14 +19,18 @@ export default function TicketUserActionButtons({ ticket }: ITicketUserActionBut
   const t = useTranslations();
 
   const [evaluationListDialog, setEvaluationListDialog] = useState<boolean>(false);
-
   const [ticketPaymentDialog, setTicketPaymentDialog] = useState<boolean>(false);
   const [ticketPaymentDialogLoading, setTicketPaymentDialogLoading] = useState<boolean>(false);
+  const [ticketDetailsDialog, setTicketDetailsDialog] = useState<boolean>(false);
 
   const paymentDialogLoadingStart = useCallback(() => setTicketPaymentDialogLoading(true), []);
   const paymentDialogLoadingEnd = useCallback(() => setTicketPaymentDialogLoading(false), []);
 
   const statusActionButton: TStatusActionButton = {
+    [ETicketStatus.IN_PROGRESS]: {
+      title: t('ticketUserActionButtons.addComment'),
+      handler: () => setTicketDetailsDialog(true)
+    },
     [ETicketStatus.AWAITING_PAYMENT]: {
       title: t('ticketUserActionButtons.pay'),
       handler: () => setTicketPaymentDialog(true),
@@ -69,7 +74,7 @@ export default function TicketUserActionButtons({ ticket }: ITicketUserActionBut
         loadingEndHandler={paymentDialogLoadingEnd}
         ticketId={ticket._id}
         amount={ticket.acceptedEvaluation?.price?.amountInCents}
-        currency={ticket.acceptedEvaluation?.price?.currency as ESupportedCurrency}
+        currency={ticket.acceptedEvaluation?.price?.currency}
       />
 
       <TicketUserEvaluationsListDialog
@@ -77,6 +82,13 @@ export default function TicketUserActionButtons({ ticket }: ITicketUserActionBut
         closeDialog={() => setEvaluationListDialog(false)}
         ticketId={ticket._id}
         ticketEvaluations={ticket.evaluations}
+      />
+
+      <TicketDetailsDialog
+        open={ticketDetailsDialog}
+        ticket={ticket}
+        closeDialog={() => setTicketDetailsDialog(false)}
+        scrollToInput={true}
       />
     </>
   );

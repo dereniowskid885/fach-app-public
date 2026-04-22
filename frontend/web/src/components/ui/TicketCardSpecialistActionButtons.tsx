@@ -8,16 +8,17 @@ import { Evaluation, Ticket } from '@/services/api/generated/accountApi';
 import { useTranslations } from 'next-intl';
 import { EActionType } from '@/enums/ui';
 import { TStatusActionButton } from '@/types/ticket';
+import TicketDetailsDialog from './TicketDetailsDialog';
 
-export interface ITicketSpecialistActionButtons {
+export interface ITicketCardSpecialistActionButtons {
   ticket: Ticket;
   currentUserEvaluation?: Evaluation;
 }
 
-export const TicketSpecialistActionButtons = ({
+export default function TicketCardSpecialistActionButtons({
   ticket,
   currentUserEvaluation
-}: ITicketSpecialistActionButtons) => {
+}: ITicketCardSpecialistActionButtons) {
   const ticketStatus = ticket.status as ETicketStatus;
 
   const t = useTranslations();
@@ -26,11 +27,14 @@ export const TicketSpecialistActionButtons = ({
     EActionType.CREATION
   );
   const [priceEvaluationDialog, setPriceEvaluationDialog] = useState<boolean>(false);
+  const [ticketDetailsDialog, setTicketDetailsDialog] = useState<boolean>(false);
 
   const statusActionButton: TStatusActionButton = {
     [ETicketStatus.IN_PROGRESS]: {
       title: t('ticketSpecialistActionButtons.reply'),
-      handler: () => null
+      handler: () => {
+        setTicketDetailsDialog(true);
+      }
     },
     [ETicketStatus.AWAITING_EVALUATION]: currentUserEvaluation
       ? {
@@ -70,6 +74,13 @@ export const TicketSpecialistActionButtons = ({
         currentUserEvaluation={currentUserEvaluation}
         closeDialog={() => setPriceEvaluationDialog(false)}
       />
+
+      <TicketDetailsDialog
+        open={ticketDetailsDialog}
+        ticket={ticket}
+        closeDialog={() => setTicketDetailsDialog(false)}
+        scrollToInput={true}
+      />
     </>
   );
-};
+}

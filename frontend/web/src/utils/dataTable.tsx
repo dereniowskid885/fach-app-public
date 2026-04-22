@@ -9,7 +9,7 @@ import { getLocaleDateString } from './date';
 import UserCard from '@/components/ui/UserCard';
 import { ETicketStatus, EUserRole } from 'shared-types';
 import TicketDropdownMenu from '@/components/ui/TicketDropdownMenu';
-import TicketActionButtons from '@/components/ui/TicketActionButtons';
+import TicketCardActionButtons from '@/components/ui/TicketCardActionButtons';
 import { getFormattedPriceAmount, getFormattedResponseTime, getUserFullName } from './shared';
 
 /**
@@ -108,7 +108,7 @@ export const getConversationColumn = (t: TFunction) => ({
     const ticket = item.row.original as Ticket;
 
     let ConversationIcon = MessageSquare;
-    let conversationAmount = t('ticket.messagesAmount', { count: 0 });
+    let conversationAmount = t('ticket.messagesAmount', { count: ticket.commentsCount ?? 0 });
 
     switch (ticket.status) {
       case ETicketStatus.AWAITING_EVALUATION:
@@ -118,7 +118,7 @@ export const getConversationColumn = (t: TFunction) => ({
         ConversationIcon = ChartColumn;
         break;
       default:
-        conversationAmount = t('ticket.messagesAmount', { count: 5 });
+        conversationAmount = t('ticket.messagesAmount', { count: ticket.commentsCount ?? 0 });
         break;
     }
 
@@ -141,7 +141,7 @@ export const getActionColumn = (role: EUserRole | string, userId?: string) => ({
 
     return (
       <div className="text-center">
-        <TicketActionButtons ticket={ticket} role={role} userId={userId} />
+        <TicketCardActionButtons ticket={ticket} role={role} userId={userId} />
       </div>
     );
   }
