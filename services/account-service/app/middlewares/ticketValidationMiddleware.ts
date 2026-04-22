@@ -22,6 +22,23 @@ export const validateCreateTicketMiddleware = (req: Request, res: Response, next
   }
 };
 
+const createTicketCommentSchema = z
+  .object({
+    content: z.string().min(7).max(3000),
+    attatchments: z.array(z.string()).optional(),
+  })
+  .strict();
+
+export const validateCreateTicketCommentMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    req.body = createTicketCommentSchema.parse(req.body);
+
+    next();
+  } catch (err) {
+    handleZodError(res, err);
+  }
+};
+
 const ticketEvaluationSchema = z
   .object({
     price: z.object({
