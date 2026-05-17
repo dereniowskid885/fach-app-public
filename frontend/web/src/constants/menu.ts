@@ -1,7 +1,6 @@
 import {
   ClipboardList,
   LayoutDashboard,
-  MessageSquare,
   Settings,
   BriefcaseBusiness,
   ChartColumn,
@@ -14,6 +13,7 @@ import {
   EVALUATIONS_PATH,
   HOME_PATH,
   ROUTES,
+  SETTINGS_PATH,
   TICKETS_PATH
 } from './routes';
 import { EUserRole } from 'shared-types';
@@ -43,25 +43,22 @@ const commonMenuItems = [
 ];
 
 const otherMenuItems = [
-  {
-    id: 'inbox',
-    translationKey: 'pages.inbox',
-    icon: MessageSquare,
-    href: '#',
-    path: {
-      en: '',
-      pl: ''
-    }
-  },
+  // {
+  //   id: 'inbox',
+  //   translationKey: 'pages.inbox',
+  //   icon: MessageSquare,
+  //   href: '#',
+  //   path: {
+  //     en: '',
+  //     pl: ''
+  //   }
+  // },
   {
     id: 'settings',
     translationKey: 'pages.settings',
     icon: Settings,
-    href: '#',
-    path: {
-      en: '',
-      pl: ''
-    }
+    href: SETTINGS_PATH,
+    path: ROUTES[SETTINGS_PATH]
   }
 ];
 

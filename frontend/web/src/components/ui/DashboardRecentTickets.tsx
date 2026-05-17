@@ -70,7 +70,7 @@ export default function DashboardRecentTickets() {
         ) : (
           <Link
             href={TICKETS_PATH}
-            className="animation-base animation-idle animation-interactive flex items-center gap-1 rounded-xl p-2 text-xs font-bold"
+            className="animation-base animation-idle animation-interactive flex items-center gap-1 rounded-2xl p-2 text-xs font-bold"
           >
             <Typography variant="note-wide">{t('common.viewAll')}</Typography>
             <ArrowRight size={12} />

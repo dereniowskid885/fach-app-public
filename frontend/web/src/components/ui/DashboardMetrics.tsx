@@ -57,7 +57,7 @@ export default function DashboardMetrics() {
       {widgets.map((widget, i) => (
         <ContentCard key={widget.id} index={i} className="space-y-4">
           <div className="flex items-start justify-between">
-            <div className={cn('rounded-xl border p-2.5', widget.color)}>
+            <div className={cn('rounded-2xl border p-2.5', widget.color)}>
               <widget.icon size={22} />
             </div>
           </div>

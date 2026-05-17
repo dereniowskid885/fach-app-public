@@ -200,14 +200,14 @@ export default function TicketDetailsDialog({
       >
         <div className="grid grid-cols-2 gap-x-8 gap-y-4">
           <ContentSectionItem
-            className="rounded-xl border p-2"
+            className="rounded-2xl border p-2"
             title={t('common.createdBy')}
             descriptionComponent={renderUserInfo(ticket.createdBy)}
             variant={ESectionItemType.USER}
           />
 
           <ContentSectionItem
-            className="rounded-xl border p-2"
+            className="rounded-2xl border p-2"
             title={t('common.assignee')}
             descriptionComponent={renderUserInfo(ticket.assignee, t('common.unassigned'))}
             variant={
@@ -218,14 +218,14 @@ export default function TicketDetailsDialog({
           />
 
           <ContentSectionItem
-            className="rounded-xl border p-2"
+            className="rounded-2xl border p-2"
             title={t('common.category')}
             description={ticket.category?.name}
             variant={ESectionItemType.CATEGORY}
           />
 
           <ContentSectionItem
-            className="rounded-xl border p-2"
+            className="rounded-2xl border p-2"
             title={t('common.city')}
             description={ticket.city}
             variant={ESectionItemType.CITY}

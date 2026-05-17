@@ -9,6 +9,7 @@ export const VERIFY_PATH = '/verify';
 export const ALL_TICKETS_PATH = '/all-tickets';
 export const COMPLETED_TICKETS_PATH = '/completed-tickets';
 export const EVALUATIONS_PATH = '/evaluations';
+export const SETTINGS_PATH = '/settings';
 
 export const ROUTES = {
   [HOME_PATH]: {
@@ -54,6 +55,10 @@ export const ROUTES = {
   [VERIFY_PATH]: {
     pl: '/weryfikacja',
     en: VERIFY_PATH
+  },
+  [SETTINGS_PATH]: {
+    pl: '/ustawienia',
+    en: SETTINGS_PATH
   }
 };
 

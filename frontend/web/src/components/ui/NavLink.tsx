@@ -22,7 +22,7 @@ export default function NavLink({
   isSidebarCollapsed = false
 }: INavLink) {
   const classNames = cn(
-    `flex items-center px-3 py-2 rounded-xl text-sm animation-base animation-idle animation-interactive group ${className ?? ''}`,
+    `flex items-center px-3 py-2 rounded-2xl text-sm animation-base animation-idle animation-interactive group ${className ?? ''}`,
     isCurrentPath ? 'animation-active' : ''
   );
 

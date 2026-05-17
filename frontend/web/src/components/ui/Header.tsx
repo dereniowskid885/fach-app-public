@@ -43,7 +43,7 @@ export default function Header() {
 
         <div className="flex items-center gap-3">
           <Popover>
-            <PopoverTrigger className="animation-base animation-idle animation-interactive h-10 w-10 rounded-xl px-2">
+            <PopoverTrigger className="animation-base animation-idle animation-interactive h-10 w-10 rounded-2xl px-2">
               <AmountIcon amount={notifications.length}>
                 <Bell size={24} />
               </AmountIcon>
@@ -66,7 +66,7 @@ export default function Header() {
           <Button
             variant="ghost"
             size="icon"
-            className="animation-base animation-idle animation-interactive h-10 w-10 rounded-xl"
+            className="animation-base animation-idle animation-interactive h-10 w-10 rounded-2xl"
           >
             <HelpCircle size={24} />
           </Button>
