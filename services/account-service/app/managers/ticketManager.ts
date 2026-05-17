@@ -7,8 +7,15 @@ import { FilterQuery } from 'mongoose';
 import { IEvaluationSchema } from '@schemas/evaluationSchema';
 import { safeUserProjection } from '@constants/projections';
 import { AppError } from 'shared-backend';
-import { EResponseStatus, ESupportedCurrency, ETicketStatus, isAdmin, isSpecialist } from 'shared-types';
-import { canDeleteTicketComment, canViewTicketComments, checkTicketStatusTransition } from '@helpers/ticket';
+import {
+  EResponseStatus,
+  ESupportedCurrency,
+  ETicketStatus,
+  isAdmin,
+  isSpecialist,
+  checkTicketStatusTransition,
+} from 'shared-types';
+import { canDeleteTicketComment, canViewTicketComments, resolveAssigneeOnStatusChange } from '@helpers/ticket';
 
 export const TicketManager = {
   getTicketByID: async (ticketId: string) => {
@@ -263,17 +270,45 @@ export const TicketManager = {
 
     if (status !== undefined) {
       if (!checkTicketStatusTransition(ticket.status, status, user.role)) {
-        throw new AppError(400, EResponseStatus.ERROR_TICKET_INVALID_STATUS, 'Wrong ticket status transition');
+        throw new AppError(400, EResponseStatus.ERROR_TICKET_INVALID_STATUS_CHANGE, 'Wrong ticket status transition');
       }
 
-      if (status === ETicketStatus.SOLUTION_REVIEW && ticket.specialistCommentsCount === 0) {
+      if (!isAdminRole && status === ETicketStatus.SOLUTION_REVIEW && ticket.specialistCommentsCount === 0) {
         throw new AppError(
           400,
-          EResponseStatus.ERROR_TICKET_INVALID_STATUS,
+          EResponseStatus.ERROR_TICKET_SPECIALIST_COMMENT_NOT_FOUND,
           'Specialist must comment before submitting for review',
         );
       }
 
+      if (
+        (status === ETicketStatus.AWAITING_PAYMENT || status === ETicketStatus.IN_PROGRESS) &&
+        ticket.acceptedEvaluation === null
+      ) {
+        throw new AppError(
+          400,
+          EResponseStatus.ERROR_TICKET_INVALID_STATUS_CHANGE,
+          'You cannot move ticket to awaiting_payment or in_progress without accepted evaluation',
+        );
+      }
+
+      if (
+        ticket.status === ETicketStatus.MODERATOR_INVESTIGATION &&
+        status === ETicketStatus.AWAITING_PAYMENT &&
+        ticket.payment !== null
+      ) {
+        throw new AppError(
+          400,
+          EResponseStatus.ERROR_TICKET_INVALID_STATUS_CHANGE,
+          'Cannot revert to status awaiting_payment after successful payment',
+        );
+      }
+
+      if (status === ETicketStatus.AWAITING_EVALUATION) {
+        ticket.acceptedEvaluation = null;
+      }
+
+      ticket.assignee = resolveAssigneeOnStatusChange(status, ticket);
       ticket.status = status;
     }
 
