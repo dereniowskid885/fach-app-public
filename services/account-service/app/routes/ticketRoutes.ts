@@ -1146,10 +1146,10 @@ router.delete('/comment/:id', deleteTicketComment);
  *                   example: false
  *                 status:
  *                   type: string
- *                   example: "ERROR_INVALID_DATA"
+ *                   example: "ERROR_TICKET_INVALID_STATUS_CHANGE"
  *                 message:
  *                   type: string
- *                   example: Invalid data provided
+ *                   example: Wrong ticket status transition
  *       401:
  *         description: Unauthorized
  *         content:
