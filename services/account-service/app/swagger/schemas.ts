@@ -160,6 +160,8 @@
  *         specialistCommentsCount:
  *           type: number
  *           example: 0
+ *         payment:
+ *           $ref: '#/components/schemas/Payment'
  *     Comment:
  *       type: object
  *       properties:
