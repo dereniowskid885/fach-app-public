@@ -78,13 +78,17 @@
     "ticketNotFound": "Ticket not found.",
     "evaluationNotFound": "Evaluation not found.",
     "invalidTicketStatus": "Invalid ticket status.",
+    "invalidTicketStatusChange": "Invalid ticket status change.",
+    "specialistCommentNotFound": "Cannot submit ticket for review without a specialist comment.",
     "alreadyEvaluated": "You have already evaluated this ticket.",
     "categoryHasSpecialists": "This category has assigned specialists and cannot be removed.",
     "userAlreadyAssigned": "User is already assigned to this category.",
     "categoryAlreadyExists": "Category already exists.",
     "invalidRole": "Invalid user role.",
     "userAlreadyCategorized": "User is already categorized.",
-    "userNotAssignedToCategory": "User is not assigned to this category."
+    "userNotAssignedToCategory": "User is not assigned to this category.",
+    "missingAcceptedEvaluation": "No accepted evaluation found.",
+    "paymentAlreadyProcessed": "Payment has already been processed."
   },
   "sidebar": {
     "mainMenu": "Main Menu"
@@ -316,7 +320,6 @@
     "addMessageSectionTitle": "Add Message",
     "toastTitle": {
       "comment": "Comment added",
-      "sendForReview": "Ticket has been sent for solution review",
       "solutionAccept": "Great, glad your issue is resolved! The ticket has been closed.",
       "moderatorInvestigation": "Your ticket has been sent for moderator review. We will look into the issue and get back to you shortly."
     },
@@ -338,5 +341,32 @@
     "resolvedDescription": "The specialist has resolved your issue. Click to close the ticket and release the payment to the specialist.",
     "reportIssueTitle": "Report an issue",
     "reportIssueDescription": "Not satisfied with the solution? Escalate the case to a moderator who will look into the situation."
+  },
+  "ticketDetailsAdminConfirmButtons": {
+    "changeStatus": "Change status",
+    "assigneeChange": "Assign ticket"
+  },
+  "ticketAdminStatusChangeDialog": {
+    "title": "Choose status",
+    "toastTitle": "Ticket status changed successfully",
+    "statusChangeDescription": {
+      "awaiting_payment": "The ticket will be moved to awaiting payment from the client. A specialist evaluation must be accepted before proceeding. Only available if no payment has been made yet.",
+      "in_progress": "The ticket will be reopened and handed back to the specialist for further work. A specialist evaluation must be accepted before proceeding.",
+      "solution_review": "The ticket will be sent to the client for solution review and approval.",
+      "moderator_investigation": "The ticket will be escalated to a moderator for a thorough investigation.",
+      "completed": "The ticket will be marked as completed and the specialist will receive their payment.",
+      "canceled": "The ticket will be permanently canceled. This action cannot be undone.",
+      "awaiting_evaluation": "The ticket will be reverted to the evaluation stage. The accepted evaluation will be removed, allowing the client to select a new specialist."
+    }
+  },
+  "ticketAdminAssignmentDialog": {
+    "title": "Are you sure you want to assign ticket to yourself?",
+    "confirmButtonText": "Assign",
+    "toastTitle": "The case has been assigned to you"
+  },
+  "ticketSpecialistSendForReviewDialog": {
+    "title": "Are you sure you want to submit this ticket for review?",
+    "confirmButtonText": "Submit for review",
+    "toastTitle": "The ticket has been submitted for review"
   }
 }

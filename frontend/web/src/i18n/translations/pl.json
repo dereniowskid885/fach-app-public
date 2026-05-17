@@ -75,16 +75,20 @@
     "userNotVerified": "Twoje konto nie zostało jeszcze zweryfikowane.",
     "emailFailed": "Nie udało się wysłać wiadomości email. Spróbuj ponownie później.",
     "categoryNotFound": "Kategoria nie została znaleziona.",
-    "ticketNotFound": "Zgłoszenie nie zostało znalezione.",
+    "ticketNotFound": "Sprawa nie została znaleziona.",
     "evaluationNotFound": "Ocena nie została znaleziona.",
-    "invalidTicketStatus": "Nieprawidłowy status zgłoszenia.",
-    "alreadyEvaluated": "To zgłoszenie zostało już przez Ciebie ocenione.",
+    "invalidTicketStatus": "Nieprawidłowy status sprawy.",
+    "invalidTicketStatusChange": "Nieprawidłowa zmiana statusu sprawy.",
+    "specialistCommentNotFound": "Nie można przesłać sprawy do weryfikacji bez komentarza specjalisty.",
+    "alreadyEvaluated": "Ta sprawa została już przez Ciebie oceniona.",
     "categoryHasSpecialists": "Ta kategoria ma przypisanych specjalistów i nie może zostać usunięta.",
     "userAlreadyAssigned": "Użytkownik jest już przypisany do tej kategorii.",
     "categoryAlreadyExists": "Kategoria już istnieje.",
     "invalidRole": "Nieprawidłowa rola użytkownika.",
     "userAlreadyCategorized": "Użytkownik został już przypisany do kategorii.",
-    "userNotAssignedToCategory": "Użytkownik nie jest przypisany do tej kategorii."
+    "userNotAssignedToCategory": "Użytkownik nie jest przypisany do tej kategorii.",
+    "missingAcceptedEvaluation": "Brak zaakceptowanej wyceny.",
+    "paymentAlreadyProcessed": "Płatność została już zrealizowana."
   },
   "sidebar": {
     "mainMenu": "Menu główne"
@@ -317,7 +321,6 @@
     "addMessageSectionTitle": "Dodaj wiadomość",
     "toastTitle": {
       "comment": "Komentarz dodany",
-      "sendForReview": "Rozwiązanie zostało przesłane do weryfikacji",
       "solutionAccept": "Świetnie, cieszymy się, że problem został rozwiązany! Sprawa została zamknięta.",
       "moderatorInvestigation": "Twoje zgłoszenie zostało przekazane do weryfikacji moderatora. Przyjrzymy się sprawie i wkrótce się odezwiemy."
     },
@@ -339,5 +342,32 @@
     "resolvedDescription": "Specjalista rozwiązał Twój problem. Kliknij aby zamknąć ticket i wypłacić wynagrodzenie specjaliście.",
     "reportIssueTitle": "Zgłoś problem",
     "reportIssueDescription": "Rozwiązanie nie jest satysfakcjonujące? Przekaż sprawę moderatorowi, który przyjrzy się sytuacji."
+  },
+  "ticketDetailsAdminConfirmButtons": {
+    "changeStatus": "Zmień status",
+    "assigneeChange": "Przypisz sprawę"
+  },
+  "ticketAdminStatusChangeDialog": {
+    "title": "Wybierz status",
+    "toastTitle": "Status sprawy został zmieniony",
+    "statusChangeDescription": {
+      "awaiting_payment": "Sprawa zostanie przekazana do oczekiwania na płatność od klienta. Przed kontynuacją musi zostać zaakceptowana wycena specjalisty. Opcja dostępna wyłącznie jeśli płatność nie została jeszcze zrealizowana.",
+      "in_progress": "Sprawa zostanie wznowiona i przekazana do realizacji przez specjalistę. Przed kontynuacją musi zostać zaakceptowana wycena specjalisty.",
+      "solution_review": "Sprawa zostanie przekazana do weryfikacji rozwiązania przez klienta.",
+      "moderator_investigation": "Sprawa zostanie przekazana do moderatora w celu dokładnego zbadania sytuacji.",
+      "completed": "Sprawa zostanie oznaczona jako zakończona, a specjalista otrzyma wynagrodzenie.",
+      "canceled": "Sprawa zostanie anulowana. Tej operacji nie można cofnąć.",
+      "awaiting_evaluation": "Sprawa zostanie cofnięta do etapu wyceny. Zaakceptowana wycena zostanie usunięta, a klient będzie mógł wybrać nowego specjalistę."
+    }
+  },
+  "ticketAdminAssignmentDialog": {
+    "title": "Czy na pewno chcesz przypisać sprawę do siebie?",
+    "confirmButtonText": "Przypisz",
+    "toastTitle": "Sprawa została przypisana do Ciebie"
+  },
+  "ticketSpecialistSendForReviewDialog": {
+    "title": "Czy na pewno chcesz przesłać tę sprawę do weryfikacji?",
+    "confirmButtonText": "Prześlij do weryfikacji",
+    "toastTitle": "Sprawa została przesłana do weryfikacji"
   }
 }

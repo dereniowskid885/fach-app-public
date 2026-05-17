@@ -12,6 +12,7 @@ interface IErrorHandler {
   callback?: () => void;
   setInlineError?: (message: string) => void;
   redirectTo?: (path: string) => void;
+  toastDescription?: string;
 }
 
 /**
@@ -48,7 +49,9 @@ export const useErrorHandler = (
         break;
 
       case EErrorStrategy.TOAST:
-        toast.error(message);
+        toast.error(message, {
+          description: options?.toastDescription
+        });
         break;
     }
 

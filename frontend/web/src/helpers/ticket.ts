@@ -5,9 +5,10 @@ import {
   MY_TICKETS_SPECIALIST_FILTERS,
   MY_TICKETS_USER_FILTERS
 } from '@/constants/filters';
-import { TicketStatus } from '@/services/api/generated/accountApi';
+import { Ticket, TicketStatus } from '@/services/api/generated/accountApi';
 import { ticketStatusObj } from '@/constants/ticketStatus';
 import { ClipboardList } from 'lucide-react';
+import { TFunction } from '@/types/i18n';
 
 // Ticket Status Filters
 export const getMyTicketsStatusFilters = (role: EUserRole | string): ETicketStatus[] => {
@@ -58,4 +59,27 @@ export const isCommentingAllowed = (role: EUserRole, status?: TicketStatus | ETi
     default:
       return false;
   }
+};
+
+export const getTicketUpdateErrorDescription = (
+  ticket: Ticket,
+  targetStatus: ETicketStatus | null,
+  t: TFunction
+): string => {
+  if (
+    targetStatus === ETicketStatus.AWAITING_PAYMENT ||
+    targetStatus === ETicketStatus.IN_PROGRESS
+  ) {
+    if (ticket.acceptedEvaluation === null) {
+      return t('errors.missingAcceptedEvaluation');
+    }
+  }
+
+  if (targetStatus === ETicketStatus.AWAITING_PAYMENT) {
+    if (ticket.status === ETicketStatus.MODERATOR_INVESTIGATION && ticket.payment !== null) {
+      return t('errors.paymentAlreadyProcessed');
+    }
+  }
+
+  return '';
 };

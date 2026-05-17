@@ -77,6 +77,16 @@ export const ERROR_STATUS_MAP: Record<EResponseStatus, TErrorMapping> = {
     strategy: EErrorStrategy.TOAST
   },
 
+  ERROR_TICKET_INVALID_STATUS_CHANGE: {
+    messageKey: 'errors.invalidTicketStatusChange',
+    strategy: EErrorStrategy.TOAST
+  },
+
+  ERROR_TICKET_SPECIALIST_COMMENT_NOT_FOUND: {
+    messageKey: 'errors.specialistCommentNotFound',
+    strategy: EErrorStrategy.TOAST
+  },
+
   ERROR_TICKET_ALREADY_EVALUATED_BY_USER: {
     messageKey: 'errors.alreadyEvaluated',
     strategy: EErrorStrategy.TOAST
