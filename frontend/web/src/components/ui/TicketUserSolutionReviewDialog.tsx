@@ -86,9 +86,7 @@ export default function TicketUserSolutionReviewDialog({
             </FieldTitle>
 
             <FieldDescription>
-              <Typography variant="muted">
-                {t('ticketSolutionReviewDialog.resolvedDescription')}
-              </Typography>
+              {t('ticketSolutionReviewDialog.resolvedDescription')}
             </FieldDescription>
           </FieldContent>
 
@@ -116,9 +114,7 @@ export default function TicketUserSolutionReviewDialog({
             </FieldTitle>
 
             <FieldDescription>
-              <Typography variant="muted">
-                {t('ticketSolutionReviewDialog.reportIssueDescription')}
-              </Typography>
+              {t('ticketSolutionReviewDialog.reportIssueDescription')}
             </FieldDescription>
           </FieldContent>
 

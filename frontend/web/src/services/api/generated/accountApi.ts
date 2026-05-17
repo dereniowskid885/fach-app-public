@@ -850,6 +850,17 @@ export type Evaluation = {
     currency?: Currency;
   };
 };
+export type PaymentStatus = 'pending' | 'succeeded' | 'failed' | 'canceled' | 'refunded';
+export type Payment = {
+  _id?: string;
+  user?: User;
+  ticket?: Ticket;
+  amount?: number;
+  currency?: Currency;
+  paymentMethod?: string;
+  status?: PaymentStatus;
+  createdAt?: string;
+};
 export type Ticket = {
   _id?: string;
   category?: Category;
@@ -866,6 +877,7 @@ export type Ticket = {
   acceptedEvaluation?: Evaluation;
   commentsCount?: number;
   specialistCommentsCount?: number;
+  payment?: Payment;
 };
 export type Comment = {
   _id?: string;
@@ -876,17 +888,6 @@ export type Comment = {
   attachments?: string[];
   createdAt?: string;
   updatedAt?: string;
-};
-export type PaymentStatus = 'pending' | 'succeeded' | 'failed' | 'canceled' | 'refunded';
-export type Payment = {
-  _id?: string;
-  user?: User;
-  ticket?: Ticket;
-  amount?: number;
-  currency?: Currency;
-  paymentMethod?: string;
-  status?: PaymentStatus;
-  createdAt?: string;
 };
 export type ThemeType = 'light' | 'dark' | 'system';
 export const {
