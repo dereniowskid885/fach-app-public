@@ -2,20 +2,18 @@ import { Ticket } from '@/services/api/generated/accountApi';
 import { EUserRole } from 'shared-types';
 import { TicketDetailsSpecialistConfirmButtons } from './TicketDetailsSpecialistConfirmButtons';
 import { TicketDetailsUserConfirmButtons } from './TicketDetailsUserConfirmButtons';
-import { Dispatch, SetStateAction } from 'react';
+import { TicketDetailsAdminConfirmButtons } from './TicketDetailsAdminConfirmButtons';
 
 export interface ITicketDetailsConfirmButtons {
   ticket: Ticket;
   userId?: string;
   role: EUserRole | string;
-  setDialogErrorMessage: Dispatch<SetStateAction<string | undefined>>;
 }
 
 export default function TicketDetailsConfirmButtons({
   ticket,
   userId,
-  role,
-  setDialogErrorMessage
+  role
 }: ITicketDetailsConfirmButtons) {
   switch (role) {
     case EUserRole.SPECIALIST: {
@@ -27,12 +25,14 @@ export default function TicketDetailsConfirmButtons({
         <TicketDetailsSpecialistConfirmButtons
           ticket={ticket}
           currentUserEvaluation={currentUserEvaluation}
-          setDialogErrorMessage={setDialogErrorMessage}
         />
       );
     }
 
     case EUserRole.USER:
       return <TicketDetailsUserConfirmButtons ticket={ticket} />;
+
+    case EUserRole.ADMIN:
+      return <TicketDetailsAdminConfirmButtons ticket={ticket} />;
   }
 }
