@@ -342,7 +342,7 @@
     "reportIssueTitle": "Report an issue",
     "reportIssueDescription": "Not satisfied with the solution? Escalate the case to a moderator who will look into the situation."
   },
-  "ticketDetailsAdminConfirmButtons": {
+  "ticketDetailsAdminActionButtons": {
     "changeStatus": "Change status",
     "assigneeChange": "Assign ticket"
   },

@@ -343,7 +343,7 @@
     "reportIssueTitle": "Zgłoś problem",
     "reportIssueDescription": "Rozwiązanie nie jest satysfakcjonujące? Przekaż sprawę moderatorowi, który przyjrzy się sytuacji."
   },
-  "ticketDetailsAdminConfirmButtons": {
+  "ticketDetailsAdminActionButtons": {
     "changeStatus": "Zmień status",
     "assigneeChange": "Przypisz sprawę"
   },

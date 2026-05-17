@@ -11,15 +11,15 @@ import { TStatusActionButton } from '@/types/ticket';
 import TicketDetailsDialog from './TicketDetailsDialog';
 import TicketSpecialistSendForReviewDialog from './TicketSpecialistSendForReviewDialog';
 
-export interface ITicketDetailsSpecialistConfirmButtons {
+export interface ITicketDetailsSpecialistActionButtons {
   ticket: Ticket;
   currentUserEvaluation?: Evaluation;
 }
 
-export const TicketDetailsSpecialistConfirmButtons = ({
+export const TicketDetailsSpecialistActionButtons = ({
   ticket,
   currentUserEvaluation
-}: ITicketDetailsSpecialistConfirmButtons) => {
+}: ITicketDetailsSpecialistActionButtons) => {
   const ticketStatus = ticket.status as ETicketStatus;
 
   const t = useTranslations();

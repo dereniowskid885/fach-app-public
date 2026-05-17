@@ -34,7 +34,7 @@ import { LoadingSpinner } from '../shadcn/loading-spinner';
 import TicketComment from './TicketComment';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
-import TicketDetailsConfirmButtons from './TicketDetailsConfirmButtons';
+import TicketDetailsActionButtons from './TicketDetailsActionButtons';
 import { isCommentingAllowed } from '@/helpers/ticket';
 
 export interface ITicketDetailsDialog {
@@ -355,7 +355,7 @@ export default function TicketDetailsDialog({
       content={content}
       contentClass="max-w-7xl"
       customConfirmButton={
-        <TicketDetailsConfirmButtons ticket={ticket} role={role} userId={userId} />
+        <TicketDetailsActionButtons ticket={ticket} role={role} userId={userId} />
       }
       cancelButtonHandler={closeDialog}
       cancelButtonText={t('common.close')}
