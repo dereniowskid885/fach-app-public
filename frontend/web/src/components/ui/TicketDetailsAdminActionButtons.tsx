@@ -11,11 +11,11 @@ import TicketAdminAssignmentDialog from './TicketAdminAssignmentDialog';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 
-export interface ITicketDetailsAdminConfirmButtons {
+export interface ITicketDetailsAdminActionButtons {
   ticket: Ticket;
 }
 
-export const TicketDetailsAdminConfirmButtons = ({ ticket }: ITicketDetailsAdminConfirmButtons) => {
+export const TicketDetailsAdminActionButtons = ({ ticket }: ITicketDetailsAdminActionButtons) => {
   const ticketStatus = ticket.status as ETicketStatus;
 
   const t = useTranslations();
@@ -32,7 +32,7 @@ export const TicketDetailsAdminConfirmButtons = ({ ticket }: ITicketDetailsAdmin
   const statusActionButton: TStatusActionButton = {
     [ETicketStatus.MODERATOR_INVESTIGATION]: !isCurrentUserAssigned
       ? {
-          title: t('ticketDetailsAdminConfirmButtons.assigneeChange'),
+          title: t('ticketDetailsAdminActionButtons.assigneeChange'),
           handler: () => setTicketAssignmentDialog(true)
         }
       : undefined
@@ -56,7 +56,7 @@ export const TicketDetailsAdminConfirmButtons = ({ ticket }: ITicketDetailsAdmin
 
       {isStatusChangeAvailable ? (
         <Button variant="special-1" onClick={() => setTicketStatusChangeDialog(true)}>
-          {t('ticketDetailsAdminConfirmButtons.changeStatus')}
+          {t('ticketDetailsAdminActionButtons.changeStatus')}
         </Button>
       ) : null}
 

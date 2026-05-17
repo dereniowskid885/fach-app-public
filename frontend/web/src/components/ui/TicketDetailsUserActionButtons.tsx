@@ -11,11 +11,11 @@ import TicketUserEvaluationsListDialog from './TicketUserEvaluationsListDialog';
 import TicketUserPaymentDialog from './TicketUserPaymentDialog';
 import TicketUserSolutionReviewDialog from './TicketUserSolutionReviewDialog';
 
-export interface ITicketDetailsUserConfirmButtons {
+export interface ITicketDetailsUserActionButtons {
   ticket: Ticket;
 }
 
-export const TicketDetailsUserConfirmButtons = ({ ticket }: ITicketDetailsUserConfirmButtons) => {
+export const TicketDetailsUserActionButtons = ({ ticket }: ITicketDetailsUserActionButtons) => {
   const ticketStatus = ticket.status as ETicketStatus;
 
   const t = useTranslations();
