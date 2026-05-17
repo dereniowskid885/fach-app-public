@@ -27,7 +27,7 @@ export default function ContentCard({
     >
       <Card
         onClick={onClick}
-        className="rounded-xl border shadow-sm transition-shadow hover:shadow-md"
+        className="rounded-2xl border shadow-sm transition-shadow hover:shadow-md"
       >
         <CardContent className={cn('p-4 sm:p-6', className)}>{children}</CardContent>
       </Card>

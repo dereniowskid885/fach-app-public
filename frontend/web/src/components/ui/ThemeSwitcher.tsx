@@ -65,7 +65,7 @@ export default function ThemeSwitcher({
           variant="ghost"
           size="icon"
           className={cn(
-            'animation-base animation-idle animation-interactive h-10 w-10 rounded-xl',
+            'animation-base animation-idle animation-interactive h-10 w-10 rounded-2xl',
             wrapperClassName
           )}
         >

@@ -28,7 +28,7 @@ export default function TicketStatusIcon({
   return (
     <div
       className={cn(
-        'flex items-center gap-2 rounded-xl border p-2.5 shadow-sm',
+        'flex items-center gap-2 rounded-2xl border p-2.5 shadow-sm',
         getTicketStatusColorClasses(status),
         className
       )}
