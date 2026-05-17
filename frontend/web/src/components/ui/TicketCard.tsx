@@ -79,11 +79,16 @@ export default function TicketCard({ ticket, index }: ITicketCard) {
 
           <UserCard
             className="ml-auto"
-            user={{
-              name: ticket.assignee?.name,
-              surname: ticket.assignee?.surname,
-              role: ticket.assignee?.role
-            }}
+            user={
+              ticket.assignee
+                ? {
+                    name: ticket.assignee.name,
+                    surname: ticket.assignee.surname,
+                    role: ticket.assignee.role
+                  }
+                : null
+            }
+            userNameFallback={t('common.unassigned')}
           />
         </div>
       </div>

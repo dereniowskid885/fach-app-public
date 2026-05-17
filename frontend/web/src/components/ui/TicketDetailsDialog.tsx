@@ -126,7 +126,7 @@ export default function TicketDetailsDialog({
 
     // Additional validation to catch trimmed empty content
     if (!trimmedMessage || trimmedMessage.length < 7) {
-      setErrorMessage(t('common.errorMinimumCharacters', { minimum: 7 }) || 'Comment must be at least 7 characters');
+      setErrorMessage(t('common.errorMinimumCharacters', { minimum: 7 }));
       return;
     }
 
@@ -209,7 +209,7 @@ export default function TicketDetailsDialog({
           <ContentSectionItem
             className="rounded-xl border p-2"
             title={t('common.assignee')}
-            descriptionComponent={renderUserInfo(ticket.assignee)}
+            descriptionComponent={renderUserInfo(ticket.assignee, t('common.unassigned'))}
             variant={
               isSpecialist(ticket.assignee?.role)
                 ? ESectionItemType.SPECIALIST
@@ -314,11 +314,13 @@ export default function TicketDetailsDialog({
                   required: true,
                   minLength: 7,
                   maxLength: messageMaxLength,
-                  validate: (value) => {
+                  validate: value => {
                     const trimmedValue = value?.trim() || '';
+
                     if (trimmedValue.length < 7) {
-                      return t('common.errorMinimumCharacters', { minimum: 7 }) || 'Comment must be at least 7 characters';
+                      return t('common.errorMinimumCharacters', { minimum: 7 });
                     }
+
                     return true;
                   }
                 })}
@@ -353,12 +355,7 @@ export default function TicketDetailsDialog({
       content={content}
       contentClass="max-w-7xl"
       customConfirmButton={
-        <TicketDetailsConfirmButtons
-          ticket={ticket}
-          role={role}
-          userId={userId}
-          setDialogErrorMessage={setErrorMessage}
-        />
+        <TicketDetailsConfirmButtons ticket={ticket} role={role} userId={userId} />
       }
       cancelButtonHandler={closeDialog}
       cancelButtonText={t('common.close')}
@@ -368,12 +365,12 @@ export default function TicketDetailsDialog({
   );
 }
 
-const renderUserInfo = (user?: User) => (
+const renderUserInfo = (user?: User, nameFallback?: string) => (
   <div className="flex items-center gap-2">
     <Typography variant="note" className="font-semibold text-muted-foreground">
-      {getUserFullName(user)}
+      {getUserFullName(user, nameFallback)}
     </Typography>
 
-    <UserRoleBadge role={user?.role} />
+    {user && user.role ? <UserRoleBadge role={user?.role} /> : null}
   </div>
 );

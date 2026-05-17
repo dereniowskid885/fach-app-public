@@ -90,11 +90,16 @@ export const getAssigneeColumn = (t: TFunction) => ({
 
     return (
       <UserCard
-        user={{
-          name: ticket.assignee?.name,
-          surname: ticket.assignee?.surname,
-          role: ticket.assignee?.role
-        }}
+        user={
+          ticket.assignee
+            ? {
+                name: ticket.assignee.name,
+                surname: ticket.assignee.surname,
+                role: ticket.assignee.role
+              }
+            : null
+        }
+        userNameFallback={t('common.unassigned')}
       />
     );
   }

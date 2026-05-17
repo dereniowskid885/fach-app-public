@@ -13,7 +13,7 @@ export const getFormattedPriceAmount = (
   currency?: Currency | ESupportedCurrency
 ) => (amountInCents / 100).toFixed(2) + (currency ? ` ${currency}` : '');
 
-export const getUserFullName = (user?: User, nameFallback = 'Unknown') => {
+export const getUserFullName = (user?: User | null, nameFallback = 'Unknown') => {
   return user?.name && user?.surname ? `${user.name} ${user.surname}` : nameFallback;
 };
 

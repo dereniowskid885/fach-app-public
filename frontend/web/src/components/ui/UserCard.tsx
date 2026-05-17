@@ -10,7 +10,8 @@ import { ESectionItemType } from '@/enums/ui';
 import UserRoleBadge from './UserRoleBadge';
 
 export interface IUserCard {
-  user?: Partial<User>;
+  user?: Partial<User> | null;
+  userNameFallback?: string;
   isSidebarCollapsed?: boolean;
   showBackground?: boolean;
   className?: string;
@@ -18,12 +19,15 @@ export interface IUserCard {
 
 export default function UserCard({
   user,
+  userNameFallback,
   isSidebarCollapsed = false,
   showBackground = false,
   className
 }: IUserCard) {
   const t = useTranslations();
-  const userName = getUserFullName(user, '');
+
+  const isUsernameFallback = !!userNameFallback && !user;
+  const userName = user?.name ? getUserFullName(user) : undefined;
   const shouldHideBottomInfo = isSidebarCollapsed || (!user?.city && !user?.category);
 
   return (
@@ -33,15 +37,15 @@ export default function UserCard({
     >
       <ContentSectionItem
         hideContent={isSidebarCollapsed}
-        title={userName}
-        descriptionComponent={<UserRoleBadge role={user?.role} className="w-fit" />}
+        title={isUsernameFallback ? userNameFallback : userName}
+        descriptionComponent={user ? <UserRoleBadge role={user.role} className="w-fit" /> : <></>}
         iconComponent={
-          user?.name && user?.surname ? (
-            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border bg-card text-xs font-bold uppercase shadow-sm">
-              {`${user.name.charAt(0)}${user.surname.charAt(0)}`}
-            </div>
-          ) : (
+          user === undefined ? (
             <Skeleton className="h-[32px] w-[32px] rounded-full" />
+          ) : (
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border bg-card text-xs font-bold uppercase shadow-sm">
+              {`${user?.name?.charAt(0) ?? 'U'}${user?.surname?.charAt(0) ?? 'A'}`}
+            </div>
           )
         }
       />
