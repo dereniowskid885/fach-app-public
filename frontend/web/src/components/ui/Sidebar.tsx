@@ -139,6 +139,7 @@ export default function Sidebar() {
             }
           }}
           showBackground={true}
+          className="border border-secondary shadow-none"
           isSidebarCollapsed={isSidebarCollapsed}
         />
 
