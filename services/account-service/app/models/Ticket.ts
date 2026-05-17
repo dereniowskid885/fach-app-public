@@ -3,13 +3,14 @@ import { ICategoryModel } from './Category';
 import { IUserModel } from './User';
 import EvaluationSchema, { IEvaluationSchema } from '@schemas/evaluationSchema';
 import { ETicketStatus } from 'shared-types';
+import { IPaymentModel } from './Payment';
 
 export interface ITicketModel extends Document {
   _id: Types.ObjectId;
   category: Types.ObjectId | ICategoryModel;
   city: string;
   status: ETicketStatus;
-  assignee: Types.ObjectId | IUserModel;
+  assignee: Types.ObjectId | IUserModel | null;
   createdBy: Types.ObjectId | IUserModel;
   createdAt: Date;
   updatedBy: Types.ObjectId | IUserModel;
@@ -17,9 +18,10 @@ export interface ITicketModel extends Document {
   title: string;
   description: string;
   evaluations: IEvaluationSchema[];
-  acceptedEvaluation: IEvaluationSchema;
+  acceptedEvaluation: IEvaluationSchema | null;
   commentsCount: number;
   specialistCommentsCount: number;
+  payment: Types.ObjectId | IPaymentModel;
 }
 
 const ticketSchema = new Schema<ITicketModel>(
@@ -42,7 +44,8 @@ const ticketSchema = new Schema<ITicketModel>(
     assignee: {
       type: Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: false,
+      default: null,
     },
     createdBy: {
       type: Types.ObjectId,
@@ -66,7 +69,10 @@ const ticketSchema = new Schema<ITicketModel>(
       required: true,
     },
     evaluations: [EvaluationSchema],
-    acceptedEvaluation: EvaluationSchema,
+    acceptedEvaluation: {
+      type: EvaluationSchema,
+      default: null,
+    },
     commentsCount: {
       type: Number,
       required: false,
@@ -76,6 +82,12 @@ const ticketSchema = new Schema<ITicketModel>(
       type: Number,
       required: false,
       default: 0,
+    },
+    payment: {
+      type: Types.ObjectId,
+      ref: 'Payment',
+      required: false,
+      default: null,
     },
   },
   { timestamps: true },
