@@ -1,51 +1,7 @@
 import { ICommentModel } from '@models/Comment';
 import { ITicketModel } from '@models/Ticket';
 import { JwtPayload } from 'jsonwebtoken';
-import { ETicketStatus, EUserRole, isAdmin } from 'shared-types';
-
-export const checkTicketStatusTransition = (
-  fromStatus: ETicketStatus,
-  toStatus: ETicketStatus,
-  role: EUserRole,
-): boolean => {
-  const allowedTransitions: Partial<Record<ETicketStatus, Partial<Record<EUserRole, ETicketStatus[]>>>> = {
-    [ETicketStatus.AWAITING_EVALUATION]: {
-      [EUserRole.USER]: [ETicketStatus.CANCELED],
-      [EUserRole.ADMIN]: [
-        ETicketStatus.AWAITING_PAYMENT,
-        ETicketStatus.CANCELED,
-        ETicketStatus.MODERATOR_INVESTIGATION,
-      ],
-    },
-    [ETicketStatus.AWAITING_PAYMENT]: {
-      [EUserRole.ADMIN]: [ETicketStatus.IN_PROGRESS, ETicketStatus.CANCELED, ETicketStatus.MODERATOR_INVESTIGATION],
-    },
-    [ETicketStatus.IN_PROGRESS]: {
-      [EUserRole.SPECIALIST]: [ETicketStatus.SOLUTION_REVIEW],
-      [EUserRole.ADMIN]: [ETicketStatus.SOLUTION_REVIEW, ETicketStatus.CANCELED, ETicketStatus.MODERATOR_INVESTIGATION],
-    },
-    [ETicketStatus.SOLUTION_REVIEW]: {
-      [EUserRole.USER]: [ETicketStatus.COMPLETED, ETicketStatus.MODERATOR_INVESTIGATION],
-      [EUserRole.ADMIN]: [
-        ETicketStatus.COMPLETED,
-        ETicketStatus.CANCELED,
-        ETicketStatus.MODERATOR_INVESTIGATION,
-        ETicketStatus.IN_PROGRESS,
-      ],
-    },
-    [ETicketStatus.MODERATOR_INVESTIGATION]: {
-      [EUserRole.ADMIN]: [
-        ETicketStatus.COMPLETED,
-        ETicketStatus.IN_PROGRESS,
-        ETicketStatus.CANCELED,
-        ETicketStatus.AWAITING_PAYMENT,
-      ],
-    },
-  };
-
-  const allowedForRole = allowedTransitions[fromStatus]?.[role] ?? [];
-  return allowedForRole.includes(toStatus);
-};
+import { ETicketStatus, isAdmin } from 'shared-types';
 
 export const canViewTicketComments = (user: JwtPayload, ticket: ITicketModel) => {
   const isAdminRole = isAdmin(user.role);
@@ -63,4 +19,29 @@ export const canDeleteTicketComment = (user: JwtPayload, comment: ICommentModel)
   const isCommentCreator = user.userId === comment.user.id;
 
   return isAdminRole || isCommentCreator;
+};
+
+export const resolveAssigneeOnStatusChange = (status: ETicketStatus, ticket: ITicketModel) => {
+  switch (status) {
+    case ETicketStatus.AWAITING_EVALUATION:
+    case ETicketStatus.AWAITING_PAYMENT:
+      return ticket.createdBy._id;
+
+    case ETicketStatus.IN_PROGRESS:
+      const acceptedEvaluation = ticket.acceptedEvaluation;
+      return acceptedEvaluation?.user ?? null;
+
+    case ETicketStatus.SOLUTION_REVIEW:
+      return ticket.createdBy._id;
+
+    case ETicketStatus.MODERATOR_INVESTIGATION:
+      return null;
+
+    case ETicketStatus.COMPLETED:
+    case ETicketStatus.CANCELED:
+      return null;
+
+    default:
+      return null;
+  }
 };
