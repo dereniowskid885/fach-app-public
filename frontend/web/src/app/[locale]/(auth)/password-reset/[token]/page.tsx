@@ -3,8 +3,8 @@
 import { Button } from '@/components/shadcn/button';
 import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
-import PasswordInput from '@/components/common/PasswordInput';
-import Typography from '@/components/common/Typography';
+import PasswordInput from '@/components/ui/PasswordInput';
+import Typography from '@/components/ui/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
 import { getTokenPayload, isTokenExpired } from '@/utils/token';
 import Link from 'next/link';
@@ -16,7 +16,7 @@ import {
   PostAuthPasswordResetApiArg,
   usePostAuthPasswordResetMutation
 } from '@/services/api/generated/accountApi';
-import AuthCard from '@/components/ui/AuthCard';
+import AuthCard from '../../_components/AuthCard';
 import { useTranslations } from 'next-intl';
 import { getLastPathSegment } from '@/utils/pathname';
 import { useErrorHandler } from '@/hooks/useErrorHandler';

@@ -1,23 +1,23 @@
 'use client';
 
-import ContentCard from '@/components/common/ContentCard';
-import SearchComponent from '@/components/common/SearchComponent';
+import ContentCard from '@/components/ui/ContentCard';
+import SearchComponent from '@/components/ui/SearchComponent';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useSelector } from 'react-redux';
 import { useGetTicketsSpecialistAvailableQuery } from '@/services/api/generated/accountApi';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import PageHeader from '@/components/common/PageHeader';
+import PageHeader from '@/components/ui/PageHeader';
 import { getAvailableTicketsColumns } from '@/helpers/dataTable';
-import { DataTable } from '@/components/common/DataTable';
+import { DataTable } from '@/components/ui/DataTable';
 import { Badge } from '@/components/shadcn/badge';
 import { Skeleton } from '@/components/shadcn/skeleton';
 import IconBadge from '@/components/ui/IconBadge';
 import { EFilterButton, EIconBadgeVariant } from '@/enums/ui';
 import { notFound } from 'next/navigation';
 import { isSpecialist } from 'shared-types';
-import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
+import TicketFilterPanel from '@/components/features/ticket/TicketFilterPanel';
 
 export default function AvailableTickets() {
   const {

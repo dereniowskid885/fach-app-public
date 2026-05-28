@@ -1,11 +1,11 @@
-import Typography from '@/components/common/Typography';
+import Typography from '@/components/ui/Typography';
 import { ReactNode } from 'react';
 import { Layers, CheckCircle, RefreshCw, Star, Heart, Bolt } from 'lucide-react';
 import AuthLeftBanner from '@assets/auth-left-banner.jpg';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { EFallbackKey } from '@/enums/ui';
-import PreferencesButtons from '@/components/ui/PreferencesButtons';
+import PreferencesButtons from './_components/PreferencesButtons';
 import Logo from '@/components/ui/Logo';
 
 export interface IAuthLayout {

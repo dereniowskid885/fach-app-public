@@ -2,10 +2,10 @@
 
 import { Button } from '@/components/shadcn/button';
 import { Input } from '@/components/shadcn/input';
-import DialogComponent from '@/components/common/DialogComponent';
-import CitySelect from '@/components/ui/CitySelect';
-import PasswordInput from '@/components/common/PasswordInput';
-import Typography from '@/components/common/Typography';
+import DialogComponent from '@/components/ui/DialogComponent';
+import CitySelect from '@/app/[locale]/(auth)/_components/CitySelect';
+import PasswordInput from '@/components/ui/PasswordInput';
+import Typography from '@/components/ui/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
 import { Label } from '@/components/shadcn/label';
 import Link from 'next/link';
@@ -16,7 +16,7 @@ import {
   PostAuthRegisterApiArg,
   usePostAuthRegisterMutation
 } from '@/services/api/generated/accountApi';
-import AuthCard from '@/components/ui/AuthCard';
+import AuthCard from '../_components/AuthCard';
 import { useLocale, useTranslations } from 'next-intl';
 import { ESupportedLanguages } from 'shared-types';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
