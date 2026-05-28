@@ -55,6 +55,7 @@ export default function PriceInput({
         value={priceInput}
         onChange={handlePriceChange}
         inputMode="decimal"
+        placeholder="0.00"
       />
 
       <Typography
