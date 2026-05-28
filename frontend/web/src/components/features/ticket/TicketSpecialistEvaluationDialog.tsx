@@ -229,7 +229,7 @@ export default function TicketSpecialistEvaluationDialog({
 
           <PriceInput
             className="w-auto text-center"
-            defaultInputValue={getFormattedPriceAmount(priceInCents)}
+            defaultInputValue={priceInCents ? getFormattedPriceAmount(priceInCents) : ''}
             setPrice={setPriceInCents}
             max={10000}
             currency={currentUserEvaluation?.price?.currency ?? ESupportedCurrency.PLN}

@@ -36,7 +36,11 @@ export default function TicketSpecialistSendForReviewDialog({
     });
 
     const { error } = result;
-    if (error) return;
+
+    if (error) {
+      closeDialog();
+      return;
+    }
 
     toast.success(t('ticketSpecialistSendForReviewDialog.toastTitle'));
   };

@@ -78,7 +78,7 @@ export default function TicketUserPaymentDialog({
       cancelButtonHandler={closeDialog}
       content={
         <StripeProvider clientSecret={clientSecret}>
-          <StripePaymentForm />
+          <StripePaymentForm closePaymentDialog={closeDialog} />
         </StripeProvider>
       }
       errorMessage={errorMessage}

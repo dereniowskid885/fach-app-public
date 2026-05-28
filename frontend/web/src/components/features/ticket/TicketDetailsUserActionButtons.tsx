@@ -62,6 +62,7 @@ export const TicketDetailsUserActionButtons = ({ ticket }: ITicketDetailsUserAct
             statusActionButton[ticketStatus].isLoading !== undefined ? 'min-w-[120px]' : ''
           }
           onClick={statusActionButton[ticketStatus].handler}
+          loading={statusActionButton[ticketStatus].isLoading}
         >
           {statusActionButton[ticketStatus].title}
           {statusActionButton[ticketStatus].element}
