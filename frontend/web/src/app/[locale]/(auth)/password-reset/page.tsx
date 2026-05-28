@@ -7,12 +7,12 @@ import {
 import { Button } from '@/components/shadcn/button';
 import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
-import Typography from '@/components/common/Typography';
+import Typography from '@/components/ui/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import AuthCard from '@/components/ui/AuthCard';
+import AuthCard from '../_components/AuthCard';
 import { useLocale, useTranslations } from 'next-intl';
 import { ESupportedLanguages } from 'shared-types';
 import { useErrorHandler } from '@/hooks/useErrorHandler';

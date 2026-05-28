@@ -1,12 +1,12 @@
 'use client';
 
 import { useGetTicketsQuery } from '@/services/api/generated/accountApi';
-import ContentCard from '@/components/common/ContentCard';
-import { DataTable } from '@/components/common/DataTable';
-import PageHeader from '@/components/common/PageHeader';
-import SearchComponent from '@/components/common/SearchComponent';
+import ContentCard from '@/components/ui/ContentCard';
+import { DataTable } from '@/components/ui/DataTable';
+import PageHeader from '@/components/ui/PageHeader';
+import SearchComponent from '@/components/ui/SearchComponent';
 import { Badge } from '@/components/shadcn/badge';
-import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
+import TicketFilterPanel from '@/components/features/ticket/TicketFilterPanel';
 import { EFilterButton } from '@/enums/ui';
 import { getAllTicketsColumns } from '@/helpers/dataTable';
 import { getAllTicketsStatusFilters } from '@/helpers/ticket';
