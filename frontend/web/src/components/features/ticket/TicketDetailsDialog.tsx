@@ -241,6 +241,12 @@ export default function TicketDetailsDialog({
         {ticket.acceptedEvaluation ? (
           <div className="grid grid-cols-2 gap-x-8 gap-y-4">
             <ContentSectionItem
+              title={t('userRole.specialist')}
+              description={getUserFullName(ticket.acceptedEvaluation.user)}
+              variant={ESectionItemType.SPECIALIST}
+            />
+
+            <ContentSectionItem
               title={t('evaluation.responseTime')}
               description={getFormattedResponseTime(ticket.acceptedEvaluation.minutes, t)}
               variant={ESectionItemType.RESPONSE_TIME}
@@ -263,16 +269,10 @@ export default function TicketDetailsDialog({
               )}
               variant={ESectionItemType.PRICE}
             />
-
-            <ContentSectionItem
-              title={t('userRole.specialist')}
-              description={getUserFullName(ticket.acceptedEvaluation.user)}
-              variant={ESectionItemType.SPECIALIST}
-            />
           </div>
         ) : (
           <Typography variant="p" className="text-muted-foreground">
-            {t(`ticketDetailsDialog.noAcceptedEvaluationText.${role}`)}
+            {role ? t(`ticketDetailsDialog.noAcceptedEvaluationText.${role}`) : null}
           </Typography>
         )}
       </ContentSection>
