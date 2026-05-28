@@ -38,6 +38,7 @@ export default function UserCard({
       <ContentSectionItem
         hideContent={isSidebarCollapsed}
         title={isUsernameFallback ? userNameFallback : userName}
+        titleClass="text-primary font-bold"
         descriptionComponent={user ? <UserRoleBadge role={user.role} className="w-fit" /> : <></>}
         iconComponent={
           user === undefined ? (

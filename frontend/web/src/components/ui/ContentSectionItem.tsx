@@ -64,7 +64,10 @@ export default function ContentSectionItem({
           {titleComponent ? (
             titleComponent
           ) : title ? (
-            <Typography variant="note" className={cn('text-nowrap font-bold', titleClass)}>
+            <Typography
+              variant="note"
+              className={cn('text-nowrap font-semibold text-muted-foreground', titleClass)}
+            >
               {title}
             </Typography>
           ) : (
@@ -74,10 +77,7 @@ export default function ContentSectionItem({
           {descriptionComponent ? (
             descriptionComponent
           ) : description ? (
-            <Typography
-              variant="note"
-              className={cn('font-semibold text-muted-foreground', descriptionClass)}
-            >
+            <Typography variant="note" className={cn('font-bold', descriptionClass)}>
               {description}
             </Typography>
           ) : (

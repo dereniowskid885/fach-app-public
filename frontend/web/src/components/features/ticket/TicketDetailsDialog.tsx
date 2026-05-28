@@ -367,7 +367,7 @@ export default function TicketDetailsDialog({
 
 const renderUserInfo = (user?: User, nameFallback?: string) => (
   <div className="flex items-center gap-2">
-    <Typography variant="note" className="font-semibold text-muted-foreground">
+    <Typography variant="note" className="font-bold">
       {getUserFullName(user, nameFallback)}
     </Typography>
 
