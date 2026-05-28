@@ -1,7 +1,7 @@
 import { EIconBadgeVariant } from '@/enums/ui';
 import { Badge, BadgeProps } from '../shadcn/badge';
 import { cn } from '@/utils/shared';
-import Typography from '../common/Typography';
+import Typography from './Typography';
 import { iconBadgeObj } from '@/constants/iconBadge';
 
 export interface IIconBadge {
