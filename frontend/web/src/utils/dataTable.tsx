@@ -1,15 +1,15 @@
 import { Evaluation, Ticket } from '@/services/api/generated/accountApi';
-import Typography from '@/components/common/Typography';
-import TicketStatusBadge from '@/components/ui/TicketStatusBadge';
-import TicketSummaryInfo from '@/components/ui/TicketSummaryInfo';
+import Typography from '@/components/ui/Typography';
+import TicketStatusBadge from '@/components/features/ticket/TicketStatusBadge';
+import TicketSummaryInfo from '@/components/features/ticket/TicketSummaryInfo';
 import { TFunction } from '@/types/i18n';
 import { CellContext } from '@tanstack/react-table';
 import { ChartColumn, Layers, MessageSquare } from 'lucide-react';
 import { getLocaleDateString } from './date';
-import UserCard from '@/components/ui/UserCard';
+import UserCard from '@/components/features/user/UserCard';
 import { ETicketStatus, EUserRole } from 'shared-types';
-import TicketDropdownMenu from '@/components/ui/TicketDropdownMenu';
-import TicketCardActionButtons from '@/components/ui/TicketCardActionButtons';
+import TicketDropdownMenu from '@/components/features/ticket/TicketDropdownMenu';
+import TicketCardActionButtons from '@/components/features/ticket/TicketCardActionButtons';
 import { getFormattedPriceAmount, getFormattedResponseTime, getUserFullName } from './shared';
 
 /**

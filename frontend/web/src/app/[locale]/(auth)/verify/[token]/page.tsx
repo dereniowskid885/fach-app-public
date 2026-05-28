@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import AsyncCountdown from '@/components/ui/AsyncCountdown';
+import AsyncCountdown from '../../_components/AsyncCountdown';
 import { useEffect, useState } from 'react';
 import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
 import {
@@ -10,7 +10,7 @@ import {
 } from '@/services/api/generated/accountApi';
 import { HOME_PATH, LOGIN_PATH } from '@/constants/routes';
 import { parseQueryError } from '@/utils/error';
-import AuthCard from '@/components/ui/AuthCard';
+import AuthCard from '../../_components/AuthCard';
 import { useTranslations } from 'next-intl';
 import { getLastPathSegment } from '@/utils/pathname';
 import { useErrorHandler } from '@/hooks/useErrorHandler';

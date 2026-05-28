@@ -1,12 +1,12 @@
 'use client';
 
-import ContentCard from '@/components/common/ContentCard';
-import { DataTable } from '@/components/common/DataTable';
-import PageHeader from '@/components/common/PageHeader';
-import SearchComponent from '@/components/common/SearchComponent';
+import ContentCard from '@/components/ui/ContentCard';
+import { DataTable } from '@/components/ui/DataTable';
+import PageHeader from '@/components/ui/PageHeader';
+import SearchComponent from '@/components/ui/SearchComponent';
 import { Badge } from '@/components/shadcn/badge';
 import { Skeleton } from '@/components/shadcn/skeleton';
-import TicketFilterPanel from '@/components/ui/TicketFilterPanel';
+import TicketFilterPanel from '@/components/features/ticket/TicketFilterPanel';
 import IconBadge from '@/components/ui/IconBadge';
 import { EFilterButton, EIconBadgeVariant } from '@/enums/ui';
 import { getAvailableTicketsColumns } from '@/helpers/dataTable';
