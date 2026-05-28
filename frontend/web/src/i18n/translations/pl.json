@@ -88,7 +88,8 @@
     "userAlreadyCategorized": "Użytkownik został już przypisany do kategorii.",
     "userNotAssignedToCategory": "Użytkownik nie jest przypisany do tej kategorii.",
     "missingAcceptedEvaluation": "Brak zaakceptowanej wyceny.",
-    "paymentAlreadyProcessed": "Płatność została już zrealizowana."
+    "paymentAlreadyProcessed": "Płatność została już zrealizowana.",
+    "paymentFailed": "Nie udało się przetworzyć płatności. Spróbuj ponownie."
   },
   "sidebar": {
     "mainMenu": "Menu główne"
@@ -208,7 +209,8 @@
     "toastTitle": "Komentarz usunięty pomyślnie"
   },
   "ticketPaymentDialog": {
-    "title": "Wypełnij dane płatności"
+    "title": "Wypełnij dane płatności",
+    "toastTitle": "Płatność zakończona sukcesem"
   },
   "evaluation": {
     "dateOfResponse": "Termin odpowiedzi",

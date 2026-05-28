@@ -88,7 +88,8 @@
     "userAlreadyCategorized": "User is already categorized.",
     "userNotAssignedToCategory": "User is not assigned to this category.",
     "missingAcceptedEvaluation": "No accepted evaluation found.",
-    "paymentAlreadyProcessed": "Payment has already been processed."
+    "paymentAlreadyProcessed": "Payment has already been processed.",
+    "paymentFailed": "Failed to process payment. Please try again."
   },
   "sidebar": {
     "mainMenu": "Main Menu"
@@ -207,7 +208,8 @@
     "toastTitle": "Comment deleted successfully"
   },
   "ticketPaymentDialog": {
-    "title": "Enter payment details"
+    "title": "Enter payment details",
+    "toastTitle": "Ticket payment successfully completed"
   },
   "evaluation": {
     "dateOfResponse": "Response deadline",

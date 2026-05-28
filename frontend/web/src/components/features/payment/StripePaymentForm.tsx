@@ -2,13 +2,24 @@ import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { FormEvent, useState } from 'react';
 import { Button } from '@/components/shadcn/button';
 import Typography from '@/components/ui/Typography';
+import { useTranslations } from 'next-intl';
+import { toast } from 'sonner';
+import { useGetTicketsMyQuery } from '@/services/api/generated/accountApi';
 
-export const StripePaymentForm = () => {
+export interface IStripePaymentForm {
+  closePaymentDialog: () => void;
+}
+
+export const StripePaymentForm = ({ closePaymentDialog }: IStripePaymentForm) => {
+  const t = useTranslations();
+
   const [isLoading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const stripe = useStripe();
   const elements = useElements();
+
+  const { refetch } = useGetTicketsMyQuery({});
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -18,17 +29,30 @@ export const StripePaymentForm = () => {
     setLoading(true);
     setErrorMessage('');
 
+    const previousPath = window.location.pathname;
+    const redirectUrl = `${window.location.origin}${previousPath}`;
+
     const { error } = await stripe.confirmPayment({
       elements,
+      redirect: 'if_required',
       confirmParams: {
-        return_url: `${window.location.origin}`
+        return_url: redirectUrl
       }
     });
 
+    setLoading(false);
+
     if (error) {
-      setLoading(false);
-      setErrorMessage(error.message ?? 'Płatność nie powiodła się.');
+      setErrorMessage(error.message ?? t('errors.paymentFailed'));
+
+      return;
     }
+
+    setTimeout(() => {
+      closePaymentDialog();
+      refetch();
+      toast.success(t('ticketPaymentDialog.toastTitle'));
+    }, 500);
   };
 
   return (
@@ -36,7 +60,7 @@ export const StripePaymentForm = () => {
       <PaymentElement className="w-full" />
 
       <Button disabled={!stripe || isLoading} loading={isLoading} className="w-1/3">
-        Opłać
+        {t('common.confirm')}
       </Button>
 
       {errorMessage ? (
