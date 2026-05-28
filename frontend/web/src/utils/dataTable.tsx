@@ -25,7 +25,11 @@ export const getTicketColumn = (t: TFunction) => ({
     const ticket = item.row.original as Ticket;
 
     return (
-      <TicketSummaryInfo ticket={ticket} className="h-[60px] max-w-xs" showStatusIcon={true} />
+      <TicketSummaryInfo
+        ticket={ticket}
+        className="h-[60px] max-w-xs overflow-hidden"
+        showStatusIcon={true}
+      />
     );
   }
 });

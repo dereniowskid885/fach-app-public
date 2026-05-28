@@ -25,7 +25,7 @@ export default function TicketCard({ ticket, index }: ITicketCard) {
 
   return (
     <ContentCard index={index}>
-      <div className="group relative flex cursor-pointer flex-col gap-12">
+      <div className="relative flex cursor-pointer flex-col gap-12">
         <div className="flex items-center gap-4">
           <TicketStatusIcon status={ticket.status} showStatusText={true} />
 
