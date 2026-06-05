@@ -135,15 +135,3 @@ export const passwordReset = async (req: Request, res: Response) => {
     handleAppError(res, err as IAppError);
   }
 };
-
-module.exports = {
-  getCurrentUser,
-  register,
-  login,
-  refreshToken,
-  logout,
-  requestPasswordResetLink,
-  requestEmailVerificationLink,
-  verifyEmail,
-  passwordReset,
-};
