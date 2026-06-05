@@ -8,48 +8,77 @@ export const sectionItemObj = {
     variantName: 'category',
     iconWrapperClass: 'border-blue-200 bg-blue-50',
     iconClass: 'text-blue-600',
-    icon: Layers
+    icon: Layers,
+    iconSize: 14
   },
   [ESectionItemType.CITY]: {
     variantName: 'city',
     iconWrapperClass: 'border-emerald-200 bg-emerald-50',
     iconClass: 'text-emerald-600',
-    icon: MapPin
+    icon: MapPin,
+    iconSize: 14
   },
   [ESectionItemType.USER]: {
     variantName: 'user',
     iconWrapperClass: roleObj[EUserRole.USER].wrapperClass,
     iconClass: roleObj[EUserRole.USER].textClass,
-    icon: User
+    icon: User,
+    iconSize: 14
   },
   [ESectionItemType.SPECIALIST]: {
     variantName: 'specialist',
     iconWrapperClass: roleObj[EUserRole.SPECIALIST].wrapperClass,
     iconClass: roleObj[EUserRole.SPECIALIST].textClass,
-    icon: Wrench
+    icon: Wrench,
+    iconSize: 14
   },
   [ESectionItemType.ADMIN]: {
     variantName: 'admin',
     iconWrapperClass: roleObj[EUserRole.ADMIN].wrapperClass,
     iconClass: roleObj[EUserRole.ADMIN].textClass,
-    icon: Search
+    icon: Search,
+    iconSize: 14
   },
   [ESectionItemType.DATE_OF_RESPONSE]: {
     variantName: 'dateOfResponse',
     iconWrapperClass: 'border-blue-200 bg-blue-50',
     iconClass: 'text-blue-600',
-    icon: Calendar
+    icon: Calendar,
+    iconSize: 14
   },
   [ESectionItemType.RESPONSE_TIME]: {
     variantName: 'responseTime',
     iconWrapperClass: 'border-blue-200 bg-blue-50',
     iconClass: 'text-blue-600',
-    icon: Clock
+    icon: Clock,
+    iconSize: 14
   },
   [ESectionItemType.PRICE]: {
     variantName: 'price',
     iconWrapperClass: 'border-emerald-200 bg-emerald-50',
     iconClass: 'text-emerald-600',
-    icon: DollarSign
+    icon: DollarSign,
+    iconSize: 14
+  },
+  [ESectionItemType.SETTINGS_PERSONAL_INFO]: {
+    variantName: 'settingsPersonalInfo',
+    iconWrapperClass: 'h-10 w-10 border-violet-200 bg-violet-50',
+    iconClass: 'text-violet-600',
+    icon: User,
+    iconSize: 18
+  },
+  [ESectionItemType.SETTINGS_SECURITY]: {
+    variantName: 'settingsSecurity',
+    iconWrapperClass: 'h-10 w-10 border-orange-200 bg-orange-50',
+    iconClass: 'text-orange-600',
+    icon: Wrench,
+    iconSize: 18
+  },
+  [ESectionItemType.SETTINGS_THEME]: {
+    variantName: 'settingsTheme',
+    iconWrapperClass: 'h-10 w-10 border-pink-200 bg-pink-50',
+    iconClass: 'text-pink-600',
+    icon: Layers,
+    iconSize: 18
   }
 };
