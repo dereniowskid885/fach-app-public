@@ -1,11 +1,11 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import LanguageSwitcher from '@/components/shared/LanguageSwitcher';
+import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
 import { useLocale } from 'next-intl';
 import { normalizePathname } from '@/utils/pathname';
 import { ESupportedLanguages } from 'shared-types';
-import ThemeSwitcher from '@/components/shared/ThemeSwitcher';
+import ThemeSwitcher from '@/components/ui/ThemeSwitcher';
 import { EPopoverContentDirection } from '@/enums/ui';
 
 export default function PreferencesButtons() {

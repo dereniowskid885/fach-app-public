@@ -12,6 +12,7 @@ import UserRoleBadge from './UserRoleBadge';
 export interface IUserCard {
   user?: Partial<User> | null;
   userNameFallback?: string;
+  userNameTextWrap?: boolean;
   isSidebarCollapsed?: boolean;
   showBackground?: boolean;
   className?: string;
@@ -20,6 +21,7 @@ export interface IUserCard {
 export default function UserCard({
   user,
   userNameFallback,
+  userNameTextWrap = false,
   isSidebarCollapsed = false,
   showBackground = false,
   className
@@ -38,6 +40,7 @@ export default function UserCard({
       <ContentSectionItem
         hideContent={isSidebarCollapsed}
         title={isUsernameFallback ? userNameFallback : userName}
+        titleClass={cn('text-primary font-bold', userNameTextWrap ? 'text-pretty' : '')}
         descriptionComponent={user ? <UserRoleBadge role={user.role} className="w-fit" /> : <></>}
         iconComponent={
           user === undefined ? (

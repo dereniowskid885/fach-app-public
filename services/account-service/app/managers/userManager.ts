@@ -277,4 +277,20 @@ export const UserManager = {
       );
     }
   },
+  handlePasswordChange: async (userId: string, currentPassword: string, newPassword: string) => {
+    const user = await UserManager.getUserById(userId, false);
+
+    if (!user) {
+      throw new AppError(404, EResponseStatus.ERROR_USER_NOT_FOUND, 'User with provided id not found');
+    }
+
+    const isPasswordMatch = await user.comparePassword(currentPassword);
+
+    if (!isPasswordMatch) {
+      throw new AppError(400, EResponseStatus.ERROR_INVALID_DATA, 'Current password is incorrect');
+    }
+
+    user.password = newPassword;
+    await user.save();
+  },
 };

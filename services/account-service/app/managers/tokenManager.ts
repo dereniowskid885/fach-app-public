@@ -132,4 +132,7 @@ export const TokenManager = {
 
     Logger.info('Expired tokens deleted');
   },
+  removeAllTokensForUser: async (userId: Types.ObjectId) => {
+    await User.updateOne({ _id: userId }, { $set: { refreshTokens: [] } });
+  },
 };

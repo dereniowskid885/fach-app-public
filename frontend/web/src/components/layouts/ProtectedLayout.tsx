@@ -1,11 +1,11 @@
 'use client';
 
 import { ReactNode } from 'react';
-import Header from './Header';
-import Sidebar from './Sidebar';
+import Header from '../ui/Header';
+import Sidebar from '../ui/Sidebar';
 import { motion } from 'framer-motion';
 import { useSidebarContext } from '@/contexts/SidebarContext';
-import { useSyncTheme } from '@/hooks/useSyncTheme';
+import { useThemeHandler } from '@/hooks/useThemeHandler';
 
 export interface IProtectedLayout {
   children: ReactNode;
@@ -14,7 +14,7 @@ export interface IProtectedLayout {
 export default function ProtectedLayout({ children }: IProtectedLayout) {
   const { sidebarWidth, isSidebarCollapsed } = useSidebarContext();
 
-  useSyncTheme();
+  useThemeHandler();
 
   return (
     <main className="flex min-h-dvh bg-background">

@@ -5,19 +5,19 @@ export const themeObj = {
   [EThemeType.SYSTEM]: {
     id: 'theme-variant-system',
     icon: MonitorCog,
-    label: 'systemVariant',
+    translationKey: 'theme.systemVariant',
     className: 'system'
   },
   [EThemeType.LIGHT]: {
     id: 'theme-variant-light',
     icon: Sun,
-    label: 'lightVariant',
+    translationKey: 'theme.lightVariant',
     className: 'light'
   },
   [EThemeType.DARK]: {
     id: 'theme-variant-dark',
     icon: Moon,
-    label: 'darkVariant',
+    translationKey: 'theme.darkVariant',
     className: 'dark'
   }
 };

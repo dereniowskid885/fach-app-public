@@ -1,20 +1,19 @@
 import { notifications } from '@/mocks/notifications';
 import AmountIcon from '@/components/ui/AmountIcon';
-import HeaderNotificationList from '@/components/layouts/protected/HeaderNotificationList';
+import HeaderNotificationList from '@/components/ui/HeaderNotificationList';
 import { usePathname } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { ESupportedLanguages } from 'shared-types';
-import { Bell, HelpCircle } from 'lucide-react';
+import { Bell } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn/popover';
-import { Button } from '@/components/shadcn/button';
 import { Separator } from '@/components/shadcn/separator';
 import { motion } from 'framer-motion';
 import { useSidebarContext } from '@/contexts/SidebarContext';
 import { normalizePathname } from '@/utils/pathname';
 import SearchComponent from '@/components/ui/SearchComponent';
 import { ESearchComponentVariant } from '@/enums/ui';
-import LanguageSwitcher from '@/components/shared/LanguageSwitcher';
-import ThemeSwitcher from '@/components/shared/ThemeSwitcher';
+import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
+import ThemeSwitcher from '@/components/ui/ThemeSwitcher';
 
 export default function Header() {
   const { sidebarWidth } = useSidebarContext();
@@ -63,13 +62,14 @@ export default function Header() {
 
           <ThemeSwitcher />
 
-          <Button
+          {/* TODO - help button */}
+          {/* <Button
             variant="ghost"
             size="icon"
             className="animation-base animation-idle animation-interactive h-10 w-10 rounded-2xl"
           >
             <HelpCircle size={24} />
-          </Button>
+          </Button> */}
         </div>
       </div>
     </motion.header>
