@@ -8,7 +8,7 @@
     "sidebarButtonText": "Theme",
     "lightVariant": "Light",
     "darkVariant": "Dark",
-    "systemVariant": "Default"
+    "systemVariant": "System"
   },
   "common": {
     "appTitle": "FachApp",
@@ -41,7 +41,10 @@
     "assignee": "Assignee",
     "createdBy": "Created by",
     "send": "Send",
-    "charsAmount": "{amount} characters remaining"
+    "charsAmount": "{amount} characters remaining",
+    "saveChanges": "Save Changes",
+    "before": "Before",
+    "after": "After"
   },
   "userRole": {
     "admin": "Admin",
@@ -119,10 +122,6 @@
   "select": {
     "city": "Select city"
   },
-  "errorMessages": {
-    "passwordMatch": "Passwords must match",
-    "cityRequired": "City is required"
-  },
   "authLayout": {
     "title": "Fast and reliable support",
     "subtitle": "The all-in-one platform for reporting, tracking, and resolving technical challenges with world-class specialists.",
@@ -146,6 +145,12 @@
     "surnamePlaceholder": "Doe",
     "city": "City"
   },
+  "passwordInput": {
+    "info": "Password must be at least 7 characters long",
+    "passwordMatch": "Passwords must match",
+    "newPasswordMatch": "New password and confirm new password must match",
+    "passwordEqualsCurrent": "New password cannot be the same as the current password"
+  },
   "loginPage": {
     "authCardDescription": "To be one step away from <span>solution</span>",
     "forgotPassword": "Forgot password?",
@@ -160,7 +165,8 @@
   "registerPage": {
     "authCardTitle": "Create your account",
     "successDialogTitle": "Account created",
-    "successDialogDescription": "Account verification link has been sent to email: <span>{email}</span>"
+    "successDialogDescription": "Account verification link has been sent to email: <span>{email}</span>",
+    "cityRequired": "City is required"
   },
   "passwordReset": {
     "authCardDescription": "Enter your email to receive a password reset link",
@@ -370,5 +376,36 @@
     "title": "Are you sure you want to submit this ticket for review?",
     "confirmButtonText": "Submit for review",
     "toastTitle": "The ticket has been submitted for review"
+  },
+  "settingsPage": {
+    "title": "Settings",
+    "description": "Manage your account settings and preferences.",
+    "personalForm": {
+      "title": "Personal Information",
+      "description": "Update your personal information, such as name, surname, and city.",
+      "confirmDialogTitle": "Are you sure you want to update your personal information?",
+      "toastTitle": "Your personal information has been updated"
+    },
+    "securityForm": {
+      "title": "Security",
+      "description": "Update your login credentials.",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmNewPassword": "Confirm new password",
+      "confirmDialogTitle": "Are you sure you want to change your password?",
+      "confirmDialogDescription": "This action will log you out from all devices.",
+      "submitButton": "Change password",
+      "toastTitle": "Your password has been updated"
+    },
+    "themeForm": {
+      "title": "Theme",
+      "description": "Customize the appearance of the application. Your selection will be saved and applied immediately.",
+      "toastTitle": "Your theme preference has been saved",
+      "themeDescription": {
+        "light": "Use the light theme",
+        "dark": "Use the dark theme",
+        "system": "Match the system theme"
+      }
+    }
   }
 }

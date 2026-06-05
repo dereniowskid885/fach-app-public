@@ -8,7 +8,7 @@
     "sidebarButtonText": "Motyw",
     "lightVariant": "Jasny",
     "darkVariant": "Ciemny",
-    "systemVariant": "Domyślny"
+    "systemVariant": "Systemowy"
   },
   "common": {
     "appTitle": "FachApp",
@@ -41,7 +41,10 @@
     "assignee": "Przypisany",
     "createdBy": "Twórca",
     "send": "Wyślij",
-    "charsAmount": "Pozostało: {amount} znaków"
+    "charsAmount": "Pozostało: {amount} znaków",
+    "saveChanges": "Zapisz zmiany",
+    "before": "Przed",
+    "after": "Po"
   },
   "userRole": {
     "admin": "Admin",
@@ -120,10 +123,6 @@
   "select": {
     "city": "Wybierz miasto"
   },
-  "errorMessages": {
-    "passwordMatch": "Hasła muszą być takie same",
-    "cityRequired": "Miasto jest wymagane"
-  },
   "authLayout": {
     "title": "Szybka i fachowa pomoc",
     "subtitle": "Wszechstronna platforma do zgłaszania, śledzenia i rozwiązywania problemów technicznych z udziałem światowej klasy specjalistów.",
@@ -147,6 +146,12 @@
     "surnamePlaceholder": "Kowalski",
     "city": "Miasto"
   },
+  "passwordInput": {
+    "info": "Hasło musi mieć przynajmniej 7 znaków",
+    "passwordMatch": "Hasła muszą być takie same",
+    "newPasswordMatch": "Nowe hasło i potwierdzenie nowego hasła muszą być takie same",
+    "passwordEqualsCurrent": "Nowe hasło nie może być takie samo jak obecne hasło"
+  },
   "loginPage": {
     "authCardDescription": "Aby być krok od <span>rozwiązania</span>",
     "forgotPassword": "Zapomniałeś hasła?",
@@ -161,7 +166,8 @@
   "registerPage": {
     "authCardTitle": "Stwórz swoje konto",
     "successDialogTitle": "Konto zostało utworzone",
-    "successDialogDescription": "Link do weryfikacji konta został wysłany na e-mail: <span>{email}</span>"
+    "successDialogDescription": "Link do weryfikacji konta został wysłany na e-mail: <span>{email}</span>",
+    "cityRequired": "Miasto jest wymagane"
   },
   "passwordReset": {
     "authCardDescription": "Wprowadź swój e-mail, aby uzyskać link do zresetowania hasła",
@@ -371,5 +377,36 @@
     "title": "Czy na pewno chcesz przesłać tę sprawę do weryfikacji?",
     "confirmButtonText": "Prześlij do weryfikacji",
     "toastTitle": "Sprawa została przesłana do weryfikacji"
+  },
+  "settingsPage": {
+    "title": "Ustawienia",
+    "description": "Zarządzaj swoim kontem i preferencjami.",
+    "personalForm": {
+      "title": "Informacje osobiste",
+      "description": "Zaktualizuj swoje imię, nazwisko, lub miasto.",
+      "confirmDialogTitle": "Czy na pewno chcesz zaktualizować swoje informacje osobiste?",
+      "toastTitle": "Twoje informacje osobiste zostały zaktualizowane"
+    },
+    "securityForm": {
+      "title": "Bezpieczeństwo",
+      "description": "Zaktualizuj swoje dane logowania.",
+      "currentPassword": "Obecne hasło",
+      "newPassword": "Nowe hasło",
+      "confirmNewPassword": "Potwierdź nowe hasło",
+      "confirmDialogTitle": "Czy na pewno chcesz zmienić swoje hasło?",
+      "confirmDialogDescription": "Ta operacja spowoduje wylogowanie ze wszystkich urządzeń.",
+      "submitButton": "Zmień hasło",
+      "toastTitle": "Twoje hasło zostało zaktualizowane"
+    },
+    "themeForm": {
+      "title": "Motyw",
+      "description": "Dostosuj wygląd aplikacji. Wybór zostanie zapisany i zastosowany natychmiast.",
+      "toastTitle": "Motyw został zaktualizowany",
+      "themeDescription": {
+        "light": "Użyj jasnego motywu",
+        "dark": "Użyj ciemnego motywu",
+        "system": "Dopasuj do motywu systemowego"
+      }
+    }
   }
 }

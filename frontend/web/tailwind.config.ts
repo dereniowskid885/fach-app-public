@@ -119,7 +119,14 @@ export default {
     'border-lime-200',
     'bg-red-50',
     'text-red-600',
-    'border-red-200'
+    'border-red-200',
+    'bg-pink-50',
+    'bg-pink-100',
+    'text-pink-600',
+    'border-pink-200',
+    'bg-violet-50',
+    'text-violet-600',
+    'border-violet-200'
   ],
   plugins: [animate]
 } satisfies Config;
