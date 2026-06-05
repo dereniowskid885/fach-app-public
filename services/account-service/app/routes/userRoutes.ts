@@ -1,4 +1,12 @@
-import { createUser, deleteUser, getUsers, getUserById, updateUser, updateUserRole } from '@controllers/userController';
+import {
+  createUser,
+  deleteUser,
+  getUsers,
+  getUserById,
+  updateUser,
+  updateUserRole,
+  changePassword,
+} from '@controllers/userController';
 
 import express from 'express';
 const router = express.Router();
@@ -6,6 +14,7 @@ const router = express.Router();
 import { createMiddleware, checkAndParseAccessToken, checkUserRole } from 'shared-backend';
 import {
   validateCreateUserMiddleware,
+  validateUserPasswordChangeMiddleware,
   validateUserRoleUpdateMiddleware,
   validateUserUpdateMiddleware,
 } from 'middlewares/userValidationMiddleware';
@@ -247,6 +256,111 @@ router.post('/', validateCreateUserMiddleware, checkAdminRole, createUser);
  *                   example: Server error
  */
 router.get('/', checkAdminRole, getUsers);
+
+/**
+ * @swagger
+ * /users/change-password:
+ *   patch:
+ *     summary: Change user password
+ *     description: Changes the password of a user based on the provided current password and new password
+ *     tags:
+ *       - Users
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 format: password
+ *               newPassword:
+ *                 type: string
+ *                 format: password
+ *     responses:
+ *       200:
+ *         description: Successfully changed the user password
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Password changed successfully
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_INVALID_DATA"
+ *                 message:
+ *                   type: string
+ *                   example: Current password is incorrect
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TOKEN_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: No access token provided
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: User with provided id not found
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.patch('/change-password', validateUserPasswordChangeMiddleware, changePassword);
 
 /**
  * @swagger

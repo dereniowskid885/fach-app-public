@@ -60,3 +60,20 @@ export const validateUserUpdateMiddleware = (req: Request, res: Response, next: 
     handleZodError(res, err);
   }
 };
+
+const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(7).max(64),
+    newPassword: z.string().min(7).max(64),
+  })
+  .strict();
+
+export const validateUserPasswordChangeMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    req.body = changePasswordSchema.parse(req.body);
+
+    next();
+  } catch (err) {
+    handleZodError(res, err);
+  }
+};
