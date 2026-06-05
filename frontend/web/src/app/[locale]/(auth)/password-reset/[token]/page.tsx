@@ -50,7 +50,7 @@ export default function PasswordResetForm() {
 
   const submitHandler = async (formData: IPasswordResetForm) => {
     if (formData.newPassword !== formData.newPasswordConfirm) {
-      setError('root', { message: t('errorMessages.passwordMatch') });
+      setError('root', { message: t('passwordInput.passwordMatch') });
       return;
     }
 

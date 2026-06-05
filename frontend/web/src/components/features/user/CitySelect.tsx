@@ -27,6 +27,7 @@ export default function CitySelect({ register, defaultValue, id }: ICitySelect) 
       <SelectTrigger id={id}>
         <SelectValue placeholder={t('select.city')} />
       </SelectTrigger>
+
       <SelectContent>
         {cities.map(city => (
           <SelectItem key={city} value={city}>
