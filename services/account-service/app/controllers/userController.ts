@@ -2,6 +2,7 @@ import { UserManager } from '@managers/userManager';
 import { IAppError, handleAppError } from 'shared-backend';
 import type { Request, Response } from 'express';
 import { FilterBuilder } from '@utils/filterBuilder';
+import { TokenManager } from '@managers/tokenManager';
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -59,6 +60,18 @@ export const createUser = async (req: Request, res: Response) => {
     const user = await UserManager.createUser(req.user.userId, req.body);
 
     return res.status(200).json({ success: true, message: 'User created successfully', data: user });
+  } catch (err) {
+    handleAppError(res, err as IAppError);
+  }
+};
+
+export const changePassword = async (req: Request, res: Response) => {
+  try {
+    await UserManager.handlePasswordChange(req.user.userId, req.body.currentPassword, req.body.newPassword);
+    await TokenManager.removeAllTokensForUser(req.user.userId);
+    TokenManager.clearAllTokens(res);
+
+    return res.status(200).json({ success: true, message: 'Password changed successfully' });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }

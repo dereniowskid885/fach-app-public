@@ -4,17 +4,8 @@ import { Check, Palette } from 'lucide-react';
 import { themeObj } from '@/constants/theme';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/utils/shared';
-import {
-  PatchUsersByIdApiArg,
-  ThemeType,
-  usePatchUsersByIdMutation
-} from '@/services/api/generated/accountApi';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectUserData, setUserTheme } from '@/redux/slices/UserDataSlice';
-import { useTheme } from 'next-themes';
-import { useEffect } from 'react';
-import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { EPopoverContentDirection } from '@/enums/ui';
+import { useThemeHandler } from '@/hooks/useThemeHandler';
 
 export interface IThemeSwitcher {
   popoverContentDirection?: EPopoverContentDirection;
@@ -28,35 +19,7 @@ export default function ThemeSwitcher({
   wrapperClassName = ''
 }: IThemeSwitcher) {
   const t = useTranslations();
-  const { userId, theme: userTheme } = useSelector(selectUserData);
-  const { theme, setTheme } = useTheme();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (!userTheme) return;
-
-    setTheme(userTheme);
-  }, [setTheme, userTheme]);
-
-  const [trigger, { error }] = usePatchUsersByIdMutation();
-
-  useErrorHandler(error);
-
-  const handleThemeChange = async (themeClass: string) => {
-    if (triggerPatchUserMutation) {
-      const payload: PatchUsersByIdApiArg = {
-        id: userId,
-        body: {
-          theme: themeClass as ThemeType
-        }
-      };
-
-      await trigger(payload);
-    }
-
-    setTheme(themeClass);
-    dispatch(setUserTheme(themeClass as ThemeType));
-  };
+  const { theme, handleThemeChange } = useThemeHandler();
 
   return (
     <Popover>
@@ -86,7 +49,7 @@ export default function ThemeSwitcher({
               <Button
                 key={themeObjItem.id}
                 disabled={isCurrentTheme}
-                onClick={() => handleThemeChange(themeObjItem.className)}
+                onClick={() => handleThemeChange(themeObjItem.className, triggerPatchUserMutation)}
                 variant="ghost"
                 className={cn(
                   'animation-base animation-idle animation-interactive group flex w-full items-center justify-start gap-3 px-3 py-2 text-sm',
@@ -94,9 +57,9 @@ export default function ThemeSwitcher({
                 )}
               >
                 <themeObjItem.icon size={12} />
-                <span className="flex-1 text-left">{t(`theme.${themeObjItem.label}`)}</span>
+                <span className="flex-1 text-left">{t(themeObjItem.translationKey)}</span>
 
-                {isCurrentTheme && <Check size={12} className="text-primary" />}
+                {isCurrentTheme ? <Check size={12} className="text-primary" /> : null}
               </Button>
             );
           })}

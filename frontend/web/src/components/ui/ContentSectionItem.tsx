@@ -41,7 +41,8 @@ export default function ContentSectionItem({
     : {
         icon: Icon,
         iconClass: iconClass,
-        iconWrapperClass: iconWrapperClass
+        iconWrapperClass: iconWrapperClass,
+        iconSize: 14
       };
 
   return (
@@ -55,7 +56,7 @@ export default function ContentSectionItem({
             sectionItem.iconWrapperClass
           )}
         >
-          <sectionItem.icon size={14} className={sectionItem.iconClass} />
+          <sectionItem.icon size={sectionItem.iconSize} className={sectionItem.iconClass} />
         </div>
       ) : null}
 
@@ -64,7 +65,13 @@ export default function ContentSectionItem({
           {titleComponent ? (
             titleComponent
           ) : title ? (
-            <Typography variant="note" className={cn('text-nowrap font-bold', titleClass)}>
+            <Typography
+              variant="note"
+              className={cn(
+                'text-nowrap font-semibold leading-relaxed text-muted-foreground',
+                titleClass
+              )}
+            >
               {title}
             </Typography>
           ) : (
@@ -74,10 +81,7 @@ export default function ContentSectionItem({
           {descriptionComponent ? (
             descriptionComponent
           ) : description ? (
-            <Typography
-              variant="note"
-              className={cn('font-semibold text-muted-foreground', descriptionClass)}
-            >
+            <Typography variant="note" className={cn('font-bold', descriptionClass)}>
               {description}
             </Typography>
           ) : (

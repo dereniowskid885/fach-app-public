@@ -3,7 +3,7 @@
 import { Button } from '@/components/shadcn/button';
 import { Input } from '@/components/shadcn/input';
 import DialogComponent from '@/components/ui/DialogComponent';
-import CitySelect from '@/app/[locale]/(auth)/_components/CitySelect';
+import CitySelect from '@/components/features/user/CitySelect';
 import PasswordInput from '@/components/ui/PasswordInput';
 import Typography from '@/components/ui/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
@@ -45,12 +45,12 @@ export default function Register() {
 
   const submitHandler = async (formData: IRegisterForm) => {
     if (formData.password !== formData.passwordConfirm) {
-      setError('root', { message: t('errorMessages.passwordMatch') });
+      setError('root', { message: t('passwordInput.passwordMatch') });
       return;
     }
 
     if (!formData.city) {
-      setError('root', { type: 'required', message: t('errorMessages.cityRequired') });
+      setError('root', { type: 'required', message: t('registerPage.cityRequired') });
       return;
     }
 
@@ -79,6 +79,7 @@ export default function Register() {
         <>
           <div className="space-y-2">
             <Label htmlFor="email">{t('authForm.email')}</Label>
+
             <Input
               {...register('email')}
               id="email"
@@ -92,6 +93,7 @@ export default function Register() {
 
           <div className="space-y-2">
             <Label htmlFor="name">{t('authForm.name')}</Label>
+
             <Input
               {...register('name')}
               id="name"
@@ -104,6 +106,7 @@ export default function Register() {
 
           <div className="space-y-2">
             <Label htmlFor="surname">{t('authForm.surname')}</Label>
+
             <Input
               {...register('surname')}
               id="surname"
@@ -116,16 +119,19 @@ export default function Register() {
 
           <div className="space-y-2">
             <Label htmlFor="password">{t('authForm.password')}</Label>
-            <PasswordInput register={register('password')} id="password" />
+
+            <PasswordInput register={register('password')} id="password" showPasswordInfo={true} />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="passwordConfirm">{t('authForm.passwordConfirm')}</Label>
+
             <PasswordInput register={register('passwordConfirm')} id="passwordConfirm" />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="city">{t('authForm.city')}</Label>
+
             <CitySelect register={register('city')} id="city" />
           </div>
 
@@ -150,20 +156,18 @@ export default function Register() {
         </div>
       }
       bottomContent={
-        <>
-          <DialogComponent
-            open={successDialog}
-            title={t('registerPage.successDialogTitle')}
-            description={t.rich('registerPage.successDialogDescription', {
-              email: getValues('email'),
-              span: chunks => <span className="font-bold text-chart-2">{chunks}</span>
-            })}
-            cancelButtonText={t('common.close')}
-            confirmButtonText={t('common.goToLogin')}
-            cancelButtonHandler={() => setSuccessDialog(false)}
-            confirmButtonHandler={() => router.push(LOGIN_PATH)}
-          />
-        </>
+        <DialogComponent
+          open={successDialog}
+          title={t('registerPage.successDialogTitle')}
+          description={t.rich('registerPage.successDialogDescription', {
+            email: getValues('email'),
+            span: chunks => <span className="font-bold text-chart-2">{chunks}</span>
+          })}
+          cancelButtonText={t('common.close')}
+          confirmButtonText={t('common.goToLogin')}
+          cancelButtonHandler={() => setSuccessDialog(false)}
+          confirmButtonHandler={() => router.push(LOGIN_PATH)}
+        />
       }
     />
   );

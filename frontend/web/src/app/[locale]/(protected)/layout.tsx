@@ -1,5 +1,5 @@
 import AuthWrapper from '@/components/features/auth/AuthWrapper';
-import ProtectedLayout from '@/components/layouts/protected/ProtectedLayout';
+import ProtectedLayout from '@/components/layouts/ProtectedLayout';
 import SidebarContextProvider from '@/components/providers/SidebarContextProvider';
 import { ReactNode } from 'react';
 

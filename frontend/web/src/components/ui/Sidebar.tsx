@@ -1,5 +1,5 @@
 import { LogOut } from 'lucide-react';
-import NavLink from '@/components/layouts/protected/NavLink';
+import NavLink from '@/components/ui/NavLink';
 import { LOGIN_PATH } from '@/constants/routes';
 import { useLocale, useTranslations } from 'next-intl';
 import LoadingOverlay from '@/components/ui/LoadingOverlay';
@@ -141,6 +141,7 @@ export default function Sidebar() {
           showBackground={true}
           className="border border-secondary shadow-none"
           isSidebarCollapsed={isSidebarCollapsed}
+          userNameTextWrap={true}
         />
 
         <Button

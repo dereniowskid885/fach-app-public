@@ -317,6 +317,17 @@ const injectedRtkApi = api
           body: queryArg.body
         }),
         invalidatesTags: ['Users']
+      }),
+      patchUsersChangePassword: build.mutation<
+        PatchUsersChangePasswordApiResponse,
+        PatchUsersChangePasswordApiArg
+      >({
+        query: queryArg => ({
+          url: `/users/change-password`,
+          method: 'PATCH',
+          body: queryArg.body
+        }),
+        invalidatesTags: ['Users']
       })
     }),
     overrideExisting: false
@@ -813,6 +824,17 @@ export type PatchUsersByIdRoleApiArg = {
     role: UserRole;
   };
 };
+export type PatchUsersChangePasswordApiResponse =
+  /** status 200 Successfully changed the user password */ {
+    success?: boolean;
+    message?: string;
+  };
+export type PatchUsersChangePasswordApiArg = {
+  body: {
+    currentPassword: string;
+    newPassword: string;
+  };
+};
 export type UserRole = 'user' | 'specialist' | 'admin';
 export type Category = {
   _id?: string;
@@ -928,5 +950,6 @@ export const {
   useGetUsersByIdQuery,
   usePatchUsersByIdMutation,
   useDeleteUsersByIdMutation,
-  usePatchUsersByIdRoleMutation
+  usePatchUsersByIdRoleMutation,
+  usePatchUsersChangePasswordMutation
 } = injectedRtkApi;
