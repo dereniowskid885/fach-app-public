@@ -57,7 +57,7 @@ export default function DialogComponent({
   return (
     <AlertDialog open={open}>
       <AlertDialogContent className={contentClass}>
-        <AlertDialogHeader className={cn('items-center space-y-0', headerClass)}>
+        <AlertDialogHeader className={cn('items-center space-y-2', headerClass)}>
           {headerContent}
 
           <AlertDialogTitle className={cn(title ? '' : 'hidden', 'text-center', titleClass)}>

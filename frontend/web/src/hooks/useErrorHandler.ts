@@ -13,6 +13,7 @@ interface IErrorHandler {
   setInlineError?: (message: string) => void;
   redirectTo?: (path: string) => void;
   toastDescription?: string;
+  strategyOverride?: EErrorStrategy;
 }
 
 /**
@@ -34,8 +35,9 @@ export const useErrorHandler = (
     const { strategy, messageKey } = mapErrorStatusToMessageKey(status);
 
     const message = t.has(messageKey) ? t(messageKey) : t('errors.generic');
+    const effectiveStrategy = options?.strategyOverride || strategy;
 
-    switch (strategy) {
+    switch (effectiveStrategy) {
       case EErrorStrategy.INLINE:
         options?.setInlineError?.(message);
         break;
