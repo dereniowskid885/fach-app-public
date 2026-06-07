@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/shadcn/skeleton';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import TicketCard from '@/components/features/ticket/TicketCard';
-import { TICKETS_PATH } from '@/constants/routes';
+import { ALL_TICKETS_PATH, TICKETS_PATH } from '@/constants/routes';
 import Link from 'next/link';
 import { Badge } from '@/components/shadcn/badge';
 import { useSelector } from 'react-redux';
@@ -69,7 +69,7 @@ export default function DashboardRecentTickets() {
           </Button>
 
           <Link
-            href={TICKETS_PATH}
+            href={isAdmin(role) ? ALL_TICKETS_PATH : TICKETS_PATH}
             className="animation-hover flex items-center gap-1 rounded-2xl p-2 text-xs font-bold"
           >
             <Typography variant="note-wide">{t('common.viewAll')}</Typography>

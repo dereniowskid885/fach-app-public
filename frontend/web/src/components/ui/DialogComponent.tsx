@@ -33,6 +33,7 @@ export interface IDialogComponent {
   errorMessage?: string;
   content?: ReactNode;
   contentClass?: string;
+  size?: 'default' | 'sm' | 'none';
 }
 
 export default function DialogComponent({
@@ -53,11 +54,12 @@ export default function DialogComponent({
   customConfirmButton,
   errorMessage,
   content,
-  contentClass
+  contentClass,
+  size = 'default'
 }: IDialogComponent) {
   return (
     <AlertDialog open={open}>
-      <AlertDialogContent className={contentClass} size="none">
+      <AlertDialogContent className={contentClass} size={size}>
         <AlertDialogHeader className={cn('space-y-2', headerClass)}>
           {headerContent}
 

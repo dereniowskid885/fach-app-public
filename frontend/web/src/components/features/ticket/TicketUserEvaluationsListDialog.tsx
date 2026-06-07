@@ -78,6 +78,7 @@ export default function TicketUserEvaluationsListDialog({
     <DialogComponent
       open={open}
       contentClass="max-lg:max-w-none lg:max-w-[70%]"
+      size="none"
       title={t('evaluationListDialog.title')}
       content={
         <DataTable

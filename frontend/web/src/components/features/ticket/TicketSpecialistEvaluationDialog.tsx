@@ -242,6 +242,8 @@ export default function TicketSpecialistEvaluationDialog({
   return (
     <DialogComponent
       open={open}
+      contentClass="max-w-xl"
+      size="none"
       title={t(`evaluationDialog.title.${mode.toLowerCase()}`)}
       cancelButtonText={t('common.cancel')}
       confirmButtonText={t('common.confirm')}
