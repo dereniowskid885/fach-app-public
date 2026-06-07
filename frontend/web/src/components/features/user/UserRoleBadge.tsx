@@ -29,6 +29,6 @@ export default function UserRoleBadge({ role, className }: IUserRoleBadge) {
   return role ? (
     <IconBadge variant={variant} text={role} showIcon={false} className={className} />
   ) : (
-    <Skeleton className="h-6 w-16" />
+    <Skeleton className="h-5.5 w-16" />
   );
 }

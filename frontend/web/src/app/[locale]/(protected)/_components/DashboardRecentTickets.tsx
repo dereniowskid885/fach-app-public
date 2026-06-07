@@ -46,7 +46,7 @@ export default function DashboardRecentTickets() {
           </Typography>
 
           {isAdmin(role) ? null : isLoadingUserState ? (
-            <Skeleton className="h-6 w-10" />
+            <Skeleton className="h-5 w-10" />
           ) : (
             <IconBadge
               variant={isSpecialist(role) ? EIconBadgeVariant.CATEGORY : EIconBadgeVariant.CITY}
@@ -55,7 +55,7 @@ export default function DashboardRecentTickets() {
           )}
 
           {isLoadingUserState ? (
-            <Skeleton className="h-6 w-10" />
+            <Skeleton className="h-5 w-10" />
           ) : (
             <Badge variant="amount">
               {t('ticket.ticketsAmount', { count: userTickets.length ?? 0 })}
