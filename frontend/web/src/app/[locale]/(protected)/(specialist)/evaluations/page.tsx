@@ -74,7 +74,7 @@ export default function MyEvaluations() {
         {isUserStateInitialized ? (
           <IconBadge variant={EIconBadgeVariant.CATEGORY} text={categoryName} />
         ) : (
-          <Skeleton className="h-6 w-20" />
+          <Skeleton className="h-5.5 w-20" />
         )}
       </div>
 

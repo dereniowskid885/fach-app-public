@@ -96,7 +96,7 @@ export default function CompletedTickets() {
             ) : null}
           </div>
         ) : (
-          <Skeleton className="h-6 w-20" />
+          <Skeleton className="h-5.5 w-20" />
         )}
       </div>
 

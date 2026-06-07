@@ -23,7 +23,7 @@ export default function PageHeader({ title, description, isDataLoaded = true }: 
     </div>
   ) : (
     <div className="space-y-1">
-      <Skeleton className="h-8 w-50" />
+      <Skeleton className="h-7 w-50" />
       <Skeleton className="h-5 w-45" />
     </div>
   );
