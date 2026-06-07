@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React, { ReactNode } from 'react';
 import Typography from '@/components/ui/Typography';
-import { cn } from '@/utils/shared';
+import { cn } from '@/lib/utils';
 import AnimateCollapse from '@/components/ui/AnimateCollapse';
 
 export interface INavLink {
@@ -22,7 +22,7 @@ export default function NavLink({
   isSidebarCollapsed = false
 }: INavLink) {
   const classNames = cn(
-    `flex items-center px-3 py-2 rounded-2xl text-sm animation-base animation-idle animation-interactive group ${className ?? ''}`,
+    `flex items-center px-3 py-2 rounded-2xl text-sm animation-hover group ${className ?? ''}`,
     isCurrentPath ? 'animation-active' : ''
   );
 

@@ -1,7 +1,7 @@
 import { Search } from 'lucide-react';
 import { Input } from '../shadcn/input';
 import { useTranslations } from 'next-intl';
-import { cn } from '@/utils/shared';
+import { cn } from '@/lib/utils';
 import { ESearchComponentVariant } from '@/enums/ui';
 import CloseIcon from './CloseIcon';
 
@@ -36,18 +36,18 @@ export default function SearchComponent({
 
   return (
     <div className={cn('group relative', variantClasses)}>
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-tertiary" size={24} />
+      <Search className="absolute top-1/2 left-3 -translate-y-1/2" size={24} />
 
       <Input
         value={inputValue}
         onChange={e => inputOnChangeHandler?.(e.target.value)}
         placeholder={placeholder || t('common.search')}
-        className={cn('h-11 bg-background px-11 font-medium dark:bg-secondary', inputClassName)}
+        className={cn('bg-background h-11 px-11 font-medium', inputClassName)}
       />
 
       {inputValue ? (
         <CloseIcon
-          className="absolute right-3 top-1/2 -translate-y-1/2"
+          className="absolute top-1/2 right-3 -translate-y-1/2"
           onClick={() => inputOnChangeHandler('')}
         />
       ) : null}

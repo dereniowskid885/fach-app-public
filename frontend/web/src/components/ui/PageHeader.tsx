@@ -15,12 +15,16 @@ export default function PageHeader({ title, description, isDataLoaded = true }: 
         {title}
       </Typography>
 
-      {description ? <Typography variant="muted">{description}</Typography> : null}
+      {description ? (
+        <Typography variant="muted" className="text-muted-foreground">
+          {description}
+        </Typography>
+      ) : null}
     </div>
   ) : (
     <div className="space-y-1">
-      <Skeleton className="h-[32px] w-[200px]" />
-      <Skeleton className="h-[20px] w-[180px]" />
+      <Skeleton className="h-8 w-50" />
+      <Skeleton className="h-5 w-45" />
     </div>
   );
 }

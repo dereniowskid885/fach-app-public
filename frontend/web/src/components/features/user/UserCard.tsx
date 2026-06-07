@@ -1,20 +1,19 @@
 import { User } from '@/services/api/generated/accountApi';
 import { Skeleton } from '@/components/shadcn/skeleton';
 import { useTranslations } from 'next-intl';
-import { cn, getUserFullName } from '@/utils/shared';
-import { Separator } from '@/components/shadcn/separator';
+import { getUserFullName } from '@/utils/shared';
 import ContentSection from '@/components/ui/ContentSection';
 import ContentSectionItem from '@/components/ui/ContentSectionItem';
 import { isSpecialist } from 'shared-types';
 import { ESectionItemType } from '@/enums/ui';
 import UserRoleBadge from './UserRoleBadge';
+import { cn } from '@/lib/utils';
 
 export interface IUserCard {
   user?: Partial<User> | null;
   userNameFallback?: string;
   userNameTextWrap?: boolean;
   isSidebarCollapsed?: boolean;
-  showBackground?: boolean;
   className?: string;
 }
 
@@ -23,7 +22,6 @@ export default function UserCard({
   userNameFallback,
   userNameTextWrap = false,
   isSidebarCollapsed = false,
-  showBackground = false,
   className
 }: IUserCard) {
   const t = useTranslations();
@@ -33,20 +31,20 @@ export default function UserCard({
   const shouldHideBottomInfo = isSidebarCollapsed || (!user?.city && !user?.category);
 
   return (
-    <ContentSection
-      bgTransparent={!showBackground}
-      className={cn(className, !showBackground ? 'p-0' : 'p-3')}
-    >
+    <ContentSection bgTransparent={true} className={cn('p-3', className)}>
       <ContentSectionItem
         hideContent={isSidebarCollapsed}
         title={isUsernameFallback ? userNameFallback : userName}
-        titleClass={cn('text-primary font-bold', userNameTextWrap ? 'text-pretty' : '')}
-        descriptionComponent={user ? <UserRoleBadge role={user.role} className="w-fit" /> : <></>}
+        titleClass={cn(
+          'text-foreground font-bold text-sm mb-1',
+          userNameTextWrap ? 'text-pretty' : ''
+        )}
+        descriptionComponent={user ? <UserRoleBadge role={user.role} /> : <></>}
         iconComponent={
           user === undefined ? (
-            <Skeleton className="h-[32px] w-[32px] rounded-full" />
+            <Skeleton className="size-10 rounded-full" />
           ) : (
-            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border bg-card text-xs font-bold uppercase shadow-sm">
+            <div className="bg-card flex size-10 shrink-0 items-center justify-center rounded-full border text-sm font-bold uppercase shadow-xs">
               {`${user?.name?.charAt(0) ?? 'U'}${user?.surname?.charAt(0) ?? 'A'}`}
             </div>
           )
@@ -54,25 +52,25 @@ export default function UserCard({
       />
 
       {shouldHideBottomInfo ? null : (
-        <>
-          <Separator className="bg-border" />
+        <div className="space-y-4">
+          <ContentSectionItem
+            title={t('common.city')}
+            titleClass="text-xs"
+            description={user.city}
+            descriptionClass="text-xs"
+            variant={ESectionItemType.CITY}
+          />
 
-          <div className="space-y-4">
+          {isSpecialist(user.role) && user.category?.name ? (
             <ContentSectionItem
-              title={t('common.city')}
-              description={user.city}
-              variant={ESectionItemType.CITY}
+              title={t('common.category')}
+              titleClass="text-xs"
+              description={user.category.name}
+              descriptionClass="text-xs"
+              variant={ESectionItemType.CATEGORY}
             />
-
-            {isSpecialist(user.role) && user.category?.name ? (
-              <ContentSectionItem
-                title={t('common.category')}
-                description={user.category.name}
-                variant={ESectionItemType.CATEGORY}
-              />
-            ) : null}
-          </div>
-        </>
+          ) : null}
+        </div>
       )}
     </ContentSection>
   );

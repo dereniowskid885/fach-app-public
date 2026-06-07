@@ -20,6 +20,7 @@ import AuthCard from '../../_components/AuthCard';
 import { useTranslations } from 'next-intl';
 import { getLastPathSegment } from '@/utils/pathname';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { Spinner } from '@/components/shadcn/spinner';
 
 interface IPasswordResetForm {
   newPassword: string;
@@ -104,7 +105,7 @@ export default function PasswordResetForm() {
             </div>
 
             {formState.errors.root && (
-              <Typography variant="p" className="mt-2 text-center font-bold text-destructive">
+              <Typography variant="p" className="text-destructive mt-2 text-center font-bold">
                 {formState.errors.root.message}
               </Typography>
             )}
@@ -114,7 +115,9 @@ export default function PasswordResetForm() {
       footerContent={
         <div className="flex w-full gap-2">
           {isFormVisible ? (
-            <Button loading={isLoading} type="submit" className="w-full">
+            <Button type="submit" className="w-full">
+              {isLoading ? <Spinner /> : null}
+
               {t('common.confirm')}
             </Button>
           ) : null}

@@ -36,7 +36,7 @@ export default function AuthLayout({ children }: IAuthLayout) {
 
           <Typography
             variant="h1"
-            className="bg-gradient-to-br from-chart-2 to-chart-5 bg-clip-text text-5xl text-transparent"
+            className="from-chart-2 to-chart-5 bg-linear-to-br bg-clip-text text-5xl text-transparent"
           >
             {t('common.appTitle')}
           </Typography>
@@ -46,11 +46,11 @@ export default function AuthLayout({ children }: IAuthLayout) {
           className="animate-zoom-enter space-y-4 text-center lg:text-left 2xl:w-2/3"
           style={{ animationDuration: '2000ms' }}
         >
-          <Typography variant="h2" className="text-muted-constant md:text-5xl">
+          <Typography variant="h2" className="text-white md:text-5xl">
             {t('authLayout.title')}
           </Typography>
 
-          <Typography variant="lead" className="text-chart-5">
+          <Typography variant="lead" className="text-chart-3">
             {t('authLayout.subtitle')}
           </Typography>
         </div>
@@ -66,11 +66,11 @@ export default function AuthLayout({ children }: IAuthLayout) {
                   key={`${EFallbackKey.AUTH_FEATURE_LIST_ITEM}-${j}`}
                   className="flex items-center gap-4"
                 >
-                  <div className="flex rounded-full bg-chart-5 p-2">
+                  <div className="bg-chart-3 flex rounded-full p-2">
                     <item.icon className="text-black" />
                   </div>
 
-                  <Typography variant="muted" className="text-muted-constant">
+                  <Typography variant="muted" className="text-white">
                     {item.text}
                   </Typography>
                 </li>

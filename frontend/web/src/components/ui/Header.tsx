@@ -1,12 +1,9 @@
-import { notifications } from '@/mocks/notifications';
-import AmountIcon from '@/components/ui/AmountIcon';
 import HeaderNotificationList from '@/components/ui/HeaderNotificationList';
 import { usePathname } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { ESupportedLanguages } from 'shared-types';
 import { Bell } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn/popover';
-import { Separator } from '@/components/shadcn/separator';
 import { motion } from 'framer-motion';
 import { useSidebarContext } from '@/contexts/SidebarContext';
 import { normalizePathname } from '@/utils/pathname';
@@ -29,7 +26,7 @@ export default function Header() {
         left: sidebarWidth,
         width: `calc(100vw - ${sidebarWidth}px)`
       }}
-      className={`fixed flex h-[88px] bg-sidebar p-8 shadow-md left-[${sidebarWidth}px] w-[calc(100vw-${sidebarWidth}px)] z-50`}
+      className={`bg-sidebar fixed flex h-22 p-8 shadow-sm left-[${sidebarWidth}px] w-[calc(100vw-${sidebarWidth}px)] z-50`}
     >
       <div className="flex w-full items-center justify-between">
         {/* TODO to be improved - header search component */}
@@ -42,10 +39,10 @@ export default function Header() {
 
         <div className="flex items-center gap-3">
           <Popover>
-            <PopoverTrigger className="animation-base animation-idle animation-interactive h-10 w-10 rounded-2xl px-2">
-              <AmountIcon amount={notifications.length}>
+            <PopoverTrigger className="animation-hover h-10 w-10 rounded-2xl px-2">
+              <div>
                 <Bell size={24} />
-              </AmountIcon>
+              </div>
             </PopoverTrigger>
 
             <PopoverContent align="end">
@@ -53,23 +50,12 @@ export default function Header() {
             </PopoverContent>
           </Popover>
 
-          <Separator orientation="vertical" className="mx-2 h-[20px]" />
-
           <LanguageSwitcher
             currentPath={normalizedPath}
             currentLang={currentLocale as ESupportedLanguages}
           />
 
           <ThemeSwitcher />
-
-          {/* TODO - help button */}
-          {/* <Button
-            variant="ghost"
-            size="icon"
-            className="animation-base animation-idle animation-interactive h-10 w-10 rounded-2xl"
-          >
-            <HelpCircle size={24} />
-          </Button> */}
         </div>
       </div>
     </motion.header>

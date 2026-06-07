@@ -44,7 +44,8 @@
     "charsAmount": "{amount} characters remaining",
     "saveChanges": "Save Changes",
     "before": "Before",
-    "after": "After"
+    "after": "After",
+    "refresh": "Refresh"
   },
   "userRole": {
     "admin": "Admin",
@@ -101,7 +102,8 @@
     "greeting": "{timeOfDayGreeting}, {userName}!",
     "greetingMessage": "Check out what's new and be up to date.",
     "createNewTicketButtonText": "Create new ticket",
-    "recentTicketsHeader": "Recent tickets"
+    "recentTicketsHeader": "Recent tickets",
+    "recentTicketsEmpty": "No recent tickets - refresh to update."
   },
   "pages": {
     "dashboard": "Dashboard",
@@ -186,7 +188,7 @@
   "ticketFormDialog": {
     "title": {
       "edit": "Edit ticket",
-      "creation": "New ticket"
+      "creation": "Create new ticket"
     },
     "toastTitle": {
       "edit": "Your ticket has been updated",

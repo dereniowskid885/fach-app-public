@@ -2,11 +2,10 @@
 
 import ContentCard from '@/components/ui/ContentCard';
 import ContentSectionItem from '@/components/ui/ContentSectionItem';
-import Typography from '@/components/ui/Typography';
 import { themeObj } from '@/constants/theme';
 import { ESectionItemType } from '@/enums/ui';
 import { useThemeHandler } from '@/hooks/useThemeHandler';
-import { cn } from '@/utils/shared';
+import { cn } from '@/lib/utils';
 import { Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React from 'react';
@@ -16,16 +15,16 @@ export default function SettingsThemeForm() {
   const { theme, handleThemeChange } = useThemeHandler();
 
   return (
-    <ContentCard index={2} className="space-y-6 p-6 sm:p-8">
+    <ContentCard index={2} contentClass="space-y-8">
       <ContentSectionItem
         title={t('settingsPage.themeForm.title')}
-        titleClass={'text-sm font-bold text-primary'}
+        titleClass={'text-foreground font-bold text-base'}
         description={t('settingsPage.themeForm.description')}
-        descriptionClass={'font-semibold text-muted-foreground'}
+        descriptionClass={'text-muted-foreground'}
         variant={ESectionItemType.SETTINGS_THEME}
       />
 
-      <div className="flex gap-4">
+      <div className="flex gap-6">
         {Object.values(themeObj).map((themeObjItem, index) => {
           const isCurrentTheme = theme === themeObjItem.className;
 
@@ -34,38 +33,32 @@ export default function SettingsThemeForm() {
               index={index}
               key={themeObjItem.className}
               onClick={() => handleThemeChange(themeObjItem.className)}
-              className={cn(
-                'cursor-pointer rounded-2xl border-[1px]',
-                isCurrentTheme ? 'border-pink-200 bg-pink-50' : ''
-              )}
+              className={cn('cursor-pointer rounded-2xl border', themeObjItem.iconWrapperClass)}
             >
               <div className="relative flex items-center pr-16">
                 <ContentSectionItem
-                  titleComponent={
-                    <Typography variant="p" className="font-bold">
-                      {t(themeObjItem.translationKey)}
-                    </Typography>
-                  }
+                  title={t(themeObjItem.translationKey)}
+                  titleClass={cn('text-base font-bold', themeObjItem.iconClass)}
                   description={t(
                     `settingsPage.themeForm.themeDescription.${themeObjItem.className}`
                   )}
-                  descriptionClass={'font-normal text-muted-foreground'}
+                  descriptionClass={cn('font-normal', themeObjItem.iconClass)}
                   iconComponent={
-                    <div
-                      className={cn(
-                        'rounded-md border p-3',
-                        isCurrentTheme ? 'border-pink-200 bg-pink-100 text-pink-600' : ''
-                      )}
-                    >
-                      <themeObjItem.icon size={24} />
+                    <div className={cn('rounded-md border p-3', themeObjItem.iconWrapperClass)}>
+                      <themeObjItem.icon size={24} className={themeObjItem.iconClass} />
                     </div>
                   }
                   variant={ESectionItemType.SETTINGS_THEME}
                 />
 
                 {isCurrentTheme ? (
-                  <div className="absolute right-0 rounded-full bg-pink-100 p-1">
-                    <Check size={16} className="text-pink-600" />
+                  <div
+                    className={cn(
+                      'absolute right-0 rounded-full p-1',
+                      themeObjItem.iconWrapperClass
+                    )}
+                  >
+                    <Check size={16} className={themeObjItem.iconClass} />
                   </div>
                 ) : null}
               </div>

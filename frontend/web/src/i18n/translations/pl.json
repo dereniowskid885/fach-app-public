@@ -44,7 +44,8 @@
     "charsAmount": "Pozostało: {amount} znaków",
     "saveChanges": "Zapisz zmiany",
     "before": "Przed",
-    "after": "Po"
+    "after": "Po",
+    "refresh": "Odśwież"
   },
   "userRole": {
     "admin": "Admin",
@@ -102,7 +103,7 @@
     "greetingMessage": "Sprawdź, co nowego i bądź na bieżąco.",
     "createNewTicketButtonText": "Utwórz nową sprawę",
     "recentTicketsHeader": "Ostatnie sprawy",
-    "recentTicketsAmount": "{count, plural, =0 {0 spraw} one {# sprawa} few {# sprawy} many {# spraw} other {# spraw}}"
+    "recentTicketsEmpty": "Brak ostatnich zgłoszeń - odśwież, aby uaktualnić."
   },
   "pages": {
     "dashboard": "Pulpit",
@@ -187,7 +188,7 @@
   "ticketFormDialog": {
     "title": {
       "edit": "Edycja sprawy",
-      "creation": "Nowa sprawa"
+      "creation": "Stwórz nową sprawę"
     },
     "toastTitle": {
       "edit": "Twoja sprawa została zaktualizowana",

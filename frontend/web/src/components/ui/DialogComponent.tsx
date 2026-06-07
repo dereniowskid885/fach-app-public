@@ -11,7 +11,8 @@ import Typography from '../ui/Typography';
 import { Button } from '../shadcn/button';
 import { ReactNode } from 'react';
 import CloseIcon from './CloseIcon';
-import { cn } from '@/utils/shared';
+import { cn } from '@/lib/utils';
+import { Spinner } from '../shadcn/spinner';
 
 export interface IDialogComponent {
   open: boolean;
@@ -56,11 +57,11 @@ export default function DialogComponent({
 }: IDialogComponent) {
   return (
     <AlertDialog open={open}>
-      <AlertDialogContent className={contentClass}>
-        <AlertDialogHeader className={cn('items-center space-y-2', headerClass)}>
+      <AlertDialogContent className={contentClass} size="none">
+        <AlertDialogHeader className={cn('space-y-2', headerClass)}>
           {headerContent}
 
-          <AlertDialogTitle className={cn(title ? '' : 'hidden', 'text-center', titleClass)}>
+          <AlertDialogTitle className={cn(title ? '' : 'hidden', titleClass)}>
             {title}
           </AlertDialogTitle>
 
@@ -70,7 +71,7 @@ export default function DialogComponent({
 
           {showCloseIcon ? (
             <CloseIcon
-              className="absolute right-1 top-1"
+              className="absolute top-2 right-2"
               onClick={() => {
                 if (closeIconHandler) closeIconHandler();
                 else cancelButtonHandler?.();
@@ -80,30 +81,25 @@ export default function DialogComponent({
         </AlertDialogHeader>
 
         {content ? (
-          <div className="max-h-[70dvh] overflow-y-auto overflow-x-hidden py-4 pr-1">{content}</div>
+          <div className="max-h-[70dvh] overflow-x-hidden overflow-y-auto pr-1 pb-1">{content}</div>
         ) : null}
 
         {errorMessage ? (
-          <Typography variant="p" className="text-center font-bold text-destructive">
+          <Typography variant="p" className="text-destructive text-center font-bold">
             {errorMessage}
           </Typography>
         ) : null}
 
         <AlertDialogFooter className="flex-row items-center justify-center gap-2 sm:justify-center">
           {cancelButtonHandler && cancelButtonText ? (
-            <AlertDialogCancel className="m-0" onClick={cancelButtonHandler}>
-              {cancelButtonText}
-            </AlertDialogCancel>
+            <AlertDialogCancel onClick={cancelButtonHandler}>{cancelButtonText}</AlertDialogCancel>
           ) : null}
 
           {customConfirmButton ? (
             customConfirmButton
           ) : confirmButtonHandler && confirmButtonText ? (
-            <Button
-              loading={isLoadingConfirmButton}
-              onClick={confirmButtonHandler}
-              disabled={confirmButtonDisabled}
-            >
+            <Button onClick={confirmButtonHandler} disabled={confirmButtonDisabled}>
+              {isLoadingConfirmButton ? <Spinner /> : null}
               {confirmButtonText}
             </Button>
           ) : null}

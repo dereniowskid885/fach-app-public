@@ -27,7 +27,7 @@ export const getTicketColumn = (t: TFunction) => ({
     return (
       <TicketSummaryInfo
         ticket={ticket}
-        className="h-[60px] max-w-xs overflow-hidden"
+        className="h-15 max-w-xs overflow-hidden"
         showStatusIcon={true}
       />
     );
@@ -60,7 +60,7 @@ export const getCategoryColumn = (t: TFunction) => ({
       <div className="flex items-center justify-center gap-2">
         <Layers size={14} strokeWidth={2.5} className="text-muted-foreground" />
 
-        <Typography variant="note" className="font-bold text-muted-foreground">
+        <Typography variant="note" className="text-muted-foreground font-bold">
           {ticket.category?.name}
         </Typography>
       </div>
@@ -77,7 +77,7 @@ export const getCreatedAtColumn = (t: TFunction, currentLocale: string) => ({
 
     return (
       <div className="text-center">
-        <Typography variant="note" className="font-bold text-muted-foreground">
+        <Typography variant="note" className="text-muted-foreground font-bold">
           {getLocaleDateString(ticket.createdAt, currentLocale)}
         </Typography>
       </div>
@@ -132,7 +132,7 @@ export const getConversationColumn = (t: TFunction) => ({
     }
 
     return (
-      <div className="flex items-center justify-center gap-1 text-muted-foreground">
+      <div className="text-muted-foreground flex items-center justify-center gap-1">
         <ConversationIcon size={14} strokeWidth={2.5} />
 
         <Typography variant="note" className="font-bold">
@@ -175,7 +175,7 @@ export const getCityColumn = (t: TFunction) => ({
 
     return (
       <div className="text-center">
-        <Typography variant="note" className="font-bold text-muted-foreground">
+        <Typography variant="note" className="text-muted-foreground font-bold">
           {city}
         </Typography>
       </div>
@@ -217,11 +217,11 @@ export const getSpecialistColumn = (t: TFunction) => ({
 
     return (
       <div className="flex flex-col items-center gap-1">
-        <Typography variant="note" className="text-nowrap font-bold">
+        <Typography variant="note" className="font-bold text-nowrap">
           {getUserFullName(evaluation.user, t('common.unknownUser'))}
         </Typography>
 
-        <Typography variant="note" className="font-semibold text-muted-foreground">
+        <Typography variant="note" className="text-muted-foreground font-semibold">
           {evaluation.user?.email}
         </Typography>
       </div>
@@ -238,7 +238,7 @@ export const getResponseTimeColumn = (t: TFunction) => ({
 
     return (
       <div className="text-center">
-        <Typography variant="note" className="font-bold text-muted-foreground">
+        <Typography variant="note" className="text-muted-foreground font-bold">
           {getFormattedResponseTime(evaluation.minutes, t)}
         </Typography>
       </div>
@@ -255,7 +255,7 @@ export const getDateOfResponseColumn = (t: TFunction, currentLocale: string) => 
 
     return (
       <div className="text-center">
-        <Typography variant="note" className="font-bold text-muted-foreground">
+        <Typography variant="note" className="text-muted-foreground font-bold">
           {getLocaleDateString(evaluation.dateOfResponse, currentLocale)}
         </Typography>
       </div>
@@ -272,7 +272,7 @@ export const getPriceColumn = (t: TFunction) => ({
 
     return (
       <div className="text-center">
-        <Typography variant="note" className="font-bold text-muted-foreground">
+        <Typography variant="note" className="text-muted-foreground font-bold">
           {getFormattedPriceAmount(evaluation.price?.amountInCents, evaluation.price?.currency)}
         </Typography>
       </div>

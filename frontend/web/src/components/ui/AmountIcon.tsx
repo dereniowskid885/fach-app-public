@@ -19,7 +19,7 @@ export default function AmountIcon({
 
       {showZeroAmount || amount > 0 ? (
         <div
-          className={`absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-chart-1 font-semibold text-primary ${className}`}
+          className={`bg-chart-2 text-chart-5 absolute -top-2 -right-2 flex h-5 min-w-5 items-center justify-center rounded-full font-semibold ${className}`}
         >
           {amount > 99 ? '99+' : amount}
         </div>

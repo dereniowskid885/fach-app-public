@@ -42,10 +42,7 @@ export const TicketDetailsAdminActionButtons = ({ ticket }: ITicketDetailsAdminA
     <>
       {statusActionButton[ticketStatus] ? (
         <Button
-          variant="default"
-          className={
-            statusActionButton[ticketStatus].isLoading !== undefined ? 'min-w-[120px]' : ''
-          }
+          className={statusActionButton[ticketStatus].isLoading !== undefined ? 'min-w-30' : ''}
           onClick={statusActionButton[ticketStatus].handler}
           disabled={statusActionButton[ticketStatus].isDisabled}
         >
@@ -55,7 +52,7 @@ export const TicketDetailsAdminActionButtons = ({ ticket }: ITicketDetailsAdminA
       ) : null}
 
       {isStatusChangeAvailable ? (
-        <Button variant="special-1" onClick={() => setTicketStatusChangeDialog(true)}>
+        <Button variant="destructive" onClick={() => setTicketStatusChangeDialog(true)}>
           {t('ticketDetailsAdminActionButtons.changeStatus')}
         </Button>
       ) : null}

@@ -28,7 +28,7 @@ export const useThemeHandler = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [theme, userTheme]);
+  }, [userTheme]);
 
   const [trigger, { error }] = usePatchUsersByIdMutation();
 
@@ -46,7 +46,6 @@ export const useThemeHandler = () => {
       await trigger(payload);
     }
 
-    setTheme(themeClass);
     dispatch(setUserTheme(themeClass as ThemeType));
   };
 

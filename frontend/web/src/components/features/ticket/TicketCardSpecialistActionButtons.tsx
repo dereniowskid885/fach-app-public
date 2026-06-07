@@ -57,10 +57,7 @@ export default function TicketCardSpecialistActionButtons({
     <>
       {statusActionButton[ticketStatus] ? (
         <Button
-          variant="outline"
-          className={
-            statusActionButton[ticketStatus].isLoading !== undefined ? 'min-w-[120px]' : ''
-          }
+          className={statusActionButton[ticketStatus].isLoading !== undefined ? 'min-w-30' : ''}
           onClick={statusActionButton[ticketStatus].handler}
         >
           {statusActionButton[ticketStatus].title}

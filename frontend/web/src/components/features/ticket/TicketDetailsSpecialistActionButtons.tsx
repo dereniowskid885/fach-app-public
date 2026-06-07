@@ -10,6 +10,7 @@ import { EActionType } from '@/enums/ui';
 import { TStatusActionButton } from '@/types/ticket';
 import TicketDetailsDialog from './TicketDetailsDialog';
 import TicketSpecialistSendForReviewDialog from './TicketSpecialistSendForReviewDialog';
+import { Spinner } from '@/components/shadcn/spinner';
 
 export interface ITicketDetailsSpecialistActionButtons {
   ticket: Ticket;
@@ -58,13 +59,11 @@ export const TicketDetailsSpecialistActionButtons = ({
       {statusActionButton[ticketStatus] ? (
         <Button
           variant="default"
-          className={
-            statusActionButton[ticketStatus].isLoading !== undefined ? 'min-w-[120px]' : ''
-          }
+          className={statusActionButton[ticketStatus].isLoading !== undefined ? 'min-w-30' : ''}
           onClick={statusActionButton[ticketStatus].handler}
-          loading={statusActionButton[ticketStatus].isLoading ?? false}
           disabled={statusActionButton[ticketStatus].isDisabled ?? false}
         >
+          {statusActionButton[ticketStatus].isLoading ? <Spinner /> : null}
           {statusActionButton[ticketStatus].title}
         </Button>
       ) : null}

@@ -1,6 +1,6 @@
 'use client';
 
-import CitySelect from '@/components/features/user/CitySelect';
+import CitySelect from '@/components/ui/CitySelect';
 import { Button } from '@/components/shadcn/button';
 import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
@@ -86,16 +86,16 @@ export default function SettingsPersonalForm() {
   };
 
   return (
-    <ContentCard index={0} className="space-y-6 p-6 sm:p-8">
+    <ContentCard index={0} contentClass="space-y-8">
       <ContentSectionItem
         title={t('settingsPage.personalForm.title')}
-        titleClass={'text-sm font-bold text-primary'}
+        titleClass={'text-foreground font-bold text-base'}
         description={t('settingsPage.personalForm.description')}
-        descriptionClass={'font-semibold text-muted-foreground'}
-        variant={ESectionItemType.SETTINGS_PERSONAL_INFO}
+        descriptionClass={'text-muted-foreground'}
+        variant={ESectionItemType.USER}
       />
 
-      <form onSubmit={handleSubmit(openConfirmDialog)} className="grid grid-cols-2 gap-x-8 gap-y-4">
+      <form onSubmit={handleSubmit(openConfirmDialog)} className="grid grid-cols-2 gap-x-8 gap-y-6">
         <div className="space-y-2">
           <Label htmlFor="name">{t('authForm.name')}</Label>
 
@@ -144,7 +144,12 @@ export default function SettingsPersonalForm() {
           ) : null}
         </div>
 
-        <Button type="submit" className="col-span-full ml-auto mt-2" disabled={!isDirty}>
+        <Button
+          type="submit"
+          variant="user"
+          className="col-span-full mt-2 ml-auto"
+          disabled={!isDirty}
+        >
           <Save size={16} />
 
           {t('common.saveChanges')}

@@ -29,12 +29,12 @@ export default function PasswordInput({
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       <div className="relative flex">
         <Input
           {...register}
           id={id}
-          className={`pr-[40px] ${className}`}
+          className={`pr-10 ${className}`}
           type={showPassword ? 'text' : 'password'}
           placeholder={placeholder}
           minLength={minLength}
@@ -43,7 +43,7 @@ export default function PasswordInput({
         />
 
         <div
-          className="absolute right-[12px] top-[50%] translate-y-[-50%] cursor-pointer opacity-70"
+          className="absolute top-[50%] right-3 translate-y-[-50%] cursor-pointer opacity-70"
           onClick={() => setShowPassword(!showPassword)}
         >
           {showPassword ? <HiEye /> : <HiEyeOff />}

@@ -29,21 +29,21 @@ export default function TicketCard({ ticket, index }: ITicketCard) {
         <div className="flex items-center gap-4">
           <TicketStatusIcon status={ticket.status} showStatusText={true} />
 
-          <Separator orientation="vertical" className="h-4 bg-tertiary" />
+          <Separator orientation="vertical" className="h-8" />
 
           {role !== EUserRole.SPECIALIST ? (
             <div className="flex items-center gap-2">
-              <Layers size={14} strokeWidth={2.5} className="text-tertiary" />
+              <Layers size={14} strokeWidth={2.5} />
 
-              <Typography variant="note" className="font-bold text-tertiary">
+              <Typography variant="note" className="font-bold">
                 {ticket.category?.name}
               </Typography>
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <MapPin size={14} strokeWidth={2.5} className="text-tertiary" />
+              <MapPin size={14} strokeWidth={2.5} />
 
-              <Typography variant="note" className="font-bold text-tertiary">
+              <Typography variant="note" className="font-bold">
                 {ticket.city}
               </Typography>
             </div>
@@ -51,14 +51,14 @@ export default function TicketCard({ ticket, index }: ITicketCard) {
 
           {ticket.updatedAt ? (
             <>
-              <Separator orientation="vertical" className="h-4 bg-tertiary" />
+              <Separator orientation="vertical" className="h-8" />
 
               <div className="flex items-center gap-2">
-                <Clock size={14} strokeWidth={2.5} className="text-tertiary" />
+                <Clock size={14} strokeWidth={2.5} />
 
                 <Typography
                   variant="note"
-                  className="font-bold text-tertiary"
+                  className="font-bold"
                   title={getFormattedDate(ticket.updatedAt)}
                 >
                   {getRelativeTime(t, ticket.updatedAt)}
