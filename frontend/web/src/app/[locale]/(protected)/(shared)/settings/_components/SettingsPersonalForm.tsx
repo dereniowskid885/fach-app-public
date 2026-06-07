@@ -161,6 +161,7 @@ export default function SettingsPersonalForm() {
         title={t('settingsPage.personalForm.confirmDialogTitle')}
         content={<FormDirtyFields fields={dirtyFieldsValues} />}
         contentClass="max-w-7xl"
+        size="none"
         cancelButtonText={t('common.close')}
         cancelButtonHandler={() => setConfirmDialogOpen(false)}
         confirmButtonText={t('common.confirm')}

@@ -75,16 +75,12 @@ export default function TicketAdminStatusChangeDialog({
                   <TicketStatusIcon status={status} showStatusText={true} />
                 </FieldTitle>
 
-                <FieldDescription>
+                <FieldDescription className={ticketStatusObj[status].className}>
                   {t(`ticketAdminStatusChangeDialog.statusChangeDescription.${status}`)}
                 </FieldDescription>
               </FieldContent>
 
-              <RadioGroupItem
-                value={status}
-                id={status}
-                className={ticketStatusObj[status].className}
-              />
+              <RadioGroupItem value={status} id={status} />
             </Field>
           </FieldLabel>
         );
@@ -96,6 +92,8 @@ export default function TicketAdminStatusChangeDialog({
     <DialogComponent
       open={open}
       content={content}
+      contentClass="max-w-xl"
+      size="none"
       title={t('ticketAdminStatusChangeDialog.title')}
       cancelButtonText={t('common.cancel')}
       cancelButtonHandler={closeDialog}

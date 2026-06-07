@@ -358,10 +358,11 @@ export default function TicketDetailsDialog({
   return (
     <DialogComponent
       open={open}
-      headerClass="items-start"
+      headerClass="items-start text-start"
       headerContent={headerContent}
       content={content}
       contentClass="max-w-7xl"
+      size="none"
       customConfirmButton={
         <TicketDetailsActionButtons ticket={ticket} role={role} userId={userId} />
       }
