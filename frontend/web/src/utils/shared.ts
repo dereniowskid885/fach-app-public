@@ -1,12 +1,6 @@
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 import { Currency, User } from '@/services/api/generated/accountApi';
 import { ESupportedCurrency } from 'shared-types';
 import { TFunction } from '@/types/i18n';
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 
 export const getFormattedPriceAmount = (
   amountInCents = 0,

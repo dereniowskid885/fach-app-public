@@ -91,11 +91,11 @@ export default function AvailableTickets() {
         {isUserStateInitialized ? (
           <IconBadge variant={EIconBadgeVariant.CATEGORY} text={categoryName} />
         ) : (
-          <Skeleton className="h-[22px] w-[80px]" />
+          <Skeleton className="h-6 w-20" />
         )}
       </div>
 
-      <ContentCard index={0} className="space-y-6 p-6 sm:p-8">
+      <ContentCard index={0} contentClass="space-y-6">
         <div className="flex w-full items-center gap-4">
           <SearchComponent
             inputValue={searchQuery}
@@ -115,7 +115,7 @@ export default function AvailableTickets() {
         />
       </ContentCard>
 
-      <ContentCard index={1} className="p-0 sm:p-0">
+      <ContentCard index={1} className="py-0" contentClass="px-0">
         <DataTable
           isLoadingData={isLoadingTickets}
           data={filteredTickets}

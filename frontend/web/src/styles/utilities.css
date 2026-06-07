@@ -1,0 +1,19 @@
+@utility animation-hover {
+  @apply text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:bg-muted focus-visible:text-foreground bg-transparent duration-300 ease-out;
+}
+
+@utility animation-active {
+  @apply bg-muted-foreground/10 text-foreground;
+}
+
+@utility animate-zoom-enter {
+  @apply animate-in fade-in-75 zoom-in-95 duration-500 ease-out;
+}
+
+@utility no-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

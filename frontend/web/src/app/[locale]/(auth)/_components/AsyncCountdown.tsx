@@ -42,10 +42,11 @@ export default function AsyncCountdown({
     <div className="space-y-4">
       <div className="space-y-2">
         <Typography variant="h2">{title}</Typography>
-        <Typography variant="lead" className="font-medium text-primary">
+
+        <Typography variant="lead">
           {description}
 
-          <span className="font-bold text-chart-2">{count}</span>
+          <span className="text-foreground font-bold">{count}</span>
         </Typography>
       </div>
 

@@ -1,5 +1,5 @@
 import { Clock, CheckCircle, ClipboardList, MessageSquare, Bell, CreditCard } from 'lucide-react';
-import { cn } from '@/utils/shared';
+import { cn } from '@/lib/utils';
 import { getTicketStatusColorClasses } from '@/helpers/ticket';
 import { ETicketStatus } from 'shared-types';
 import ContentCard from '@/components/ui/ContentCard';
@@ -63,7 +63,7 @@ export default function DashboardMetrics() {
           </div>
 
           <div className="space-y-2">
-            <p className="text-3xl font-black tracking-tighter text-primary">{widget.value}</p>
+            <p className="text-primary text-3xl font-black tracking-tighter">{widget.value}</p>
 
             <Typography variant="note-wide" as="p">
               {widget.label}

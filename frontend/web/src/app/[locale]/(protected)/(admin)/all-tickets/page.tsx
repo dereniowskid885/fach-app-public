@@ -82,7 +82,7 @@ export default function AllTickets() {
         />
       </div>
 
-      <ContentCard index={0} className="space-y-6 p-6 sm:p-8">
+      <ContentCard index={0} contentClass="space-y-6">
         <div className="flex justify-between gap-4">
           <div className="flex w-full items-center gap-4">
             <SearchComponent
@@ -109,7 +109,7 @@ export default function AllTickets() {
         />
       </ContentCard>
 
-      <ContentCard index={1} className="p-0 sm:p-0">
+      <ContentCard index={1} className="py-0" contentClass="px-0">
         <DataTable
           isLoadingData={isLoadingTickets}
           data={filteredTickets}

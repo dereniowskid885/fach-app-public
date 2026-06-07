@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ClipboardList, RotateCcw } from 'lucide-react';
 import { useGetTicketsMyQuery } from '@/services/api/generated/accountApi';
 import Typography from '@/components/ui/Typography';
 import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
@@ -16,6 +16,8 @@ import { selectUserData } from '@/redux/slices/UserDataSlice';
 import IconBadge from '@/components/ui/IconBadge';
 import { EIconBadgeVariant } from '@/enums/ui';
 import { isAdmin, isSpecialist } from 'shared-types';
+import ContentSection from '@/components/ui/ContentSection';
+import { Button } from '@/components/shadcn/button';
 
 export default function DashboardRecentTickets() {
   const t = useTranslations();
@@ -25,9 +27,9 @@ export default function DashboardRecentTickets() {
     data: getTicketsResponse,
     isLoading,
     isFetching,
-    isUninitialized,
     isError,
-    error
+    error,
+    refetch
   } = useGetTicketsMyQuery({});
 
   useErrorHandler(error);
@@ -39,16 +41,12 @@ export default function DashboardRecentTickets() {
     <section className="space-y-3 lg:col-span-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          {isUninitialized ? (
-            <Skeleton className="h-[28px] w-[200px]" />
-          ) : (
-            <Typography variant="large" className="font-bold">
-              {t('dashboard.recentTicketsHeader')}
-            </Typography>
-          )}
+          <Typography variant="large" className="font-bold">
+            {t('dashboard.recentTicketsHeader')}
+          </Typography>
 
           {isAdmin(role) ? null : isLoadingUserState ? (
-            <Skeleton className="h-[22px] w-[40px]" />
+            <Skeleton className="h-6 w-10" />
           ) : (
             <IconBadge
               variant={isSpecialist(role) ? EIconBadgeVariant.CATEGORY : EIconBadgeVariant.CITY}
@@ -57,7 +55,7 @@ export default function DashboardRecentTickets() {
           )}
 
           {isLoadingUserState ? (
-            <Skeleton className="h-[22px] w-[40px]" />
+            <Skeleton className="h-6 w-10" />
           ) : (
             <Badge variant="amount">
               {t('ticket.ticketsAmount', { count: userTickets.length ?? 0 })}
@@ -65,21 +63,38 @@ export default function DashboardRecentTickets() {
           )}
         </div>
 
-        {isUninitialized ? (
-          <Skeleton className="h-[28px] w-[90px]" />
-        ) : (
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" className="animation-hover" onClick={refetch}>
+            <RotateCcw size={12} />
+          </Button>
+
           <Link
             href={TICKETS_PATH}
-            className="animation-base animation-idle animation-interactive flex items-center gap-1 rounded-2xl p-2 text-xs font-bold"
+            className="animation-hover flex items-center gap-1 rounded-2xl p-2 text-xs font-bold"
           >
             <Typography variant="note-wide">{t('common.viewAll')}</Typography>
+
             <ArrowRight size={12} />
           </Link>
-        )}
+        </div>
       </div>
 
       {isLoadingTickets ? (
         <LoadingSpinner className="m-auto" />
+      ) : userTickets.length === 0 ? (
+        <ContentSection className="m-auto flex w-fit flex-col items-center justify-center p-6">
+          <ClipboardList size={28} className="text-muted-foreground/70" />
+
+          <Typography variant="p" className="text-muted-foreground/70">
+            {t('dashboard.recentTicketsEmpty')}
+          </Typography>
+
+          <Button variant="secondary" onClick={refetch}>
+            <RotateCcw size={12} />
+
+            {t('common.refresh')}
+          </Button>
+        </ContentSection>
       ) : (
         <div className="grid grid-cols-2 gap-3">
           {userTickets.map((ticket, i) => (

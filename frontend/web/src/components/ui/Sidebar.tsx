@@ -51,7 +51,7 @@ export default function Sidebar() {
       animate={{
         width: sidebarWidth
       }}
-      className={`fixed flex h-screen flex-col border-r bg-sidebar shadow-md w-[${sidebarWidth}px] z-50`}
+      className={`bg-sidebar fixed flex h-screen flex-col shadow-sm w-[${sidebarWidth}px] z-50`}
     >
       <motion.div
         animate={{
@@ -82,7 +82,7 @@ export default function Sidebar() {
         )}
       </AnimatePresence>
 
-      <nav className="flex-1 space-y-2 overflow-y-auto overflow-x-hidden p-3">
+      <nav className="flex-1 space-y-2 overflow-x-hidden overflow-y-auto p-3">
         {role
           ? menuItemsObj[role as EUserRole].map(item => (
               <NavLink
@@ -102,17 +102,17 @@ export default function Sidebar() {
           : Array.from({ length: 4 }).map((item, index) => (
               <Skeleton
                 key={`${EFallbackKey.MENU_ITEM_SKELETON}-${item}-${index}`}
-                className="h-[36px]"
+                className="h-9"
               />
             ))}
       </nav>
 
-      <Separator className="mt-2 bg-border" />
+      <Separator className="bg-border mt-2" />
 
       <div className="p-3">
         <Button
           variant="ghost"
-          className="animation-base animation-idle animation-interactive h-9 w-full items-center justify-start gap-2.5 px-2"
+          className="animation-hover h-9 w-full items-center justify-start gap-2.5 px-2"
           onClick={toggleSidebar}
         >
           {isSidebarCollapsed ? (
@@ -138,14 +138,12 @@ export default function Sidebar() {
               name: categoryName
             }
           }}
-          showBackground={true}
-          className="border border-secondary shadow-none"
           isSidebarCollapsed={isSidebarCollapsed}
           userNameTextWrap={true}
         />
 
         <Button
-          className="animation-base animation-idle animation-interactive h-9 w-full justify-start gap-2.5 px-2 hover:text-destructive"
+          className="animation-hover hover:text-destructive h-9 w-full justify-start gap-2.5 px-2"
           onClick={handleLogout}
           variant="ghost"
         >

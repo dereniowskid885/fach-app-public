@@ -11,8 +11,6 @@ import {
   CommandItem,
   CommandList
 } from '@/components/shadcn/command';
-import { Check } from 'lucide-react';
-import { cn } from '@/utils/shared';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Category, useGetCategoriesQuery } from '@/services/api/generated/accountApi';
 import { EFallbackKey } from '@/enums/ui';
@@ -65,7 +63,8 @@ export default function TicketCategorySelect({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="z-[99] p-0">
+
+      <PopoverContent className="z-99 p-0">
         <Command>
           <CommandInput placeholder={t('common.search')} />
           <CommandList>
@@ -78,17 +77,11 @@ export default function TicketCategorySelect({
                     value={category.name}
                     disabled={!category.name}
                     onSelect={() => selectCategoryHandler(category)}
+                    data-checked={category._id === selectedCategory?._id}
                   >
                     <TicketCategoryIcon categoryName={category.name} />
 
                     {category.name ? category.name : t('category.unknown')}
-
-                    <Check
-                      className={cn(
-                        'ml-auto',
-                        category === selectedCategory ? 'opacity-100' : 'opacity-0'
-                      )}
-                    />
                   </CommandItem>
                 ))}
             </CommandGroup>

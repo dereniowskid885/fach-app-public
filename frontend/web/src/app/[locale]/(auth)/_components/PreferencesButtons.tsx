@@ -14,17 +14,17 @@ export default function PreferencesButtons() {
   const normalizedPath = normalizePathname(currentPath, currentLocale);
 
   return (
-    <div className="fixed bottom-0 right-0 z-50 flex flex-col gap-3 lg:bottom-3 lg:right-3">
+    <div className="fixed right-0 bottom-0 z-50 flex flex-col gap-3 lg:right-3 lg:bottom-3">
       <ThemeSwitcher
         triggerPatchUserMutation={false}
-        wrapperClassName="text-chart-2"
+        wrapperClassName="text-chart-3"
         popoverContentDirection={EPopoverContentDirection.LEFT}
       />
 
       <LanguageSwitcher
         currentPath={normalizedPath}
         currentLang={currentLocale as ESupportedLanguages}
-        wrapperClassName="text-chart-2"
+        wrapperClassName="text-chart-3"
         popoverContentDirection={EPopoverContentDirection.LEFT}
       />
     </div>

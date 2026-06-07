@@ -1,6 +1,6 @@
 import { EIconBadgeVariant } from '@/enums/ui';
 import { Badge, BadgeProps } from '../shadcn/badge';
-import { cn } from '@/utils/shared';
+import { cn } from '@/lib/utils';
 import Typography from './Typography';
 import { iconBadgeObj } from '@/constants/iconBadge';
 
@@ -25,12 +25,12 @@ export default function IconBadge({
   return (
     <Badge
       variant={badge.variantName as BadgeProps['variant']}
-      className={cn('space-x-2 border', badge.iconWrapperClass, className)}
+      className={cn('space-x-1 border', badge.iconWrapperClass, className)}
       title={text}
     >
       {showIcon ? <Icon size={12} className={badge.iconClass} /> : null}
 
-      <Typography variant="note" className={cn(textClassName, showIcon ? '' : badge.iconClass)}>
+      <Typography variant="note" className={cn(textClassName, badge.iconClass)}>
         {text}
       </Typography>
     </Badge>

@@ -5,6 +5,7 @@ import Typography from '@/components/ui/Typography';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { useGetTicketsMyQuery } from '@/services/api/generated/accountApi';
+import { Spinner } from '@/components/shadcn/spinner';
 
 export interface IStripePaymentForm {
   closePaymentDialog: () => void;
@@ -59,12 +60,14 @@ export const StripePaymentForm = ({ closePaymentDialog }: IStripePaymentForm) =>
     <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4">
       <PaymentElement className="w-full" />
 
-      <Button disabled={!stripe || isLoading} loading={isLoading} className="w-1/3">
+      <Button disabled={!stripe || isLoading} className="w-1/3">
+        {isLoading ? <Spinner /> : null}
+
         {t('common.confirm')}
       </Button>
 
       {errorMessage ? (
-        <Typography variant="p" className="text-center font-bold text-destructive">
+        <Typography variant="p" className="text-destructive text-center font-bold">
           {errorMessage}
         </Typography>
       ) : null}

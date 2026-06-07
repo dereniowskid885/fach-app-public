@@ -19,7 +19,7 @@ import {
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Checkbox } from '../shadcn/checkbox';
 import { useTranslations } from 'next-intl';
-import { cn } from '@/utils/shared';
+import { cn } from '@/lib/utils';
 import { LoadingSpinner } from '../shadcn/loading-spinner';
 
 interface DataTableProps<TData, TValue> {
@@ -95,7 +95,7 @@ export function DataTable<TData, TValue>({
                   <TableHead
                     key={header.id}
                     className={cn(
-                      'text-nowrap text-center text-xs font-bold uppercase tracking-wide text-muted-foreground',
+                      'text-muted-foreground text-center text-xs font-bold tracking-wide text-nowrap uppercase',
                       headClassName
                     )}
                   >
