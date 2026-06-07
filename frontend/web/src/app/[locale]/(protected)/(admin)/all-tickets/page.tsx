@@ -17,6 +17,9 @@ import { useLocale, useTranslations } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Button } from '@/components/shadcn/button';
+import { RotateCcw } from 'lucide-react';
+import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
 
 export default function AllTickets() {
   const { role, isInitialized: isUserStateInitialized } = useSelector(selectUserData);
@@ -44,7 +47,8 @@ export default function AllTickets() {
     data: ticketsData,
     error: getTicketsError,
     isLoading,
-    isFetching
+    isFetching,
+    refetch
   } = useGetTicketsQuery(
     {
       categoryId: selectedCategoryId === EFilterButton.ALL ? undefined : selectedCategoryId,
@@ -83,7 +87,7 @@ export default function AllTickets() {
       </div>
 
       <ContentCard index={0} contentClass="space-y-6">
-        <div className="flex justify-between gap-4">
+        <div className="flex items-center justify-between gap-4">
           <div className="flex w-full items-center gap-4">
             <SearchComponent
               inputValue={searchQuery}
@@ -95,6 +99,12 @@ export default function AllTickets() {
               {t('ticket.ticketsAmount', { count: filteredTickets.length ?? 0 })}
             </Badge>
           </div>
+
+          <Button variant="secondary" size="lg" onClick={refetch}>
+            <RotateCcw size={12} />
+
+            {t('common.refresh')}
+          </Button>
         </div>
 
         <TicketFilterPanel
@@ -109,13 +119,13 @@ export default function AllTickets() {
         />
       </ContentCard>
 
-      <ContentCard index={1} className="py-0" contentClass="px-0">
-        <DataTable
-          isLoadingData={isLoadingTickets}
-          data={filteredTickets}
-          columns={tableColumnsData}
-        />
-      </ContentCard>
+      {isLoadingTickets ? (
+        <LoadingSpinner className="m-auto" />
+      ) : (
+        <ContentCard index={1} className="py-0" contentClass="px-0">
+          <DataTable data={filteredTickets} columns={tableColumnsData} />
+        </ContentCard>
+      )}
     </div>
   );
 }
