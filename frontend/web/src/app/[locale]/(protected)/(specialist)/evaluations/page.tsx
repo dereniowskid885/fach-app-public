@@ -16,6 +16,9 @@ import { useGetTicketsSpecialistEvaluationsQuery } from '@/services/api/generate
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
+import { Button } from '@/components/shadcn/button';
+import { RotateCcw } from 'lucide-react';
 
 export default function MyEvaluations() {
   const {
@@ -37,7 +40,8 @@ export default function MyEvaluations() {
     data: ticketsData,
     error: getTicketsError,
     isLoading,
-    isFetching
+    isFetching,
+    refetch
   } = useGetTicketsSpecialistEvaluationsQuery(
     {
       city: selectedCity === EFilterButton.ALL ? undefined : selectedCity
@@ -79,16 +83,24 @@ export default function MyEvaluations() {
       </div>
 
       <ContentCard index={0} contentClass="space-y-6">
-        <div className="flex w-full items-center gap-4">
-          <SearchComponent
-            inputValue={searchQuery}
-            inputOnChangeHandler={setSearchQuery}
-            placeholder={t('ticket.searchPlaceholder')}
-          />
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex w-full items-center gap-4">
+            <SearchComponent
+              inputValue={searchQuery}
+              inputOnChangeHandler={setSearchQuery}
+              placeholder={t('ticket.searchPlaceholder')}
+            />
 
-          <Badge variant="amount" className="text-sm">
-            {t('ticket.ticketsAmount', { count: filteredTickets.length ?? 0 })}
-          </Badge>
+            <Badge variant="amount" className="text-sm">
+              {t('ticket.ticketsAmount', { count: filteredTickets.length ?? 0 })}
+            </Badge>
+          </div>
+
+          <Button variant="secondary" size="lg" onClick={refetch}>
+            <RotateCcw size={12} />
+
+            {t('common.refresh')}
+          </Button>
         </div>
 
         <TicketFilterPanel
@@ -98,13 +110,13 @@ export default function MyEvaluations() {
         />
       </ContentCard>
 
-      <ContentCard index={1} className="py-0" contentClass="px-0">
-        <DataTable
-          isLoadingData={isLoadingTickets}
-          data={filteredTickets}
-          columns={tableColumnsData}
-        />
-      </ContentCard>
+      {isLoadingTickets ? (
+        <LoadingSpinner className="m-auto" />
+      ) : (
+        <ContentCard index={1} className="py-0" contentClass="px-0">
+          <DataTable data={filteredTickets} columns={tableColumnsData} />
+        </ContentCard>
+      )}
     </div>
   );
 }

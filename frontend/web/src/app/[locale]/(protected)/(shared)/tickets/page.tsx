@@ -20,6 +20,9 @@ import { EFilterButton, EIconBadgeVariant } from '@/enums/ui';
 import TicketFilterPanel from '@/components/features/ticket/TicketFilterPanel';
 import { notFound } from 'next/navigation';
 import { getMyTicketsStatusFilters } from '@/helpers/ticket';
+import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
+import { RotateCcw } from 'lucide-react';
+import { Button } from '@/components/shadcn/button';
 
 export default function MyTickets() {
   const {
@@ -53,7 +56,8 @@ export default function MyTickets() {
     data: ticketsData,
     error: getTicketsError,
     isLoading,
-    isFetching
+    isFetching,
+    refetch
   } = useGetTicketsMyQuery(
     {
       categoryId: selectedCategoryId === EFilterButton.ALL ? undefined : selectedCategoryId,
@@ -103,7 +107,7 @@ export default function MyTickets() {
       </div>
 
       <ContentCard index={0} contentClass="space-y-6">
-        <div className="flex justify-between gap-4">
+        <div className="flex items-center justify-between gap-4">
           <div className="flex w-full items-center gap-4">
             <SearchComponent
               inputValue={searchQuery}
@@ -116,7 +120,15 @@ export default function MyTickets() {
             </Badge>
           </div>
 
-          {isUser(role) ? <TicketCreateButton /> : null}
+          <div className="flex items-center gap-4">
+            {isUser(role) ? <TicketCreateButton /> : null}
+
+            <Button variant="secondary" size="lg" onClick={refetch}>
+              <RotateCcw size={12} />
+
+              {t('common.refresh')}
+            </Button>
+          </div>
         </div>
 
         <TicketFilterPanel
@@ -131,13 +143,13 @@ export default function MyTickets() {
         />
       </ContentCard>
 
-      <ContentCard index={1} className="py-0" contentClass="px-0">
-        <DataTable
-          isLoadingData={isLoadingTickets}
-          data={filteredTickets}
-          columns={tableColumnsData}
-        />
-      </ContentCard>
+      {isLoadingTickets ? (
+        <LoadingSpinner className="m-auto" />
+      ) : (
+        <ContentCard index={1} className="py-0" contentClass="px-0">
+          <DataTable data={filteredTickets} columns={tableColumnsData} />
+        </ContentCard>
+      )}
     </div>
   );
 }

@@ -19,6 +19,9 @@ import { useLocale, useTranslations } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { RotateCcw } from 'lucide-react';
+import { Button } from '@/components/shadcn/button';
+import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
 
 export default function CompletedTickets() {
   const {
@@ -51,7 +54,8 @@ export default function CompletedTickets() {
     data: ticketsData,
     error: getTicketsError,
     isLoading,
-    isFetching
+    isFetching,
+    refetch
   } = useGetTicketsCompletedQuery(
     {
       categoryId: selectedCategoryId === EFilterButton.ALL ? undefined : selectedCategoryId,
@@ -101,16 +105,24 @@ export default function CompletedTickets() {
       </div>
 
       <ContentCard index={0} contentClass="space-y-6">
-        <div className="flex w-full items-center gap-4">
-          <SearchComponent
-            inputValue={searchQuery}
-            inputOnChangeHandler={setSearchQuery}
-            placeholder={t('ticket.searchPlaceholder')}
-          />
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex w-full items-center gap-4">
+            <SearchComponent
+              inputValue={searchQuery}
+              inputOnChangeHandler={setSearchQuery}
+              placeholder={t('ticket.searchPlaceholder')}
+            />
 
-          <Badge variant="amount" className="text-sm">
-            {t('ticket.ticketsAmount', { count: filteredTickets.length ?? 0 })}
-          </Badge>
+            <Badge variant="amount" className="text-sm">
+              {t('ticket.ticketsAmount', { count: filteredTickets.length ?? 0 })}
+            </Badge>
+          </div>
+
+          <Button variant="secondary" size="lg" onClick={refetch}>
+            <RotateCcw size={12} />
+
+            {t('common.refresh')}
+          </Button>
         </div>
 
         <TicketFilterPanel
@@ -125,13 +137,13 @@ export default function CompletedTickets() {
         />
       </ContentCard>
 
-      <ContentCard index={1} className="py-0" contentClass="px-0">
-        <DataTable
-          isLoadingData={isLoadingTickets}
-          data={filteredTickets}
-          columns={tableColumnsData}
-        />
-      </ContentCard>
+      {isLoadingTickets ? (
+        <LoadingSpinner className="m-auto" />
+      ) : (
+        <ContentCard index={1} className="py-0" contentClass="px-0">
+          <DataTable data={filteredTickets} columns={tableColumnsData} />
+        </ContentCard>
+      )}
     </div>
   );
 }
