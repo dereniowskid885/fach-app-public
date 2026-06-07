@@ -17,7 +17,7 @@ export default function ProtectedLayout({ children }: IProtectedLayout) {
   useThemeHandler();
 
   return (
-    <main className="flex min-h-dvh bg-background">
+    <main className="bg-background flex min-h-dvh">
       <Header />
       <Sidebar />
 
@@ -26,7 +26,7 @@ export default function ProtectedLayout({ children }: IProtectedLayout) {
         animate={{
           marginLeft: sidebarWidth
         }}
-        className={`h-vdh mt-[90px] w-full p-8 ml-[${sidebarWidth}px] min-w-0`}
+        className={`h-vdh mt-24 w-full p-8 ml-[${sidebarWidth}px] min-w-0`}
       >
         <motion.div
           animate={{ maxWidth: isSidebarCollapsed ? 1600 : 1280 }}

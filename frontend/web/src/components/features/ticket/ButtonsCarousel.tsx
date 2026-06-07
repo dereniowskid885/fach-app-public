@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/shadcn/button';
 import Typography from '@/components/ui/Typography';
-import { cn } from '@/utils/shared';
+import { cn } from '@/lib/utils';
 import { Filter, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { Input } from '@/components/shadcn/input';
@@ -33,7 +33,7 @@ export default function ButtonsCarousel({
   const t = useTranslations();
 
   const buttonClassName =
-    'shrink-0 whitespace-nowrap rounded-full border px-4 py-5 text-xs font-bold select-none';
+    'shrink-0 whitespace-nowrap rounded-full border px-4 py-5 text-xs font-semibold select-none gap-3 animation-hover';
 
   const [isSearchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -105,12 +105,14 @@ export default function ButtonsCarousel({
     <div className="space-y-1">
       {headerText ? (
         <div className="flex items-center gap-2">
-          <Typography variant="note-wide">{headerText}</Typography>
+          <Typography variant="note-wide" className="text-muted-foreground">
+            {headerText}
+          </Typography>
 
           <div
             className={cn(
-              'animation-base animation-idle animation-interactive flex shrink-0 items-center overflow-hidden rounded-full',
-              isSearchOpen ? 'h-8 w-40 bg-muted px-2.5' : 'h-8 w-8 justify-center'
+              'animation-hover flex shrink-0 items-center overflow-hidden rounded-full',
+              isSearchOpen ? 'bg-muted h-8 w-40 px-2.5' : 'h-8 w-8 justify-center'
             )}
           >
             {isSearchOpen ? (
@@ -120,7 +122,7 @@ export default function ButtonsCarousel({
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   placeholder={t('buttonsCarousel.searchPlaceholder')}
-                  className="w-full border-none bg-muted text-xs font-medium text-primary outline-none dark:bg-muted"
+                  className="bg-muted text-muted-foreground w-full border-none shadow-none outline-hidden focus-visible:ring-0"
                 />
 
                 <Button
@@ -130,7 +132,7 @@ export default function ButtonsCarousel({
                     setSearchOpen(false);
                     setSearchQuery('');
                   }}
-                  className="h-[24px] w-[24px]"
+                  className="size-6"
                 >
                   <X size={16} />
                 </Button>
@@ -148,11 +150,21 @@ export default function ButtonsCarousel({
           </div>
 
           <div className="ml-auto flex">
-            <Button variant="ghost" size="icon" onClick={() => onArrowClick(EArrowDirection.LEFT)}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onArrowClick(EArrowDirection.LEFT)}
+              className="animation-hover"
+            >
               <ChevronLeft size={16} />
             </Button>
 
-            <Button variant="ghost" size="icon" onClick={() => onArrowClick(EArrowDirection.RIGHT)}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onArrowClick(EArrowDirection.RIGHT)}
+              className="animation-hover"
+            >
               <ChevronRight size={16} />
             </Button>
           </div>
@@ -167,7 +179,7 @@ export default function ButtonsCarousel({
           className="no-scrollbar -ml-1 flex cursor-grab items-center gap-2 overflow-x-auto p-1 active:cursor-grabbing"
         >
           <Button
-            variant={selectedItemId === EFilterButton.ALL ? 'special-1' : 'ghost'}
+            variant={selectedItemId === EFilterButton.ALL ? 'secondary' : 'ghost'}
             onClick={() => selectItemHandler(EFilterButton.ALL)}
             className={buttonClassName}
           >
@@ -177,7 +189,7 @@ export default function ButtonsCarousel({
           {!isDataLoading
             ? filteredItems?.map(item => (
                 <Button
-                  variant={selectedItemId === item.id ? 'special-1' : 'ghost'}
+                  variant={selectedItemId === item.id ? 'secondary' : 'ghost'}
                   key={item.id}
                   disabled={!item.name}
                   onClick={() => selectItemHandler(item.id)}
@@ -190,7 +202,7 @@ export default function ButtonsCarousel({
             : Array.from({ length: 3 }).map((item, index) => (
                 <Skeleton
                   key={`${EFallbackKey.MENU_ITEM_SKELETON}-${itemFallbackKey}-${item}-${index}`}
-                  className="h-[40px] w-[80px] rounded-full"
+                  className="h-10 w-20 rounded-full"
                 />
               ))}
         </div>

@@ -1,4 +1,4 @@
-import { cn } from '@/utils/shared';
+import { cn } from '@/lib/utils';
 import { Button } from '../shadcn/button';
 import { X } from 'lucide-react';
 
@@ -12,10 +12,7 @@ export default function CloseIcon({ className, onClick }: ICloseIcon) {
     <Button
       variant="ghost"
       size="icon"
-      className={cn(
-        'animation-base animation-idle animation-interactive h-[28px] w-[28px] hover:bg-transparent',
-        className
-      )}
+      className={cn('animation-hover h-[28px] w-[28px] hover:bg-transparent', className)}
       onClick={onClick}
     >
       <X />

@@ -43,11 +43,7 @@ export default function TicketDropdownMenu({ ticket }: ITicketDropdownMenu) {
   return ticket._id ? (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="animation-base animation-idle animation-interactive h-8 w-8 rounded-lg"
-        >
+        <Button variant="ghost" size="icon" className="animation-hover h-8 w-8 rounded-lg">
           <MoreVertical size={16} />
         </Button>
       </DropdownMenuTrigger>
@@ -85,7 +81,7 @@ export default function TicketDropdownMenu({ ticket }: ITicketDropdownMenu) {
               onSelect={() => setTicketCancelDialog(true)}
               disabled={!isEligibleForModification}
             >
-              <div className="flex w-full items-center gap-2 text-destructive">
+              <div className="text-destructive flex w-full items-center gap-2">
                 <TrashIcon size={16} />
 
                 {t('common.cancel')}
@@ -100,7 +96,7 @@ export default function TicketDropdownMenu({ ticket }: ITicketDropdownMenu) {
               className="cursor-pointer"
               onSelect={() => setTicketDeleteDialog(true)}
             >
-              <div className="flex w-full items-center gap-2 text-destructive">
+              <div className="text-destructive flex w-full items-center gap-2">
                 <TrashIcon size={16} />
 
                 {t('common.delete')}

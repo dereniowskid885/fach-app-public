@@ -10,6 +10,7 @@ import TicketUserEvaluationsListDialog from './TicketUserEvaluationsListDialog';
 import TicketUserPaymentDialog from './TicketUserPaymentDialog';
 import TicketUserSolutionReviewDialog from './TicketUserSolutionReviewDialog';
 import { Button } from '@/components/shadcn/button';
+import { Spinner } from '@/components/shadcn/spinner';
 
 export interface ITicketDetailsUserActionButtons {
   ticket: Ticket;
@@ -42,9 +43,9 @@ export const TicketDetailsUserActionButtons = ({ ticket }: ITicketDetailsUserAct
       title: t('ticketUserActionButtons.showEvaluations'),
       handler: () => setEvaluationListDialog(true),
       element: (
-        <div className="mt-[1px] pr-4">
+        <div className="mt-px pr-4">
           <AmountIcon
-            className="top-0 -translate-y-[50%] translate-x-[50%]"
+            className="top-0 translate-x-[50%] translate-y-[-50%]"
             amount={ticket.evaluations?.length ?? 0}
             showZeroAmount={true}
           />
@@ -58,12 +59,10 @@ export const TicketDetailsUserActionButtons = ({ ticket }: ITicketDetailsUserAct
       {statusActionButton[ticketStatus] ? (
         <Button
           variant="default"
-          className={
-            statusActionButton[ticketStatus].isLoading !== undefined ? 'min-w-[120px]' : ''
-          }
+          className={statusActionButton[ticketStatus].isLoading !== undefined ? 'min-w-30' : ''}
           onClick={statusActionButton[ticketStatus].handler}
-          loading={statusActionButton[ticketStatus].isLoading}
         >
+          {statusActionButton[ticketStatus].isLoading ? <Spinner /> : null}
           {statusActionButton[ticketStatus].title}
           {statusActionButton[ticketStatus].element}
         </Button>

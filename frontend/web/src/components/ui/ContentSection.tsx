@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import Typography from './Typography';
-import { cn } from '@/utils/shared';
+import { cn } from '@/lib/utils';
 import { Badge } from '../shadcn/badge';
 
 export interface IContentSection {
@@ -24,13 +24,13 @@ export default function ContentSection({
     <div
       className={cn(
         'space-y-4 p-4',
-        bgTransparent ? 'bg-transparent' : 'rounded-2xl bg-background shadow-md',
+        bgTransparent ? 'bg-transparent' : 'rounded-2xl border shadow-md',
         className
       )}
     >
       {Icon || title ? (
         <div className="flex items-center gap-2">
-          {Icon ? <Icon size={16} strokeWidth={2.5} className="text-muted-foreground" /> : null}
+          {Icon ? <Icon size={16} strokeWidth={2.5} /> : null}
 
           {title ? <Typography variant="note-wide">{title}</Typography> : null}
 

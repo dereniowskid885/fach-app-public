@@ -24,7 +24,7 @@ export default function CitySelect({ register, defaultValue, id }: ICitySelect) 
       defaultValue={defaultValue}
       required
     >
-      <SelectTrigger id={id}>
+      <SelectTrigger id={id} className="w-1/2">
         <SelectValue placeholder={t('select.city')} />
       </SelectTrigger>
 

@@ -1,7 +1,7 @@
 import { Check, Globe } from 'lucide-react';
 import { Button } from '../shadcn/button';
 import { Popover, PopoverContent, PopoverTrigger } from '../shadcn/popover';
-import { cn } from '@/utils/shared';
+import { cn } from '@/lib/utils';
 import { supportedLanguagesObj } from '@/constants/supportedLanguages';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
@@ -30,17 +30,14 @@ export default function LanguageSwitcher({
         <Button
           variant="ghost"
           size="icon"
-          className={cn(
-            'animation-base animation-idle animation-interactive h-10 w-10 rounded-2xl',
-            wrapperClassName
-          )}
+          className={cn('animation-hover h-10 w-10 rounded-2xl', wrapperClassName)}
         >
           <Globe size={24} strokeWidth={2.5} />
         </Button>
       </PopoverTrigger>
 
       <PopoverContent side={popoverContentDirection} align="end" className="w-48 p-1">
-        <div className="mb-1 border-b px-3 py-2 text-xs font-bold uppercase tracking-widest text-muted-foreground">
+        <div className="text-muted-foreground mb-1 border-b px-3 py-2 text-xs font-bold tracking-widest uppercase">
           {t('common.selectLanguage')}
         </div>
 
@@ -54,8 +51,8 @@ export default function LanguageSwitcher({
                 locale={langKey}
                 href={`/${langKey}${currentPath}`}
                 className={cn(
-                  'animation-base animation-idle animation-interactive group flex w-full items-center gap-3 rounded-sm px-3 py-2 text-sm',
-                  isCurrentLang ? 'font-bold text-primary' : ''
+                  'animation-hover group flex w-full items-center gap-3 rounded-4xl px-3 py-2 text-sm',
+                  isCurrentLang ? 'animation-active' : ''
                 )}
               >
                 <Image
@@ -63,11 +60,11 @@ export default function LanguageSwitcher({
                   alt={lang.id}
                   width={24}
                   height={24}
-                  className="h-[24px] w-[24px] object-contain"
+                  className="size-6 object-contain"
                 />
                 <span className="flex-1 text-left">{t(`lang.${lang.label}`)}</span>
 
-                {isCurrentLang && <Check size={12} className="text-primary" />}
+                {isCurrentLang ? <Check size={16} /> : null}
               </Link>
             );
           })}

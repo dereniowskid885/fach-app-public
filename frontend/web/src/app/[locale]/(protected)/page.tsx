@@ -1,5 +1,5 @@
 import DashboardGreeting from '@/app/[locale]/(protected)/_components/DashboardGreeting';
-import DashboardMetrics from '@/app/[locale]/(protected)/_components/DashboardMetrics';
+// import DashboardMetrics from '@/app/[locale]/(protected)/_components/DashboardMetrics';
 import DashboardRecentTickets from '@/app/[locale]/(protected)/_components/DashboardRecentTickets';
 
 export default function Home() {
@@ -7,7 +7,7 @@ export default function Home() {
     <>
       <DashboardGreeting />
 
-      <DashboardMetrics />
+      {/* <DashboardMetrics /> */}
 
       <DashboardRecentTickets />
     </>

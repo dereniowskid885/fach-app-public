@@ -3,7 +3,7 @@
 import { Button } from '@/components/shadcn/button';
 import { Input } from '@/components/shadcn/input';
 import DialogComponent from '@/components/ui/DialogComponent';
-import CitySelect from '@/components/features/user/CitySelect';
+import CitySelect from '@/components/ui/CitySelect';
 import PasswordInput from '@/components/ui/PasswordInput';
 import Typography from '@/components/ui/Typography';
 import { LOGIN_PATH } from '@/constants/routes';
@@ -20,6 +20,7 @@ import AuthCard from '../_components/AuthCard';
 import { useLocale, useTranslations } from 'next-intl';
 import { ESupportedLanguages } from 'shared-types';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { Spinner } from '@/components/shadcn/spinner';
 
 interface IRegisterForm {
   email: string;
@@ -136,7 +137,7 @@ export default function Register() {
           </div>
 
           {formState.errors.root && (
-            <Typography variant="p" className="mt-2 text-center font-bold text-destructive">
+            <Typography variant="p" className="text-destructive mt-2 text-center font-bold">
               {formState.errors.root.message}
             </Typography>
           )}
@@ -144,11 +145,13 @@ export default function Register() {
       }
       footerContent={
         <div className="flex w-full gap-2">
-          <Button loading={isLoading} type="submit" className="w-full">
+          <Button type="submit" className="w-1/2">
+            {isLoading ? <Spinner /> : null}
+
             {t('common.confirm')}
           </Button>
 
-          <Link href={LOGIN_PATH} className="w-full">
+          <Link href={LOGIN_PATH} className="w-1/2">
             <Button variant="outline" className="w-full">
               {t('common.back')}
             </Button>
@@ -161,7 +164,7 @@ export default function Register() {
           title={t('registerPage.successDialogTitle')}
           description={t.rich('registerPage.successDialogDescription', {
             email: getValues('email'),
-            span: chunks => <span className="font-bold text-chart-2">{chunks}</span>
+            span: chunks => <span className="text-foreground font-bold">{chunks}</span>
           })}
           cancelButtonText={t('common.close')}
           confirmButtonText={t('common.goToLogin')}

@@ -1,4 +1,4 @@
-import { cn } from '@/utils/shared';
+import { cn } from '@/lib/utils';
 import Typography from './Typography';
 import { Skeleton } from '../shadcn/skeleton';
 import { ReactNode } from 'react';
@@ -42,7 +42,7 @@ export default function ContentSectionItem({
         icon: Icon,
         iconClass: iconClass,
         iconWrapperClass: iconWrapperClass,
-        iconSize: 14
+        iconSize: 16
       };
 
   return (
@@ -52,7 +52,7 @@ export default function ContentSectionItem({
       ) : sectionItem.icon ? (
         <div
           className={cn(
-            'flex h-8 w-8 shrink-0 items-center justify-center rounded-md border',
+            'flex h-10 w-10 shrink-0 items-center justify-center rounded-md border',
             sectionItem.iconWrapperClass
           )}
         >
@@ -66,26 +66,23 @@ export default function ContentSectionItem({
             titleComponent
           ) : title ? (
             <Typography
-              variant="note"
-              className={cn(
-                'text-nowrap font-semibold leading-relaxed text-muted-foreground',
-                titleClass
-              )}
+              variant="muted"
+              className={cn('text-muted-foreground leading-relaxed text-nowrap', titleClass)}
             >
               {title}
             </Typography>
           ) : (
-            <Skeleton className="h-[16px] w-[60px]" />
+            <Skeleton className="h-4 w-15" />
           )}
 
           {descriptionComponent ? (
             descriptionComponent
           ) : description ? (
-            <Typography variant="note" className={cn('font-bold', descriptionClass)}>
+            <Typography variant="muted" className={cn('text-foreground', descriptionClass)}>
               {description}
             </Typography>
           ) : (
-            <Skeleton className="h-[16px] w-[60px]" />
+            <Skeleton className="h-4 w-15" />
           )}
         </div>
       )}

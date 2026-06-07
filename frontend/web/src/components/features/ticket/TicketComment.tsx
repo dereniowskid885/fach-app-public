@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import ContentSectionItem from '@/components/ui/ContentSectionItem';
 import Typography from '@/components/ui/Typography';
-import { cn, getUserFullName } from '@/utils/shared';
+import { getUserFullName } from '@/utils/shared';
 import { getSafeTextContent } from '@/utils/sanitize';
 import UserRoleBadge from '../user/UserRoleBadge';
 import { getFormattedDate, getRelativeTime } from '@/utils/date';
@@ -21,6 +21,7 @@ import {
 import { Button } from '@/components/shadcn/button';
 import { MoreVertical, TrashIcon } from 'lucide-react';
 import { TicketCommentDeleteDialog } from './TicketCommentDeleteDialog';
+import { cn } from '@/lib/utils';
 
 export interface ITicketComment {
   data: Comment;
@@ -50,7 +51,7 @@ export default function TicketComment({ isCommentingAllowed = false, data }: ITi
         className={cn('rounded-2xl border p-2 pr-12', isCurrentUserComment ? 'bg-background' : '')}
         titleComponent={
           <div className="flex items-center gap-2">
-            <Typography variant="small" className="font-bold text-primary">
+            <Typography variant="small" className="text-foreground font-bold">
               {getUserFullName(data.user)}
             </Typography>
 
@@ -71,12 +72,8 @@ export default function TicketComment({ isCommentingAllowed = false, data }: ITi
 
       {showDropdownMenu ? (
         <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild className="absolute right-2 top-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="animation-base animation-idle animation-interactive h-8 w-8 rounded-lg"
-            >
+          <DropdownMenuTrigger asChild className="absolute top-2 right-2">
+            <Button variant="ghost" size="icon" className="animation-hover h-8 w-8 rounded-lg">
               <MoreVertical size={16} />
             </Button>
           </DropdownMenuTrigger>
@@ -87,7 +84,7 @@ export default function TicketComment({ isCommentingAllowed = false, data }: ITi
                 className="cursor-pointer"
                 onSelect={() => setTicketCommentDeleteDialog(true)}
               >
-                <div className="flex w-full items-center gap-2 text-destructive">
+                <div className="text-destructive flex w-full items-center gap-2">
                   <TrashIcon size={16} />
 
                   {t('common.delete')}
