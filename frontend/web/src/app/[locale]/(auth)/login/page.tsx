@@ -22,6 +22,7 @@ import { clearUserData } from '@/redux/slices/UserDataSlice';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { parseQueryError } from '@/utils/error';
 import { isCookie } from '@/utils/cookie';
+import { Spinner } from '@/components/shadcn/spinner';
 
 interface ILoginForm {
   email: string;
@@ -82,7 +83,7 @@ export default function Login() {
       formSubmitHandler={handleSubmit(submitHandler)}
       titleContent={t('authForm.signIn')}
       descriptionContent={t.rich('loginPage.authCardDescription', {
-        span: chunks => <span className="font-bold text-chart-2">{chunks}</span>
+        span: chunks => <span className="text-foreground font-bold">{chunks}</span>
       })}
       mainContent={
         <>
@@ -113,7 +114,7 @@ export default function Login() {
           </div>
 
           {formState.errors.root && (
-            <Typography variant="p" className="text-center font-bold text-destructive">
+            <Typography variant="p" className="text-destructive text-center font-bold">
               {formState.errors.root.message}
             </Typography>
           )}
@@ -121,14 +122,16 @@ export default function Login() {
       }
       footerContent={
         <>
-          <Button loading={isLoading} type="submit" className="w-full">
+          <Button type="submit" className="w-full">
+            {isLoading ? <Spinner /> : null}
+
             {t('authForm.signIn')}
           </Button>
 
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {t('loginPage.signUpLabel')}
 
-            <Link href={REGISTER_PATH} className="ml-1 font-bold text-primary hover:underline">
+            <Link href={REGISTER_PATH} className="text-foreground ml-1 font-bold hover:underline">
               {t('authForm.signUp')}
             </Link>
           </p>
@@ -139,20 +142,20 @@ export default function Login() {
             </div>
 
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-secondary px-2 text-muted-foreground">
+              <span className="bg-secondary text-muted-foreground px-2">
                 {t('loginPage.continueWith')}
               </span>
             </div>
           </div>
 
           <div className="flex w-full gap-2">
-            <Button variant="outline" className="w-full gap-2">
+            <Button variant="outline" className="w-1/2 gap-2">
               <FaGithub />
 
               {t('loginPage.github')}
             </Button>
 
-            <Button variant="outline" className="w-full gap-2">
+            <Button variant="outline" className="w-1/2 gap-2">
               <FcGoogle />
 
               {t('loginPage.google')}
@@ -167,7 +170,7 @@ export default function Login() {
           title={t('loginPage.accountVerifyTitle')}
           description={t.rich('loginPage.accountVerifyDescription', {
             email: getValues('email'),
-            span: chunks => <span className="font-bold text-chart-2">{chunks}</span>
+            span: chunks => <span className="text-foreground font-bold">{chunks}</span>
           })}
           emailSentDescription={t('loginPage.accountVerifyEmailSent')}
           closeDialogHandler={() => setAccountVerifyDialog(false)}

@@ -188,7 +188,7 @@ export default function TicketFormDialog({
             required
           />
 
-          <Typography variant="note" className="text-right text-muted-foreground">
+          <Typography variant="note" className="text-muted-foreground text-right">
             {t('common.charsAmount', { amount: descriptionCharsLeft })}
           </Typography>
         </div>

@@ -19,7 +19,7 @@ export default function FormDirtyFields({ fields = [] }: IFormDirtyFields) {
     <div className="grid grid-cols-2 gap-x-8 gap-y-4">
       {fields.map(field => (
         <ContentSection key={field.name}>
-          <Typography variant="large" className="text-primary">
+          <Typography variant="large">
             {field.name.charAt(0).toUpperCase() + field.name.slice(1)}
           </Typography>
 
@@ -27,7 +27,7 @@ export default function FormDirtyFields({ fields = [] }: IFormDirtyFields) {
             <div className="space-y-1 rounded-md p-4">
               <Typography variant="note-wide">{t('common.before')}</Typography>
 
-              <Typography variant="muted" className="text-primary">
+              <Typography variant="muted" className="text-muted-foreground">
                 {field.oldValue || '—'}
               </Typography>
             </div>
@@ -39,7 +39,7 @@ export default function FormDirtyFields({ fields = [] }: IFormDirtyFields) {
             <div className="space-y-1 rounded-md p-4">
               <Typography variant="note-wide">{t('common.after')}</Typography>
 
-              <Typography variant="muted" className="text-primary">
+              <Typography variant="muted" className="text-muted-foreground">
                 {field.newValue || '—'}
               </Typography>
             </div>

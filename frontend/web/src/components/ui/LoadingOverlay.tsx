@@ -10,7 +10,7 @@ export interface ILoadingOverlay {
 export default function LoadingOverlay({ isLoading }: ILoadingOverlay) {
   return (
     <AlertDialog open={isLoading}>
-      <AlertDialogContent className="justify-center border-none bg-transparent outline-none">
+      <AlertDialogContent className="justify-center border-none bg-transparent outline-hidden">
         <AlertDialogTitle className="hidden" />
         <AlertDialogDescription className="hidden" />
         <LoadingSpinner />

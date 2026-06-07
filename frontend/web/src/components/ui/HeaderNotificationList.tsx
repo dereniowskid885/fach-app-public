@@ -5,12 +5,9 @@ import NotificationIcon from './NotificationIcon';
 export default function HeaderNotificationList() {
   return (
     <ul>
-      <div className="divide-y divide-muted-foreground">
+      <div className="divide-muted-foreground divide-y">
         {notifications.map(notification => (
-          <div
-            key={notification.id}
-            className="animation-base animation-idle animation-interactive flex items-start space-x-3 p-4"
-          >
+          <div key={notification.id} className="animation-hover flex items-start space-x-3 p-4">
             <NotificationIcon type={notification.type} />
 
             <div className="flex min-w-0 flex-col gap-1">

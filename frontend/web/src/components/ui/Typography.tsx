@@ -1,5 +1,5 @@
 import React, { ElementType } from 'react';
-import { cn } from '@/utils/shared';
+import { cn } from '@/lib/utils';
 
 interface TypographyProps<T extends ElementType> extends React.HTMLAttributes<HTMLElement> {
   as?: T;
@@ -14,16 +14,16 @@ export default function Typography<T extends ElementType = 'p'>({
   ...props
 }: TypographyProps<T> & React.ComponentPropsWithoutRef<T>) {
   const variantStyles = {
-    h1: 'scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl',
-    h2: 'scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0',
-    h3: 'scroll-m-20 text-2xl font-semibold tracking-tight',
+    h1: 'scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-4xl',
+    h2: 'scroll-m-20 text-2xl font-semibold tracking-tight first:mt-0',
+    h3: 'scroll-m-20 text-xl font-semibold tracking-tight',
     p: 'text-sm leading-6 md:text-base md:leading-7',
-    lead: 'text-base text-muted-foreground sm:text-lg md:text-xl',
-    large: 'text-base font-semibold sm:text-lg md:text-xl',
-    small: 'text-xs font-medium sm:text-sm',
-    muted: 'text-muted-foreground text-sm',
+    lead: 'text-base md:text-lg',
+    large: 'text-base font-semibold md:text-lg',
+    small: 'text-xs sm:text-sm font-medium',
+    muted: 'text-sm',
     note: 'text-xs',
-    'note-wide': 'text-xs font-bold uppercase tracking-wide text-muted-foreground'
+    'note-wide': 'text-xs font-bold uppercase tracking-wide'
   };
 
   const defaultElement =

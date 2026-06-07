@@ -1,7 +1,7 @@
 import { Ticket } from '@/services/api/generated/accountApi';
 import Typography from '@/components/ui/Typography';
 import TicketStatusIcon from './TicketStatusIcon';
-import { cn } from '@/utils/shared';
+import { cn } from '@/lib/utils';
 import TicketDetailsDialog from './TicketDetailsDialog';
 import { useState } from 'react';
 
@@ -26,12 +26,12 @@ export default function TicketSummaryInfo({
         <div className="group space-y-0.5" onClick={() => setTicketDetailsDialog(true)}>
           <Typography
             variant="muted"
-            className="line-clamp-1 font-bold text-primary group-hover:underline"
+            className="text-foreground line-clamp-1 font-semibold group-hover:underline"
           >
             {ticket.title}
           </Typography>
 
-          <Typography variant="small" className="line-clamp-2 text-muted-foreground">
+          <Typography variant="small" className="text-muted-foreground line-clamp-2">
             {ticket.description}
           </Typography>
         </div>

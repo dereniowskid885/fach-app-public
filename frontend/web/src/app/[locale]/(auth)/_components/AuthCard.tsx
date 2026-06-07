@@ -29,17 +29,17 @@ export default function AuthCard({
   const contentElements = (
     <>
       {mainContent ? (
-        <CardContent className="flex flex-col gap-3">{mainContent}</CardContent>
+        <CardContent className="flex flex-col gap-6">{mainContent}</CardContent>
       ) : null}
 
       {footerContent ? (
-        <CardFooter className="flex flex-col gap-6">{footerContent}</CardFooter>
+        <CardFooter className="mt-4 flex flex-col gap-6">{footerContent}</CardFooter>
       ) : null}
     </>
   );
 
   return (
-    <Card className="animate-zoom-enter w-full max-w-[600px] bg-secondary p-4 shadow-2xl backdrop-blur-xl sm:p-8">
+    <Card className="animate-zoom-enter bg-secondary w-full max-w-150 p-4 shadow-2xl backdrop-blur-xl sm:p-8">
       {titleContent || descriptionContent ? (
         <CardHeader className="mb-2 space-y-2 text-center">
           {titleContent ? (
@@ -52,9 +52,7 @@ export default function AuthCard({
 
           {descriptionContent ? (
             <CardDescription>
-              <Typography variant="lead" className="text-primary">
-                {descriptionContent}
-              </Typography>
+              <Typography variant="lead">{descriptionContent}</Typography>
             </CardDescription>
           ) : null}
         </CardHeader>

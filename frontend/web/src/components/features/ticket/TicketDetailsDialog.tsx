@@ -36,6 +36,7 @@ import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import TicketDetailsActionButtons from './TicketDetailsActionButtons';
 import { isCommentingAllowed } from '@/helpers/ticket';
+import { Spinner } from '@/components/shadcn/spinner';
 
 export interface ITicketDetailsDialog {
   open: boolean;
@@ -152,12 +153,12 @@ export default function TicketDetailsDialog({
   const headerContent = (
     <div className="flex w-full items-center justify-between">
       <div className="flex items-center gap-4">
-        <div className="rounded-sm bg-foreground p-2 shadow-md">
+        <div className="bg-foreground rounded-sm p-2 shadow-md">
           <ClipboardList size={28} className="text-background" />
         </div>
 
         <div className="space-y-0.5">
-          <Typography variant="lead" className="font-bold text-primary">
+          <Typography variant="lead" className="text-foreground font-bold">
             {ticket.title}
           </Typography>
 
@@ -200,14 +201,14 @@ export default function TicketDetailsDialog({
       >
         <div className="grid grid-cols-2 gap-x-8 gap-y-4">
           <ContentSectionItem
-            className="rounded-2xl border p-2"
+            className="rounded-2xl border p-3"
             title={t('common.createdBy')}
             descriptionComponent={renderUserInfo(ticket.createdBy)}
             variant={ESectionItemType.USER}
           />
 
           <ContentSectionItem
-            className="rounded-2xl border p-2"
+            className="rounded-2xl border p-3"
             title={t('common.assignee')}
             descriptionComponent={renderUserInfo(ticket.assignee, t('common.unassigned'))}
             variant={
@@ -218,14 +219,14 @@ export default function TicketDetailsDialog({
           />
 
           <ContentSectionItem
-            className="rounded-2xl border p-2"
+            className="rounded-2xl border p-3"
             title={t('common.category')}
             description={ticket.category?.name}
             variant={ESectionItemType.CATEGORY}
           />
 
           <ContentSectionItem
-            className="rounded-2xl border p-2"
+            className="rounded-2xl border p-3"
             title={t('common.city')}
             description={ticket.city}
             variant={ESectionItemType.CITY}
@@ -239,20 +240,23 @@ export default function TicketDetailsDialog({
         Icon={ChartColumn}
       >
         {ticket.acceptedEvaluation ? (
-          <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+          <div className="grid grid-cols-2 gap-x-8">
             <ContentSectionItem
+              className="p-3"
               title={t('userRole.specialist')}
               description={getUserFullName(ticket.acceptedEvaluation.user)}
               variant={ESectionItemType.SPECIALIST}
             />
 
             <ContentSectionItem
+              className="p-3"
               title={t('evaluation.responseTime')}
               description={getFormattedResponseTime(ticket.acceptedEvaluation.minutes, t)}
               variant={ESectionItemType.RESPONSE_TIME}
             />
 
             <ContentSectionItem
+              className="p-3"
               title={t('evaluation.dateOfResponse')}
               description={getLocaleDateString(
                 ticket.acceptedEvaluation.dateOfResponse,
@@ -262,6 +266,7 @@ export default function TicketDetailsDialog({
             />
 
             <ContentSectionItem
+              className="p-3"
               title={t('evaluation.price')}
               description={getFormattedPriceAmount(
                 ticket.acceptedEvaluation.price?.amountInCents,
@@ -306,6 +311,7 @@ export default function TicketDetailsDialog({
         <ContentSection
           title={t('ticketDetailsDialog.addMessageSectionTitle')}
           Icon={MessageSquare}
+          bgTransparent={true}
         >
           <form onSubmit={handleSubmit(createCommentHandler)} className="flex flex-col gap-4">
             <div ref={commentInputRef} className="space-y-1.5">
@@ -331,12 +337,14 @@ export default function TicketDetailsDialog({
                 required
               />
 
-              <Typography variant="note" className="block text-right text-muted-foreground">
+              <Typography variant="note" className="text-muted-foreground block text-right">
                 {t('common.charsAmount', { amount: messageCharsLeft })}
               </Typography>
             </div>
 
-            <Button type="submit" className="self-end" loading={isLoadingCreate}>
+            <Button type="submit" className="self-end">
+              {isLoadingCreate ? <Spinner /> : null}
+
               <Forward />
 
               {t('common.send')}
@@ -367,7 +375,7 @@ export default function TicketDetailsDialog({
 
 const renderUserInfo = (user?: User, nameFallback?: string) => (
   <div className="flex items-center gap-2">
-    <Typography variant="note" className="font-bold">
+    <Typography variant="muted" className="text-foreground font-semibold">
       {getUserFullName(user, nameFallback)}
     </Typography>
 

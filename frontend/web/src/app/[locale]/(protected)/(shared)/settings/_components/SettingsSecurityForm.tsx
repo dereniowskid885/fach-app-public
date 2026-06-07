@@ -74,16 +74,16 @@ export default function SettingsSecurityForm() {
   };
 
   return (
-    <ContentCard index={1} className="space-y-6 p-6 sm:p-8">
+    <ContentCard index={1} contentClass="space-y-8">
       <ContentSectionItem
         title={t('settingsPage.securityForm.title')}
-        titleClass={'text-sm font-bold text-primary'}
+        titleClass={'text-foreground font-bold text-base'}
         description={t('settingsPage.securityForm.description')}
-        descriptionClass={'font-semibold text-muted-foreground'}
+        descriptionClass={'text-muted-foreground'}
         variant={ESectionItemType.SETTINGS_SECURITY}
       />
 
-      <form onSubmit={handleSubmit(openConfirmDialog)} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(openConfirmDialog)} className="flex flex-col gap-6">
         <div className="space-y-2">
           <Label htmlFor="currentPassword">{t('settingsPage.securityForm.currentPassword')}</Label>
 
@@ -113,7 +113,7 @@ export default function SettingsSecurityForm() {
           />
         </div>
 
-        <Button variant="special-1" type="submit" className="ml-auto mt-2">
+        <Button variant="admin" type="submit" className="mt-2 ml-auto">
           <Lock size={16} />
 
           {t('settingsPage.securityForm.submitButton')}

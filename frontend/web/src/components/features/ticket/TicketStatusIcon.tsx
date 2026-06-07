@@ -4,7 +4,7 @@ import {
   getTicketStatusIcon,
   getTicketStatusTranslationKey
 } from '@/helpers/ticket';
-import { cn } from '@/utils/shared';
+import { cn } from '@/lib/utils';
 import Typography from '@/components/ui/Typography';
 import { ETicketStatus } from 'shared-types';
 import { useTranslations } from 'next-intl';
@@ -28,7 +28,7 @@ export default function TicketStatusIcon({
   return (
     <div
       className={cn(
-        'flex items-center gap-2 rounded-2xl border p-2.5 shadow-sm',
+        'flex items-center gap-2 rounded-2xl border p-2.5 shadow-xs',
         getTicketStatusColorClasses(status),
         className
       )}
@@ -36,7 +36,7 @@ export default function TicketStatusIcon({
       <Icon size={size} />
 
       {showStatusText ? (
-        <Typography variant="note" className="text-nowrap text-center font-semibold">
+        <Typography variant="note" className="text-center font-semibold text-nowrap">
           {t(getTicketStatusTranslationKey(status))}
         </Typography>
       ) : null}

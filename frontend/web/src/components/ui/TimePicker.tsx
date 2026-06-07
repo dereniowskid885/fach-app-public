@@ -1,6 +1,6 @@
 import { Input } from '@/components/shadcn/input';
 import { ETimePickerType } from '@/enums/ui';
-import { cn } from '@/utils/shared';
+import { cn } from '@/lib/utils';
 import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 
 export interface TimePickerInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -148,7 +148,7 @@ export const TimePickerInput = React.forwardRef<HTMLInputElement, TimePickerInpu
         id={id || picker}
         name={name || picker}
         className={cn(
-          'w-[48px] text-center font-mono text-base tabular-nums caret-transparent focus:bg-secondary dark:focus:bg-secondary [&::-webkit-inner-spin-button]:appearance-none',
+          'focus:bg-secondary dark:focus:bg-secondary w-[48px] text-center font-mono text-base tabular-nums caret-transparent [&::-webkit-inner-spin-button]:appearance-none',
           className
         )}
         value={pickerInputValue}
