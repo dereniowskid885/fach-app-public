@@ -1,49 +1,23 @@
-import { LogOut } from 'lucide-react';
-import NavLink from '@/components/ui/NavLink';
-import { LOGIN_PATH } from '@/constants/routes';
-import { useLocale, useTranslations } from 'next-intl';
-import LoadingOverlay from '@/components/ui/LoadingOverlay';
-import { usePostAuthLogoutMutation, UserRole } from '@/services/api/generated/accountApi';
+import { useTranslations } from 'next-intl';
+import { UserRole } from '@/services/api/generated/accountApi';
 import { Button } from '@/components/shadcn/button';
 import Typography from '@/components/ui/Typography';
-import { usePathname, useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
-import { menuItemsObj } from '@/constants/menu';
-import { ESupportedLanguages, EUserRole } from 'shared-types';
 import Logo from '@/components/ui/Logo';
-import { Skeleton } from '@/components/shadcn/skeleton';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeftFromLine, ArrowRightFromLine } from 'lucide-react';
 import AnimateCollapse from '@/components/ui/AnimateCollapse';
 import { useSidebarContext } from '@/contexts/SidebarContext';
-import { normalizePathname } from '@/utils/pathname';
-import { useErrorHandler } from '@/hooks/useErrorHandler';
 import UserCard from '@/components/features/user/UserCard';
 import { Separator } from '@/components/shadcn/separator';
-import { EFallbackKey } from '@/enums/ui';
+import NavDesktop from '../features/nav/NavDesktop';
+import LogoutButton from '../features/nav/LogoutButton';
 
 export default function Sidebar() {
   const t = useTranslations();
   const { sidebarWidth, isSidebarCollapsed, toggleSidebar } = useSidebarContext();
-
-  const currentPath = usePathname();
-  const currentLocale = useLocale();
-  const normalizedPath = normalizePathname(currentPath, currentLocale);
-
-  const router = useRouter();
   const { role, name, surname, city, categoryName } = useSelector(selectUserData);
-
-  const [triggerLogout, { isLoading, error }] = usePostAuthLogoutMutation();
-
-  useErrorHandler(error);
-
-  const handleLogout = async () => {
-    const { error } = await triggerLogout();
-    if (error) return;
-
-    router.push(LOGIN_PATH);
-  };
 
   return (
     <motion.aside
@@ -51,7 +25,7 @@ export default function Sidebar() {
       animate={{
         width: sidebarWidth
       }}
-      className={`bg-sidebar fixed flex h-screen flex-col shadow-sm w-[${sidebarWidth}px] z-50`}
+      className={`bg-sidebar fixed hidden h-screen flex-col shadow-sm sm:flex w-[${sidebarWidth}px] z-50`}
     >
       <motion.div
         animate={{
@@ -75,37 +49,14 @@ export default function Sidebar() {
             exit={{ opacity: 0, height: 0 }}
             className="text-center"
           >
-            <Typography variant="note-wide" className="px-3 tracking-widest">
+            <Typography variant="note-wide" className="text-muted-foreground px-3 tracking-widest">
               {t('sidebar.mainMenu')}
             </Typography>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <nav className="flex-1 space-y-2 overflow-x-hidden overflow-y-auto p-3">
-        {role
-          ? menuItemsObj[role as EUserRole].map(item => (
-              <NavLink
-                key={item.id}
-                href={item.href}
-                isCurrentPath={
-                  item.path
-                    ? item.path[currentLocale as ESupportedLanguages] === normalizedPath
-                    : false
-                }
-                isSidebarCollapsed={isSidebarCollapsed}
-                title={t(item.translationKey)}
-              >
-                <item.icon size={18} strokeWidth={2.5} className="ml-1" />
-              </NavLink>
-            ))
-          : Array.from({ length: 4 }).map((item, index) => (
-              <Skeleton
-                key={`${EFallbackKey.MENU_ITEM_SKELETON}-${item}-${index}`}
-                className="h-9"
-              />
-            ))}
-      </nav>
+      <NavDesktop isSidebarCollapsed={isSidebarCollapsed} />
 
       <Separator className="bg-border mt-2" />
 
@@ -142,20 +93,8 @@ export default function Sidebar() {
           userNameTextWrap={true}
         />
 
-        <Button
-          className="animation-hover hover:text-destructive h-9 w-full justify-start gap-2.5 px-2"
-          onClick={handleLogout}
-          variant="ghost"
-        >
-          <LogOut size={18} strokeWidth={2.5} className="ml-2" />
-
-          <AnimateCollapse isHidden={isSidebarCollapsed}>
-            <Typography variant="small">{t('common.logout')}</Typography>
-          </AnimateCollapse>
-        </Button>
+        <LogoutButton isSidebarCollapsed={isSidebarCollapsed} />
       </div>
-
-      <LoadingOverlay isLoading={isLoading} />
     </motion.aside>
   );
 }

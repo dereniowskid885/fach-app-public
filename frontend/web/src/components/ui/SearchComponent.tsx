@@ -14,7 +14,7 @@ export interface ISearchComponent {
 }
 
 export default function SearchComponent({
-  variant = ESearchComponentVariant.DEFAULT,
+  variant = ESearchComponentVariant.PAGE,
   placeholder,
   inputClassName,
   inputValue,
@@ -25,12 +25,12 @@ export default function SearchComponent({
   let variantClasses = '';
 
   switch (variant) {
-    case ESearchComponentVariant.BIG:
-      variantClasses = 'w-48 lg:w-64 xl:w-[500px]';
-      break;
-    case ESearchComponentVariant.DEFAULT:
-    default:
+    case ESearchComponentVariant.HEADER:
       variantClasses = 'w-full max-w-md';
+      break;
+    case ESearchComponentVariant.PAGE:
+    default:
+      variantClasses = 'w-full lg:max-w-md';
       break;
   }
 

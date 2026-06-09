@@ -1,9 +1,9 @@
 import { EUserRole, ETicketStatus, isAdmin, isSpecialist, isUser } from 'shared-types';
 import { Dispatch, SetStateAction } from 'react';
 import { Separator } from '@/components/shadcn/separator';
-import TicketCategoryFilter from './TicketCategoryFilter';
-import TicketCityFilter from './TicketCityFilter';
-import TicketStatusFilter from './TicketStatusFilter';
+import TicketCategoryFilter from '@/app/[locale]/(protected)/_components/TicketCategoryFilter';
+import TicketCityFilter from '@/app/[locale]/(protected)/_components/TicketCityFilter';
+import TicketStatusFilter from '@/app/[locale]/(protected)/_components/TicketStatusFilter';
 import { EFilterButton } from '@/enums/ui';
 
 export interface ITicketFilterPanel {

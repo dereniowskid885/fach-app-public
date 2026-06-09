@@ -284,7 +284,7 @@
   },
   "myTicketsPage": {
     "headerTitle": {
-      "user": "Your support requests",
+      "user": "Your tickets",
       "specialist": "Tickets assigned to you",
       "admin": "Ticket management"
     },
@@ -307,12 +307,20 @@
     }
   },
   "availableTicketsPage": {
-    "headerTitle": "Open requests",
-    "headerDescription": "Browse tickets submitted by users and send your evaluations."
+    "headerTitle": {
+      "specialist": "Open requests"
+    },
+    "headerDescription": {
+      "specialist": "Browse tickets submitted by users and send your evaluations."
+    }
   },
   "myEvaluationsPage": {
-    "headerTitle": "Your evaluations",
-    "headerDescription": "Track tickets where you have already submitted your evaluation."
+    "headerTitle": {
+      "specialist": "Your evaluations"
+    },
+    "headerDescription": {
+      "specialist": "Track tickets where you have already submitted your evaluation."
+    }
   },
   "responseTime": {
     "days": "{count, plural, =1 {# day} other {# days}}",

@@ -91,7 +91,7 @@ export default function TicketUserSolutionReviewDialog({
               </Typography>
             </FieldTitle>
 
-            <FieldDescription>
+            <FieldDescription className="text-lime-600">
               {t('ticketSolutionReviewDialog.resolvedDescription')}
             </FieldDescription>
           </FieldContent>
@@ -99,7 +99,6 @@ export default function TicketUserSolutionReviewDialog({
           <RadioGroupItem
             value={ETicketResolutionType.RESOLVED}
             id={ETicketResolutionType.RESOLVED}
-            className="text-lime-600"
           />
         </Field>
       </FieldLabel>
@@ -119,7 +118,7 @@ export default function TicketUserSolutionReviewDialog({
               </Typography>
             </FieldTitle>
 
-            <FieldDescription>
+            <FieldDescription className="text-orange-600">
               {t('ticketSolutionReviewDialog.reportIssueDescription')}
             </FieldDescription>
           </FieldContent>
@@ -127,7 +126,6 @@ export default function TicketUserSolutionReviewDialog({
           <RadioGroupItem
             value={ETicketResolutionType.REPORT_ISSUE}
             id={ETicketResolutionType.REPORT_ISSUE}
-            className="text-orange-600"
           />
         </Field>
       </FieldLabel>

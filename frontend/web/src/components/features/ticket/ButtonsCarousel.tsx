@@ -104,7 +104,7 @@ export default function ButtonsCarousel({
   return (
     <div className="space-y-1">
       {headerText ? (
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Typography variant="note-wide" className="text-muted-foreground">
             {headerText}
           </Typography>
