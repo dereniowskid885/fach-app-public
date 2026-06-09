@@ -28,9 +28,9 @@ export default function IconBadge({
       className={cn('space-x-1 border', badge.iconWrapperClass, className)}
       title={text}
     >
-      {showIcon ? <Icon size={12} className={badge.iconClass} /> : null}
+      {showIcon ? <Icon size={12} strokeWidth={2.5} className={badge.iconClass} /> : null}
 
-      <Typography variant="note" className={cn(textClassName, badge.iconClass)}>
+      <Typography variant="note" className={cn('font-bold', textClassName, badge.iconClass)}>
         {text}
       </Typography>
     </Badge>
