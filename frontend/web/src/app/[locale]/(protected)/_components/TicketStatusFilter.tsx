@@ -1,6 +1,6 @@
 import { ETicketStatus } from 'shared-types';
-import ButtonsCarousel from './ButtonsCarousel';
-import TicketStatusIcon from './TicketStatusIcon';
+import ButtonsCarousel from '@/components/features/ticket/ButtonsCarousel';
+import TicketStatusIcon from '@/components/features/ticket/TicketStatusIcon';
 import { useTranslations } from 'next-intl';
 import { getTicketStatusTranslationKey } from '@/helpers/ticket';
 import { EFallbackKey, EFilterButton } from '@/enums/ui';

@@ -16,7 +16,7 @@ export default function PageHeader({ title, description, isDataLoaded = true }: 
       </Typography>
 
       {description ? (
-        <Typography variant="muted" className="text-muted-foreground">
+        <Typography variant="muted" className="text-muted-foreground pr-8">
           {description}
         </Typography>
       ) : null}

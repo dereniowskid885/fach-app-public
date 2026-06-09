@@ -6,6 +6,7 @@ import { selectUserData } from '@/redux/slices/UserDataSlice';
 import TicketCreateButton from '@/components/features/ticket/TicketCreateButton';
 import PageHeader from '@/components/ui/PageHeader';
 import { isUser } from 'shared-types';
+import { Skeleton } from '@/components/shadcn/skeleton';
 
 export default function DashboardGreeting() {
   const t = useTranslations();
@@ -19,7 +20,7 @@ export default function DashboardGreeting() {
   };
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between gap-4">
       <PageHeader
         isDataLoaded={isUserStateInitialized}
         title={t('dashboard.greeting', {
@@ -29,7 +30,11 @@ export default function DashboardGreeting() {
         description={t('dashboard.greetingMessage')}
       />
 
-      {isUser(role) ? <TicketCreateButton /> : null}
+      {!isUserStateInitialized ? (
+        <Skeleton className="h-10 w-41.5 rounded-full" />
+      ) : isUser(role) ? (
+        <TicketCreateButton />
+      ) : null}
     </div>
   );
 }

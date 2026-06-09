@@ -127,7 +127,7 @@ export default function TicketSpecialistEvaluationDialog({
         Icon={ChartColumn}
         className="shadow-none"
       >
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
           <ContentSectionItem
             title={t('evaluation.responseTime')}
             description={getFormattedResponseTime(currentUserEvaluation?.minutes, t)}

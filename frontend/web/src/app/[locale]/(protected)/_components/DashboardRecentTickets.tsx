@@ -39,28 +39,30 @@ export default function DashboardRecentTickets() {
 
   return isError ? null : (
     <section className="space-y-3 lg:col-span-2">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-3 gap-y-2">
           <Typography variant="large" className="font-bold">
             {t('dashboard.recentTicketsHeader')}
           </Typography>
 
-          {isAdmin(role) ? null : isLoadingUserState ? (
-            <Skeleton className="h-5 w-10" />
-          ) : (
-            <IconBadge
-              variant={isSpecialist(role) ? EIconBadgeVariant.CATEGORY : EIconBadgeVariant.CITY}
-              text={isSpecialist(role) ? categoryName : city}
-            />
-          )}
+          <div className="flex items-center gap-3">
+            {isAdmin(role) ? null : isLoadingUserState ? (
+              <Skeleton className="h-5 w-20" />
+            ) : (
+              <IconBadge
+                variant={isSpecialist(role) ? EIconBadgeVariant.CATEGORY : EIconBadgeVariant.CITY}
+                text={isSpecialist(role) ? categoryName : city}
+              />
+            )}
 
-          {isLoadingUserState ? (
-            <Skeleton className="h-5 w-10" />
-          ) : (
-            <Badge variant="amount">
-              {t('ticket.ticketsAmount', { count: userTickets.length ?? 0 })}
-            </Badge>
-          )}
+            {isLoadingUserState ? (
+              <Skeleton className="h-5 w-10" />
+            ) : (
+              <Badge variant="amount">
+                {t('ticket.ticketsAmount', { count: userTickets.length ?? 0 })}
+              </Badge>
+            )}
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
@@ -70,7 +72,7 @@ export default function DashboardRecentTickets() {
 
           <Link
             href={isAdmin(role) ? ALL_TICKETS_PATH : TICKETS_PATH}
-            className="animation-hover flex items-center gap-1 rounded-2xl p-2 text-xs font-bold"
+            className="animation-hover flex items-center gap-1 rounded-2xl p-2 text-xs font-bold text-nowrap"
           >
             <Typography variant="note-wide">{t('common.viewAll')}</Typography>
 
@@ -82,7 +84,10 @@ export default function DashboardRecentTickets() {
       {isLoadingTickets ? (
         <LoadingSpinner className="m-auto" />
       ) : userTickets.length === 0 ? (
-        <ContentSection className="m-auto flex w-fit flex-col items-center justify-center p-6">
+        <ContentSection
+          bgTransparent={true}
+          className="m-auto flex w-fit flex-col items-center justify-center p-6"
+        >
           <ClipboardList size={28} className="text-muted-foreground/70" />
 
           <Typography variant="p" className="text-muted-foreground/70">
@@ -96,7 +101,7 @@ export default function DashboardRecentTickets() {
           </Button>
         </ContentSection>
       ) : (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 xl:grid-cols-2">
           {userTickets.map((ticket, i) => (
             <TicketCard key={ticket._id} index={i} ticket={ticket} />
           ))}

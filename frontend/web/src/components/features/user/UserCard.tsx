@@ -15,6 +15,8 @@ export interface IUserCard {
   userNameTextWrap?: boolean;
   isSidebarCollapsed?: boolean;
   className?: string;
+  titleClass?: string;
+  descriptionClass?: string;
 }
 
 export default function UserCard({
@@ -22,7 +24,9 @@ export default function UserCard({
   userNameFallback,
   userNameTextWrap = false,
   isSidebarCollapsed = false,
-  className
+  className,
+  titleClass = '',
+  descriptionClass = ''
 }: IUserCard) {
   const t = useTranslations();
 
@@ -31,15 +35,22 @@ export default function UserCard({
   const shouldHideBottomInfo = isSidebarCollapsed || (!user?.city && !user?.category);
 
   return (
-    <ContentSection bgTransparent={true} className={cn('p-3', className)}>
+    <ContentSection
+      bgTransparent={true}
+      className={cn(isSidebarCollapsed ? 'p-0' : 'p-3', className)}
+    >
       <ContentSectionItem
         hideContent={isSidebarCollapsed}
         title={isUsernameFallback ? userNameFallback : userName}
         titleClass={cn(
           'text-foreground font-bold text-sm mb-1',
-          userNameTextWrap ? 'text-pretty' : ''
+          userNameTextWrap ? 'text-pretty' : '',
+          titleClass
         )}
-        descriptionComponent={user ? <UserRoleBadge role={user.role} /> : <></>}
+        descriptionComponent={
+          user ? <UserRoleBadge role={user.role} className={cn('ml-3', descriptionClass)} /> : <></>
+        }
+        descriptionClass={descriptionClass}
         iconComponent={
           user === undefined ? (
             <Skeleton className="size-10 rounded-full" />
@@ -49,6 +60,7 @@ export default function UserCard({
             </div>
           )
         }
+        className={isSidebarCollapsed ? 'mr-2 justify-center' : ''}
       />
 
       {shouldHideBottomInfo ? null : (

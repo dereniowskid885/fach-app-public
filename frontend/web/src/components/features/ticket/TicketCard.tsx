@@ -1,5 +1,4 @@
 import Typography from '@/components/ui/Typography';
-import { Separator } from '@/components/shadcn/separator';
 import { Clock, Layers, MapPin } from 'lucide-react';
 import { getFormattedDate, getRelativeTime } from '@/utils/date';
 import { Ticket } from '@/services/api/generated/accountApi';
@@ -25,46 +24,42 @@ export default function TicketCard({ ticket, index }: ITicketCard) {
 
   return (
     <ContentCard index={index}>
-      <div className="relative flex cursor-pointer flex-col gap-12">
+      <div className="relative flex cursor-pointer flex-col gap-12 overflow-hidden">
         <div className="flex items-center gap-4">
-          <TicketStatusIcon status={ticket.status} showStatusText={true} />
+          <div className="flex flex-wrap items-center gap-4">
+            <TicketStatusIcon status={ticket.status} showStatusText={true} />
 
-          <Separator orientation="vertical" className="h-8" />
-
-          {role !== EUserRole.SPECIALIST ? (
-            <div className="flex items-center gap-2">
-              <Layers size={14} strokeWidth={2.5} />
-
-              <Typography variant="note" className="font-bold">
-                {ticket.category?.name}
-              </Typography>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <MapPin size={14} strokeWidth={2.5} />
-
-              <Typography variant="note" className="font-bold">
-                {ticket.city}
-              </Typography>
-            </div>
-          )}
-
-          {ticket.updatedAt ? (
-            <>
-              <Separator orientation="vertical" className="h-8" />
-
+            {role !== EUserRole.SPECIALIST ? (
               <div className="flex items-center gap-2">
-                <Clock size={14} strokeWidth={2.5} />
+                <Layers size={14} strokeWidth={2.5} />
 
-                <Typography
-                  variant="note"
-                  className="font-bold"
-                  title={getFormattedDate(ticket.updatedAt)}
-                >
-                  {getRelativeTime(t, ticket.updatedAt)}
+                <Typography variant="note" className="font-bold">
+                  {ticket.category?.name}
                 </Typography>
               </div>
-            </>
+            ) : (
+              <div className="flex items-center gap-2">
+                <MapPin size={14} strokeWidth={2.5} />
+
+                <Typography variant="note" className="font-bold">
+                  {ticket.city}
+                </Typography>
+              </div>
+            )}
+          </div>
+
+          {ticket.updatedAt ? (
+            <div className="hidden items-center gap-2 md:flex">
+              <Clock size={14} strokeWidth={2.5} />
+
+              <Typography
+                variant="note"
+                className="font-bold"
+                title={getFormattedDate(ticket.updatedAt)}
+              >
+                {getRelativeTime(t, ticket.updatedAt)}
+              </Typography>
+            </div>
           ) : null}
 
           <div className="ml-auto">
@@ -78,7 +73,9 @@ export default function TicketCard({ ticket, index }: ITicketCard) {
           <TicketCardActionButtons ticket={ticket} role={role} userId={userId} />
 
           <UserCard
-            className="ml-auto"
+            className="ml-auto p-0"
+            titleClass="hidden md:block"
+            descriptionClass="hidden md:block"
             user={
               ticket.assignee
                 ? {
@@ -89,6 +86,7 @@ export default function TicketCard({ ticket, index }: ITicketCard) {
                 : null
             }
             userNameFallback={t('common.unassigned')}
+            userNameTextWrap={true}
           />
         </div>
       </div>
