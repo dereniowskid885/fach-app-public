@@ -46,16 +46,16 @@ export default function TicketComment({ isCommentingAllowed = false, data }: ITi
   const showDropdownMenu = isCommentingAllowed && (isCurrentUserComment || isAdmin(role));
 
   return data._id ? (
-    <div className={cn('relative w-3/4', isCurrentUserComment ? 'ml-auto' : '')}>
+    <div className={cn('relative sm:w-3/4', isCurrentUserComment ? 'ml-auto' : '')}>
       <ContentSectionItem
         className={cn('rounded-2xl border p-2 pr-12', isCurrentUserComment ? 'bg-background' : '')}
         titleComponent={
-          <div className="flex items-center gap-2">
+          <div className="ml-3 flex items-center gap-2">
             <Typography variant="small" className="text-foreground font-bold">
               {getUserFullName(data.user)}
             </Typography>
 
-            <UserRoleBadge role={data.user?.role} />
+            <UserRoleBadge role={data.user?.role} className="hidden sm:block" />
 
             <Typography
               variant="note"
@@ -67,6 +67,7 @@ export default function TicketComment({ isCommentingAllowed = false, data }: ITi
           </div>
         }
         description={sanitizedContent}
+        descriptionClass="text-muted-foreground"
         variant={sectionItemType[data.userRole ?? EUserRole.USER]}
       />
 

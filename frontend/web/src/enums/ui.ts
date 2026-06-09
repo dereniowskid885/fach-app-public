@@ -17,8 +17,8 @@ export const enum ETimePickerType {
 }
 
 export const enum ESearchComponentVariant {
-  BIG = 'BIG',
-  DEFAULT = 'DEFAULT'
+  HEADER = 'HEADER',
+  PAGE = 'PAGE'
 }
 
 export const enum EPopoverContentDirection {

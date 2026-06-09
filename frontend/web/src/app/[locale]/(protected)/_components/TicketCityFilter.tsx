@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import ButtonsCarousel from './ButtonsCarousel';
+import ButtonsCarousel from '@/components/features/ticket/ButtonsCarousel';
 import { useTranslations } from 'next-intl';
 import { cities } from 'shared-types';
 import { EFallbackKey, EFilterButton } from '@/enums/ui';

@@ -46,7 +46,7 @@ export default function ContentSectionItem({
       };
 
   return (
-    <div className={cn('flex items-center gap-3', className)} title={title}>
+    <div className={cn('flex items-center', className)} title={title}>
       {iconComponent ? (
         iconComponent
       ) : sectionItem.icon ? (
@@ -67,22 +67,22 @@ export default function ContentSectionItem({
           ) : title ? (
             <Typography
               variant="muted"
-              className={cn('text-muted-foreground leading-relaxed text-nowrap', titleClass)}
+              className={cn('text-muted-foreground ml-3 leading-relaxed text-nowrap', titleClass)}
             >
               {title}
             </Typography>
           ) : (
-            <Skeleton className="h-4 w-15" />
+            <Skeleton className="ml-3 h-4 w-30" />
           )}
 
           {descriptionComponent ? (
             descriptionComponent
           ) : description ? (
-            <Typography variant="muted" className={cn('text-foreground', descriptionClass)}>
+            <Typography variant="muted" className={cn('text-foreground ml-3', descriptionClass)}>
               {description}
             </Typography>
           ) : (
-            <Skeleton className="h-4 w-15" />
+            <Skeleton className="ml-3 h-4 w-15" />
           )}
         </div>
       )}

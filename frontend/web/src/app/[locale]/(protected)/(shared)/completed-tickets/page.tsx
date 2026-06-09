@@ -1,37 +1,24 @@
 'use client';
 
 import { useGetTicketsCompletedQuery } from '@/services/api/generated/accountApi';
-import ContentCard from '@/components/ui/ContentCard';
-import { DataTable } from '@/components/ui/DataTable';
-import PageHeader from '@/components/ui/PageHeader';
-import SearchComponent from '@/components/ui/SearchComponent';
-import { Badge } from '@/components/shadcn/badge';
-import { Skeleton } from '@/components/shadcn/skeleton';
-import TicketFilterPanel from '@/components/features/ticket/TicketFilterPanel';
-import IconBadge from '@/components/ui/IconBadge';
-import { EFilterButton, EIconBadgeVariant } from '@/enums/ui';
+import TicketFilterPanel from '@/app/[locale]/(protected)/_components/TicketFilterPanel';
+import { EFilterButton } from '@/enums/ui';
 import { getMyTicketsColumns } from '@/helpers/dataTable';
 import { getCompletedTicketsStatusFilters } from '@/helpers/ticket';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
-import { isAdmin, isSpecialist, isUser, ETicketStatus } from 'shared-types';
+import { ETicketStatus, EUserRole, isRoleAllowed } from 'shared-types';
 import { useLocale, useTranslations } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { RotateCcw } from 'lucide-react';
-import { Button } from '@/components/shadcn/button';
-import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
+import TicketsTablePageContent from '@/app/[locale]/(protected)/_components/TicketsTablePageContent';
 
 export default function CompletedTickets() {
-  const {
-    role,
-    city,
-    categoryName,
-    isInitialized: isUserStateInitialized
-  } = useSelector(selectUserData);
+  const { role, isInitialized: isUserStateInitialized } = useSelector(selectUserData);
 
-  const isInvalidRole = isUserStateInitialized && isAdmin(role);
+  const isInvalidRole =
+    isUserStateInitialized && !isRoleAllowed([EUserRole.SPECIALIST, EUserRole.USER], role);
   if (isInvalidRole) {
     notFound();
   }
@@ -39,7 +26,6 @@ export default function CompletedTickets() {
   const t = useTranslations();
   const currentLocale = useLocale();
 
-  const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<ETicketStatus | EFilterButton.ALL>(
     EFilterButton.ALL
   );
@@ -70,61 +56,17 @@ export default function CompletedTickets() {
 
   useErrorHandler(getTicketsError);
 
-  const filteredTickets =
-    ticketsData?.data?.filter(ticket => {
-      const matchesSearchQuery = searchQuery
-        ? ticket.title?.toLowerCase().includes(searchQuery.toLowerCase())
-        : true;
-
-      return matchesSearchQuery;
-    }) ?? [];
-
   const tableColumnsData = getMyTicketsColumns(t, currentLocale, role);
   const ticketStatusFilters = getCompletedTicketsStatusFilters();
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-2">
-        <PageHeader
-          isDataLoaded={isUserStateInitialized}
-          title={role ? t(`completedTicketsPage.headerTitle.${role}`) : ''}
-          description={role ? t(`completedTicketsPage.headerDescription.${role}`) : ''}
-        />
-
-        {isUserStateInitialized ? (
-          <div className="space-x-2">
-            {isUser(role) ? <IconBadge variant={EIconBadgeVariant.CITY} text={city} /> : null}
-
-            {isSpecialist(role) ? (
-              <IconBadge variant={EIconBadgeVariant.CATEGORY} text={categoryName} />
-            ) : null}
-          </div>
-        ) : (
-          <Skeleton className="h-5.5 w-20" />
-        )}
-      </div>
-
-      <ContentCard index={0} contentClass="space-y-6">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex w-full items-center gap-4">
-            <SearchComponent
-              inputValue={searchQuery}
-              inputOnChangeHandler={setSearchQuery}
-              placeholder={t('ticket.searchPlaceholder')}
-            />
-
-            <Badge variant="amount" className="text-sm">
-              {t('ticket.ticketsAmount', { count: filteredTickets.length ?? 0 })}
-            </Badge>
-          </div>
-
-          <Button variant="secondary" size="lg" onClick={refetch}>
-            <RotateCcw size={12} />
-
-            {t('common.refresh')}
-          </Button>
-        </div>
-
+    <TicketsTablePageContent
+      pageName="completedTicketsPage"
+      isLoadingTickets={isLoadingTickets}
+      ticketsData={ticketsData?.data}
+      tableColumns={tableColumnsData}
+      refetchTickets={refetch}
+      filterPanelComponent={
         <TicketFilterPanel
           role={role}
           ticketStatusFilters={ticketStatusFilters}
@@ -135,15 +77,7 @@ export default function CompletedTickets() {
           selectedStatus={selectedStatus}
           setSelectedStatus={setSelectedStatus}
         />
-      </ContentCard>
-
-      {isLoadingTickets ? (
-        <LoadingSpinner className="m-auto" />
-      ) : (
-        <ContentCard index={1} className="py-0" contentClass="px-0">
-          <DataTable data={filteredTickets} columns={tableColumnsData} />
-        </ContentCard>
-      )}
-    </div>
+      }
+    />
   );
 }

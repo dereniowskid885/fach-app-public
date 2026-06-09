@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 import { Category, useGetCategoriesQuery } from '@/services/api/generated/accountApi';
-import TicketCategoryIcon from './TicketCategoryIcon';
-import ButtonsCarousel from './ButtonsCarousel';
+import TicketCategoryIcon from '@/components/features/ticket/TicketCategoryIcon';
+import ButtonsCarousel from '@/components/features/ticket/ButtonsCarousel';
 import { useTranslations } from 'next-intl';
 import { EFallbackKey, EFilterButton } from '@/enums/ui';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
