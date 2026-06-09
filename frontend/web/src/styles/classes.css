@@ -1,0 +1,21 @@
+/* Applies the animated sidebar offset based on sidebar collapsed state on desktop */
+.animate-margin-left {
+  margin-left: 0;
+}
+
+@media (min-width: 640px) {
+  .animate-margin-left {
+    margin-left: var(--sidebar-offset);
+  }
+}
+
+/* Applies the animated header width based on sidebar collapsed state on desktop. */
+.animate-width {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .animate-width {
+    width: var(--header-width);
+  }
+}

@@ -3,6 +3,7 @@
 @import 'shadcn/tailwind.css';
 
 @import './utilities.css';
+@import './classes.css';
 @import './theme.css';
 
 /* ---------------------------------------------

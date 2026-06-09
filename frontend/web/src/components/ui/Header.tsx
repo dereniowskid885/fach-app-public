@@ -11,6 +11,8 @@ import SearchComponent from '@/components/ui/SearchComponent';
 import { ESearchComponentVariant } from '@/enums/ui';
 import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
 import ThemeSwitcher from '@/components/ui/ThemeSwitcher';
+import Logo from './Logo';
+import NavMobile from '../features/nav/NavMobile';
 
 export default function Header() {
   const { sidebarWidth } = useSidebarContext();
@@ -23,17 +25,21 @@ export default function Header() {
     <motion.header
       initial={false}
       animate={{
-        left: sidebarWidth,
-        width: `calc(100vw - ${sidebarWidth}px)`
+        '--sidebar-offset': `${sidebarWidth}px`,
+        '--header-width': `calc(100vw - ${sidebarWidth}px)`
       }}
-      className={`bg-sidebar fixed flex h-22 p-8 shadow-sm left-[${sidebarWidth}px] w-[calc(100vw-${sidebarWidth}px)] z-50`}
+      className={`bg-sidebar animate-margin-left animate-width fixed z-50 flex h-22 p-4 shadow-sm sm:p-8`}
     >
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full items-center justify-between gap-8">
+        <div className="sm:hidden">
+          <Logo />
+        </div>
+
         {/* TODO to be improved - header search component */}
         <SearchComponent
           inputValue=""
           inputOnChangeHandler={() => null}
-          variant={ESearchComponentVariant.BIG}
+          variant={ESearchComponentVariant.HEADER}
           inputClassName="ring-1 ring-border"
         />
 
@@ -50,12 +56,16 @@ export default function Header() {
             </PopoverContent>
           </Popover>
 
-          <LanguageSwitcher
-            currentPath={normalizedPath}
-            currentLang={currentLocale as ESupportedLanguages}
-          />
+          <NavMobile />
 
-          <ThemeSwitcher />
+          <div className="hidden items-center gap-3 sm:flex">
+            <LanguageSwitcher
+              currentPath={normalizedPath}
+              currentLang={currentLocale as ESupportedLanguages}
+            />
+
+            <ThemeSwitcher />
+          </div>
         </div>
       </div>
     </motion.header>

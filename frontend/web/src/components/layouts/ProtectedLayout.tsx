@@ -24,9 +24,9 @@ export default function ProtectedLayout({ children }: IProtectedLayout) {
       <motion.div
         initial={false}
         animate={{
-          marginLeft: sidebarWidth
+          '--sidebar-offset': `${sidebarWidth}px`
         }}
-        className={`h-vdh mt-24 w-full p-8 ml-[${sidebarWidth}px] min-w-0`}
+        className={`h-vdh animate-margin-left mt-24 w-full min-w-0 p-4 sm:p-8`}
       >
         <motion.div
           animate={{ maxWidth: isSidebarCollapsed ? 1600 : 1280 }}
