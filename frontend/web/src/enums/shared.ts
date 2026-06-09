@@ -4,3 +4,8 @@ export const enum EErrorStrategy {
   REDIRECT = 'REDIRECT',
   SILENT = 'SILENT'
 }
+
+export const enum EDevice {
+  MOBILE = 'mobile',
+  DESKTOP = 'desktop'
+}

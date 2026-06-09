@@ -11,6 +11,7 @@ export interface INavLink {
   title: string;
   isCurrentPath?: boolean;
   isSidebarCollapsed?: boolean;
+  isDesktop?: boolean;
 }
 
 export default function NavLink({
@@ -19,7 +20,8 @@ export default function NavLink({
   isCurrentPath = false,
   className,
   title,
-  isSidebarCollapsed = false
+  isSidebarCollapsed = false,
+  isDesktop = true
 }: INavLink) {
   const classNames = cn(
     `flex items-center px-3 py-2 rounded-2xl text-sm animation-hover group ${className ?? ''}`,
@@ -33,7 +35,7 @@ export default function NavLink({
 
         <AnimateCollapse isHidden={isSidebarCollapsed}>
           <Typography
-            variant="small"
+            variant={isDesktop ? 'small' : 'lead'}
             className={cn('text-nowrap', isCurrentPath ? 'font-semibold' : '')}
           >
             {title}

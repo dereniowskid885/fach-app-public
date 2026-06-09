@@ -200,6 +200,7 @@ export default function TicketFormDialog({
     <DialogComponent
       open={open}
       contentClass="max-w-5xl"
+      size="none"
       title={t(`ticketFormDialog.title.${mode.toLowerCase()}`)}
       cancelButtonText={t('common.cancel')}
       confirmButtonText={t('common.confirm')}

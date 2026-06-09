@@ -307,12 +307,20 @@
     }
   },
   "availableTicketsPage": {
-    "headerTitle": "Dostępne sprawy",
-    "headerDescription": "Przeglądaj sprawy użytkowników i wysyłaj swoje wyceny."
+    "headerTitle": {
+      "specialist": "Dostępne sprawy"
+    },
+    "headerDescription": {
+      "specialist": "Przeglądaj sprawy użytkowników i wysyłaj swoje wyceny."
+    }
   },
   "myEvaluationsPage": {
-    "headerTitle": "Twoje wyceny",
-    "headerDescription": "Śledź sprawy, dla których wysłałeś już swoją wycenę."
+    "headerTitle": {
+      "specialist": "Twoje wyceny"
+    },
+    "headerDescription": {
+      "specialist": "Śledź sprawy, dla których wysłałeś już swoją wycenę."
+    }
   },
   "responseTime": {
     "days": "{count, plural, =1 {# dzień} few {# dni} many {# dni} other {# dni}}",

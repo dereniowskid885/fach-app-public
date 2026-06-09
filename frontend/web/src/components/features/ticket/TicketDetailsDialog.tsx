@@ -37,6 +37,9 @@ import { selectUserData } from '@/redux/slices/UserDataSlice';
 import TicketDetailsActionButtons from './TicketDetailsActionButtons';
 import { isCommentingAllowed } from '@/helpers/ticket';
 import { Spinner } from '@/components/shadcn/spinner';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { breakpoints } from '@/constants/breakpoints';
+import TicketStatusBadge from './TicketStatusBadge';
 
 export interface ITicketDetailsDialog {
   open: boolean;
@@ -51,6 +54,7 @@ export default function TicketDetailsDialog({
   closeDialog,
   scrollToInput = false
 }: ITicketDetailsDialog) {
+  const isDesktop = useMediaQuery(`(min-width: ${breakpoints.sm})`);
   const t = useTranslations();
   const currentLocale = useLocale();
   const { userId, role } = useSelector(selectUserData);
@@ -162,12 +166,12 @@ export default function TicketDetailsDialog({
             {ticket.title}
           </Typography>
 
-          <div className="flex items-center">
+          <div className="flex flex-wrap items-center gap-2 gap-y-1 md:gap-0">
             <Typography variant="note" className="text-muted-foreground">
               {t('ticketDetailsDialog.createdAt', { date: getFormattedDate(ticket.createdAt) })}
             </Typography>
 
-            <Dot className="text-muted-foreground" />
+            <Dot className="text-muted-foreground hidden md:block" />
 
             <Typography
               variant="note"
@@ -180,7 +184,11 @@ export default function TicketDetailsDialog({
         </div>
       </div>
 
-      <TicketStatusIcon className="mx-4" status={ticket.status} showStatusText={true} />
+      {isDesktop ? (
+        <TicketStatusIcon className="mx-4" status={ticket.status} showStatusText={true} />
+      ) : (
+        <TicketStatusBadge status={ticket.status} />
+      )}
     </div>
   );
 
@@ -199,7 +207,7 @@ export default function TicketDetailsDialog({
         title={t('ticketDetailsDialog.detailsSectionTitle')}
         Icon={Info}
       >
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2">
           <ContentSectionItem
             className="rounded-2xl border p-3"
             title={t('common.createdBy')}
@@ -240,7 +248,7 @@ export default function TicketDetailsDialog({
         Icon={ChartColumn}
       >
         {ticket.acceptedEvaluation ? (
-          <div className="grid grid-cols-2 gap-x-8">
+          <div className="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2">
             <ContentSectionItem
               className="p-3"
               title={t('userRole.specialist')}
@@ -358,10 +366,11 @@ export default function TicketDetailsDialog({
   return (
     <DialogComponent
       open={open}
-      headerClass="items-start"
+      headerClass="items-start text-start"
       headerContent={headerContent}
       content={content}
       contentClass="max-w-7xl"
+      size="none"
       customConfirmButton={
         <TicketDetailsActionButtons ticket={ticket} role={role} userId={userId} />
       }
@@ -374,11 +383,11 @@ export default function TicketDetailsDialog({
 }
 
 const renderUserInfo = (user?: User, nameFallback?: string) => (
-  <div className="flex items-center gap-2">
+  <div className="ml-3 flex items-center">
     <Typography variant="muted" className="text-foreground font-semibold">
       {getUserFullName(user, nameFallback)}
     </Typography>
 
-    {user && user.role ? <UserRoleBadge role={user?.role} /> : null}
+    {user && user.role ? <UserRoleBadge role={user?.role} className="ml-2" /> : null}
   </div>
 );
