@@ -1,7 +1,8 @@
 import { Ticket } from '@/services/api/generated/accountApi';
 import { EUserRole } from 'shared-types';
 import TicketCardSpecialistActionButtons from './TicketCardSpecialistActionButtons';
-import TicketUserActionButtons from './TicketCardUserActionButtons';
+import TicketCardUserActionButtons from './TicketCardUserActionButtons';
+import TicketCardAdminActionButtons from './TicketCardAdminActionButtons';
 
 export interface ITicketCardActionButtons {
   ticket: Ticket;
@@ -29,6 +30,9 @@ export default function TicketCardActionButtons({
     }
 
     case EUserRole.USER:
-      return <TicketUserActionButtons ticket={ticket} />;
+      return <TicketCardUserActionButtons ticket={ticket} />;
+
+    case EUserRole.ADMIN:
+      return <TicketCardAdminActionButtons ticket={ticket} />;
   }
 }

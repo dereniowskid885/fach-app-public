@@ -45,7 +45,8 @@
     "saveChanges": "Save Changes",
     "before": "Before",
     "after": "After",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "showDetails": "Show details"
   },
   "userRole": {
     "admin": "Admin",
@@ -277,10 +278,8 @@
     "pay": "Pay",
     "addComment": "Comment",
     "showEvaluations": "Show evaluations",
-    "solutionReview": "Resolve the ticket"
-  },
-  "ticketDropdownMenu": {
-    "showDetails": "Show details"
+    "solutionReview": "Resolve the ticket",
+    "checkSolution": "Check solution"
   },
   "myTicketsPage": {
     "headerTitle": {
