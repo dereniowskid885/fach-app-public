@@ -48,7 +48,7 @@ export default function TicketComment({ isCommentingAllowed = false, data }: ITi
   return data._id ? (
     <div className={cn('relative sm:w-3/4', isCurrentUserComment ? 'ml-auto' : '')}>
       <ContentSectionItem
-        className={cn('rounded-2xl border p-2 pr-12', isCurrentUserComment ? 'bg-background' : '')}
+        className={cn('rounded-2xl border p-2 pr-12', isCurrentUserComment ? 'bg-secondary' : '')}
         titleComponent={
           <div className="ml-3 flex items-center gap-2">
             <Typography variant="small" className="text-foreground font-bold">

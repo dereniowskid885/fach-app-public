@@ -86,7 +86,7 @@ export default function SettingsPersonalForm() {
   };
 
   return (
-    <ContentCard index={0} contentClass="space-y-8">
+    <ContentCard index={0} className="bg-popover" contentClass="space-y-8">
       <ContentSectionItem
         title={t('settingsPage.personalForm.title')}
         titleClass={'text-foreground font-bold text-base'}
