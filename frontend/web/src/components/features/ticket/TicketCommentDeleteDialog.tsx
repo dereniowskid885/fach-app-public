@@ -4,6 +4,7 @@ import { useDeleteTicketsCommentByIdMutation } from '@/services/api/generated/ac
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { TrashIcon } from 'lucide-react';
 
 export interface ITicketCommentDeleteDialog {
   open: boolean;
@@ -39,6 +40,7 @@ export const TicketCommentDeleteDialog = ({
   return (
     <DialogComponent
       open={open}
+      headerContent={<TrashIcon size={24} />}
       title={t('ticketCommentDeleteDialog.title')}
       cancelButtonText={t('common.back')}
       confirmButtonText={t('common.confirm')}

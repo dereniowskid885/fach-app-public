@@ -17,6 +17,7 @@ import {
 import TicketStatusIcon from './TicketStatusIcon';
 import { enhancedAccountApi } from '@/services/api/enhanced/enhancedAccountApi';
 import { getTicketUpdateErrorDescription } from '@/helpers/ticket';
+import { ClipboardList } from 'lucide-react';
 
 export interface ITicketAdminStatusChangeDialog {
   open: boolean;
@@ -94,6 +95,7 @@ export default function TicketAdminStatusChangeDialog({
       content={content}
       contentClass="max-w-xl"
       size="none"
+      headerContent={<ClipboardList size={24} />}
       title={t('ticketAdminStatusChangeDialog.title')}
       cancelButtonText={t('common.cancel')}
       cancelButtonHandler={closeDialog}

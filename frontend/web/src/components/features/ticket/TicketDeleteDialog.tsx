@@ -4,6 +4,7 @@ import { useDeleteTicketsByIdMutation } from '@/services/api/generated/accountAp
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { TrashIcon } from 'lucide-react';
 
 export interface ITicketDeleteDialog {
   open: boolean;
@@ -35,6 +36,7 @@ export const TicketDeleteDialog = ({ open, ticketId, closeDialog }: ITicketDelet
   return (
     <DialogComponent
       open={open}
+      headerContent={<TrashIcon size={24} />}
       title={t('ticketDeleteDialog.title')}
       cancelButtonText={t('common.back')}
       confirmButtonText={t('common.confirm')}

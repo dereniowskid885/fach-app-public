@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { ETicketStatus } from 'shared-types';
+import { XCircle } from 'lucide-react';
 
 export interface ITicketCancelDialog {
   open: boolean;
@@ -39,6 +40,7 @@ export const TicketCancelDialog = ({ open, ticketId, closeDialog }: ITicketCance
   return (
     <DialogComponent
       open={open}
+      headerContent={<XCircle size={24} />}
       title={t('ticketCancelDialog.title')}
       cancelButtonText={t('common.back')}
       confirmButtonText={t('common.confirm')}

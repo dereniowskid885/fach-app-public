@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { ETicketStatus } from 'shared-types';
 import { RadioGroup, RadioGroupItem } from '@/components/shadcn/radio-group';
-import { CheckSquare } from 'lucide-react';
+import { CheckCircle2, CheckSquare } from 'lucide-react';
 import Typography from '@/components/ui/Typography';
 import {
   Field,
@@ -135,6 +135,7 @@ export default function TicketUserSolutionReviewDialog({
   return (
     <DialogComponent
       open={open}
+      headerContent={<CheckCircle2 size={24} />}
       title={t('ticketSolutionReviewDialog.title')}
       content={content}
       cancelButtonText={t('common.cancel')}

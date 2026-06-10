@@ -11,7 +11,7 @@ import { EErrorStrategy } from '@/enums/shared';
 import { ESectionItemType } from '@/enums/ui';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { usePatchUsersChangePasswordMutation } from '@/services/api/generated/accountApi';
-import { Lock } from 'lucide-react';
+import { Lock, Wrench } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -122,6 +122,7 @@ export default function SettingsSecurityForm() {
 
       <DialogComponent
         open={confirmDialogOpen}
+        headerContent={<Wrench size={24} />}
         title={t('settingsPage.securityForm.confirmDialogTitle')}
         description={t('settingsPage.securityForm.confirmDialogDescription')}
         cancelButtonText={t('common.close')}

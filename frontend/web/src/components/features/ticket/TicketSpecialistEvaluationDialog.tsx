@@ -244,6 +244,7 @@ export default function TicketSpecialistEvaluationDialog({
       open={open}
       contentClass="max-w-xl"
       size="none"
+      headerContent={<ChartColumn size={24} />}
       title={t(`evaluationDialog.title.${mode.toLowerCase()}`)}
       cancelButtonText={t('common.cancel')}
       confirmButtonText={t('common.confirm')}
