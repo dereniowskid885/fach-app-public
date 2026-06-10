@@ -5,6 +5,7 @@ import { enhancedAccountApi } from '@/services/api/enhanced/enhancedAccountApi';
 import { Ticket } from '@/services/api/generated/accountApi';
 import { toast } from 'sonner';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { User } from 'lucide-react';
 
 export interface ITicketAdminAssignmentDialog {
   open: boolean;
@@ -46,6 +47,7 @@ export default function TicketAdminAssignmentDialog({
   return (
     <DialogComponent
       open={open}
+      headerContent={<User size={24} />}
       title={t('ticketAdminAssignmentDialog.title')}
       confirmButtonText={t('ticketAdminAssignmentDialog.confirmButtonText')}
       confirmButtonHandler={updateTicketHandler}

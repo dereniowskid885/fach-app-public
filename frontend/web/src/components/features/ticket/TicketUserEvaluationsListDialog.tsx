@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { useLocale, useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { getEvaluationsListDialogColumns } from '@/helpers/dataTable';
+import { ChartColumn } from 'lucide-react';
 
 export interface ITicketUserEvaluationsListDialog {
   open: boolean;
@@ -79,6 +80,7 @@ export default function TicketUserEvaluationsListDialog({
       open={open}
       contentClass="max-lg:max-w-none lg:max-w-[70%]"
       size="none"
+      headerContent={<ChartColumn size={24} />}
       title={t('evaluationListDialog.title')}
       content={
         <DataTable

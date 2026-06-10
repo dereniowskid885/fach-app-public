@@ -7,6 +7,7 @@ import { StripeProvider } from '@/components/providers/StripeProvider';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { Currency } from '@/services/api/generated/accountApi';
+import { CreditCard } from 'lucide-react';
 
 export interface ITicketUserPaymentDialog {
   open: boolean;
@@ -73,6 +74,7 @@ export default function TicketUserPaymentDialog({
     <DialogComponent
       open={open}
       isLoadingConfirmButton={isLoading}
+      headerContent={<CreditCard size={24} />}
       title={t('ticketPaymentDialog.title')}
       cancelButtonText={t('common.cancel')}
       cancelButtonHandler={closeDialog}

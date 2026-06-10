@@ -6,6 +6,7 @@ import {
 } from '@/services/api/generated/accountApi';
 import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { Mail, MailCheck } from 'lucide-react';
 
 export interface IAccountVerifyDialog {
   open: boolean;
@@ -62,6 +63,7 @@ export default function AccountVerifyDialog({
   return (
     <DialogComponent
       open={open}
+      headerContent={isEmailSent ? <MailCheck size={24} /> : <Mail size={24} />}
       title={isEmailSent ? (emailSentTitle ?? title) : title}
       description={isEmailSent ? (emailSentDescription ?? description) : description}
       cancelButtonText={t('common.close')}

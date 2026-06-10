@@ -52,15 +52,9 @@ export default function TicketCategorySelect({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="outline" role="combobox" aria-expanded={open}>
-          {selectedCategory ? (
-            <>
-              <TicketCategoryIcon categoryName={selectedCategory.name} />
+          <TicketCategoryIcon categoryName={selectedCategory ? selectedCategory.name : undefined} />
 
-              {selectedCategory.name}
-            </>
-          ) : (
-            t('category.select')
-          )}
+          {selectedCategory ? selectedCategory.name : t('category.select')}
         </Button>
       </PopoverTrigger>
 

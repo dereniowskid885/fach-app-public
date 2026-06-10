@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import DialogComponent from '@/components/ui/DialogComponent';
 import { Ticket } from '@/services/api/generated/accountApi';
 import { useTranslations } from 'next-intl';
+import { CheckCircle2 } from 'lucide-react';
 
 export interface ITicketSpecialistSendForReviewDialog {
   open: boolean;
@@ -48,6 +49,7 @@ export default function TicketSpecialistSendForReviewDialog({
   return (
     <DialogComponent
       open={open}
+      headerContent={<CheckCircle2 size={24} />}
       title={t('ticketSpecialistSendForReviewDialog.title')}
       confirmButtonText={t('ticketSpecialistSendForReviewDialog.confirmButtonText')}
       confirmButtonHandler={sendTicketForSolutionReview}

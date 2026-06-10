@@ -13,7 +13,7 @@ import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
-import { Save } from 'lucide-react';
+import { Save, User } from 'lucide-react';
 import FormDirtyFields from '@/components/ui/FormDirtyFields';
 import { useGetAuthMeQuery, usePatchUsersByIdMutation } from '@/services/api/generated/accountApi';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
@@ -158,6 +158,7 @@ export default function SettingsPersonalForm() {
 
       <DialogComponent
         open={confirmDialogOpen}
+        headerContent={<User size={24} />}
         title={t('settingsPage.personalForm.confirmDialogTitle')}
         content={<FormDirtyFields fields={dirtyFieldsValues} />}
         contentClass="max-w-7xl"

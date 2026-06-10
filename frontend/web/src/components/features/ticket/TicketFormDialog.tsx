@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/UserDataSlice';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { EActionType } from '@/enums/ui';
+import { ClipboardList } from 'lucide-react';
 
 interface ITicketForm {
   title: string;
@@ -201,6 +202,7 @@ export default function TicketFormDialog({
       open={open}
       contentClass="max-w-5xl"
       size="none"
+      headerContent={<ClipboardList size={24} />}
       title={t(`ticketFormDialog.title.${mode.toLowerCase()}`)}
       cancelButtonText={t('common.cancel')}
       confirmButtonText={t('common.confirm')}
