@@ -87,6 +87,7 @@ export default function TicketUserEvaluationsListDialog({
           oneSelectableRow={true}
           setSelectedRow={setSelectedEvaluationRow}
           columns={tableColumnsData}
+          className="bg-card"
         />
       }
       cancelButtonText={t('common.back')}

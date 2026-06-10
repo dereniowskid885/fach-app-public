@@ -24,7 +24,7 @@ export default function ContentSection({
     <div
       className={cn(
         'space-y-4 p-4',
-        bgTransparent ? 'bg-transparent' : 'rounded-2xl border shadow-md',
+        bgTransparent ? 'bg-transparent' : 'bg-card rounded-2xl border',
         className
       )}
     >

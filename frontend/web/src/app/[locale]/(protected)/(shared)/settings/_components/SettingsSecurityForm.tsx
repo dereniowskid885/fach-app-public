@@ -74,7 +74,7 @@ export default function SettingsSecurityForm() {
   };
 
   return (
-    <ContentCard index={1} contentClass="space-y-8">
+    <ContentCard index={1} className="bg-popover" contentClass="space-y-8">
       <ContentSectionItem
         title={t('settingsPage.securityForm.title')}
         titleClass={'text-foreground font-bold text-base'}

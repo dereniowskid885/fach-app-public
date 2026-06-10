@@ -6,6 +6,8 @@ import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { EPopoverContentDirection } from '@/enums/ui';
 import { useThemeHandler } from '@/hooks/useThemeHandler';
+import { PopoverClose } from '@radix-ui/react-popover';
+import { useRef } from 'react';
 
 export interface IThemeSwitcher {
   popoverContentDirection?: EPopoverContentDirection;
@@ -20,6 +22,9 @@ export default function ThemeSwitcher({
 }: IThemeSwitcher) {
   const t = useTranslations();
   const { theme, handleThemeChange } = useThemeHandler();
+  const closeRef = useRef<HTMLButtonElement | null>(null);
+
+  const handlePopoverClose = () => closeRef.current?.click();
 
   return (
     <Popover>
@@ -45,7 +50,10 @@ export default function ThemeSwitcher({
             return (
               <Button
                 key={themeObjItem.id}
-                onClick={() => handleThemeChange(themeObjItem.className, triggerPatchUserMutation)}
+                onClick={() => {
+                  handleThemeChange(themeObjItem.className, triggerPatchUserMutation);
+                  handlePopoverClose();
+                }}
                 variant="ghost"
                 className={cn(
                   'animation-hover group flex w-full items-center justify-start gap-3 px-3 py-2 text-sm',
@@ -61,6 +69,8 @@ export default function ThemeSwitcher({
           })}
         </div>
       </PopoverContent>
+
+      <PopoverClose ref={closeRef} />
     </Popover>
   );
 }

@@ -23,7 +23,7 @@ export default function TicketCard({ ticket, index }: ITicketCard) {
   const { role, userId } = useSelector(selectUserData);
 
   return (
-    <ContentCard index={index}>
+    <ContentCard index={index} className="bg-popover">
       <div className="relative flex cursor-pointer flex-col gap-12 overflow-hidden">
         <div className="flex items-center gap-4">
           <div className="flex flex-wrap items-center gap-4">

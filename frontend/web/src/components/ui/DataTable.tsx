@@ -27,6 +27,7 @@ interface DataTableProps<TData, TValue> {
   oneSelectableRow?: boolean;
   setSelectedRow?: Dispatch<SetStateAction<RowSelectionState>>;
   data: TData[];
+  className?: string;
   tableClassName?: string;
   headClassName?: string;
 }
@@ -37,6 +38,7 @@ export function DataTable<TData, TValue>({
   selectableRows = false,
   oneSelectableRow = false,
   setSelectedRow,
+  className,
   tableClassName,
   headClassName
 }: DataTableProps<TData, TValue>) {
@@ -82,7 +84,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="overflow-x-auto rounded-2xl border">
+    <div className={cn('bg-popover overflow-x-auto rounded-2xl border', className)}>
       <Table className={tableClassName}>
         <TableHeader>
           {table.getHeaderGroups().map(headerGroup => (

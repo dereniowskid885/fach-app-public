@@ -15,7 +15,7 @@ export default function SettingsThemeForm() {
   const { theme, handleThemeChange } = useThemeHandler();
 
   return (
-    <ContentCard index={2} contentClass="space-y-8">
+    <ContentCard index={2} className="bg-popover" contentClass="space-y-8">
       <ContentSectionItem
         title={t('settingsPage.themeForm.title')}
         titleClass={'text-foreground font-bold text-base'}
