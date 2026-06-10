@@ -56,7 +56,7 @@ export default function TicketDropdownMenu({ ticket }: ITicketDropdownMenu) {
           >
             <Info size={16} />
 
-            {t('ticketDropdownMenu.showDetails')}
+            {t('common.showDetails')}
           </DropdownMenuItem>
         </DropdownMenuGroup>
 

@@ -55,14 +55,18 @@ export default function TicketCardSpecialistActionButtons({
 
   return (
     <>
-      {statusActionButton[ticketStatus] ? (
-        <Button
-          className={statusActionButton[ticketStatus].isLoading !== undefined ? 'min-w-30' : ''}
-          onClick={statusActionButton[ticketStatus].handler}
-        >
-          {statusActionButton[ticketStatus].title}
-        </Button>
-      ) : null}
+      <div className="flex flex-wrap gap-2">
+        <Button onClick={() => setTicketDetailsDialog(true)}>{t('common.showDetails')}</Button>
+
+        {statusActionButton[ticketStatus] ? (
+          <Button
+            className={statusActionButton[ticketStatus].isLoading !== undefined ? 'min-w-30' : ''}
+            onClick={statusActionButton[ticketStatus].handler}
+          >
+            {statusActionButton[ticketStatus].title}
+          </Button>
+        ) : null}
+      </div>
 
       <TicketSpecialistEvaluationDialog
         open={priceEvaluationDialog}

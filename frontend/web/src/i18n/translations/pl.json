@@ -45,7 +45,8 @@
     "saveChanges": "Zapisz zmiany",
     "before": "Przed",
     "after": "Po",
-    "refresh": "Odśwież"
+    "refresh": "Odśwież",
+    "showDetails": "Zobacz szczegóły"
   },
   "userRole": {
     "admin": "Admin",
@@ -277,10 +278,8 @@
     "pay": "Opłać",
     "addComment": "Skomentuj",
     "showEvaluations": "Zobacz wyceny",
-    "solutionReview": "Zakończ sprawę"
-  },
-  "ticketDropdownMenu": {
-    "showDetails": "Zobacz szczegóły"
+    "solutionReview": "Zakończ sprawę",
+    "checkSolution": "Sprawdź rozwiązanie"
   },
   "myTicketsPage": {
     "headerTitle": {

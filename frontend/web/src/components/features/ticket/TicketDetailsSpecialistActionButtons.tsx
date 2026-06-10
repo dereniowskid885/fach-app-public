@@ -8,7 +8,6 @@ import { Evaluation, Ticket } from '@/services/api/generated/accountApi';
 import { useTranslations } from 'next-intl';
 import { EActionType } from '@/enums/ui';
 import { TStatusActionButton } from '@/types/ticket';
-import TicketDetailsDialog from './TicketDetailsDialog';
 import TicketSpecialistSendForReviewDialog from './TicketSpecialistSendForReviewDialog';
 import { Spinner } from '@/components/shadcn/spinner';
 
@@ -29,7 +28,6 @@ export const TicketDetailsSpecialistActionButtons = ({
     EActionType.CREATION
   );
   const [priceEvaluationDialog, setPriceEvaluationDialog] = useState<boolean>(false);
-  const [ticketDetailsDialog, setTicketDetailsDialog] = useState<boolean>(false);
   const [ticketSendForReviewDialog, setTicketSendForReviewDialog] = useState<boolean>(false);
 
   const statusActionButton: TStatusActionButton = {
@@ -74,13 +72,6 @@ export const TicketDetailsSpecialistActionButtons = ({
         ticket={ticket}
         currentUserEvaluation={currentUserEvaluation}
         closeDialog={() => setPriceEvaluationDialog(false)}
-      />
-
-      <TicketDetailsDialog
-        open={ticketDetailsDialog}
-        ticket={ticket}
-        closeDialog={() => setTicketDetailsDialog(false)}
-        scrollToInput={true}
       />
 
       <TicketSpecialistSendForReviewDialog

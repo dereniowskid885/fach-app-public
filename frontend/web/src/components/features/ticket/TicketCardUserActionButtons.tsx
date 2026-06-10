@@ -10,11 +10,11 @@ import { TStatusActionButton } from '@/types/ticket';
 import TicketDetailsDialog from './TicketDetailsDialog';
 import { Spinner } from '@/components/shadcn/spinner';
 
-export interface ITicketUserActionButtons {
+export interface ITicketCardUserActionButtons {
   ticket: Ticket;
 }
 
-export default function TicketUserActionButtons({ ticket }: ITicketUserActionButtons) {
+export default function TicketCardUserActionButtons({ ticket }: ITicketCardUserActionButtons) {
   const ticketStatus = ticket.status as ETicketStatus;
 
   const t = useTranslations();
@@ -49,21 +49,29 @@ export default function TicketUserActionButtons({ ticket }: ITicketUserActionBut
           />
         </div>
       )
+    },
+    [ETicketStatus.SOLUTION_REVIEW]: {
+      title: t('ticketUserActionButtons.checkSolution'),
+      handler: () => setTicketDetailsDialog(true)
     }
   };
 
   return (
     <>
-      {statusActionButton[ticketStatus] ? (
-        <Button
-          className={statusActionButton[ticketStatus].isLoading !== undefined ? 'min-w-30' : ''}
-          onClick={statusActionButton[ticketStatus].handler}
-        >
-          {statusActionButton[ticketStatus].isLoading ? <Spinner /> : null}
-          {statusActionButton[ticketStatus].title}
-          {statusActionButton[ticketStatus].element}
-        </Button>
-      ) : null}
+      <div className="flex flex-wrap gap-2">
+        <Button onClick={() => setTicketDetailsDialog(true)}>{t('common.showDetails')}</Button>
+
+        {statusActionButton[ticketStatus] ? (
+          <Button
+            className={statusActionButton[ticketStatus].isLoading !== undefined ? 'min-w-30' : ''}
+            onClick={statusActionButton[ticketStatus].handler}
+          >
+            {statusActionButton[ticketStatus].isLoading ? <Spinner /> : null}
+            {statusActionButton[ticketStatus].title}
+            {statusActionButton[ticketStatus].element}
+          </Button>
+        ) : null}
+      </div>
 
       <TicketUserPaymentDialog
         open={ticketPaymentDialog}
