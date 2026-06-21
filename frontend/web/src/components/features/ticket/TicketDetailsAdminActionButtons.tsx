@@ -9,7 +9,7 @@ import { ETicketStatus } from 'shared-types';
 import { TStatusActionButton } from '@/types/ticket';
 import TicketAdminAssignmentDialog from './TicketAdminAssignmentDialog';
 import { useSelector } from 'react-redux';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { selectUserData } from '@/redux/slices/userSlice';
 
 export interface ITicketDetailsAdminActionButtons {
   ticket: Ticket;

@@ -4,7 +4,7 @@ import { useGetTicketsMyQuery } from '@/services/api/generated/accountApi';
 import { ETicketStatus, EUserRole, isRoleAllowed } from 'shared-types';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { selectUserData } from '@/redux/slices/userSlice';
 import { useSelector } from 'react-redux';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { getMyTicketsColumns } from '@/helpers/dataTable';

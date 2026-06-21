@@ -10,7 +10,7 @@ import { useTranslations } from 'next-intl';
 import { EUserRole, isAdmin } from 'shared-types';
 import { ESectionItemType } from '@/enums/ui';
 import { useSelector } from 'react-redux';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { selectUserData } from '@/redux/slices/userSlice';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,7 +48,10 @@ export default function TicketComment({ isCommentingAllowed = false, data }: ITi
   return data._id ? (
     <div className={cn('relative sm:w-3/4', isCurrentUserComment ? 'ml-auto' : '')}>
       <ContentSectionItem
-        className={cn('rounded-2xl border p-2 pr-12', isCurrentUserComment ? 'bg-secondary' : '')}
+        className={cn(
+          'rounded-2xl border p-2 pr-12',
+          isCurrentUserComment ? 'bg-muted-foreground/10' : 'bg-card'
+        )}
         titleComponent={
           <div className="ml-3 flex items-center gap-2">
             <Typography variant="small" className="text-foreground font-bold">

@@ -12,7 +12,7 @@ import { ALL_TICKETS_PATH, TICKETS_PATH } from '@/constants/routes';
 import Link from 'next/link';
 import { Badge } from '@/components/shadcn/badge';
 import { useSelector } from 'react-redux';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { selectUserData } from '@/redux/slices/userSlice';
 import IconBadge from '@/components/ui/IconBadge';
 import { EIconBadgeVariant } from '@/enums/ui';
 import { isAdmin, isSpecialist } from 'shared-types';
