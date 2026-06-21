@@ -8,7 +8,7 @@ import ContentCard from '@/components/ui/ContentCard';
 import ContentSectionItem from '@/components/ui/ContentSectionItem';
 import DialogComponent from '@/components/ui/DialogComponent';
 import { ESectionItemType } from '@/enums/ui';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { selectUserData } from '@/redux/slices/userSlice';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';

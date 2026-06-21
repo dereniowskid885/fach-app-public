@@ -4,7 +4,7 @@ import TicketFilterPanel from '@/app/[locale]/(protected)/_components/TicketFilt
 import { EFilterButton } from '@/enums/ui';
 import { getAvailableTicketsColumns } from '@/helpers/dataTable';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { selectUserData } from '@/redux/slices/userSlice';
 import { useGetTicketsSpecialistEvaluationsQuery } from '@/services/api/generated/accountApi';
 import { useLocale, useTranslations } from 'next-intl';
 import { useSelector } from 'react-redux';

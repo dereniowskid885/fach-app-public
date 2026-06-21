@@ -4,13 +4,13 @@
     {
       "label": "Start Account Service",
       "type": "shell",
-      "command": "cd services/account-service ; npm run dev",
+      "command": "cd services/account-service && npm run dev",
       "problemMatcher": []
     },
     {
       "label": "Start Frontend",
       "type": "shell",
-      "command": "cd frontend/web ; npm run dev",
+      "command": "cd frontend/web && npm run dev",
       "problemMatcher": []
     },
     {
