@@ -21,7 +21,8 @@
       "@utils/*": ["./utils/*"],
       "@interfaces/*": ["./interfaces/*"],
       "@middlewares/*": ["./middlewares/*"],
-      "@schemas/*": ["./schemas/*"]
+      "@schemas/*": ["./schemas/*"],
+      "@sse/*": ["./realtime/sse/*"]
     },
     "typeRoots": ["./node_modules/@types"]
   },

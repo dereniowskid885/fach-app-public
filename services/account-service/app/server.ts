@@ -1,12 +1,13 @@
 import { SWAGGER_ROUTES } from 'shared-types';
 import { dbConnect } from 'shared-backend';
-import authRoutes from './routes/authRoutes';
-import userRoutes from './routes/userRoutes';
-import ticketRoutes from './routes/ticketRoutes';
-import categoryRoutes from './routes/categoryRoutes';
-import swaggerRoutes from './routes/swaggerRoutes';
+import authRoutes from '@routes/authRoutes';
+import userRoutes from '@routes/userRoutes';
+import ticketRoutes from '@routes/ticketRoutes';
+import categoryRoutes from '@routes/categoryRoutes';
+import swaggerRoutes from '@routes/swaggerRoutes';
 import webhookRoutes from '@routes/webhookRoutes';
-import { ROUTES } from './constants/routeConstants';
+import notificationsRoutes from '@routes/notificationRoutes';
+import { ROUTES } from '@constants/routeConstants';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -40,6 +41,7 @@ app.use(ROUTES.AUTH, authRoutes);
 app.use(ROUTES.USERS, userRoutes);
 app.use(ROUTES.TICKETS, ticketRoutes);
 app.use(ROUTES.CATEGORIES, categoryRoutes);
+app.use(ROUTES.NOTIFICATIONS, notificationsRoutes);
 
 // Swagger
 app.use(SWAGGER_ROUTES.BASE, swaggerRoutes);

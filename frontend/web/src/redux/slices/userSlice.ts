@@ -19,7 +19,7 @@ const initialState = {
   isInitialized: false
 };
 
-const userData = createSlice({
+const userSlice = createSlice({
   name: 'userData',
   initialState,
   reducers: {
@@ -81,6 +81,6 @@ const selectUserData = createSelector(selectSelf, state => ({
   isInitialized: state.isInitialized
 }));
 
-export const { setUserData, setUserTheme, clearUserData, setUserLoading } = userData.actions;
+export const { setUserData, setUserTheme, clearUserData, setUserLoading } = userSlice.actions;
 export { selectUserData };
-export default userData.reducer;
+export default userSlice.reducer;

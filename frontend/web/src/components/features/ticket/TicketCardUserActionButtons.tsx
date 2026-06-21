@@ -12,9 +12,13 @@ import { Spinner } from '@/components/shadcn/spinner';
 
 export interface ITicketCardUserActionButtons {
   ticket: Ticket;
+  hideDetailsButton?: boolean;
 }
 
-export default function TicketCardUserActionButtons({ ticket }: ITicketCardUserActionButtons) {
+export default function TicketCardUserActionButtons({
+  ticket,
+  hideDetailsButton = false
+}: ITicketCardUserActionButtons) {
   const ticketStatus = ticket.status as ETicketStatus;
 
   const t = useTranslations();
@@ -59,7 +63,9 @@ export default function TicketCardUserActionButtons({ ticket }: ITicketCardUserA
   return (
     <>
       <div className="flex flex-wrap gap-2">
-        <Button onClick={() => setTicketDetailsDialog(true)}>{t('common.showDetails')}</Button>
+        {!hideDetailsButton ? (
+          <Button onClick={() => setTicketDetailsDialog(true)}>{t('common.showDetails')}</Button>
+        ) : null}
 
         {statusActionButton[ticketStatus] ? (
           <Button

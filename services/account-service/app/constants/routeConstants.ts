@@ -4,6 +4,7 @@ const USERS_ROUTE = `${BASE_ROUTE}/users`;
 const TICKETS_ROUTE = `${BASE_ROUTE}/tickets`;
 const CATEGORIES_ROUTE = `${BASE_ROUTE}/categories`;
 const WEBHOOKS_ROUTE = `${BASE_ROUTE}/webhooks`;
+const NOTIFICATIONS_ROUTE = `${BASE_ROUTE}/notifications`;
 
 export const ROUTES = {
   BASE: BASE_ROUTE,
@@ -12,4 +13,5 @@ export const ROUTES = {
   TICKETS: TICKETS_ROUTE,
   CATEGORIES: CATEGORIES_ROUTE,
   WEBHOOKS: WEBHOOKS_ROUTE,
+  NOTIFICATIONS: NOTIFICATIONS_ROUTE,
 };

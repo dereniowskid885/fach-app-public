@@ -6,3 +6,4 @@ export * from "./role";
 export * from "./shared";
 export * from "./theme";
 export * from "./ticket";
+export * from "./notification";

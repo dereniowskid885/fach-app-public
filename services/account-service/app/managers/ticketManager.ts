@@ -3,7 +3,7 @@ import Comment from '@models/Comment';
 import { JwtPayload } from 'jsonwebtoken';
 import { CategoryManager } from './categoryManager';
 import { UserManager } from './userManager';
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, ObjectId } from 'mongoose';
 import { IEvaluationSchema } from '@schemas/evaluationSchema';
 import { safeUserProjection } from '@constants/projections';
 import { AppError } from 'shared-backend';
@@ -14,8 +14,12 @@ import {
   isAdmin,
   isSpecialist,
   checkTicketStatusTransition,
+  ENotificationType,
 } from 'shared-types';
 import { canDeleteTicketComment, canViewTicketComments, resolveAssigneeOnStatusChange } from '@helpers/ticket';
+import { NotificationManager } from './notificationManager';
+import { IUserModel } from '@models/User';
+import { IPaymentModel } from '@models/Payment';
 
 export const TicketManager = {
   getTicketByID: async (ticketId: string) => {
@@ -150,6 +154,15 @@ export const TicketManager = {
 
     await ticket.save();
 
+    const recipient = ticket.createdBy as IUserModel; // user
+    const actorId = user.userId; // specialist
+    await NotificationManager.handleSingleNotificationByType(
+      ENotificationType.SPECIALIST_EVALUATION_ADDED,
+      ticketId,
+      recipient,
+      actorId,
+    );
+
     return ticket.populate({ path: 'updatedBy', select: 'email' });
   },
   ticketEvaluationAcceptHandler: async (ticketId: string, evaluationId: string, user: JwtPayload) => {
@@ -190,6 +203,15 @@ export const TicketManager = {
     ticket.status = ETicketStatus.AWAITING_PAYMENT;
     await ticket.save();
 
+    const recipient = evaluation.user as IUserModel; // specialist
+    const actorId = user.userId; // user
+    await NotificationManager.handleSingleNotificationByType(
+      ENotificationType.USER_EVALUATION_ACCEPTED,
+      ticketId,
+      recipient,
+      actorId,
+    );
+
     return ticket.populate({ path: 'updatedBy', select: 'email' });
   },
   updateTicket: async (
@@ -209,6 +231,7 @@ export const TicketManager = {
     }
 
     const ticket = await TicketManager.getTicketByID(ticketId);
+    const specialist = ticket.acceptedEvaluation?.user as IUserModel;
 
     // TODO: modify while doing superadmin role ticket
     // https://github.com/dereniowskid885/fach-app/issues/7
@@ -263,7 +286,6 @@ export const TicketManager = {
     if (categoryId !== undefined) {
       const category = await CategoryManager.getCategoryById(categoryId);
 
-      // TODO: sent notification to specialists who evaluated the ticket
       ticket.evaluations = [];
       ticket.category = category._id;
     }
@@ -306,6 +328,7 @@ export const TicketManager = {
 
       if (status === ETicketStatus.AWAITING_EVALUATION) {
         ticket.acceptedEvaluation = null;
+        // TODO: also evaluations should be cleared ?
       }
 
       ticket.assignee = resolveAssigneeOnStatusChange(status, ticket);
@@ -314,6 +337,8 @@ export const TicketManager = {
 
     ticket.updatedBy = user.userId;
     await ticket.save();
+
+    await NotificationManager.handleTicketUpdate(updateData, ticket, user.userId, specialist);
 
     return ticket.populate({ path: 'updatedBy', select: 'email' });
   },
@@ -372,9 +397,19 @@ export const TicketManager = {
     ticket.updatedBy = user.userId;
     await ticket.save();
 
+    // TODO: powiadomienie gdy specjalista edytuje ewaluacje + ticket table action buttons fix
+    const recipient = ticket.createdBy as IUserModel; // user
+    const actorId = user.userId; // specialist
+    await NotificationManager.handleSingleNotificationByType(
+      ENotificationType.SPECIALIST_EVALUATION_EDITED,
+      ticketId,
+      recipient,
+      actorId,
+    );
+
     return ticket;
   },
-  handleSuccessfulPayment: async (ticketId: string) => {
+  handleSuccessfulPayment: async (payment: IPaymentModel, ticketId: string) => {
     const ticket = await Ticket.findById(ticketId).populate('acceptedEvaluation');
 
     if (!ticket) {
@@ -403,11 +438,21 @@ export const TicketManager = {
       );
     }
 
+    ticket.payment = payment;
     ticket.updatedBy = ticket.createdBy;
     ticket.assignee = acceptedEvaluation.user;
     ticket.status = ETicketStatus.IN_PROGRESS;
 
     await ticket.save();
+
+    const recipient = acceptedEvaluation.user as IUserModel; // specialist
+    const actorId = ticket.createdBy._id.toString(); // user
+    await NotificationManager.handleSingleNotificationByType(
+      ENotificationType.USER_TICKET_PAYMENT_DONE,
+      ticketId,
+      recipient,
+      actorId,
+    );
   },
   createTicketComment: async (
     user: JwtPayload,
@@ -440,6 +485,8 @@ export const TicketManager = {
     });
 
     await comment.save();
+
+    await NotificationManager.handleNewTicketComment(ticket, content, user.userId);
 
     return comment;
   },
