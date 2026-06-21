@@ -6,7 +6,7 @@ import { EFilterButton } from '@/enums/ui';
 import { getAllTicketsColumns } from '@/helpers/dataTable';
 import { getAllTicketsStatusFilters } from '@/helpers/ticket';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { selectUserData } from '@/redux/slices/userSlice';
 import { ETicketStatus } from 'shared-types';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';

@@ -2,6 +2,7 @@ import { api } from '../services/account-service/index';
 export const addTagTypes = [
   'Authentication',
   'Categories',
+  'Notifications',
   'Ticketing',
   'Comments',
   'Users'
@@ -132,6 +133,36 @@ const injectedRtkApi = api
           body: queryArg.body
         }),
         invalidatesTags: ['Categories']
+      }),
+      getNotifications: build.query<GetNotificationsApiResponse, GetNotificationsApiArg>({
+        query: queryArg => ({
+          url: `/notifications`,
+          params: {
+            onlyUnread: queryArg.onlyUnread
+          }
+        }),
+        providesTags: ['Notifications']
+      }),
+      getNotificationsStream: build.query<
+        GetNotificationsStreamApiResponse,
+        GetNotificationsStreamApiArg
+      >({
+        query: () => ({ url: `/notifications/stream` }),
+        providesTags: ['Notifications']
+      }),
+      patchNotificationsByIdRead: build.mutation<
+        PatchNotificationsByIdReadApiResponse,
+        PatchNotificationsByIdReadApiArg
+      >({
+        query: queryArg => ({ url: `/notifications/${queryArg.id}/read`, method: 'PATCH' }),
+        invalidatesTags: ['Notifications']
+      }),
+      patchNotificationsReadAll: build.mutation<
+        PatchNotificationsReadAllApiResponse,
+        PatchNotificationsReadAllApiArg
+      >({
+        query: () => ({ url: `/notifications/read-all`, method: 'PATCH' }),
+        invalidatesTags: ['Notifications']
       }),
       postTickets: build.mutation<PostTicketsApiResponse, PostTicketsApiArg>({
         query: queryArg => ({ url: `/tickets`, method: 'POST', body: queryArg.body }),
@@ -298,6 +329,17 @@ const injectedRtkApi = api
         }),
         providesTags: ['Users']
       }),
+      patchUsersChangePassword: build.mutation<
+        PatchUsersChangePasswordApiResponse,
+        PatchUsersChangePasswordApiArg
+      >({
+        query: queryArg => ({
+          url: `/users/change-password`,
+          method: 'PATCH',
+          body: queryArg.body
+        }),
+        invalidatesTags: ['Users']
+      }),
       getUsersById: build.query<GetUsersByIdApiResponse, GetUsersByIdApiArg>({
         query: queryArg => ({ url: `/users/${queryArg.id}` }),
         providesTags: ['Users']
@@ -313,17 +355,6 @@ const injectedRtkApi = api
       patchUsersByIdRole: build.mutation<PatchUsersByIdRoleApiResponse, PatchUsersByIdRoleApiArg>({
         query: queryArg => ({
           url: `/users/${queryArg.id}/role`,
-          method: 'PATCH',
-          body: queryArg.body
-        }),
-        invalidatesTags: ['Users']
-      }),
-      patchUsersChangePassword: build.mutation<
-        PatchUsersChangePasswordApiResponse,
-        PatchUsersChangePasswordApiArg
-      >({
-        query: queryArg => ({
-          url: `/users/change-password`,
           method: 'PATCH',
           body: queryArg.body
         }),
@@ -510,6 +541,47 @@ export type PatchCategoriesByIdSpecialistRemoveApiArg = {
     userId: string;
   };
 };
+export type GetNotificationsApiResponse =
+  /** status 200 Successfully retrieved all notifications */ {
+    success?: boolean;
+    dataLength?: number;
+    data?: Notification[];
+    unreadCount?: number;
+  };
+export type GetNotificationsApiArg = {
+  /** Determines if only unread notifications should be fetched (isRead = false) */
+  onlyUnread?: boolean;
+};
+export type GetNotificationsStreamApiResponse =
+  /** status 200 SSE stream opened successfully */ Notification;
+export type GetNotificationsStreamApiArg = void;
+export type PatchNotificationsByIdReadApiResponse =
+  /** status 200 Notification marked as read successfully */ {
+    success?: boolean;
+    message?: string;
+    data?: {
+      _id?: string;
+      user?: string;
+      userRole?: string;
+      type?: string;
+      ticket?: string;
+      ticketTitle?: string;
+      message?: string;
+      isRead?: boolean;
+      createdAt?: string;
+      updatedAt?: string;
+    };
+  };
+export type PatchNotificationsByIdReadApiArg = {
+  /** Unique ID of the notification */
+  id: string;
+};
+export type PatchNotificationsReadAllApiResponse =
+  /** status 200 All notifications marked as read successfully */ {
+    success?: boolean;
+    message?: string;
+  };
+export type PatchNotificationsReadAllApiArg = void;
 export type PostTicketsApiResponse = /** status 200 Ticket created successfully */ {
   success?: boolean;
   message?: string;
@@ -779,6 +851,17 @@ export type GetUsersApiArg = {
   /** Filter by verification status */
   verified?: boolean;
 };
+export type PatchUsersChangePasswordApiResponse =
+  /** status 200 Successfully changed the user password */ {
+    success?: boolean;
+    message?: string;
+  };
+export type PatchUsersChangePasswordApiArg = {
+  body: {
+    currentPassword: string;
+    newPassword: string;
+  };
+};
 export type GetUsersByIdApiResponse = /** status 200 Single user object. */ {
   success?: boolean;
   data?: User;
@@ -822,17 +905,6 @@ export type PatchUsersByIdRoleApiArg = {
   id: string;
   body: {
     role: UserRole;
-  };
-};
-export type PatchUsersChangePasswordApiResponse =
-  /** status 200 Successfully changed the user password */ {
-    success?: boolean;
-    message?: string;
-  };
-export type PatchUsersChangePasswordApiArg = {
-  body: {
-    currentPassword: string;
-    newPassword: string;
   };
 };
 export type UserRole = 'user' | 'specialist' | 'admin';
@@ -901,6 +973,31 @@ export type Ticket = {
   specialistCommentsCount?: number;
   payment?: Payment;
 };
+export type NotificationType =
+  | 'specialist_evaluation_added'
+  | 'specialist_evaluation_edited'
+  | 'user_evaluation_accepted'
+  | 'user_ticket_payment_done'
+  | 'comment_added'
+  | 'specialist_send_for_review'
+  | 'user_solution_accepted'
+  | 'user_solution_rejected'
+  | 'admin_ticket_details_updated'
+  | 'admin_ticket_assignee_updated'
+  | 'admin_ticket_city_updated'
+  | 'admin_ticket_category_updated'
+  | 'admin_ticket_status_updated';
+export type Notification = {
+  _id?: string;
+  recipient?: User;
+  actor?: User;
+  ticket?: Ticket;
+  isRead?: boolean;
+  type?: NotificationType;
+  message?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
 export type Comment = {
   _id?: string;
   user?: User;
@@ -929,6 +1026,10 @@ export const {
   usePatchCategoriesByIdMutation,
   usePatchCategoriesByIdSpecialistAssignMutation,
   usePatchCategoriesByIdSpecialistRemoveMutation,
+  useGetNotificationsQuery,
+  useGetNotificationsStreamQuery,
+  usePatchNotificationsByIdReadMutation,
+  usePatchNotificationsReadAllMutation,
   usePostTicketsMutation,
   useGetTicketsQuery,
   usePostTicketsByIdCommentsMutation,
@@ -947,9 +1048,9 @@ export const {
   usePatchTicketsByIdEditEvaluationMutation,
   usePostUsersMutation,
   useGetUsersQuery,
+  usePatchUsersChangePasswordMutation,
   useGetUsersByIdQuery,
   usePatchUsersByIdMutation,
   useDeleteUsersByIdMutation,
-  usePatchUsersByIdRoleMutation,
-  usePatchUsersChangePasswordMutation
+  usePatchUsersByIdRoleMutation
 } = injectedRtkApi;

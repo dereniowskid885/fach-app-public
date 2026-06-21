@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import Typography from '@/components/ui/Typography';
 import {
   Category,
+  PatchTicketsByIdApiArg,
   Ticket,
   usePatchTicketsByIdMutation,
   usePostTicketsMutation
@@ -15,7 +16,7 @@ import {
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 import { useSelector } from 'react-redux';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { selectUserData } from '@/redux/slices/userSlice';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { EActionType } from '@/enums/ui';
 import { ClipboardList } from 'lucide-react';
@@ -46,7 +47,8 @@ export default function TicketFormDialog({
     reset: resetForm,
     watch,
     formState,
-    clearErrors
+    clearErrors,
+    getValues
   } = useForm<ITicketForm>({
     defaultValues: {
       title: currentTicketData?.title,
@@ -123,12 +125,21 @@ export default function TicketFormDialog({
       case EActionType.EDIT:
         if (!currentTicketData?._id) return;
 
+        const payload: Partial<PatchTicketsByIdApiArg['body']> = {};
+
+        // add only dirty fields to payload
+        Object.keys(formState.dirtyFields).forEach(key => {
+          const fieldName = key as keyof ITicketForm;
+          payload[fieldName] = getValues(fieldName);
+        });
+
+        if (currentTicketData?.category?._id !== ticketCategory?._id) {
+          payload.categoryId = ticketCategory?._id;
+        }
+
         result = await triggerEdit({
           id: currentTicketData._id,
-          body: {
-            ...formData,
-            categoryId: ticketCategory._id
-          }
+          body: payload
         });
 
         break;

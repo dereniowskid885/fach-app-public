@@ -10,7 +10,7 @@ import { RotateCcw } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
 import { DataTable } from '@/components/ui/DataTable';
 import PageHeader from '@/components/ui/PageHeader';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { selectUserData } from '@/redux/slices/userSlice';
 import { useSelector } from 'react-redux';
 import { isSpecialist, isUser } from 'shared-types';
 import IconBadge from '@/components/ui/IconBadge';

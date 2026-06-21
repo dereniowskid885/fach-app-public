@@ -1,4 +1,5 @@
 import { ICategoryModel } from '@models/Category';
+import { INotificationModel } from '@models/Notification';
 import { ITicketModel } from '@models/Ticket';
 import { IUserModel } from '@models/User';
 import { Request } from 'express';
@@ -149,6 +150,17 @@ export const FilterBuilder = {
     filterObj.evaluations = {
       $elemMatch: { user: userId },
     };
+
+    return filterObj;
+  },
+  getNotifications: (req: Request, user: JwtPayload) => {
+    const { onlyUnread } = req.query;
+
+    const filterObj: FilterQuery<INotificationModel> = {
+      recipient: user.userId,
+    };
+
+    if (onlyUnread === 'true') filterObj.isRead = false;
 
     return filterObj;
   },

@@ -15,7 +15,7 @@ import { ETicketStatus, isAdmin } from 'shared-types';
 import { TicketDeleteDialog } from './TicketDeleteDialog';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { selectUserData } from '@/redux/slices/userSlice';
 import TicketFormDialog from './TicketFormDialog';
 import { EActionType } from '@/enums/ui';
 import { TicketCancelDialog } from './TicketCancelDialog';

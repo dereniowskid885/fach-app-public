@@ -7,7 +7,7 @@ import { EDevice } from '@/enums/shared';
 import { Skeleton } from '../../shadcn/skeleton';
 import { EFallbackKey } from '@/enums/ui';
 import { useSelector } from 'react-redux';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { selectUserData } from '@/redux/slices/userSlice';
 import { menuItemsObj } from '@/constants/menu';
 
 export interface INavDesktop {

@@ -29,6 +29,7 @@
     "unassigned": "Nieprzypisany",
     "noUpdates": "Brak aktualizacji",
     "viewAll": "Zobacz wszystkie",
+    "clearAll": "Wyczyść wszystkie",
     "collapse": "Zwiń",
     "search": "Szukaj",
     "success": "Sukces",
@@ -284,7 +285,7 @@
   "myTicketsPage": {
     "headerTitle": {
       "user": "Twoje sprawy",
-      "specialist": "Sprawy przypisane do Ciebie",
+      "specialist": "Sprawy do rozwiązania",
       "admin": "Zarządzanie sprawami"
     },
     "headerDescription": {
@@ -338,7 +339,7 @@
     "toastTitle": {
       "comment": "Komentarz dodany",
       "solutionAccept": "Świetnie, cieszymy się, że problem został rozwiązany! Sprawa została zamknięta.",
-      "moderatorInvestigation": "Twoje zgłoszenie zostało przekazane do weryfikacji moderatora. Przyjrzymy się sprawie i wkrótce się odezwiemy."
+      "moderatorInvestigation": "Twoja sprawa została przekazana do weryfikacji moderatora. Przyjrzymy się sprawie i wkrótce się odezwiemy."
     },
     "noAcceptedEvaluationText": {
       "user": "Przeglądaj dostępne wyceny przesłane przez specjalistów i zaakceptuj tę, która najlepiej odpowiada Twoim potrzebom, aby kontynuować realizację sprawy.",
@@ -415,6 +416,43 @@
         "dark": "Użyj ciemnego motywu",
         "system": "Dopasuj do motywu systemowego"
       }
+    }
+  },
+  "notifications": {
+    "empty": "Nie masz żadnych powiadomień",
+    "title": {
+      "specialist_evaluation_added": "Nowa wycena specjalisty",
+      "specialist_evaluation_edited": "Wycena specjalisty zaktualizowana",
+      "user_evaluation_accepted": "Wycena zaakceptowana",
+      "user_ticket_payment_done": "Płatność zrealizowana",
+      "comment_added": "Nowy komentarz",
+      "specialist_send_for_review": "Rozwiązanie wysłane do weryfikacji",
+      "user_solution_accepted": "Rozwiązanie zaakceptowane",
+      "user_solution_rejected": "Rozwiązanie odrzucone",
+      "admin_ticket_details_updated": "Szczegóły sprawy zaktualizowane",
+      "admin_ticket_assignee_updated": "Zmieniono przypisanie sprawy",
+      "admin_ticket_city_updated": "Zmieniono miasto sprawy",
+      "admin_ticket_status_updated": "Status sprawy zmieniony",
+      "admin_ticket_category_updated": "Kategoria sprawy zmieniona"
+    },
+    "description": {
+      "specialist_evaluation_added": "{actor} dodał ocenę do sprawy: \"{ticketTitle}\".",
+      "specialist_evaluation_edited": "{actor} zaktualizował swoją wycenę dla sprawy: \"{ticketTitle}\".",
+      "user_evaluation_accepted": "{actor} zaakceptował Twoją wycene dla sprawy: \"{ticketTitle}\".",
+      "user_ticket_payment_done": "{actor} opłacił sprawę: \"{ticketTitle}\".",
+      "comment_added": "<span>{actorRole}</span> dodał komentarz do sprawy: \"{ticketTitle}\": \"{message}\".",
+      "specialist_send_for_review": "<span>{actorRole}</span> poprosił o weryfikację rozwiązania dla sprawy: \"{ticketTitle}\".",
+      "user_solution_accepted": "{actor} zaakceptował Twoje rozwiązanie dla sprawy: \"{ticketTitle}\".",
+      "user_solution_rejected": "{actor} odrzucił Twoje rozwiązanie. Proszę oczekiwać na weryfikację moderatora.",
+      "admin_ticket_details_updated": "<span>{actorRole}</span> zaktualizował Twoją sprawę: \"{ticketTitle}\".",
+      "admin_ticket_assignee_updated": "<span>{actorRole}</span> zmienił osobę przypisaną do sprawy: \"{ticketTitle}\".",
+      "admin_ticket_city_updated": "<span>{actorRole}</span> zaktualizował miasto w sprawie: \"{ticketTitle}\".",
+      "admin_ticket_status_updated": "<span>{actorRole}</span> zmienił status sprawy: \"{ticketTitle}\".",
+      "admin_ticket_category_updated": "<span>{actorRole}</span> zmienił kategorię sprawy: \"{ticketTitle}\"."
+    },
+    "additionalInfo": {
+      "user_evaluation_accepted": "Sprawa została przeniesiona do <a>Moje sprawy</a>.",
+      "user_solution_accepted": "Sprawa została przeniesiona do <a>Ukończone sprawy</a>."
     }
   }
 }

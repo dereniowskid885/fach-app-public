@@ -1,9 +1,10 @@
+import { IUserModel } from '@models/User';
 import { Schema, Types } from 'mongoose';
 import { ESupportedCurrency } from 'shared-types';
 
 export interface IEvaluationSchema extends Document {
   _id: Types.ObjectId;
-  user: Types.ObjectId;
+  user: Types.ObjectId | IUserModel;
   dateOfResponse: Date;
   minutes: number;
   price: {
