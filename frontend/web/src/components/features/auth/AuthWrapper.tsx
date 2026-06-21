@@ -2,7 +2,7 @@
 
 import { useGetAuthMeQuery } from '@/services/api/generated/accountApi';
 import { useAppDispatch } from '@/redux/hooks';
-import { clearUserData, setUserData, setUserLoading } from '@/redux/slices/UserDataSlice';
+import { clearUserData, setUserData, setUserLoading } from '@/redux/slices/userSlice';
 import { ReactNode, useEffect } from 'react';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 

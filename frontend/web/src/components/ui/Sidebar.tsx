@@ -3,7 +3,7 @@ import { UserRole } from '@/services/api/generated/accountApi';
 import { Button } from '@/components/shadcn/button';
 import Typography from '@/components/ui/Typography';
 import { useSelector } from 'react-redux';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { selectUserData } from '@/redux/slices/userSlice';
 import Logo from '@/components/ui/Logo';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeftFromLine, ArrowRightFromLine } from 'lucide-react';

@@ -1,0 +1,15 @@
+export enum ENotificationType {
+  SPECIALIST_EVALUATION_ADDED = "specialist_evaluation_added",
+  SPECIALIST_EVALUATION_EDITED = "specialist_evaluation_edited",
+  USER_EVALUATION_ACCEPTED = "user_evaluation_accepted",
+  USER_TICKET_PAYMENT_DONE = "user_ticket_payment_done",
+  COMMENT_ADDED = "comment_added",
+  SPECIALIST_SEND_FOR_REVIEW = "specialist_send_for_review",
+  USER_SOLUTION_ACCEPTED = "user_solution_accepted",
+  USER_SOLUTION_REJECTED = "user_solution_rejected",
+  ADMIN_TICKET_ASSIGNEE_UPDATED = "admin_ticket_assignee_updated",
+  ADMIN_TICKET_CITY_UPDATED = "admin_ticket_city_updated",
+  ADMIN_TICKET_CATEGORY_UPDATED = "admin_ticket_category_updated",
+  ADMIN_TICKET_STATUS_UPDATED = "admin_ticket_status_updated",
+  ADMIN_TICKET_DETAILS_UPDATED = "admin_ticket_details_updated",
+}

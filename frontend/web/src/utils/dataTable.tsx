@@ -150,7 +150,7 @@ export const getActionColumn = (role: EUserRole | string, userId?: string) => ({
 
     return (
       <div className="text-center">
-        <TicketCardActionButtons ticket={ticket} role={role} userId={userId} />
+        <TicketCardActionButtons ticket={ticket} role={role} userId={userId} isTableView={true} />
       </div>
     );
   }

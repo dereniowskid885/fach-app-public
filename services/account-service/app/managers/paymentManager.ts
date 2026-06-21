@@ -1,4 +1,4 @@
-import Payment from '@models/Payment';
+import Payment, { IPaymentModel } from '@models/Payment';
 import Stripe from 'stripe';
 import { TicketManager } from './ticketManager';
 import { JwtPayload } from 'jsonwebtoken';
@@ -58,14 +58,14 @@ export const PaymentManager = {
 
       switch (event.type) {
         case EPaymentIntentEvent.PAYMENT_SUCCEEDED:
-          await Payment.findByIdAndUpdate(paymentId, {
+          const payment = await Payment.findByIdAndUpdate(paymentId, {
             status: EPaymentStatus.SUCCEEDED,
           });
 
           if (type === EPaymentIntentType.TICKET) {
             const { ticketId } = intent.metadata;
 
-            await TicketManager.handleSuccessfulPayment(ticketId);
+            await TicketManager.handleSuccessfulPayment(payment as IPaymentModel, ticketId);
           }
 
           break;

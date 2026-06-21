@@ -1,6 +1,6 @@
 'use client';
 
-import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { selectUserData } from '@/redux/slices/userSlice';
 import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
 import { useSelector } from 'react-redux';

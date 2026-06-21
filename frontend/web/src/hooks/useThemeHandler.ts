@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUserData, setUserTheme } from '@/redux/slices/UserDataSlice';
+import { selectUserData, setUserTheme } from '@/redux/slices/userSlice';
 import {
   PatchUsersByIdApiArg,
   ThemeType,

@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { selectUserData } from '@/redux/slices/userSlice';
 import { useSelector } from 'react-redux';
 import { useGetTicketsSpecialistAvailableQuery } from '@/services/api/generated/accountApi';
 import { useErrorHandler } from '@/hooks/useErrorHandler';

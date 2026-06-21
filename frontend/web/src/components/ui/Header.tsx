@@ -13,9 +13,20 @@ import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
 import ThemeSwitcher from '@/components/ui/ThemeSwitcher';
 import Logo from './Logo';
 import NavMobile from '../features/nav/NavMobile';
+import { useDispatch, useSelector } from 'react-redux';
+import { hideDotIcon, selectNotificationData } from '@/redux/slices/notificationSlice';
+import AnimateCollapse from './AnimateCollapse';
 
 export default function Header() {
+  const dispatch = useDispatch();
   const { sidebarWidth } = useSidebarContext();
+  const { isDotIconShown } = useSelector(selectNotificationData);
+
+  const hideDotIconHandler = (open: boolean) => {
+    if (!open) return;
+
+    dispatch(hideDotIcon());
+  };
 
   const currentPath = usePathname();
   const currentLocale = useLocale();
@@ -44,14 +55,18 @@ export default function Header() {
         />
 
         <div className="flex items-center gap-3">
-          <Popover>
+          <Popover onOpenChange={hideDotIconHandler}>
             <PopoverTrigger className="animation-hover h-10 w-10 rounded-2xl px-2">
-              <div>
+              <div className="relative">
                 <Bell size={24} />
+
+                <AnimateCollapse isHidden={!isDotIconShown}>
+                  <div className="bg-chart-3 absolute top-0 -right-1 h-2 w-2 rounded-full"></div>
+                </AnimateCollapse>
               </div>
             </PopoverTrigger>
 
-            <PopoverContent align="end">
+            <PopoverContent align="end" className="px-0 pt-2 pb-2">
               <HeaderNotificationList />
             </PopoverContent>
           </Popover>

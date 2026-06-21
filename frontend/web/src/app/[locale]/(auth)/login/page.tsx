@@ -18,7 +18,7 @@ import AuthCard from '../_components/AuthCard';
 import { EResponseStatus } from 'shared-types';
 import { useTranslations } from 'next-intl';
 import { useDispatch } from 'react-redux';
-import { clearUserData } from '@/redux/slices/UserDataSlice';
+import { clearUserData } from '@/redux/slices/userSlice';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { parseQueryError } from '@/utils/error';
 import { isCookie } from '@/utils/cookie';

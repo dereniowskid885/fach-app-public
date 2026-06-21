@@ -120,5 +120,10 @@ export const ERROR_STATUS_MAP: Record<EResponseStatus, TErrorMapping> = {
   ERROR_USER_NOT_ASSIGNED_TO_CATEGORY: {
     messageKey: 'errors.userNotAssignedToCategory',
     strategy: EErrorStrategy.TOAST
+  },
+
+  ERROR_NOTIFICATION_NOT_FOUND: {
+    messageKey: 'errors.generic',
+    strategy: EErrorStrategy.SILENT
   }
 };

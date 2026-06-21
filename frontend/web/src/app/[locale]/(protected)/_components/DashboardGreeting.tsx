@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useSelector } from 'react-redux';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { selectUserData } from '@/redux/slices/userSlice';
 import TicketCreateButton from '@/components/features/ticket/TicketCreateButton';
 import PageHeader from '@/components/ui/PageHeader';
 import { isUser } from 'shared-types';

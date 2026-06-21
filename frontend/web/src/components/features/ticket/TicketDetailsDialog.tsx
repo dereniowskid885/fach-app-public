@@ -33,7 +33,7 @@ import { toast } from 'sonner';
 import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
 import TicketComment from './TicketComment';
 import { useSelector } from 'react-redux';
-import { selectUserData } from '@/redux/slices/UserDataSlice';
+import { selectUserData } from '@/redux/slices/userSlice';
 import TicketDetailsActionButtons from './TicketDetailsActionButtons';
 import { isCommentingAllowed } from '@/helpers/ticket';
 import { Spinner } from '@/components/shadcn/spinner';

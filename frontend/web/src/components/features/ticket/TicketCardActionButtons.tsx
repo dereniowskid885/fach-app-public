@@ -8,12 +8,14 @@ export interface ITicketCardActionButtons {
   ticket: Ticket;
   userId?: string;
   role: EUserRole | string;
+  isTableView?: boolean;
 }
 
 export default function TicketCardActionButtons({
   ticket,
   userId,
-  role
+  role,
+  isTableView = false
 }: ITicketCardActionButtons) {
   switch (role) {
     case EUserRole.SPECIALIST: {
@@ -25,14 +27,15 @@ export default function TicketCardActionButtons({
         <TicketCardSpecialistActionButtons
           ticket={ticket}
           currentUserEvaluation={currentUserEvaluation}
+          hideDetailsButton={isTableView}
         />
       );
     }
 
     case EUserRole.USER:
-      return <TicketCardUserActionButtons ticket={ticket} />;
+      return <TicketCardUserActionButtons ticket={ticket} hideDetailsButton={isTableView} />;
 
     case EUserRole.ADMIN:
-      return <TicketCardAdminActionButtons ticket={ticket} />;
+      return <TicketCardAdminActionButtons ticket={ticket} hideDetailsButton={isTableView} />;
   }
 }
