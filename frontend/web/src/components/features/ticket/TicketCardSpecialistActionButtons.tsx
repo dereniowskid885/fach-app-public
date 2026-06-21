@@ -13,11 +13,13 @@ import TicketDetailsDialog from './TicketDetailsDialog';
 export interface ITicketCardSpecialistActionButtons {
   ticket: Ticket;
   currentUserEvaluation?: Evaluation;
+  hideDetailsButton?: boolean;
 }
 
 export default function TicketCardSpecialistActionButtons({
   ticket,
-  currentUserEvaluation
+  currentUserEvaluation,
+  hideDetailsButton = false
 }: ITicketCardSpecialistActionButtons) {
   const ticketStatus = ticket.status as ETicketStatus;
 
@@ -56,7 +58,9 @@ export default function TicketCardSpecialistActionButtons({
   return (
     <>
       <div className="flex flex-wrap gap-2">
-        <Button onClick={() => setTicketDetailsDialog(true)}>{t('common.showDetails')}</Button>
+        {!hideDetailsButton ? (
+          <Button onClick={() => setTicketDetailsDialog(true)}>{t('common.showDetails')}</Button>
+        ) : null}
 
         {statusActionButton[ticketStatus] ? (
           <Button

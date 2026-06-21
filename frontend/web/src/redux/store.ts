@@ -1,12 +1,14 @@
 import { accountApi } from '@/services/api/generated/accountApi';
 import { configureStore } from '@reduxjs/toolkit';
-import userDataSlice from './slices/UserDataSlice';
+import userDataSlice from './slices/userSlice';
+import notificationSlice from './slices/notificationSlice';
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       [accountApi.reducerPath]: accountApi.reducer,
-      userDataSlice
+      userDataSlice,
+      notificationSlice
     },
     middleware: getDefaultMiddleware => getDefaultMiddleware().concat(accountApi.middleware)
   });

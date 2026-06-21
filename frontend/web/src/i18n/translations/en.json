@@ -29,6 +29,7 @@
     "unassigned": "Unassigned",
     "noUpdates": "No updates yet",
     "viewAll": "View all",
+    "clearAll": "Clear all",
     "collapse": "Collapse",
     "search": "Search",
     "success": "Success",
@@ -284,7 +285,7 @@
   "myTicketsPage": {
     "headerTitle": {
       "user": "Your tickets",
-      "specialist": "Tickets assigned to you",
+      "specialist": "Tickets to solve",
       "admin": "Ticket management"
     },
     "headerDescription": {
@@ -415,6 +416,43 @@
         "dark": "Use the dark theme",
         "system": "Match the system theme"
       }
+    }
+  },
+  "notifications": {
+    "empty": "You don't have any notifications",
+    "title": {
+      "specialist_evaluation_added": "New specialist evaluation",
+      "specialist_evaluation_edited": "Specialist evaluation updated",
+      "user_evaluation_accepted": "Evaluation accepted",
+      "user_ticket_payment_done": "Payment completed",
+      "comment_added": "New comment",
+      "specialist_send_for_review": "Review request",
+      "user_solution_accepted": "Solution accepted",
+      "user_solution_rejected": "Solution rejected",
+      "admin_ticket_details_updated": "Ticket details updated",
+      "admin_ticket_assignee_updated": "Ticket assignee changed",
+      "admin_ticket_city_updated": "Ticket city changed",
+      "admin_ticket_status_updated": "Ticket status changed",
+      "admin_ticket_category_updated": "Ticket category changed"
+    },
+    "description": {
+      "specialist_evaluation_added": "{actor} has added an evaluation to ticket: \"{ticketTitle}\".",
+      "specialist_evaluation_edited": "{actor} has updated their evaluation for ticket: \"{ticketTitle}\".",
+      "user_evaluation_accepted": "{actor} has accepted your evaluation for ticket: \"{ticketTitle}\".",
+      "user_ticket_payment_done": "{actor} has completed payment for ticket: \"{ticketTitle}\".",
+      "comment_added": "<span>{actorRole}</span> has added a comment to ticket: \"{ticketTitle}\": \"{message}\".",
+      "specialist_send_for_review": "<span>{actorRole}</span> has requested your review of the solution for ticket: \"{ticketTitle}\".",
+      "user_solution_accepted": "{actor} has accepted your solution for ticket: \"{ticketTitle}\".",
+      "user_solution_rejected": "{actor} has rejected your solution. Please wait for a moderator's investigation.",
+      "admin_ticket_details_updated": "<span>{actorRole}</span> has updated your ticket: \"{ticketTitle}\".",
+      "admin_ticket_assignee_updated": "<span>{actorRole}</span> has changed the assignee of ticket: \"{ticketTitle}\".",
+      "admin_ticket_city_updated": "<span>{actorRole}</span> has updated the city for ticket: \"{ticketTitle}\".",
+      "admin_ticket_status_updated": "<span>{actorRole}</span> has changed the status of ticket: \"{ticketTitle}\".",
+      "admin_ticket_category_updated": "<span>{actorRole}</span> has changed the category of ticket: \"{ticketTitle}\"."
+    },
+    "additionalInfo": {
+      "user_evaluation_accepted": "Ticket has been moved to <a>My Tickets</a>.",
+      "user_solution_accepted": "Ticket has been moved to <a>Completed Tickets</a>."
     }
   }
 }

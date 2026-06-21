@@ -115,6 +115,23 @@
  *         - canceled
  *         - refunded
  *       example: pending
+ *     NotificationType:
+ *       type: string
+ *       enum:
+ *         - specialist_evaluation_added
+ *         - specialist_evaluation_edited
+ *         - user_evaluation_accepted
+ *         - user_ticket_payment_done
+ *         - comment_added
+ *         - specialist_send_for_review
+ *         - user_solution_accepted
+ *         - user_solution_rejected
+ *         - admin_ticket_details_updated
+ *         - admin_ticket_assignee_updated
+ *         - admin_ticket_city_updated
+ *         - admin_ticket_category_updated
+ *         - admin_ticket_status_updated
+ *       example: comment_added
  *     Ticket:
  *       type: object
  *       properties:
@@ -217,5 +234,31 @@
  *           type: string
  *           format: date-time
  *           example: "2023-12-25T10:00:00Z"
- *
+ *     Notification:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           example: "64f3b12a6f4c1e9d3a7b5678"
+ *         recipient:
+ *           $ref: '#/components/schemas/User'
+ *         actor:
+ *           $ref: '#/components/schemas/User'
+ *         ticket:
+ *           $ref: '#/components/schemas/Ticket'
+ *         isRead:
+ *           type: boolean
+ *           example: false
+ *         type:
+ *           $ref: '#/components/schemas/NotificationType'
+ *         message:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2023-12-25T10:00:00Z"
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2023-12-25T10:00:00Z"
  */

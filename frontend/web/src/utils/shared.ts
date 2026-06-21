@@ -27,3 +27,9 @@ export const getFormattedResponseTime = (minutesValue = 0, t: TFunction) => {
 
   return result.join(' ');
 };
+
+export const getCapitalizedText = (text?: string) => {
+  if (!text) return '';
+
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
