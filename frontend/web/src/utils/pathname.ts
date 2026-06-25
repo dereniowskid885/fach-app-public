@@ -1,4 +1,4 @@
-import { PASSWORD_RESET_PATH, VERIFY_PATH } from '@/constants/routes';
+import { PASSWORD_RESET_PATH, ROUTES, VERIFY_PATH } from '@/constants/routes';
 import { ESupportedLanguages } from 'shared-types';
 import { PROTECTED_ROUTES } from '@/constants/routes';
 import { HOME_PATH } from '@/constants/routes';
@@ -41,4 +41,13 @@ export const isMiddlewareExcludedPath = (pathname: string) => {
   const excludedPaths = [PASSWORD_RESET_PATH, VERIFY_PATH];
 
   return excludedPaths.some(path => pathname.startsWith(`${plPrefix}${path}`));
+};
+
+export const getCurrentRouteName = (normalizedPathname: string, locale: ESupportedLanguages) => {
+  const currentRouteObj = Object.entries(ROUTES).find(
+    ([, localizedPath]) => localizedPath[locale] === normalizedPathname
+  );
+  const currentRoute = currentRouteObj ? currentRouteObj[0] : '';
+
+  return currentRoute;
 };
