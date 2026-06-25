@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Ticket, usePatchTicketsByIdMutation } from '@/services/api/generated/accountApi';
+import { Ticket } from '@/services/api/generated/accountApi';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import DialogComponent from '@/components/ui/DialogComponent';
 import { toast } from 'sonner';
@@ -15,11 +15,8 @@ import {
   FieldLabel,
   FieldTitle
 } from '@/components/shadcn/field';
-
-enum ETicketResolutionType {
-  RESOLVED = 'RESOLVED',
-  REPORT_ISSUE = 'REPORT_ISSUE'
-}
+import { enhancedAccountApi } from '@/services/api/enhanced/enhancedAccountApi';
+import { ETicketResolutionType } from '@/enums/ticket';
 
 export interface ITicketUserSolutionReviewDialog {
   open: boolean;
@@ -51,7 +48,7 @@ export default function TicketUserSolutionReviewDialog({
   const [errorMessage, setErrorMessage] = useState<string | undefined>('');
 
   const [triggerUpdateTicket, { isLoading: isLoadingTicketUpdate, error: errorTicketUpdate }] =
-    usePatchTicketsByIdMutation();
+    enhancedAccountApi.endpoints.patchTicketsById.useMutation();
 
   useErrorHandler(errorTicketUpdate, {
     setInlineError: message => setErrorMessage(message)
@@ -60,17 +57,18 @@ export default function TicketUserSolutionReviewDialog({
   const updateTicketHandler = async () => {
     if (!ticket._id) return;
 
-    const result = await triggerUpdateTicket({
+    const { error } = await triggerUpdateTicket({
       id: ticket._id,
       body: {
         status: ticketResolutionObj[ticketResolutionType].status
       }
     });
 
-    const { error } = result;
     if (error) return;
 
+    closeDialog();
     setErrorMessage('');
+    setTicketResolutionType(ETicketResolutionType.RESOLVED);
     toast.success(ticketResolutionObj[ticketResolutionType].toastMessage);
   };
 

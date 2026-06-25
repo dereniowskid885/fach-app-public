@@ -153,15 +153,4 @@ export const FilterBuilder = {
 
     return filterObj;
   },
-  getNotifications: (req: Request, user: JwtPayload) => {
-    const { onlyUnread } = req.query;
-
-    const filterObj: FilterQuery<INotificationModel> = {
-      recipient: user.userId,
-    };
-
-    if (onlyUnread === 'true') filterObj.isRead = false;
-
-    return filterObj;
-  },
 };

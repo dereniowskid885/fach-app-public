@@ -29,20 +29,16 @@ export default function TicketSpecialistSendForReviewDialog({
   const sendTicketForSolutionReview = async () => {
     if (!ticket._id) return;
 
-    const result = await triggerUpdateTicket({
+    const { error } = await triggerUpdateTicket({
       id: ticket._id,
       body: {
         status: ETicketStatus.SOLUTION_REVIEW
       }
     });
 
-    const { error } = result;
+    if (error) return;
 
-    if (error) {
-      closeDialog();
-      return;
-    }
-
+    closeDialog();
     toast.success(t('ticketSpecialistSendForReviewDialog.toastTitle'));
   };
 

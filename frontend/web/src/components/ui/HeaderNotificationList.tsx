@@ -13,8 +13,8 @@ import { BiBell } from 'react-icons/bi';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '../shadcn/button';
 import {
-  usePatchNotificationsByIdReadMutation,
-  usePatchNotificationsReadAllMutation
+  useDeleteNotificationsByIdMutation,
+  useDeleteNotificationsDeleteAllMutation
 } from '@/services/api/generated/accountApi';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { toast } from 'sonner';
@@ -24,24 +24,26 @@ import { getCapitalizedText, getUserFullName } from '@/utils/shared';
 import { LoadingSpinner } from '../shadcn/loading-spinner';
 import { roleObj } from '@/constants/role';
 import { getNotificationLinkByType } from '@/helpers/notification';
+import { useTicketDetailsDialogContext } from '@/contexts/TicketDetailsDialogContext';
 
 export default function HeaderNotificationList() {
   const t = useTranslations();
   const currentLocale = useLocale();
   const dispatch = useDispatch();
   const { notifications } = useSelector(selectNotificationData);
+  const { openTicketDetailsDialog } = useTicketDetailsDialogContext();
 
-  const [triggerMarkAsRead, { error: errorMarkAsRead, isLoading: isLoadingMarkAsRead }] =
-    usePatchNotificationsByIdReadMutation();
-  const [triggerMarkAllAsRead, { error: errorMarkAllAsRead, isLoading: isLoadingMarkAllAsRead }] =
-    usePatchNotificationsReadAllMutation();
+  const [triggerDelete, { error: errorMarkAsRead, isLoading: isLoadingMarkAsRead }] =
+    useDeleteNotificationsByIdMutation();
+  const [triggerDeleteAll, { error: errorMarkAllAsRead, isLoading: isLoadingMarkAllAsRead }] =
+    useDeleteNotificationsDeleteAllMutation();
 
   useErrorHandler(errorMarkAsRead || errorMarkAllAsRead);
 
   const deleteNotificationHandler = async (notificationId?: string) => {
     if (!notificationId) return;
 
-    const { error } = await triggerMarkAsRead({
+    const { error } = await triggerDelete({
       id: notificationId
     });
 
@@ -55,7 +57,7 @@ export default function HeaderNotificationList() {
   };
 
   const clearAllHandler = async () => {
-    const { error } = await triggerMarkAllAsRead();
+    const { error } = await triggerDeleteAll();
 
     if (error) {
       toast.error(t('errors.generic'));
@@ -90,7 +92,7 @@ export default function HeaderNotificationList() {
           <LoadingSpinner className="m-auto" />
         </div>
       ) : (
-        <ul className="divide-border divide-y">
+        <ul className="divide-border no-scrollbar max-h-[75dvh] divide-y overflow-y-auto">
           {notifications.map(notification => (
             <li
               key={notification._id}
@@ -114,7 +116,8 @@ export default function HeaderNotificationList() {
                         <span className={roleObj[notification.actor?.role as EUserRole].textClass}>
                           {chunks}
                         </span>
-                      )
+                      ),
+                      i: chunks => <i>{chunks}</i>
                     })}
                   </Typography>
 
@@ -127,10 +130,25 @@ export default function HeaderNotificationList() {
                               currentLocale as ESupportedLanguages,
                               notification.type
                             )}
-                            className="text-chart-3 font-bold"
+                            className="text-chart-3 animation-hover font-semibold"
                           >
                             {chunks}
                           </a>
+                        ),
+                        u: chunks => (
+                          <u
+                            className="text-chart-3 animation-hover mt-2 block cursor-pointer"
+                            onClick={() =>
+                              openTicketDetailsDialog(notification.ticket?._id, {
+                                scrollToInput:
+                                  notification.type === ENotificationType.COMMENT_ADDED
+                                    ? true
+                                    : false
+                              })
+                            }
+                          >
+                            {chunks}
+                          </u>
                         )
                       })}
                     </Typography>

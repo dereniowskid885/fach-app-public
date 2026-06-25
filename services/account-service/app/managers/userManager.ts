@@ -1,4 +1,4 @@
-import { safeUserProjection } from '@constants/projections';
+import { safeUserProjection } from '@projections/user';
 import { CategoryManager } from './categoryManager';
 import User, { IUserModel } from '@models/User';
 import { printMongooseValidationErrors } from '@helpers/mongoose';

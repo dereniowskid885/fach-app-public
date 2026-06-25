@@ -9,7 +9,6 @@ export interface INotificationModel extends Document {
   actor: Types.ObjectId | IUserModel;
   type: ENotificationType;
   ticket: Types.ObjectId | ITicketModel;
-  isRead: boolean;
   message: string;
 }
 
@@ -34,11 +33,6 @@ const notificationSchema = new Schema<INotificationModel>(
       type: Types.ObjectId,
       ref: 'Ticket',
       required: true,
-    },
-    isRead: {
-      type: Boolean,
-      required: true,
-      default: false,
     },
     message: {
       type: String,

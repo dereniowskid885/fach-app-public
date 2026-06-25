@@ -9,7 +9,7 @@ import {
   usePatchTicketsByIdEvaluationMutation,
   Ticket,
   usePatchTicketsByIdEditEvaluationMutation,
-  Evaluation
+  useGetTicketsByIdEvaluationsQuery
 } from '@/services/api/generated/accountApi';
 import { getFormattedPriceAmount, getFormattedResponseTime, getUserFullName } from '@/utils/shared';
 import { toast } from 'sonner';
@@ -21,25 +21,42 @@ import { ChartColumn } from 'lucide-react';
 import { getLocaleDateString } from '@/utils/date';
 import ContentSection from '@/components/ui/ContentSection';
 import ContentSectionItem from '@/components/ui/ContentSectionItem';
+import DialogLoadingOverlay from '@/components/ui/DialogLoadingOverlay';
 
 export interface ITicketSpecialistEvaluationDialog {
   open: boolean;
-  mode: EActionType;
   ticket: Ticket;
-  currentUserEvaluation?: Evaluation;
   closeDialog: () => void;
 }
 
 export default function TicketSpecialistEvaluationDialog({
   open,
-  mode,
-  currentUserEvaluation,
   ticket,
   closeDialog
 }: ITicketSpecialistEvaluationDialog) {
   const t = useTranslations();
   const currentLocale = useLocale();
   const maxMinutes = 1440; // 1 day
+
+  const {
+    data: getEvaluationsQuery,
+    isLoading: isLoadingEvaluations,
+    isSuccess: getEvaluationsSuccess,
+    error: getEvaluationsError
+  } = useGetTicketsByIdEvaluationsQuery(
+    { id: ticket._id! },
+    { skip: !open || !ticket._id, refetchOnMountOrArgChange: true }
+  );
+  const currentUserEvaluation = getEvaluationsQuery?.data ? getEvaluationsQuery?.data[0] : null;
+  const mode = currentUserEvaluation ? EActionType.EDIT : EActionType.CREATION;
+
+  const [triggerCreate, { isLoading: isLoadingCreate, error: createError }] =
+    usePatchTicketsByIdEvaluationMutation();
+  const [triggerEdit, { isLoading: isLoadingEdit, error: editError }] =
+    usePatchTicketsByIdEditEvaluationMutation();
+  const isLoading = isLoadingCreate || isLoadingEdit;
+
+  useErrorHandler(getEvaluationsError || createError || editError);
 
   const [priceInCents, setPriceInCents] = useState<number>(
     currentUserEvaluation?.price?.amountInCents ?? 0
@@ -50,14 +67,6 @@ export default function TicketSpecialistEvaluationDialog({
   const daysRef = useRef<HTMLInputElement>(null);
   const minutesRef = useRef<HTMLInputElement>(null);
   const hoursRef = useRef<HTMLInputElement>(null);
-
-  const [triggerCreate, { isLoading: isLoadingCreate, error: createError }] =
-    usePatchTicketsByIdEvaluationMutation();
-  const [triggerEdit, { isLoading: isLoadingEdit, error: editError }] =
-    usePatchTicketsByIdEditEvaluationMutation();
-  const isLoading = isLoadingCreate || isLoadingEdit;
-
-  useErrorHandler(createError || editError);
 
   const submitHandler = async () => {
     if (!ticket._id) return;
@@ -121,7 +130,7 @@ export default function TicketSpecialistEvaluationDialog({
   }, [minutes, priceInCents]);
 
   const currentEvaluation =
-    mode === EActionType.EDIT ? (
+    mode === EActionType.EDIT && getEvaluationsSuccess ? (
       <ContentSection
         title={t('evaluationDialog.currentEvaluationTitle')}
         Icon={ChartColumn}
@@ -239,7 +248,9 @@ export default function TicketSpecialistEvaluationDialog({
     </form>
   );
 
-  return (
+  return isLoadingEvaluations ? (
+    <DialogLoadingOverlay />
+  ) : (
     <DialogComponent
       open={open}
       contentClass="max-w-xl"

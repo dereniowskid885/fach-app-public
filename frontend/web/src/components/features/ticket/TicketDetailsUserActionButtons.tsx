@@ -46,7 +46,7 @@ export const TicketDetailsUserActionButtons = ({ ticket }: ITicketDetailsUserAct
         <div className="mt-px pr-4">
           <AmountIcon
             className="top-0 translate-x-[50%] translate-y-[-50%]"
-            amount={ticket.evaluations?.length ?? 0}
+            amount={ticket.evaluationsCount ?? 0}
             showZeroAmount={true}
           />
         </div>
@@ -82,7 +82,6 @@ export const TicketDetailsUserActionButtons = ({ ticket }: ITicketDetailsUserAct
         open={evaluationListDialog}
         closeDialog={() => setEvaluationListDialog(false)}
         ticketId={ticket._id}
-        ticketEvaluations={ticket.evaluations}
       />
 
       <TicketUserSolutionReviewDialog
