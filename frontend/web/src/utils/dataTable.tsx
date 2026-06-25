@@ -122,7 +122,7 @@ export const getConversationColumn = (t: TFunction) => ({
     switch (ticket.status) {
       case ETicketStatus.AWAITING_EVALUATION:
         conversationAmount = t('ticket.evaluationsAmount', {
-          count: ticket.evaluations?.length ?? 0
+          count: ticket.evaluationsCount ?? 0
         });
         ConversationIcon = ChartColumn;
         break;
@@ -143,14 +143,14 @@ export const getConversationColumn = (t: TFunction) => ({
   }
 });
 
-export const getActionColumn = (role: EUserRole | string, userId?: string) => ({
+export const getActionColumn = (role: EUserRole | string) => ({
   id: 'action',
   cell: (item: CellContext<Ticket, unknown>) => {
     const ticket = item.row.original as Ticket;
 
     return (
       <div className="text-center">
-        <TicketCardActionButtons ticket={ticket} role={role} userId={userId} isTableView={true} />
+        <TicketCardActionButtons ticket={ticket} role={role} isTableView={true} />
       </div>
     );
   }
