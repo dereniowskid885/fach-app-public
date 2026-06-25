@@ -7,8 +7,8 @@ import TicketUserEvaluationsListDialog from './TicketUserEvaluationsListDialog';
 import TicketUserPaymentDialog from './TicketUserPaymentDialog';
 import { useTranslations } from 'next-intl';
 import { TStatusActionButton } from '@/types/ticket';
-import TicketDetailsDialog from './TicketDetailsDialog';
 import { Spinner } from '@/components/shadcn/spinner';
+import { useTicketDetailsDialogContext } from '@/contexts/TicketDetailsDialogContext';
 
 export interface ITicketCardUserActionButtons {
   ticket: Ticket;
@@ -22,11 +22,11 @@ export default function TicketCardUserActionButtons({
   const ticketStatus = ticket.status as ETicketStatus;
 
   const t = useTranslations();
+  const { openTicketDetailsDialog } = useTicketDetailsDialogContext();
 
   const [evaluationListDialog, setEvaluationListDialog] = useState<boolean>(false);
   const [ticketPaymentDialog, setTicketPaymentDialog] = useState<boolean>(false);
   const [ticketPaymentDialogLoading, setTicketPaymentDialogLoading] = useState<boolean>(false);
-  const [ticketDetailsDialog, setTicketDetailsDialog] = useState<boolean>(false);
 
   const paymentDialogLoadingStart = useCallback(() => setTicketPaymentDialogLoading(true), []);
   const paymentDialogLoadingEnd = useCallback(() => setTicketPaymentDialogLoading(false), []);
@@ -34,7 +34,7 @@ export default function TicketCardUserActionButtons({
   const statusActionButton: TStatusActionButton = {
     [ETicketStatus.IN_PROGRESS]: {
       title: t('ticketUserActionButtons.addComment'),
-      handler: () => setTicketDetailsDialog(true)
+      handler: () => openTicketDetailsDialog(ticket._id, { scrollToInput: true })
     },
     [ETicketStatus.AWAITING_PAYMENT]: {
       title: t('ticketUserActionButtons.pay'),
@@ -48,7 +48,7 @@ export default function TicketCardUserActionButtons({
         <div className="mt-px pr-4">
           <AmountIcon
             className="top-0 translate-x-[50%] translate-y-[-50%]"
-            amount={ticket.evaluations?.length ?? 0}
+            amount={ticket.evaluationsCount ?? 0}
             showZeroAmount={true}
           />
         </div>
@@ -56,7 +56,7 @@ export default function TicketCardUserActionButtons({
     },
     [ETicketStatus.SOLUTION_REVIEW]: {
       title: t('ticketUserActionButtons.checkSolution'),
-      handler: () => setTicketDetailsDialog(true)
+      handler: () => openTicketDetailsDialog(ticket._id)
     }
   };
 
@@ -64,7 +64,9 @@ export default function TicketCardUserActionButtons({
     <>
       <div className="flex flex-wrap gap-2">
         {!hideDetailsButton ? (
-          <Button onClick={() => setTicketDetailsDialog(true)}>{t('common.showDetails')}</Button>
+          <Button onClick={() => openTicketDetailsDialog(ticket._id)}>
+            {t('common.showDetails')}
+          </Button>
         ) : null}
 
         {statusActionButton[ticketStatus] ? (
@@ -93,14 +95,6 @@ export default function TicketCardUserActionButtons({
         open={evaluationListDialog}
         closeDialog={() => setEvaluationListDialog(false)}
         ticketId={ticket._id}
-        ticketEvaluations={ticket.evaluations}
-      />
-
-      <TicketDetailsDialog
-        open={ticketDetailsDialog}
-        ticket={ticket}
-        closeDialog={() => setTicketDetailsDialog(false)}
-        scrollToInput={true}
       />
     </>
   );

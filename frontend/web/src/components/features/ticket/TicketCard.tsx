@@ -20,7 +20,7 @@ export interface ITicketCard {
 
 export default function TicketCard({ ticket, index }: ITicketCard) {
   const t = useTranslations();
-  const { role, userId } = useSelector(selectUserData);
+  const { role } = useSelector(selectUserData);
 
   return (
     <ContentCard index={index} className="bg-popover">
@@ -70,7 +70,7 @@ export default function TicketCard({ ticket, index }: ITicketCard) {
         <TicketSummaryInfo ticket={ticket} />
 
         <div className="flex items-center justify-between gap-4">
-          <TicketCardActionButtons ticket={ticket} role={role} userId={userId} />
+          <TicketCardActionButtons ticket={ticket} role={role} />
 
           <UserCard
             className="ml-auto p-0"

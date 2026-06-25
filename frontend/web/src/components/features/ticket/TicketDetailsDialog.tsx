@@ -1,9 +1,4 @@
-import {
-  Ticket,
-  useGetTicketsByIdCommentsQuery,
-  usePostTicketsByIdCommentsMutation,
-  User
-} from '@/services/api/generated/accountApi';
+import { useGetTicketsByIdCommentsQuery, User } from '@/services/api/generated/accountApi';
 import DialogComponent from '@/components/ui/DialogComponent';
 import TicketStatusIcon from './TicketStatusIcon';
 import Typography from '@/components/ui/Typography';
@@ -22,7 +17,7 @@ import ContentSection from '@/components/ui/ContentSection';
 import ContentSectionItem from '@/components/ui/ContentSectionItem';
 import { getFormattedPriceAmount, getFormattedResponseTime, getUserFullName } from '@/utils/shared';
 import { ESectionItemType } from '@/enums/ui';
-import { EUserRole, isSpecialist } from 'shared-types';
+import { EUserRole, isAdmin, isSpecialist } from 'shared-types';
 import UserRoleBadge from '../user/UserRoleBadge';
 import { Textarea } from '@/components/shadcn/textarea';
 import { useEffect, useRef, useState } from 'react';
@@ -40,24 +35,26 @@ import { Spinner } from '@/components/shadcn/spinner';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { breakpoints } from '@/constants/breakpoints';
 import TicketStatusBadge from './TicketStatusBadge';
+import { enhancedAccountApi } from '@/services/api/enhanced/enhancedAccountApi';
+import DialogLoadingOverlay from '@/components/ui/DialogLoadingOverlay';
+import { useTicketDetailsDialogContext } from '@/contexts/TicketDetailsDialogContext';
 
 export interface ITicketDetailsDialog {
   open: boolean;
-  ticket: Ticket;
-  closeDialog: () => void;
+  ticketId?: string;
   scrollToInput?: boolean;
 }
 
 export default function TicketDetailsDialog({
   open,
-  ticket,
-  closeDialog,
+  ticketId,
   scrollToInput = false
 }: ITicketDetailsDialog) {
   const isDesktop = useMediaQuery(`(min-width: ${breakpoints.sm})`);
   const t = useTranslations();
   const currentLocale = useLocale();
-  const { userId, role } = useSelector(selectUserData);
+  const { role } = useSelector(selectUserData);
+  const { closeTicketDetailsDialog } = useTicketDetailsDialogContext();
 
   const {
     register,
@@ -103,7 +100,17 @@ export default function TicketDetailsDialog({
     setMessageCharsLeft(messageMaxLength - descriptionInputLength);
   }, [descriptionInput]);
 
-  const canCommentOnTicket = isCommentingAllowed(role as EUserRole, ticket.status);
+  const {
+    data: getTicketByIdQuery,
+    isLoading: isLoadingTicket,
+    error: getTicketByIdError
+  } = enhancedAccountApi.endpoints.getTicketsById.useQuery(
+    { id: ticketId! },
+    { skip: !open || !ticketId, refetchOnMountOrArgChange: isAdmin(role) }
+  );
+  const ticket = getTicketByIdQuery?.data;
+
+  const canCommentOnTicket = isCommentingAllowed(role as EUserRole, ticket?.status);
 
   const {
     data: commentsData,
@@ -111,19 +118,20 @@ export default function TicketDetailsDialog({
     isSuccess: isGetCommentsSuccess,
     error: getCommentsError
   } = useGetTicketsByIdCommentsQuery(
-    { id: ticket._id! },
+    { id: ticketId! },
     {
-      skip: !open,
-      refetchOnMountOrArgChange: true,
-      pollingInterval: canCommentOnTicket ? 15000 : undefined
+      skip: !open || !ticketId,
+      refetchOnMountOrArgChange: true
     }
   );
   const [triggerCreateComment, { isLoading: isLoadingCreate, error: errorTicketCreate }] =
-    usePostTicketsByIdCommentsMutation();
+    enhancedAccountApi.endpoints.postTicketsByIdComments.useMutation();
 
-  useErrorHandler(errorTicketCreate || getCommentsError, {
+  useErrorHandler(errorTicketCreate || getCommentsError || getTicketByIdError, {
     setInlineError: message => setErrorMessage(message)
   });
+
+  if (!ticketId) return;
 
   const createCommentHandler = async (formData: { message: string }) => {
     const { message } = formData;
@@ -135,18 +143,17 @@ export default function TicketDetailsDialog({
       return;
     }
 
-    if (!ticket._id) {
+    if (!ticket?._id) {
       return;
     }
 
-    const result = await triggerCreateComment({
-      id: ticket._id,
+    const { error } = await triggerCreateComment({
+      id: ticket?._id,
       body: {
         content: trimmedMessage
       }
     });
 
-    const { error } = result;
     if (error) return;
 
     clearCommentInput();
@@ -163,12 +170,12 @@ export default function TicketDetailsDialog({
 
         <div className="space-y-0.5">
           <Typography variant="lead" className="text-foreground font-bold">
-            {ticket.title}
+            {ticket?.title}
           </Typography>
 
           <div className="flex flex-wrap items-center gap-2 gap-y-1 md:gap-0">
             <Typography variant="note" className="text-muted-foreground">
-              {t('ticketDetailsDialog.createdAt', { date: getFormattedDate(ticket.createdAt) })}
+              {t('ticketDetailsDialog.createdAt', { date: getFormattedDate(ticket?.createdAt) })}
             </Typography>
 
             <Dot className="text-muted-foreground hidden md:block" />
@@ -176,18 +183,18 @@ export default function TicketDetailsDialog({
             <Typography
               variant="note"
               className="text-muted-foreground"
-              title={getFormattedDate(ticket.updatedAt)}
+              title={getFormattedDate(ticket?.updatedAt)}
             >
-              {t('ticketDetailsDialog.updatedAt', { date: getRelativeTime(t, ticket.updatedAt) })}
+              {t('ticketDetailsDialog.updatedAt', { date: getRelativeTime(t, ticket?.updatedAt) })}
             </Typography>
           </div>
         </div>
       </div>
 
       {isDesktop ? (
-        <TicketStatusIcon className="mx-4" status={ticket.status} showStatusText={true} />
+        <TicketStatusIcon className="mx-4" status={ticket?.status} showStatusText={true} />
       ) : (
-        <TicketStatusBadge status={ticket.status} />
+        <TicketStatusBadge status={ticket?.status} />
       )}
     </div>
   );
@@ -197,7 +204,7 @@ export default function TicketDetailsDialog({
       {/* Description */}
       <ContentSection title={t('ticketDetailsDialog.descriptionSectionTitle')} Icon={BookOpen}>
         <Typography variant="p" className="text-muted-foreground">
-          {ticket.description}
+          {ticket?.description}
         </Typography>
       </ContentSection>
 
@@ -211,16 +218,16 @@ export default function TicketDetailsDialog({
           <ContentSectionItem
             className="bg-card rounded-2xl border p-3"
             title={t('common.createdBy')}
-            descriptionComponent={renderUserInfo(ticket.createdBy)}
+            descriptionComponent={renderUserInfo(ticket?.createdBy)}
             variant={ESectionItemType.USER}
           />
 
           <ContentSectionItem
             className="bg-card rounded-2xl border p-3"
             title={t('common.assignee')}
-            descriptionComponent={renderUserInfo(ticket.assignee, t('common.unassigned'))}
+            descriptionComponent={renderUserInfo(ticket?.assignee, t('common.unassigned'))}
             variant={
-              isSpecialist(ticket.assignee?.role)
+              isSpecialist(ticket?.assignee?.role)
                 ? ESectionItemType.SPECIALIST
                 : ESectionItemType.USER
             }
@@ -229,14 +236,14 @@ export default function TicketDetailsDialog({
           <ContentSectionItem
             className="bg-card rounded-2xl border p-3"
             title={t('common.category')}
-            description={ticket.category?.name}
+            description={ticket?.category?.name}
             variant={ESectionItemType.CATEGORY}
           />
 
           <ContentSectionItem
             className="bg-card rounded-2xl border p-3"
             title={t('common.city')}
-            description={ticket.city}
+            description={ticket?.city}
             variant={ESectionItemType.CITY}
           />
         </div>
@@ -247,7 +254,7 @@ export default function TicketDetailsDialog({
         title={t('ticketDetailsDialog.acceptedEvaluationSectionTitle')}
         Icon={ChartColumn}
       >
-        {ticket.acceptedEvaluation ? (
+        {ticket?.acceptedEvaluation ? (
           <div className="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2">
             <ContentSectionItem
               className="p-3"
@@ -363,7 +370,9 @@ export default function TicketDetailsDialog({
     </div>
   );
 
-  return (
+  return isLoadingTicket ? (
+    <DialogLoadingOverlay />
+  ) : (
     <DialogComponent
       open={open}
       headerClass="items-start text-start"
@@ -371,10 +380,8 @@ export default function TicketDetailsDialog({
       content={content}
       contentClass="max-w-7xl"
       size="none"
-      customConfirmButton={
-        <TicketDetailsActionButtons ticket={ticket} role={role} userId={userId} />
-      }
-      cancelButtonHandler={closeDialog}
+      customConfirmButton={<TicketDetailsActionButtons ticket={ticket!} role={role} />}
+      cancelButtonHandler={closeTicketDetailsDialog}
       cancelButtonText={t('common.close')}
       showCloseIcon={true}
       errorMessage={errorMessage ? errorMessage : ''}

@@ -4,29 +4,23 @@ import { Button } from '@/components/shadcn/button';
 import { useState } from 'react';
 import TicketSpecialistEvaluationDialog from './TicketSpecialistEvaluationDialog';
 import { ETicketStatus } from 'shared-types';
-import { Evaluation, Ticket } from '@/services/api/generated/accountApi';
+import { Ticket } from '@/services/api/generated/accountApi';
 import { useTranslations } from 'next-intl';
-import { EActionType } from '@/enums/ui';
 import { TStatusActionButton } from '@/types/ticket';
 import TicketSpecialistSendForReviewDialog from './TicketSpecialistSendForReviewDialog';
 import { Spinner } from '@/components/shadcn/spinner';
 
 export interface ITicketDetailsSpecialistActionButtons {
   ticket: Ticket;
-  currentUserEvaluation?: Evaluation;
 }
 
 export const TicketDetailsSpecialistActionButtons = ({
-  ticket,
-  currentUserEvaluation
+  ticket
 }: ITicketDetailsSpecialistActionButtons) => {
   const ticketStatus = ticket.status as ETicketStatus;
 
   const t = useTranslations();
 
-  const [evaluationDialogMode, setEvaluationDialogMode] = useState<EActionType>(
-    EActionType.CREATION
-  );
   const [priceEvaluationDialog, setPriceEvaluationDialog] = useState<boolean>(false);
   const [ticketSendForReviewDialog, setTicketSendForReviewDialog] = useState<boolean>(false);
 
@@ -35,21 +29,10 @@ export const TicketDetailsSpecialistActionButtons = ({
       title: t('ticketSpecialistActionButtons.sendForReview'),
       handler: () => setTicketSendForReviewDialog(true)
     },
-    [ETicketStatus.AWAITING_EVALUATION]: currentUserEvaluation
-      ? {
-          title: t('ticketSpecialistActionButtons.editEvaluation'),
-          handler: () => {
-            setEvaluationDialogMode(EActionType.EDIT);
-            setPriceEvaluationDialog(true);
-          }
-        }
-      : {
-          title: t('ticketSpecialistActionButtons.evaluate'),
-          handler: () => {
-            setEvaluationDialogMode(EActionType.CREATION);
-            setPriceEvaluationDialog(true);
-          }
-        }
+    [ETicketStatus.AWAITING_EVALUATION]: {
+      title: t('ticketSpecialistActionButtons.evaluate'),
+      handler: () => setPriceEvaluationDialog(true)
+    }
   };
 
   return (
@@ -68,9 +51,7 @@ export const TicketDetailsSpecialistActionButtons = ({
 
       <TicketSpecialistEvaluationDialog
         open={priceEvaluationDialog}
-        mode={evaluationDialogMode}
         ticket={ticket}
-        currentUserEvaluation={currentUserEvaluation}
         closeDialog={() => setPriceEvaluationDialog(false)}
       />
 
