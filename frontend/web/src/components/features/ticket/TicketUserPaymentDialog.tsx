@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import DialogComponent from '@/components/ui/DialogComponent';
-import { usePostTicketsByIdPaymentMutation } from '@/services/api/enhanced/enhancedAccountApi';
+import {
+  enhancedAccountApi,
+  usePostTicketsByIdPaymentMutation
+} from '@/services/api/enhanced/enhancedAccountApi';
 import { ESupportedCurrency } from 'shared-types';
 import { StripePaymentForm } from '../payment/StripePaymentForm';
 import { StripeProvider } from '@/components/providers/StripeProvider';
@@ -8,6 +11,7 @@ import { useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { Currency } from '@/services/api/generated/accountApi';
 import { CreditCard } from 'lucide-react';
+import { useDispatch } from 'react-redux';
 
 export interface ITicketUserPaymentDialog {
   open: boolean;
@@ -29,6 +33,9 @@ export default function TicketUserPaymentDialog({
   currency
 }: ITicketUserPaymentDialog) {
   const t = useTranslations();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dispatch = useDispatch<any>();
 
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -80,7 +87,17 @@ export default function TicketUserPaymentDialog({
       cancelButtonHandler={closeDialog}
       content={
         <StripeProvider clientSecret={clientSecret}>
-          <StripePaymentForm closePaymentDialog={closeDialog} />
+          <StripePaymentForm
+            closePaymentDialog={() => {
+              closeDialog();
+              dispatch(
+                enhancedAccountApi.util.invalidateTags([
+                  { type: 'Ticket', id: ticketId },
+                  { type: 'Ticketing' }
+                ])
+              );
+            }}
+          />
         </StripeProvider>
       }
       errorMessage={errorMessage}

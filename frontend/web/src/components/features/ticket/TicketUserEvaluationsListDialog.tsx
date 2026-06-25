@@ -1,30 +1,26 @@
 import React, { useState } from 'react';
 import DialogComponent from '@/components/ui/DialogComponent';
 import { DataTable } from '@/components/ui/DataTable';
-import {
-  Evaluation,
-  PatchTicketsByIdAcceptEvaluationApiArg,
-  usePatchTicketsByIdAcceptEvaluationMutation
-} from '@/services/api/generated/accountApi';
+import { PatchTicketsByIdAcceptEvaluationApiArg } from '@/services/api/generated/accountApi';
 import { RowSelectionState } from '@tanstack/react-table';
 import { toast } from 'sonner';
 import { useLocale, useTranslations } from 'next-intl';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { getEvaluationsListDialogColumns } from '@/helpers/dataTable';
 import { ChartColumn } from 'lucide-react';
+import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
+import { enhancedAccountApi } from '@/services/api/enhanced/enhancedAccountApi';
 
 export interface ITicketUserEvaluationsListDialog {
   open: boolean;
   closeDialog: () => void;
   ticketId?: string;
-  ticketEvaluations?: Evaluation[];
 }
 
 export default function TicketUserEvaluationsListDialog({
   open,
   closeDialog,
-  ticketId,
-  ticketEvaluations = []
+  ticketId
 }: ITicketUserEvaluationsListDialog) {
   const t = useTranslations();
   const currentLocale = useLocale();
@@ -32,14 +28,24 @@ export default function TicketUserEvaluationsListDialog({
   const [selectedEvaluationRow, setSelectedEvaluationRow] = useState<RowSelectionState>({});
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const [triggerEvaluationAccept, { isLoading, error }] =
-    usePatchTicketsByIdAcceptEvaluationMutation();
+  const {
+    data: getEvaluations,
+    isLoading: isLoadingEvaluations,
+    error: errorGetEvaluations
+  } = enhancedAccountApi.endpoints.getTicketsByIdEvaluations.useQuery(
+    { id: ticketId! },
+    { skip: !open || !ticketId }
+  );
+  const ticketEvaluations = getEvaluations?.data ?? [];
 
-  useErrorHandler(error, {
+  const [triggerEvaluationAccept, { isLoading, error: errorEvaluationAccept }] =
+    enhancedAccountApi.endpoints.patchTicketsByIdAcceptEvaluation.useMutation();
+
+  useErrorHandler(errorGetEvaluations || errorEvaluationAccept, {
     setInlineError: message => setErrorMessage(message)
   });
 
-  if (!ticketEvaluations) return;
+  if (!ticketId) return;
 
   const getSelectedEvaluation = () => {
     const selectedRows = Object.keys(selectedEvaluationRow);
@@ -83,14 +89,20 @@ export default function TicketUserEvaluationsListDialog({
       headerContent={<ChartColumn size={24} />}
       title={t('evaluationListDialog.title')}
       content={
-        <DataTable
-          data={ticketEvaluations}
-          selectableRows={true}
-          oneSelectableRow={true}
-          setSelectedRow={setSelectedEvaluationRow}
-          columns={tableColumnsData}
-          className="bg-card"
-        />
+        isLoadingEvaluations ? (
+          <div className="overflow-hidden">
+            <LoadingSpinner className="m-auto" />
+          </div>
+        ) : (
+          <DataTable
+            data={ticketEvaluations}
+            selectableRows={true}
+            oneSelectableRow={true}
+            setSelectedRow={setSelectedEvaluationRow}
+            columns={tableColumnsData}
+            className="bg-card"
+          />
+        )
       }
       cancelButtonText={t('common.back')}
       cancelButtonHandler={closeDialog}

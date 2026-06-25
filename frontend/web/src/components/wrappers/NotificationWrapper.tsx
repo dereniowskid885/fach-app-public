@@ -14,7 +14,7 @@ export interface INotificationWrapper {
 export default function NotificationWrapper({ children }: INotificationWrapper) {
   const dispatch = useAppDispatch();
 
-  const { data: notificationData, error } = useGetNotificationsQuery({ onlyUnread: true });
+  const { data: notificationData, error } = useGetNotificationsQuery();
 
   useErrorHandler(error);
 

@@ -18,6 +18,7 @@ export interface ITicketModel extends Document {
   title: string;
   description: string;
   evaluations: IEvaluationSchema[];
+  evaluationsCount: number;
   acceptedEvaluation: IEvaluationSchema | null;
   commentsCount: number;
   specialistCommentsCount: number;
@@ -69,6 +70,11 @@ const ticketSchema = new Schema<ITicketModel>(
       required: true,
     },
     evaluations: [EvaluationSchema],
+    evaluationsCount: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
     acceptedEvaluation: {
       type: EvaluationSchema,
       default: null,
@@ -92,5 +98,12 @@ const ticketSchema = new Schema<ITicketModel>(
   },
   { timestamps: true },
 );
+
+ticketSchema.pre('save', function (next) {
+  if (this.isModified('evaluations')) {
+    this.evaluationsCount = this.evaluations.length;
+  }
+  next();
+});
 
 export default model('Ticket', ticketSchema);

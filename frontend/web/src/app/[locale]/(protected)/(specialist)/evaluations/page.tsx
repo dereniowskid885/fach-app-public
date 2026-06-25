@@ -12,7 +12,7 @@ import TicketsTablePageContent from '@/app/[locale]/(protected)/_components/Tick
 import { useState } from 'react';
 
 export default function MyEvaluations() {
-  const { userId, role } = useSelector(selectUserData);
+  const { role } = useSelector(selectUserData);
 
   const t = useTranslations();
   const currentLocale = useLocale();
@@ -25,7 +25,6 @@ export default function MyEvaluations() {
     data: ticketsData,
     error: getTicketsError,
     isLoading,
-    isFetching,
     refetch
   } = useGetTicketsSpecialistEvaluationsQuery(
     {
@@ -36,16 +35,15 @@ export default function MyEvaluations() {
       refetchOnMountOrArgChange: true
     }
   );
-  const isLoadingTickets = isLoading || isFetching;
 
   useErrorHandler(getTicketsError);
 
-  const tableColumnsData = getAvailableTicketsColumns(t, currentLocale, userId);
+  const tableColumnsData = getAvailableTicketsColumns(t, currentLocale);
 
   return (
     <TicketsTablePageContent
       pageName="myEvaluationsPage"
-      isLoadingTickets={isLoadingTickets}
+      isLoadingTickets={isLoading}
       ticketsData={ticketsData?.data}
       tableColumns={tableColumnsData}
       refetchTickets={refetch}

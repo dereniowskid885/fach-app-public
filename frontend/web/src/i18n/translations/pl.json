@@ -271,8 +271,7 @@
   },
   "ticketSpecialistActionButtons": {
     "reply": "Odpowiedz",
-    "editEvaluation": "Edytuj wycenę",
-    "evaluate": "Wyceń",
+    "evaluate": "Wycena",
     "sendForReview": "Zgłoś rozwiązanie"
   },
   "ticketUserActionButtons": {
@@ -433,26 +432,39 @@
       "admin_ticket_assignee_updated": "Zmieniono przypisanie sprawy",
       "admin_ticket_city_updated": "Zmieniono miasto sprawy",
       "admin_ticket_status_updated": "Status sprawy zmieniony",
-      "admin_ticket_category_updated": "Kategoria sprawy zmieniona"
+      "admin_ticket_category_updated": "Kategoria sprawy zmieniona",
+      "admin_ticket_deleted": "Sprawa usunięta"
     },
     "description": {
       "specialist_evaluation_added": "{actor} dodał ocenę do sprawy: \"{ticketTitle}\".",
       "specialist_evaluation_edited": "{actor} zaktualizował swoją wycenę dla sprawy: \"{ticketTitle}\".",
       "user_evaluation_accepted": "{actor} zaakceptował Twoją wycene dla sprawy: \"{ticketTitle}\".",
       "user_ticket_payment_done": "{actor} opłacił sprawę: \"{ticketTitle}\".",
-      "comment_added": "<span>{actorRole}</span> dodał komentarz do sprawy: \"{ticketTitle}\": \"{message}\".",
+      "comment_added": "<span>{actorRole}</span> dodał komentarz do sprawy: \"{ticketTitle}\": <i>\"{message}\".</i>",
       "specialist_send_for_review": "<span>{actorRole}</span> poprosił o weryfikację rozwiązania dla sprawy: \"{ticketTitle}\".",
       "user_solution_accepted": "{actor} zaakceptował Twoje rozwiązanie dla sprawy: \"{ticketTitle}\".",
       "user_solution_rejected": "{actor} odrzucił Twoje rozwiązanie. Proszę oczekiwać na weryfikację moderatora.",
-      "admin_ticket_details_updated": "<span>{actorRole}</span> zaktualizował Twoją sprawę: \"{ticketTitle}\".",
+      "admin_ticket_details_updated": "<span>{actorRole}</span> zaktualizował Twoją sprawę: \"{message}\".",
       "admin_ticket_assignee_updated": "<span>{actorRole}</span> zmienił osobę przypisaną do sprawy: \"{ticketTitle}\".",
       "admin_ticket_city_updated": "<span>{actorRole}</span> zaktualizował miasto w sprawie: \"{ticketTitle}\".",
       "admin_ticket_status_updated": "<span>{actorRole}</span> zmienił status sprawy: \"{ticketTitle}\".",
-      "admin_ticket_category_updated": "<span>{actorRole}</span> zmienił kategorię sprawy: \"{ticketTitle}\"."
+      "admin_ticket_category_updated": "<span>{actorRole}</span> zmienił kategorię sprawy: \"{ticketTitle}\".",
+      "admin_ticket_deleted": "<span>{actorRole}</span> usunął sprawę: \"{message}\"."
     },
     "additionalInfo": {
-      "user_evaluation_accepted": "Sprawa została przeniesiona do <a>Moje sprawy</a>.",
-      "user_solution_accepted": "Sprawa została przeniesiona do <a>Ukończone sprawy</a>."
+      "specialist_evaluation_added": "<u>Zobacz sprawę</u>",
+      "specialist_evaluation_edited": "<u>Zobacz sprawę</u>",
+      "user_evaluation_accepted": "Sprawa została przeniesiona do <a>Moje sprawy</a>. <u>Zobacz sprawę</u>",
+      "user_ticket_payment_done": "<u>Zobacz sprawę</u>",
+      "comment_added": "<u>Zobacz sprawę</u>",
+      "specialist_send_for_review": "<u>Zobacz sprawę</u>",
+      "user_solution_accepted": "Sprawa została przeniesiona do <a>Ukończone sprawy</a>. <u>Zobacz sprawę</u>",
+      "user_solution_rejected": "<u>Zobacz sprawę</u>",
+      "admin_ticket_details_updated": "<u>Zobacz sprawę</u>",
+      "admin_ticket_assignee_updated": "<u>Zobacz sprawę</u>",
+      "admin_ticket_city_updated": "<u>Zobacz sprawę</u>",
+      "admin_ticket_status_updated": "<u>Zobacz sprawę</u>",
+      "admin_ticket_category_updated": "<u>Zobacz sprawę</u>"
     }
   }
 }

@@ -1,7 +1,8 @@
-import AuthWrapper from '@/components/features/auth/AuthWrapper';
-import NotificationWrapper from '@/components/features/notification/NotificationWrapper';
+import AuthWrapper from '@/components/wrappers/AuthWrapper';
+import NotificationWrapper from '@/components/wrappers/NotificationWrapper';
 import ProtectedLayout from '@/components/layouts/ProtectedLayout';
 import SidebarContextProvider from '@/components/providers/SidebarContextProvider';
+import { TicketDetailsDialogProvider } from '@/components/providers/TicketDetailsDialogContextProvider';
 import { ReactNode } from 'react';
 
 export interface IMainLayout {
@@ -13,7 +14,9 @@ export default async function MainLayout({ children }: IMainLayout) {
     <AuthWrapper>
       <NotificationWrapper>
         <SidebarContextProvider>
-          <ProtectedLayout>{children}</ProtectedLayout>
+          <TicketDetailsDialogProvider>
+            <ProtectedLayout>{children}</ProtectedLayout>
+          </TicketDetailsDialogProvider>
         </SidebarContextProvider>
       </NotificationWrapper>
     </AuthWrapper>
