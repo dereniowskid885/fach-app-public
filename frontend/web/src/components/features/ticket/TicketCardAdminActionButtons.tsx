@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import TicketDetailsDialog from './TicketDetailsDialog';
 import { Ticket } from '@/services/api/generated/accountApi';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/shadcn/button';
@@ -7,6 +6,7 @@ import { ETicketStatus } from 'shared-types';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '@/redux/slices/userSlice';
 import TicketAdminStatusChangeDialog from './TicketAdminStatusChangeDialog';
+import { useTicketDetailsDialogContext } from '@/contexts/TicketDetailsDialogContext';
 
 export interface ITicketCardAdminActionButtons {
   ticket: Ticket;
@@ -21,9 +21,9 @@ export default function TicketCardAdminActionButtons({
 
   const t = useTranslations();
   const { userId } = useSelector(selectUserData);
+  const { openTicketDetailsDialog } = useTicketDetailsDialogContext();
 
   const [ticketStatusChangeDialog, setTicketStatusChangeDialog] = useState<boolean>(false);
-  const [ticketDetailsDialog, setTicketDetailsDialog] = useState<boolean>(false);
 
   const isCurrentUserAssigned = ticket.assignee?._id === userId;
   const isStatusChangeAvailable =
@@ -34,7 +34,9 @@ export default function TicketCardAdminActionButtons({
     <>
       <div className="flex flex-wrap gap-2">
         {!hideDetailsButton ? (
-          <Button onClick={() => setTicketDetailsDialog(true)}>{t('common.showDetails')}</Button>
+          <Button onClick={() => openTicketDetailsDialog(ticket._id, { scrollToInput: true })}>
+            {t('common.showDetails')}
+          </Button>
         ) : null}
 
         {isStatusChangeAvailable ? (
@@ -48,13 +50,6 @@ export default function TicketCardAdminActionButtons({
         open={ticketStatusChangeDialog}
         closeDialog={() => setTicketStatusChangeDialog(false)}
         ticket={ticket}
-      />
-
-      <TicketDetailsDialog
-        open={ticketDetailsDialog}
-        ticket={ticket}
-        closeDialog={() => setTicketDetailsDialog(false)}
-        scrollToInput={true}
       />
     </>
   );

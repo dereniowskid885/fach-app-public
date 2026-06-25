@@ -46,14 +46,13 @@ export default function TicketAdminStatusChangeDialog({
   const updateTicketHandler = async () => {
     if (!ticket._id || !chosenTicketStatus) return;
 
-    const result = await triggerUpdateTicket({
+    const { error } = await triggerUpdateTicket({
       id: ticket._id,
       body: {
         status: chosenTicketStatus
       }
     });
 
-    const { error } = result;
     if (error) return;
 
     closeDialog();

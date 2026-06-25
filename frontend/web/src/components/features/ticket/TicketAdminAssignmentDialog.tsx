@@ -30,14 +30,13 @@ export default function TicketAdminAssignmentDialog({
   const updateTicketHandler = async () => {
     if (!ticket._id) return;
 
-    const result = await triggerUpdateTicket({
+    const { error } = await triggerUpdateTicket({
       id: ticket._id,
       body: {
         assigneeId: userId
       }
     });
 
-    const { error } = result;
     if (error) return;
 
     closeDialog();

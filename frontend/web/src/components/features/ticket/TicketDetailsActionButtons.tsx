@@ -6,27 +6,13 @@ import { TicketDetailsAdminActionButtons } from './TicketDetailsAdminActionButto
 
 export interface ITicketDetailsActionButtons {
   ticket: Ticket;
-  userId?: string;
   role: EUserRole | string;
 }
 
-export default function TicketDetailsActionButtons({
-  ticket,
-  userId,
-  role
-}: ITicketDetailsActionButtons) {
+export default function TicketDetailsActionButtons({ ticket, role }: ITicketDetailsActionButtons) {
   switch (role) {
     case EUserRole.SPECIALIST: {
-      const currentUserEvaluation = ticket.evaluations?.find(
-        evaluation => evaluation.user?._id === userId
-      );
-
-      return (
-        <TicketDetailsSpecialistActionButtons
-          ticket={ticket}
-          currentUserEvaluation={currentUserEvaluation}
-        />
-      );
+      return <TicketDetailsSpecialistActionButtons ticket={ticket} />;
     }
 
     case EUserRole.USER:
