@@ -135,12 +135,7 @@ const injectedRtkApi = api
         invalidatesTags: ['Categories']
       }),
       getNotifications: build.query<GetNotificationsApiResponse, GetNotificationsApiArg>({
-        query: queryArg => ({
-          url: `/notifications`,
-          params: {
-            onlyUnread: queryArg.onlyUnread
-          }
-        }),
+        query: () => ({ url: `/notifications` }),
         providesTags: ['Notifications']
       }),
       getNotificationsStream: build.query<
@@ -150,18 +145,18 @@ const injectedRtkApi = api
         query: () => ({ url: `/notifications/stream` }),
         providesTags: ['Notifications']
       }),
-      patchNotificationsByIdRead: build.mutation<
-        PatchNotificationsByIdReadApiResponse,
-        PatchNotificationsByIdReadApiArg
+      deleteNotificationsDeleteAll: build.mutation<
+        DeleteNotificationsDeleteAllApiResponse,
+        DeleteNotificationsDeleteAllApiArg
       >({
-        query: queryArg => ({ url: `/notifications/${queryArg.id}/read`, method: 'PATCH' }),
+        query: () => ({ url: `/notifications/delete-all`, method: 'DELETE' }),
         invalidatesTags: ['Notifications']
       }),
-      patchNotificationsReadAll: build.mutation<
-        PatchNotificationsReadAllApiResponse,
-        PatchNotificationsReadAllApiArg
+      deleteNotificationsById: build.mutation<
+        DeleteNotificationsByIdApiResponse,
+        DeleteNotificationsByIdApiArg
       >({
-        query: () => ({ url: `/notifications/read-all`, method: 'PATCH' }),
+        query: queryArg => ({ url: `/notifications/${queryArg.id}`, method: 'DELETE' }),
         invalidatesTags: ['Notifications']
       }),
       postTickets: build.mutation<PostTicketsApiResponse, PostTicketsApiArg>({
@@ -271,6 +266,13 @@ const injectedRtkApi = api
           body: queryArg.body
         }),
         invalidatesTags: ['Ticketing']
+      }),
+      getTicketsByIdEvaluations: build.query<
+        GetTicketsByIdEvaluationsApiResponse,
+        GetTicketsByIdEvaluationsApiArg
+      >({
+        query: queryArg => ({ url: `/tickets/${queryArg.id}/evaluations` }),
+        providesTags: ['Ticketing']
       }),
       deleteTicketsCommentById: build.mutation<
         DeleteTicketsCommentByIdApiResponse,
@@ -546,42 +548,26 @@ export type GetNotificationsApiResponse =
     success?: boolean;
     dataLength?: number;
     data?: Notification[];
-    unreadCount?: number;
   };
-export type GetNotificationsApiArg = {
-  /** Determines if only unread notifications should be fetched (isRead = false) */
-  onlyUnread?: boolean;
-};
+export type GetNotificationsApiArg = void;
 export type GetNotificationsStreamApiResponse =
   /** status 200 SSE stream opened successfully */ Notification;
 export type GetNotificationsStreamApiArg = void;
-export type PatchNotificationsByIdReadApiResponse =
-  /** status 200 Notification marked as read successfully */ {
+export type DeleteNotificationsDeleteAllApiResponse =
+  /** status 200 All notifications deleted successfully */ {
     success?: boolean;
     message?: string;
-    data?: {
-      _id?: string;
-      user?: string;
-      userRole?: string;
-      type?: string;
-      ticket?: string;
-      ticketTitle?: string;
-      message?: string;
-      isRead?: boolean;
-      createdAt?: string;
-      updatedAt?: string;
-    };
   };
-export type PatchNotificationsByIdReadApiArg = {
+export type DeleteNotificationsDeleteAllApiArg = void;
+export type DeleteNotificationsByIdApiResponse =
+  /** status 200 Notification deleted successfully */ {
+    success?: boolean;
+    message?: string;
+  };
+export type DeleteNotificationsByIdApiArg = {
   /** Unique ID of the notification */
   id: string;
 };
-export type PatchNotificationsReadAllApiResponse =
-  /** status 200 All notifications marked as read successfully */ {
-    success?: boolean;
-    message?: string;
-  };
-export type PatchNotificationsReadAllApiArg = void;
 export type PostTicketsApiResponse = /** status 200 Ticket created successfully */ {
   success?: boolean;
   message?: string;
@@ -749,6 +735,15 @@ export type PatchTicketsByIdApiArg = {
     /** User ID of the assignee */
     assigneeId?: string;
   };
+};
+export type GetTicketsByIdEvaluationsApiResponse = /** status 200 Array of ticket evaluations */ {
+  success?: boolean;
+  dataLength?: number;
+  data?: Evaluation[];
+};
+export type GetTicketsByIdEvaluationsApiArg = {
+  /** Unique ID of the ticket */
+  id: string;
 };
 export type DeleteTicketsCommentByIdApiResponse = /** status 200 Comment deleted successfully */ {
   success?: boolean;
@@ -968,6 +963,7 @@ export type Ticket = {
   title?: string;
   description?: string;
   evaluations?: Evaluation[];
+  evaluationsCount?: number;
   acceptedEvaluation?: Evaluation;
   commentsCount?: number;
   specialistCommentsCount?: number;
@@ -992,7 +988,6 @@ export type Notification = {
   recipient?: User;
   actor?: User;
   ticket?: Ticket;
-  isRead?: boolean;
   type?: NotificationType;
   message?: string;
   createdAt?: string;
@@ -1028,8 +1023,8 @@ export const {
   usePatchCategoriesByIdSpecialistRemoveMutation,
   useGetNotificationsQuery,
   useGetNotificationsStreamQuery,
-  usePatchNotificationsByIdReadMutation,
-  usePatchNotificationsReadAllMutation,
+  useDeleteNotificationsDeleteAllMutation,
+  useDeleteNotificationsByIdMutation,
   usePostTicketsMutation,
   useGetTicketsQuery,
   usePostTicketsByIdCommentsMutation,
@@ -1042,6 +1037,7 @@ export const {
   useGetTicketsByIdQuery,
   useDeleteTicketsByIdMutation,
   usePatchTicketsByIdMutation,
+  useGetTicketsByIdEvaluationsQuery,
   useDeleteTicketsCommentByIdMutation,
   usePatchTicketsByIdEvaluationMutation,
   usePatchTicketsByIdAcceptEvaluationMutation,
