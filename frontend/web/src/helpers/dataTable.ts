@@ -38,13 +38,13 @@ export const getMyTicketsColumns = (
   getDropdownMenuColumn()
 ];
 
-export const getAvailableTicketsColumns = (t: TFunction, currentLocale: string, userId: string) => [
+export const getAvailableTicketsColumns = (t: TFunction, currentLocale: string) => [
   getTicketColumn(t),
   getCityColumn(t),
   getCreatedAtColumn(t, currentLocale),
   getCreatedByColumn(t),
   getConversationColumn(t),
-  getActionColumn(EUserRole.SPECIALIST, userId),
+  getActionColumn(EUserRole.SPECIALIST),
   getDropdownMenuColumn()
 ];
 
