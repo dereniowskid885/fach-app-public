@@ -1,17 +1,18 @@
 import {
   createTicket,
-  getTickets,
+  getAllTickets,
   getMyTickets,
   getSpecialistAvailableTickets,
   deleteTicket,
   getTicketByID,
+  getTicketEvaluations,
   ticketEvaluationHandler,
   ticketEvaluationAccept,
   updateTicket,
   ticketPaymentHandler,
   ticketEvaluationEdit,
   getCompletedTickets,
-  getSpecialistTicketsEvaluations,
+  getSpecialistTicketEvaluations,
   getTicketComments,
   createTicketComment,
   deleteTicketComment,
@@ -463,7 +464,7 @@ router.post('/:id/payment', validateTicketPaymentMiddleware, ticketPaymentHandle
  *                   type: string
  *                   example: Server error
  */
-router.get('/', checkAdminRole, getTickets);
+router.get('/', checkAdminRole, getAllTickets);
 
 /**
  * @swagger
@@ -817,13 +818,13 @@ router.get('/specialist/available', checkSpecialistRole, getSpecialistAvailableT
  *                   type: string
  *                   example: Server error
  */
-router.get('/specialist/evaluations', checkSpecialistRole, getSpecialistTicketsEvaluations);
+router.get('/specialist/evaluations', checkSpecialistRole, getSpecialistTicketEvaluations);
 
 /**
  * @swagger
  * /tickets/{id}:
  *   get:
- *     summary: Get ticket by ID (admin only)
+ *     summary: Get ticket by ID
  *     description: Fetches a single ticket from the database using its unique ID
  *     tags:
  *       - Ticketing
@@ -880,7 +881,91 @@ router.get('/specialist/evaluations', checkSpecialistRole, getSpecialistTicketsE
  *                   type: string
  *                   example: Server error
  */
-router.get('/:id', checkAdminRole, getTicketByID);
+router.get('/:id', getTicketByID);
+
+/**
+ * @swagger
+ * /tickets/{id}/evaluations:
+ *   get:
+ *     summary: Get ticket evaluations
+ *     description: Returns evaluations for a specific ticket. Specialists receive only their own evaluation, while ticket owners and admins can view all submitted evaluations.
+ *     tags:
+ *       - Ticketing
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the ticket
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Array of ticket evaluations
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 dataLength:
+ *                   type: number
+ *                   example: 24
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Evaluation'
+ *       403:
+ *         description: Forbidden due to invalid permissions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_INVALID_ROLE"
+ *                 message:
+ *                   type: string
+ *                   example: You cannot view ticket evaluations
+ *       404:
+ *         description: Ticket with provided ID not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TICKET_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: Ticket with provided id not found
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.get('/:id/evaluations', getTicketEvaluations);
 
 /**
  * @swagger

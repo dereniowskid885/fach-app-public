@@ -4,6 +4,7 @@ import type { Request, Response } from 'express';
 import { FilterBuilder } from '@utils/filterBuilder';
 import { PaymentManager } from '@managers/paymentManager';
 import { UserManager } from '@managers/userManager';
+import { basicTicketProjection } from '@projections/ticket';
 
 export const createTicket = async (req: Request, res: Response) => {
   try {
@@ -25,7 +26,7 @@ export const createTicketComment = async (req: Request, res: Response) => {
   }
 };
 
-export const getTickets = async (req: Request, res: Response) => {
+export const getAllTickets = async (req: Request, res: Response) => {
   try {
     const filter = FilterBuilder.getTickets(req);
     const tickets = await TicketManager.getTickets(filter);
@@ -71,7 +72,7 @@ export const getSpecialistAvailableTickets = async (req: Request, res: Response)
   }
 };
 
-export const getSpecialistTicketsEvaluations = async (req: Request, res: Response) => {
+export const getSpecialistTicketEvaluations = async (req: Request, res: Response) => {
   try {
     const categoryId = (await UserManager.getUserById(req.user.userId)).category?._id.toString();
 
@@ -86,9 +87,19 @@ export const getSpecialistTicketsEvaluations = async (req: Request, res: Respons
 
 export const getTicketByID = async (req: Request, res: Response) => {
   try {
-    const ticket = await TicketManager.getTicketByID(req.params.id as string);
+    const ticket = await TicketManager.getTicketByID(req.params.id as string, basicTicketProjection);
 
     return res.status(200).json({ success: true, data: ticket });
+  } catch (err) {
+    handleAppError(res, err as IAppError);
+  }
+};
+
+export const getTicketEvaluations = async (req: Request, res: Response) => {
+  try {
+    const evaluations = await TicketManager.getTicketEvaluations(req.user, req.params.id as string);
+
+    return res.status(200).json({ success: true, dataLength: evaluations.length, data: evaluations });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -116,7 +127,7 @@ export const updateTicket = async (req: Request, res: Response) => {
 
 export const deleteTicket = async (req: Request, res: Response) => {
   try {
-    await TicketManager.deleteTicket(req.params.id as string);
+    await TicketManager.deleteTicket(req.params.id as string, req.user.userId);
 
     return res.status(200).json({ success: true, message: 'Ticket deleted successfully' });
   } catch (err) {

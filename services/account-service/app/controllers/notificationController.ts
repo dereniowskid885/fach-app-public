@@ -1,15 +1,13 @@
 import { NotificationManager } from '@managers/notificationManager';
 import { NotificationSSE } from '@sse/notification';
-import { FilterBuilder } from '@utils/filterBuilder';
 import type { Request, Response } from 'express';
 import { handleAppError, IAppError } from 'shared-backend';
 
-export const getNotifications = async (req: Request, res: Response) => {
+export const getUserNotifications = async (req: Request, res: Response) => {
   try {
-    const filter = FilterBuilder.getNotifications(req, req.user);
-    const { notifications, unreadCount } = await NotificationManager.getUserNotifications(filter);
+    const notifications = await NotificationManager.getUserNotifications(req.user.userId);
 
-    return res.status(200).json({ success: true, dataLength: notifications.length, data: notifications, unreadCount });
+    return res.status(200).json({ success: true, dataLength: notifications.length, data: notifications });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -40,23 +38,21 @@ export const streamNotifications = (req: Request, res: Response) => {
   }
 };
 
-export const markNotificationAsRead = async (req: Request, res: Response) => {
+export const deleteNotification = async (req: Request, res: Response) => {
   try {
-    const notification = await NotificationManager.markAsRead(req.params.id as string, req.user.userId);
+    await NotificationManager.deleteNotification(req.params.id as string, req.user.userId);
 
-    return res
-      .status(200)
-      .json({ success: true, message: 'Notification successfully marked as read', data: notification });
+    return res.status(200).json({ success: true, message: 'Notification deleted successfully' });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
 };
 
-export const markAllNotificationsAsRead = async (req: Request, res: Response) => {
+export const deleteAllNotifications = async (req: Request, res: Response) => {
   try {
-    await NotificationManager.markAllAsRead(req.user.userId);
+    await NotificationManager.deleteAllNotifications(req.user.userId);
 
-    return res.status(200).json({ success: true, message: 'All user notifications successfully marked as read' });
+    return res.status(200).json({ success: true, message: 'All user notifications deleted successfully' });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }

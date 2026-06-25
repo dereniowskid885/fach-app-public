@@ -1,32 +1,25 @@
-import {
-  ENotificationType,
-  EResponseStatus,
-  ETicketStatus,
-  EUserRole,
-  isAdmin,
-  isSpecialist,
-  isUser,
-} from 'shared-types';
-import Notification, { INotificationModel } from '@models/Notification';
+import { ENotificationType, EResponseStatus, ETicketStatus, EUserRole, isAdmin, isSpecialist } from 'shared-types';
+import Notification from '@models/Notification';
 import { AppError } from 'shared-backend';
 import { IUserModel } from '@models/User';
 import { ITicketModel } from '@models/Ticket';
 import { UserManager } from './userManager';
 import { TICKET_NON_ADMIN_STATUS_CHANGE_NOTIFICATION } from 'mappings/notification';
 import { NotificationSSE } from '@sse/notification';
-import { safeUserProjection } from '@constants/projections';
-import { FilterQuery } from 'mongoose';
+import { basicUserProjection } from '@projections/user';
+import { basicTicketProjection } from '@projections/ticket';
+import { basicCategoryProjection } from '@projections/category';
 
 export const NotificationManager = {
-  getUserNotifications: async (filter: FilterQuery<INotificationModel>) => {
-    const [notifications, unreadCount] = await Promise.all([
-      Notification.find(filter)
-        .sort({ createdAt: -1 })
-        .populate([{ path: 'actor', select: safeUserProjection }, { path: 'ticket' }]),
-      Notification.countDocuments({ recipient: filter.recipient, isRead: false }),
-    ]);
+  getUserNotifications: async (userId: string) => {
+    const notifications = await Notification.find({ recipient: userId })
+      .sort({ createdAt: -1 })
+      .populate([
+        { path: 'actor', select: basicUserProjection },
+        { path: 'ticket', select: basicTicketProjection },
+      ]);
 
-    return { notifications, unreadCount };
+    return notifications;
   },
   createNotification: async (
     notificationData: {
@@ -46,36 +39,46 @@ export const NotificationManager = {
     });
 
     await notification.save();
-    await notification.populate([{ path: 'actor', select: safeUserProjection }, { path: 'ticket' }]);
+    await notification.populate([
+      { path: 'actor', select: basicUserProjection },
+      {
+        path: 'ticket',
+        select: basicTicketProjection,
+        populate: [
+          { path: 'category', select: basicCategoryProjection },
+          { path: 'assignee', select: basicUserProjection },
+          { path: 'createdBy', select: basicUserProjection },
+          { path: 'updatedBy', select: basicUserProjection },
+        ],
+      },
+    ]);
 
     NotificationSSE.send(recipient._id.toString(), notification);
 
     return notification;
   },
-  markAsRead: async (notificationId: string, userId: string) => {
-    const notification = await Notification.findOneAndUpdate(
-      { _id: notificationId, recipient: userId },
-      { isRead: true },
-      { new: true },
-    ).populate([{ path: 'actor', select: safeUserProjection }, { path: 'ticket' }]);
+  deleteNotification: async (notificationId: string, userId: string) => {
+    const notification = await Notification.findOne({ _id: notificationId, recipient: userId });
 
     if (!notification) {
-      throw new AppError(404, EResponseStatus.ERROR_NOTIFICATION_NOT_FOUND, 'Notification with provided ID not found');
+      throw new AppError(
+        404,
+        EResponseStatus.ERROR_NOTIFICATION_NOT_FOUND,
+        'Notification with provided ID not found or it is not related to current user',
+      );
     }
 
-    return notification;
+    await notification.deleteOne();
   },
-  markAllAsRead: async (userId: string) => {
-    await Notification.updateMany({ recipient: userId, isRead: false }, { isRead: true }).populate([
-      { path: 'actor', select: safeUserProjection },
-      { path: 'ticket' },
-    ]);
+  deleteAllNotifications: async (userId: string) => {
+    await Notification.deleteMany({ recipient: userId });
   },
   handleSingleNotificationByType: async (
     type: ENotificationType,
     ticketId: string,
     recipient: IUserModel,
     actorId: string,
+    message?: string,
   ) => {
     const actor = await UserManager.getUserById(actorId);
 
@@ -84,6 +87,7 @@ export const NotificationManager = {
         actor,
         type,
         ticketId,
+        message,
       },
       recipient,
     );
@@ -138,6 +142,7 @@ export const NotificationManager = {
     }>,
     ticket: ITicketModel,
     actorId: string,
+    message?: string,
     acceptedEvaluationSpecialist?: IUserModel,
   ) => {
     const actor = await UserManager.getUserById(actorId);
@@ -185,6 +190,7 @@ export const NotificationManager = {
                 actor,
                 type,
                 ticketId: ticket._id.toString(),
+                message,
               },
               recipient,
             ),
@@ -196,24 +202,9 @@ export const NotificationManager = {
     const isTicketStatusUpdate = status !== undefined;
 
     if (isTicketStatusUpdate) {
-      const notificationData = TICKET_NON_ADMIN_STATUS_CHANGE_NOTIFICATION[status];
-      const isNonAdminStatusChange = !isAdmin(actor.role) && notificationData !== null;
+      const isAdminStatusChange = isAdmin(actor.role);
 
-      if (isNonAdminStatusChange) {
-        const isSpecialistActor = isSpecialist(notificationData.actorRole);
-        const isSpecialistRecipient = isSpecialist(notificationData.recipientRole);
-
-        if (!specialist && (isSpecialistActor || isSpecialistRecipient)) return;
-
-        NotificationManager.createNotification(
-          {
-            type: notificationData.notificationType,
-            actor: isSpecialistActor ? specialist : ticketCreator,
-            ticketId: ticket._id.toString(),
-          },
-          isSpecialistRecipient ? specialist : ticketCreator,
-        );
-      } else {
+      if (isAdminStatusChange) {
         const recipients = [ticketCreator];
 
         if (specialist) recipients.push(specialist);
@@ -229,6 +220,24 @@ export const NotificationManager = {
               recipient,
             ),
           ),
+        );
+      } else {
+        const notificationData = TICKET_NON_ADMIN_STATUS_CHANGE_NOTIFICATION[status];
+
+        if (!notificationData) return;
+
+        const isSpecialistActor = isSpecialist(notificationData.actorRole);
+        const isSpecialistRecipient = isSpecialist(notificationData.recipientRole);
+
+        if (!specialist && (isSpecialistActor || isSpecialistRecipient)) return;
+
+        NotificationManager.createNotification(
+          {
+            type: notificationData.notificationType,
+            actor: isSpecialistActor ? specialist : ticketCreator,
+            ticketId: ticket._id.toString(),
+          },
+          isSpecialistRecipient ? specialist : ticketCreator,
         );
       }
     }

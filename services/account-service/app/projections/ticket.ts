@@ -1,0 +1,17 @@
+export const basicTicketProjection = {
+  _id: 1,
+  city: 1,
+  category: 1,
+  assignee: 1,
+  createdBy: 1,
+  updatedBy: 1,
+  status: 1,
+  createdAt: 1,
+  updatedAt: 1,
+  title: 1,
+  description: 1,
+  acceptedEvaluation: 1,
+  evaluationsCount: 1,
+  commentsCount: 1,
+  specialistCommentsCount: 1,
+};
