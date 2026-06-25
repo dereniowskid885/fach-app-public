@@ -271,8 +271,7 @@
   },
   "ticketSpecialistActionButtons": {
     "reply": "Reply",
-    "editEvaluation": "Edit evaluation",
-    "evaluate": "Evaluate",
+    "evaluate": "Evaluation",
     "sendForReview": "Send for review"
   },
   "ticketUserActionButtons": {
@@ -433,26 +432,39 @@
       "admin_ticket_assignee_updated": "Ticket assignee changed",
       "admin_ticket_city_updated": "Ticket city changed",
       "admin_ticket_status_updated": "Ticket status changed",
-      "admin_ticket_category_updated": "Ticket category changed"
+      "admin_ticket_category_updated": "Ticket category changed",
+      "admin_ticket_deleted": "Ticket deleted"
     },
     "description": {
       "specialist_evaluation_added": "{actor} has added an evaluation to ticket: \"{ticketTitle}\".",
       "specialist_evaluation_edited": "{actor} has updated their evaluation for ticket: \"{ticketTitle}\".",
       "user_evaluation_accepted": "{actor} has accepted your evaluation for ticket: \"{ticketTitle}\".",
       "user_ticket_payment_done": "{actor} has completed payment for ticket: \"{ticketTitle}\".",
-      "comment_added": "<span>{actorRole}</span> has added a comment to ticket: \"{ticketTitle}\": \"{message}\".",
+      "comment_added": "<span>{actorRole}</span> has added a comment to ticket: \"{ticketTitle}\": <i>\"{message}\".</i>",
       "specialist_send_for_review": "<span>{actorRole}</span> has requested your review of the solution for ticket: \"{ticketTitle}\".",
       "user_solution_accepted": "{actor} has accepted your solution for ticket: \"{ticketTitle}\".",
       "user_solution_rejected": "{actor} has rejected your solution. Please wait for a moderator's investigation.",
-      "admin_ticket_details_updated": "<span>{actorRole}</span> has updated your ticket: \"{ticketTitle}\".",
+      "admin_ticket_details_updated": "<span>{actorRole}</span> has updated your ticket: \"{message}\".",
       "admin_ticket_assignee_updated": "<span>{actorRole}</span> has changed the assignee of ticket: \"{ticketTitle}\".",
       "admin_ticket_city_updated": "<span>{actorRole}</span> has updated the city for ticket: \"{ticketTitle}\".",
       "admin_ticket_status_updated": "<span>{actorRole}</span> has changed the status of ticket: \"{ticketTitle}\".",
-      "admin_ticket_category_updated": "<span>{actorRole}</span> has changed the category of ticket: \"{ticketTitle}\"."
+      "admin_ticket_category_updated": "<span>{actorRole}</span> has changed the category of ticket: \"{ticketTitle}\".",
+      "admin_ticket_deleted": "<span>{actorRole}</span> has deleted your ticket: \"{message}\"."
     },
     "additionalInfo": {
-      "user_evaluation_accepted": "Ticket has been moved to <a>My Tickets</a>.",
-      "user_solution_accepted": "Ticket has been moved to <a>Completed Tickets</a>."
+      "specialist_evaluation_added": "<u>View ticket</u>",
+      "specialist_evaluation_edited": "<u>View ticket</u>",
+      "user_evaluation_accepted": "Ticket has been moved to <a>My Tickets</a>. <u>View ticket</u>",
+      "user_ticket_payment_done": "<u>View ticket</u>",
+      "comment_added": "<u>View ticket</u>",
+      "specialist_send_for_review": "<u>View ticket</u>",
+      "user_solution_accepted": "Ticket has been moved to <a>Completed Tickets</a>. <u>View ticket</u>",
+      "user_solution_rejected": "<u>View ticket</u>",
+      "admin_ticket_details_updated": "<u>View ticket</u>",
+      "admin_ticket_assignee_updated": "<u>View ticket</u>",
+      "admin_ticket_city_updated": "<u>View ticket</u>",
+      "admin_ticket_status_updated": "<u>View ticket</u>",
+      "admin_ticket_category_updated": "<u>View ticket</u>"
     }
   }
 }

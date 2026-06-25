@@ -41,6 +41,7 @@ export default function TicketSpecialistEvaluationDialog({
   const {
     data: getEvaluationsQuery,
     isLoading: isLoadingEvaluations,
+    isSuccess: getEvaluationsSuccess,
     error: getEvaluationsError
   } = useGetTicketsByIdEvaluationsQuery(
     { id: ticket._id! },
@@ -129,7 +130,7 @@ export default function TicketSpecialistEvaluationDialog({
   }, [minutes, priceInCents]);
 
   const currentEvaluation =
-    mode === EActionType.EDIT ? (
+    mode === EActionType.EDIT && getEvaluationsSuccess ? (
       <ContentSection
         title={t('evaluationDialog.currentEvaluationTitle')}
         Icon={ChartColumn}

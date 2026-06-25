@@ -4,7 +4,6 @@ import { Button } from '@/components/shadcn/button';
 import Typography from '@/components/ui/Typography';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { useGetTicketsMyQuery } from '@/services/api/generated/accountApi';
 import { Spinner } from '@/components/shadcn/spinner';
 
 export interface IStripePaymentForm {
@@ -19,8 +18,6 @@ export const StripePaymentForm = ({ closePaymentDialog }: IStripePaymentForm) =>
 
   const stripe = useStripe();
   const elements = useElements();
-
-  const { refetch } = useGetTicketsMyQuery({});
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -51,7 +48,6 @@ export const StripePaymentForm = ({ closePaymentDialog }: IStripePaymentForm) =>
 
     setTimeout(() => {
       closePaymentDialog();
-      refetch();
       toast.success(t('ticketPaymentDialog.toastTitle'));
     }, 500);
   };

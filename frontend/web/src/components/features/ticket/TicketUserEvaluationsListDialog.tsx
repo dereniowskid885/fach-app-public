@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import DialogComponent from '@/components/ui/DialogComponent';
 import { DataTable } from '@/components/ui/DataTable';
-import {
-  PatchTicketsByIdAcceptEvaluationApiArg,
-  usePatchTicketsByIdAcceptEvaluationMutation
-} from '@/services/api/generated/accountApi';
+import { PatchTicketsByIdAcceptEvaluationApiArg } from '@/services/api/generated/accountApi';
 import { RowSelectionState } from '@tanstack/react-table';
 import { toast } from 'sonner';
 import { useLocale, useTranslations } from 'next-intl';
@@ -42,7 +39,7 @@ export default function TicketUserEvaluationsListDialog({
   const ticketEvaluations = getEvaluations?.data ?? [];
 
   const [triggerEvaluationAccept, { isLoading, error: errorEvaluationAccept }] =
-    usePatchTicketsByIdAcceptEvaluationMutation();
+    enhancedAccountApi.endpoints.patchTicketsByIdAcceptEvaluation.useMutation();
 
   useErrorHandler(errorGetEvaluations || errorEvaluationAccept, {
     setInlineError: message => setErrorMessage(message)
