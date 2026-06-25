@@ -18,6 +18,7 @@ export default function NotificationIcon({ type }: INotificationIcon) {
     case ENotificationType.ADMIN_TICKET_DETAILS_UPDATED:
     case ENotificationType.ADMIN_TICKET_STATUS_UPDATED:
     case ENotificationType.ADMIN_TICKET_CATEGORY_UPDATED:
+    case ENotificationType.ADMIN_TICKET_DELETED:
       return (
         <MdOutlineAdminPanelSettings size={24} className={roleObj[EUserRole.ADMIN].textClass} />
       );

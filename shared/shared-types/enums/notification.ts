@@ -12,4 +12,5 @@ export enum ENotificationType {
   ADMIN_TICKET_CATEGORY_UPDATED = "admin_ticket_category_updated",
   ADMIN_TICKET_STATUS_UPDATED = "admin_ticket_status_updated",
   ADMIN_TICKET_DETAILS_UPDATED = "admin_ticket_details_updated",
+  ADMIN_TICKET_DELETED = "admin_ticket_deleted",
 }

@@ -169,6 +169,9 @@
  *           type: array
  *           items:
  *             $ref: '#/components/schemas/Evaluation'
+ *         evaluationsCount:
+ *           type: number
+ *           example: 0
  *         acceptedEvaluation:
  *           $ref: '#/components/schemas/Evaluation'
  *         commentsCount:
@@ -246,9 +249,6 @@
  *           $ref: '#/components/schemas/User'
  *         ticket:
  *           $ref: '#/components/schemas/Ticket'
- *         isRead:
- *           type: boolean
- *           example: false
  *         type:
  *           $ref: '#/components/schemas/NotificationType'
  *         message:

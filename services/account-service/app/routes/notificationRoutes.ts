@@ -1,8 +1,8 @@
 import {
-  getNotifications,
+  getUserNotifications,
   streamNotifications,
-  markNotificationAsRead,
-  markAllNotificationsAsRead,
+  deleteAllNotifications,
+  deleteNotification,
 } from '@controllers/notificationController';
 
 import express from 'express';
@@ -22,13 +22,6 @@ router.use(accessTokenMiddleware);
  *     description: Fetches all notifications for the authenticated user
  *     tags:
  *       - Notifications
- *     parameters:
- *       - in: query
- *         name: onlyUnread
- *         schema:
- *           type: boolean
- *         description: Determines if only unread notifications should be fetched (isRead = false)
- *         example: true
  *     responses:
  *       200:
  *         description: Successfully retrieved all notifications
@@ -47,9 +40,6 @@ router.use(accessTokenMiddleware);
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/Notification'
- *                 unreadCount:
- *                   type: number
- *                   example: 5
  *       401:
  *         description: Unauthorized
  *         content:
@@ -83,7 +73,7 @@ router.use(accessTokenMiddleware);
  *                   type: string
  *                   example: Server error
  */
-router.get('/', getNotifications);
+router.get('/', getUserNotifications);
 
 /**
  * @swagger
@@ -122,10 +112,67 @@ router.get('/stream', streamNotifications);
 
 /**
  * @swagger
- * /notifications/{id}/read:
- *   patch:
- *     summary: Mark notification as read
- *     description: Marks a specific notification as read for the authenticated user
+ * /notifications/delete-all:
+ *   delete:
+ *     summary: Delete all notifications
+ *     description: Delete all notifications for the authenticated user
+ *     tags:
+ *       - Notifications
+ *     responses:
+ *       200:
+ *         description: All notifications deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: All notifications deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: Missing user data
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.delete('/delete-all', deleteAllNotifications);
+
+/**
+ * @swagger
+ * /notifications/{id}:
+ *   delete:
+ *     summary: Delete notification by ID
+ *     description: Delete specific notification for the authenticated user
  *     tags:
  *       - Notifications
  *     parameters:
@@ -137,7 +184,7 @@ router.get('/stream', streamNotifications);
  *           type: string
  *     responses:
  *       200:
- *         description: Notification marked as read successfully
+ *         description: Notification deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -148,42 +195,7 @@ router.get('/stream', streamNotifications);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Notification marked as read
- *                 data:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                       example: "66df7gh8sasd6f66767rt6"
- *                     user:
- *                       type: string
- *                       example: "66df7gh8sasd6f66767rt6"
- *                     userRole:
- *                       type: string
- *                       example: "USER"
- *                     type:
- *                       type: string
- *                       example: "TICKET_ASSIGNED"
- *                     ticket:
- *                       type: string
- *                       example: "66df7gh8sasd6f66767rt6"
- *                     ticketTitle:
- *                       type: string
- *                       example: "Issue with account"
- *                     message:
- *                       type: string
- *                       example: "Your ticket has been assigned to a specialist"
- *                     isRead:
- *                       type: boolean
- *                       example: true
- *                     createdAt:
- *                       type: string
- *                       format: date-time
- *                       example: "2024-06-10T12:00:00Z"
- *                     updatedAt:
- *                       type: string
- *                       format: date-time
- *                       example: "2024-06-10T12:05:00Z"
+ *                   example: Notification deleted successfully
  *       401:
  *         description: Unauthorized
  *         content:
@@ -200,6 +212,22 @@ router.get('/stream', streamNotifications);
  *                 message:
  *                   type: string
  *                   example: Missing user data
+ *       404:
+ *         description: Notification with provided ID not found or it is not related to current user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_NOTIFICATION_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: Notification with provided ID not found or it is not related to current user
  *       500:
  *         description: Server error
  *         content:
@@ -217,63 +245,6 @@ router.get('/stream', streamNotifications);
  *                   type: string
  *                   example: Server error
  */
-router.patch('/:id/read', markNotificationAsRead);
-
-/**
- * @swagger
- * /notifications/read-all:
- *   patch:
- *     summary: Mark all notifications as read
- *     description: Marks all notifications as read for the authenticated user
- *     tags:
- *       - Notifications
- *     responses:
- *       200:
- *         description: All notifications marked as read successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: All user notifications successfully marked as read
- *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "ERROR_USER_NOT_FOUND"
- *                 message:
- *                   type: string
- *                   example: Missing user data
- *       500:
- *         description: Server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 status:
- *                   type: string
- *                   example: "SERVER_ERROR"
- *                 message:
- *                   type: string
- *                   example: Server error
- */
-router.patch('/read-all', markAllNotificationsAsRead);
+router.delete('/:id', deleteNotification);
 
 export default router;

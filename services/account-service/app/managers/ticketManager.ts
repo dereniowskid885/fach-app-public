@@ -3,9 +3,9 @@ import Comment from '@models/Comment';
 import { JwtPayload } from 'jsonwebtoken';
 import { CategoryManager } from './categoryManager';
 import { UserManager } from './userManager';
-import { FilterQuery, ObjectId } from 'mongoose';
+import { FilterQuery } from 'mongoose';
 import { IEvaluationSchema } from '@schemas/evaluationSchema';
-import { safeUserProjection } from '@constants/projections';
+import { basicUserProjection } from '@projections/user';
 import { AppError } from 'shared-backend';
 import {
   EResponseStatus,
@@ -20,29 +20,27 @@ import { canDeleteTicketComment, canViewTicketComments, resolveAssigneeOnStatusC
 import { NotificationManager } from './notificationManager';
 import { IUserModel } from '@models/User';
 import { IPaymentModel } from '@models/Payment';
+import { basicCategoryProjection } from '@projections/category';
+import { basicTicketProjection } from '@projections/ticket';
 
 export const TicketManager = {
-  getTicketByID: async (ticketId: string) => {
-    const ticket = await Ticket.findOne({ _id: ticketId }).populate([
-      { path: 'category' },
-      { path: 'assignee', select: safeUserProjection },
-      { path: 'createdBy', select: safeUserProjection },
-      { path: 'updatedBy', select: safeUserProjection },
-      {
-        path: 'acceptedEvaluation',
-        populate: {
-          path: 'user',
-          select: safeUserProjection,
+  getTicketByID: async (ticketId: string, projection?: Partial<Record<keyof ITicketModel, number>>) => {
+    const ticket = await Ticket.findOne({ _id: ticketId })
+      .select(projection ?? {})
+      .populate([
+        { path: 'category', select: basicCategoryProjection },
+        { path: 'assignee', select: basicUserProjection },
+        { path: 'createdBy', select: basicUserProjection },
+        { path: 'updatedBy', select: basicUserProjection },
+        { path: 'payment' },
+        {
+          path: 'acceptedEvaluation',
+          populate: {
+            path: 'user',
+            select: basicUserProjection,
+          },
         },
-      },
-      {
-        path: 'evaluations',
-        populate: {
-          path: 'user',
-          select: safeUserProjection,
-        },
-      },
-    ]);
+      ]);
 
     if (!ticket) {
       throw new AppError(404, EResponseStatus.ERROR_TICKET_NOT_FOUND, 'Ticket with provided id not found');
@@ -52,25 +50,13 @@ export const TicketManager = {
   },
   getTickets: async (filter: FilterQuery<ITicketModel>) => {
     const tickets = await Ticket.find(filter)
+      .select(basicTicketProjection)
       .populate([
-        { path: 'category' },
-        { path: 'assignee', select: safeUserProjection },
-        { path: 'createdBy', select: safeUserProjection },
-        { path: 'updatedBy', select: safeUserProjection },
-        {
-          path: 'acceptedEvaluation',
-          populate: {
-            path: 'user',
-            select: safeUserProjection,
-          },
-        },
-        {
-          path: 'evaluations',
-          populate: {
-            path: 'user',
-            select: safeUserProjection,
-          },
-        },
+        { path: 'category', select: basicCategoryProjection },
+        { path: 'assignee', select: basicUserProjection },
+        { path: 'createdBy', select: basicUserProjection },
+        { path: 'updatedBy', select: basicUserProjection },
+        { path: 'payment' },
       ])
       .sort({ updatedAt: -1 });
 
@@ -102,10 +88,33 @@ export const TicketManager = {
 
     return ticket;
   },
-  deleteTicket: async (ticketId: string) => {
-    const ticket = await TicketManager.getTicketByID(ticketId);
+  deleteTicket: async (ticketId: string, userId: string) => {
+    const ticket = await TicketManager.getTicketByID(ticketId, { _id: 1, title: 1, acceptedEvaluation: 1 });
+    const ticketTitle = ticket.title;
 
     await ticket.deleteOne();
+
+    const ticketOwner = ticket.createdBy as IUserModel;
+    const recipients = [ticketOwner];
+
+    if (ticket.acceptedEvaluation) {
+      const specialist = ticket.acceptedEvaluation.user as IUserModel;
+
+      recipients.push(specialist);
+    }
+
+    const actorId = userId; // admin
+    await Promise.all(
+      recipients.map((recipient) => {
+        NotificationManager.handleSingleNotificationByType(
+          ENotificationType.ADMIN_TICKET_DELETED,
+          ticketId,
+          recipient,
+          actorId,
+          ticketTitle,
+        );
+      }),
+    );
   },
   ticketEvaluationHandler: async (
     ticketId: string,
@@ -117,7 +126,7 @@ export const TicketManager = {
       throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
     }
 
-    const ticket = await TicketManager.getTicketByID(ticketId);
+    const ticket = await TicketManager.getTicketByID(ticketId, { ...basicTicketProjection, evaluations: 1 });
 
     const isTicketAlreadyEvaluatedByCurrentUser = ticket.evaluations.some(
       (evaluation) => evaluation.user?.id === user?.userId,
@@ -163,14 +172,14 @@ export const TicketManager = {
       actorId,
     );
 
-    return ticket.populate({ path: 'updatedBy', select: 'email' });
+    return ticket;
   },
   ticketEvaluationAcceptHandler: async (ticketId: string, evaluationId: string, user: JwtPayload) => {
     if (!user) {
       throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
     }
 
-    const ticket = await TicketManager.getTicketByID(ticketId);
+    const ticket = await TicketManager.getTicketByID(ticketId, { ...basicTicketProjection, evaluations: 1 });
 
     if (ticket.status !== ETicketStatus.AWAITING_EVALUATION) {
       throw new AppError(
@@ -212,7 +221,7 @@ export const TicketManager = {
       actorId,
     );
 
-    return ticket.populate({ path: 'updatedBy', select: 'email' });
+    return ticket;
   },
   updateTicket: async (
     ticketId: string,
@@ -230,7 +239,8 @@ export const TicketManager = {
       throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
     }
 
-    const ticket = await TicketManager.getTicketByID(ticketId);
+    const ticket = await TicketManager.getTicketByID(ticketId, basicTicketProjection);
+    const ticketTitle = ticket.title;
     const specialist = ticket.acceptedEvaluation?.user as IUserModel;
 
     // TODO: modify while doing superadmin role ticket
@@ -287,6 +297,7 @@ export const TicketManager = {
       const category = await CategoryManager.getCategoryById(categoryId);
 
       ticket.evaluations = [];
+      ticket.evaluationsCount = 0;
       ticket.category = category._id;
     }
 
@@ -338,9 +349,9 @@ export const TicketManager = {
     ticket.updatedBy = user.userId;
     await ticket.save();
 
-    await NotificationManager.handleTicketUpdate(updateData, ticket, user.userId, specialist);
+    await NotificationManager.handleTicketUpdate(updateData, ticket, user.userId, ticketTitle, specialist);
 
-    return ticket.populate({ path: 'updatedBy', select: 'email' });
+    return ticket;
   },
   ticketEvaluationEditHandler: async (
     ticketId: string,
@@ -353,7 +364,7 @@ export const TicketManager = {
       throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
     }
 
-    const ticket = await TicketManager.getTicketByID(ticketId);
+    const ticket = await TicketManager.getTicketByID(ticketId, { ...basicTicketProjection, evaluations: 1 });
 
     if (ticket.status !== ETicketStatus.AWAITING_EVALUATION) {
       throw new AppError(
@@ -397,7 +408,6 @@ export const TicketManager = {
     ticket.updatedBy = user.userId;
     await ticket.save();
 
-    // TODO: powiadomienie gdy specjalista edytuje ewaluacje + ticket table action buttons fix
     const recipient = ticket.createdBy as IUserModel; // user
     const actorId = user.userId; // specialist
     await NotificationManager.handleSingleNotificationByType(
@@ -466,7 +476,7 @@ export const TicketManager = {
       throw new AppError(401, EResponseStatus.ERROR_USER_NOT_FOUND, 'Missing user data');
     }
 
-    const ticket = await TicketManager.getTicketByID(ticketId);
+    const ticket = await TicketManager.getTicketByID(ticketId, basicTicketProjection);
 
     const hasAccessToComments = canViewTicketComments(user, ticket);
 
@@ -510,7 +520,7 @@ export const TicketManager = {
     await comment.deleteOne();
   },
   getTicketComments: async (user: JwtPayload, ticketId: string) => {
-    const ticket = await TicketManager.getTicketByID(ticketId);
+    const ticket = await TicketManager.getTicketByID(ticketId, basicTicketProjection);
 
     const hasAccessToComments = canViewTicketComments(user, ticket);
 
@@ -520,8 +530,37 @@ export const TicketManager = {
 
     const comments = await Comment.find({ ticket: ticket._id })
       .sort({ createdAt: 1 })
-      .populate([{ path: 'user', select: safeUserProjection }, { path: 'ticket' }]);
+      .populate([{ path: 'user', select: basicUserProjection }]);
 
     return comments;
+  },
+  getTicketEvaluations: async (user: JwtPayload, ticketId: string) => {
+    const ticket = await TicketManager.getTicketByID(ticketId, { ...basicTicketProjection, evaluations: 1 });
+
+    await ticket.populate({
+      path: 'evaluations',
+      populate: {
+        path: 'user',
+        select: basicUserProjection,
+      },
+    });
+
+    if (isSpecialist(user.role)) {
+      const currentUserEvaluation = ticket.evaluations.find((evaluation) => evaluation.user?.id === user?.userId);
+
+      return [currentUserEvaluation];
+    }
+
+    const isOwner = user.userId === ticket.createdBy.id.toString();
+
+    if (!isAdmin(user.role) && !isOwner) {
+      throw new AppError(
+        403,
+        EResponseStatus.ERROR_USER_INVALID_ROLE,
+        'Missing permissions to view ticket evaluations',
+      );
+    }
+
+    return ticket.evaluations;
   },
 };

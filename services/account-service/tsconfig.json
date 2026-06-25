@@ -22,7 +22,8 @@
       "@interfaces/*": ["./interfaces/*"],
       "@middlewares/*": ["./middlewares/*"],
       "@schemas/*": ["./schemas/*"],
-      "@sse/*": ["./realtime/sse/*"]
+      "@sse/*": ["./realtime/sse/*"],
+      "@projections/*": ["./projections/*"]
     },
     "typeRoots": ["./node_modules/@types"]
   },

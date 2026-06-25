@@ -5,13 +5,11 @@ import { RootState } from '../store';
 
 interface INotificationState {
   notifications: Notification[];
-  unreadCount: number;
   isDotIconShown: boolean;
 }
 
 const initialState: INotificationState = {
   notifications: [],
-  unreadCount: 0,
   isDotIconShown: false
 };
 
@@ -22,27 +20,23 @@ const notificationSlice = createSlice({
     setNotifications: (state, action: PayloadAction<GetNotificationsApiResponse | null>) => {
       if (!action.payload) return;
 
-      const { data = [], unreadCount = 0 } = action.payload;
+      const { data = [] } = action.payload;
 
       state.notifications = data;
-      state.unreadCount = unreadCount;
-      state.isDotIconShown = unreadCount > 0;
+      state.isDotIconShown = data.length > 0;
     },
     addNotification: (state, action: PayloadAction<Notification | null>) => {
       if (!action.payload) return;
 
       state.notifications.unshift(action.payload);
-      state.unreadCount += 1;
       state.isDotIconShown = true;
     },
     deleteNotification: (state, action: PayloadAction<string>) => {
       state.notifications = state.notifications.filter(n => n._id !== action.payload);
-      state.unreadCount = Math.max(state.unreadCount - 1, 0);
-      state.isDotIconShown = state.unreadCount > 0;
+      state.isDotIconShown = state.notifications.length > 0;
     },
     deleteAllNotifications: state => {
       state.notifications = [];
-      state.unreadCount = 0;
       state.isDotIconShown = false;
     },
     hideDotIcon: state => {
