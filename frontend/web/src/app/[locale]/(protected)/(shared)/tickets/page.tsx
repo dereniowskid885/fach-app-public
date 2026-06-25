@@ -40,7 +40,6 @@ export default function MyTickets() {
     data: ticketsData,
     error: getTicketsError,
     isLoading,
-    isFetching,
     refetch
   } = useGetTicketsMyQuery(
     {
@@ -52,7 +51,6 @@ export default function MyTickets() {
       refetchOnMountOrArgChange: true
     }
   );
-  const isLoadingTickets = isLoading || isFetching;
 
   useErrorHandler(getTicketsError);
 
@@ -62,7 +60,7 @@ export default function MyTickets() {
   return (
     <TicketsTablePageContent
       pageName="myTicketsPage"
-      isLoadingTickets={isLoadingTickets}
+      isLoadingTickets={isLoading}
       ticketsData={ticketsData?.data}
       tableColumns={tableColumnsData}
       refetchTickets={refetch}

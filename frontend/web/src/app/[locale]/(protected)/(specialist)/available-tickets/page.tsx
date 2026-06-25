@@ -12,7 +12,7 @@ import TicketFilterPanel from '@/app/[locale]/(protected)/_components/TicketFilt
 import TicketsTablePageContent from '@/app/[locale]/(protected)/_components/TicketsTablePageContent';
 
 export default function AvailableTickets() {
-  const { userId, city, role, isInitialized: isUserStateInitialized } = useSelector(selectUserData);
+  const { city, role, isInitialized: isUserStateInitialized } = useSelector(selectUserData);
 
   const t = useTranslations();
   const currentLocale = useLocale();
@@ -34,7 +34,6 @@ export default function AvailableTickets() {
     data: ticketsData,
     error: getTicketsError,
     isLoading,
-    isFetching,
     refetch
   } = useGetTicketsSpecialistAvailableQuery(
     {
@@ -45,16 +44,15 @@ export default function AvailableTickets() {
       refetchOnMountOrArgChange: true
     }
   );
-  const isLoadingTickets = isLoading || isFetching;
 
   useErrorHandler(getTicketsError);
 
-  const tableColumnsData = getAvailableTicketsColumns(t, currentLocale, userId);
+  const tableColumnsData = getAvailableTicketsColumns(t, currentLocale);
 
   return (
     <TicketsTablePageContent
       pageName="availableTicketsPage"
-      isLoadingTickets={isLoadingTickets}
+      isLoadingTickets={isLoading}
       ticketsData={ticketsData?.data}
       tableColumns={tableColumnsData}
       refetchTickets={refetch}
