@@ -1,17 +1,17 @@
 'use client';
 
 import { useGetAuthMeQuery } from '@/services/api/generated/accountApi';
-import { useAppDispatch } from '@/redux/hooks';
 import { clearUserData, setUserData, setUserLoading } from '@/redux/slices/userSlice';
 import { ReactNode, useEffect } from 'react';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { useDispatch } from 'react-redux';
 
 export interface IAuthWrapper {
   children: ReactNode;
 }
 
 export default function AuthWrapper({ children }: IAuthWrapper) {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   const {
     data: userData,

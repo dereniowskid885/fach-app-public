@@ -47,7 +47,10 @@
     "before": "Before",
     "after": "After",
     "refresh": "Refresh",
-    "showDetails": "Show details"
+    "showDetails": "Show details",
+    "next": "Next",
+    "previous": "Previous",
+    "loadMore": "Load more"
   },
   "userRole": {
     "admin": "Admin",
@@ -95,7 +98,8 @@
     "userNotAssignedToCategory": "User is not assigned to this category.",
     "missingAcceptedEvaluation": "No accepted evaluation found.",
     "paymentAlreadyProcessed": "Payment has already been processed.",
-    "paymentFailed": "Failed to process payment. Please try again."
+    "paymentFailed": "Failed to process payment. Please try again.",
+    "minimumCharacters": "Text must have at least {amount} characters."
   },
   "sidebar": {
     "mainMenu": "Main Menu"
@@ -262,6 +266,10 @@
     "createdAtHeader": "Creation date",
     "conversationHeader": "Conversation",
     "cityHeader": "City"
+  },
+  "ticketTablePageContent": {
+    "showFiltersButton": "Show filters",
+    "hideFiltersButton": "Hide filters"
   },
   "ticket": {
     "searchPlaceholder": "Search tickets...",
@@ -466,5 +474,9 @@
       "admin_ticket_status_updated": "<u>View ticket</u>",
       "admin_ticket_category_updated": "<u>View ticket</u>"
     }
+  },
+  "infiniteScroll": {
+    "allLoaded": "All items loaded",
+    "empty": "No items found"
   }
 }

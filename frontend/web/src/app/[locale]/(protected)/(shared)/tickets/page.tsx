@@ -1,6 +1,5 @@
 'use client';
 
-import { useGetTicketsMyQuery } from '@/services/api/generated/accountApi';
 import { ETicketStatus, EUserRole, isRoleAllowed } from 'shared-types';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -13,6 +12,7 @@ import TicketFilterPanel from '@/app/[locale]/(protected)/_components/TicketFilt
 import { getMyTicketsStatusFilters } from '@/helpers/ticket';
 import TicketsTablePageContent from '@/app/[locale]/(protected)/_components/TicketsTablePageContent';
 import { notFound } from 'next/navigation';
+import { paginatedAccountApi } from '@/services/api/enhanced/paginatedAccountApi';
 
 export default function MyTickets() {
   const { role, isInitialized: isUserStateInitialized } = useSelector(selectUserData);
@@ -40,17 +40,22 @@ export default function MyTickets() {
     data: ticketsData,
     error: getTicketsError,
     isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
     refetch
-  } = useGetTicketsMyQuery(
+  } = paginatedAccountApi.endpoints.getTicketsMyInfinite.useInfiniteQuery(
     {
       categoryId: selectedCategoryId === EFilterButton.ALL ? undefined : selectedCategoryId,
       status: selectedStatus === EFilterButton.ALL ? undefined : selectedStatus,
-      city: selectedCity === EFilterButton.ALL ? undefined : selectedCity
+      city: selectedCity === EFilterButton.ALL ? undefined : selectedCity,
+      limit: 6
     },
     {
       refetchOnMountOrArgChange: true
     }
   );
+  const tickets = ticketsData?.pages.flatMap(page => page.data ?? []);
+  const hasNextPage = !!ticketsData?.pages[ticketsData.pages.length - 1].nextCursor;
 
   useErrorHandler(getTicketsError);
 
@@ -61,7 +66,7 @@ export default function MyTickets() {
     <TicketsTablePageContent
       pageName="myTicketsPage"
       isLoadingTickets={isLoading}
-      ticketsData={ticketsData?.data}
+      ticketsData={tickets}
       tableColumns={tableColumnsData}
       refetchTickets={refetch}
       filterPanelComponent={
@@ -76,6 +81,10 @@ export default function MyTickets() {
           setSelectedStatus={setSelectedStatus}
         />
       }
+      totalTicketsAmount={ticketsData?.pages[0].totalLength ?? 0}
+      isLoadingMore={isFetchingNextPage}
+      onLoadMore={fetchNextPage}
+      hasNextPage={hasNextPage}
     />
   );
 }

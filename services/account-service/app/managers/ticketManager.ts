@@ -3,7 +3,7 @@ import Comment from '@models/Comment';
 import { JwtPayload } from 'jsonwebtoken';
 import { CategoryManager } from './categoryManager';
 import { UserManager } from './userManager';
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, Types } from 'mongoose';
 import { IEvaluationSchema } from '@schemas/evaluationSchema';
 import { basicUserProjection } from '@projections/user';
 import { AppError } from 'shared-backend';
@@ -22,6 +22,7 @@ import { IUserModel } from '@models/User';
 import { IPaymentModel } from '@models/Payment';
 import { basicCategoryProjection } from '@projections/category';
 import { basicTicketProjection } from '@projections/ticket';
+import { IPaginationOptions } from '@utils/filterBuilder';
 
 export const TicketManager = {
   getTicketByID: async (ticketId: string, projection?: Partial<Record<keyof ITicketModel, number>>) => {
@@ -48,8 +49,16 @@ export const TicketManager = {
 
     return ticket;
   },
-  getTickets: async (filter: FilterQuery<ITicketModel>) => {
-    const tickets = await Ticket.find(filter)
+  getTickets: async (filter: FilterQuery<ITicketModel>, pagination?: IPaginationOptions) => {
+    const filterObj = filter;
+
+    const totalLength = await Ticket.countDocuments(filterObj);
+
+    if (pagination?.cursor) {
+      filterObj._id = { $lt: new Types.ObjectId(pagination.cursor) };
+    }
+
+    let query = Ticket.find(filterObj)
       .select(basicTicketProjection)
       .populate([
         { path: 'category', select: basicCategoryProjection },
@@ -60,7 +69,17 @@ export const TicketManager = {
       ])
       .sort({ updatedAt: -1 });
 
-    return tickets;
+    if (pagination?.limit) {
+      query.limit(pagination.limit + 1);
+    }
+
+    const tickets = await query;
+
+    const hasNextPage = tickets.length > (pagination?.limit || 0);
+    const data = hasNextPage ? tickets.slice(0, pagination?.limit || 0) : tickets;
+    const nextCursor = hasNextPage ? data[data.length - 1]._id.toString() : null;
+
+    return { data, nextCursor, hasNextPage, totalLength };
   },
   createTicket: async (
     ticketData: {
@@ -519,20 +538,28 @@ export const TicketManager = {
 
     await comment.deleteOne();
   },
-  getTicketComments: async (user: JwtPayload, ticketId: string) => {
+  getTicketComments: async (user: JwtPayload, ticketId: string, pagination: IPaginationOptions) => {
     const ticket = await TicketManager.getTicketByID(ticketId, basicTicketProjection);
 
     const hasAccessToComments = canViewTicketComments(user, ticket);
 
     if (!hasAccessToComments) {
-      return [];
+      return { data: [], totalLength: 0, nextCursor: null, hasNextPage: false };
     }
 
-    const comments = await Comment.find({ ticket: ticket._id })
-      .sort({ createdAt: 1 })
+    const query = { ticket: ticket._id, _id: { $lt: new Types.ObjectId(pagination.cursor) } };
+    const totalLength = await Comment.countDocuments({ ticket: ticket._id });
+
+    const comments = await Comment.find(query)
+      .sort({ createdAt: -1 })
+      .limit(pagination.limit + 1)
       .populate([{ path: 'user', select: basicUserProjection }]);
 
-    return comments;
+    const hasNextPage = comments.length > pagination.limit;
+    const data = hasNextPage ? comments.slice(0, pagination.limit) : comments;
+    const nextCursor = hasNextPage ? data[data.length - 1]._id.toString() : null;
+
+    return { data, totalLength, nextCursor, hasNextPage };
   },
   getTicketEvaluations: async (user: JwtPayload, ticketId: string) => {
     const ticket = await TicketManager.getTicketByID(ticketId, { ...basicTicketProjection, evaluations: 1 });

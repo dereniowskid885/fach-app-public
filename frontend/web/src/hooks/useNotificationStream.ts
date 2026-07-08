@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { addNotification } from '@/redux/slices/notificationSlice';
 import { API } from '@/constants/api';
 import { enhancedAccountApi } from '@/services/api/enhanced/enhancedAccountApi';
 import { accountApi } from '@/services/api/generated/accountApi';
@@ -10,6 +9,7 @@ import { getCurrentRouteName, normalizePathname } from '@/utils/pathname';
 import { useLocale } from 'next-intl';
 import { ENotificationType, ESupportedLanguages } from 'shared-types';
 import { NOTIFICATION_UPDATE_QUERY_ENDPOINTS_MAP } from '@/mappings/updateQueryEndpoints';
+import { paginatedAccountApi } from '@/services/api/enhanced/paginatedAccountApi';
 
 export const useNotificationStream = () => {
   const dispatch = useDispatch<any>();
@@ -26,12 +26,30 @@ export const useNotificationStream = () => {
 
     source.onmessage = event => {
       const notification = JSON.parse(event.data);
-      dispatch(addNotification(notification));
+
+      // update notifications list
+      dispatch(
+        paginatedAccountApi.util.updateQueryData(
+          'getNotificationsInfinite' as any,
+          { limit: 5 },
+          (draft: any) => {
+            draft.pages[0].data.unshift(notification);
+            draft.pages[0].dataLength += 1;
+          }
+        )
+      );
+
+      // update notifications count
+      dispatch(
+        accountApi.util.updateQueryData('getNotificationsCount' as any, undefined, (draft: any) => {
+          draft.count += 1;
+        })
+      );
 
       const isTicketDelete = notification.type === ENotificationType.ADMIN_TICKET_DELETED;
 
       if (isTicketDelete) {
-        dispatch(accountApi.util.invalidateTags(['Ticketing']));
+        dispatch(paginatedAccountApi.util.invalidateTags(['Ticketing']));
 
         return;
       }
@@ -56,7 +74,7 @@ export const useNotificationStream = () => {
 
       // triggers ticket list refresh, when for ex. ticket is moved to another page
       if (isAdminTicketUpdate || isEvaluationAccepted || isSolutionAcceptOrReject) {
-        dispatch(accountApi.util.invalidateTags(['Ticketing']));
+        dispatch(paginatedAccountApi.util.invalidateTags(['Ticketing']));
 
         return;
       }
@@ -69,13 +87,20 @@ export const useNotificationStream = () => {
       // update endpoint with specific ticket data
       const endpointToUpdate = NOTIFICATION_UPDATE_QUERY_ENDPOINTS_MAP[currentRoute];
       dispatch(
-        accountApi.util.updateQueryData(endpointToUpdate as any, {}, (draft: any) => {
-          const ticket = draft.data?.find((t: any) => t._id === notification.ticket._id);
+        paginatedAccountApi.util.updateQueryData(
+          endpointToUpdate as any,
+          { limit: 6 },
+          (draft: any) => {
+            for (const page of draft.pages) {
+              const ticket = page.data?.find((t: any) => t._id === notification.ticket._id);
 
-          if (!ticket) return;
+              if (!ticket) continue;
 
-          Object.assign(ticket, notification.ticket);
-        })
+              Object.assign(ticket, notification.ticket);
+              break;
+            }
+          }
+        )
       );
     };
 

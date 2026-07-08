@@ -28,10 +28,12 @@ export const createTicketComment = async (req: Request, res: Response) => {
 
 export const getAllTickets = async (req: Request, res: Response) => {
   try {
+    const pagination = FilterBuilder.getPagination(req);
     const filter = FilterBuilder.getTickets(req);
-    const tickets = await TicketManager.getTickets(filter);
 
-    return res.status(200).json({ success: true, dataLength: tickets.length, data: tickets });
+    const { data, totalLength, nextCursor, hasNextPage } = await TicketManager.getTickets(filter, pagination);
+
+    return res.status(200).json({ success: true, dataLength: data.length, totalLength, data, nextCursor, hasNextPage });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -39,10 +41,12 @@ export const getAllTickets = async (req: Request, res: Response) => {
 
 export const getMyTickets = async (req: Request, res: Response) => {
   try {
+    const pagination = FilterBuilder.getPagination(req);
     const filter = FilterBuilder.getMyTickets(req, req.user);
-    const tickets = await TicketManager.getTickets(filter);
 
-    return res.status(200).json({ success: true, dataLength: tickets.length, data: tickets });
+    const { data, totalLength, nextCursor, hasNextPage } = await TicketManager.getTickets(filter, pagination);
+
+    return res.status(200).json({ success: true, dataLength: data.length, totalLength, data, nextCursor, hasNextPage });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -50,10 +54,12 @@ export const getMyTickets = async (req: Request, res: Response) => {
 
 export const getCompletedTickets = async (req: Request, res: Response) => {
   try {
+    const pagination = FilterBuilder.getPagination(req);
     const filter = FilterBuilder.getCompletedTickets(req, req.user);
-    const tickets = await TicketManager.getTickets(filter);
 
-    return res.status(200).json({ success: true, dataLength: tickets.length, data: tickets });
+    const { data, totalLength, nextCursor, hasNextPage } = await TicketManager.getTickets(filter, pagination);
+
+    return res.status(200).json({ success: true, dataLength: data.length, totalLength, data, nextCursor, hasNextPage });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -63,10 +69,12 @@ export const getSpecialistAvailableTickets = async (req: Request, res: Response)
   try {
     const categoryId = (await UserManager.getUserById(req.user.userId)).category?._id.toString();
 
+    const pagination = FilterBuilder.getPagination(req);
     const filter = FilterBuilder.getSpecialistAvailableTickets(req, categoryId);
-    const tickets = await TicketManager.getTickets(filter);
 
-    return res.status(200).json({ success: true, dataLength: tickets.length, data: tickets });
+    const { data, totalLength, nextCursor, hasNextPage } = await TicketManager.getTickets(filter, pagination);
+
+    return res.status(200).json({ success: true, dataLength: data.length, totalLength, data, nextCursor, hasNextPage });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -76,10 +84,12 @@ export const getSpecialistTicketEvaluations = async (req: Request, res: Response
   try {
     const categoryId = (await UserManager.getUserById(req.user.userId)).category?._id.toString();
 
+    const pagination = FilterBuilder.getPagination(req);
     const filter = FilterBuilder.getSpecialistTicketsEvaluations(req, req.user.userId, categoryId);
-    const tickets = await TicketManager.getTickets(filter);
 
-    return res.status(200).json({ success: true, dataLength: tickets.length, data: tickets });
+    const { data, totalLength, nextCursor, hasNextPage } = await TicketManager.getTickets(filter, pagination);
+
+    return res.status(200).json({ success: true, dataLength: data.length, totalLength, data, nextCursor, hasNextPage });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
@@ -107,9 +117,14 @@ export const getTicketEvaluations = async (req: Request, res: Response) => {
 
 export const getTicketComments = async (req: Request, res: Response) => {
   try {
-    const comments = await TicketManager.getTicketComments(req.user, req.params.id as string);
+    const pagination = FilterBuilder.getPagination(req);
+    const { data, totalLength, nextCursor, hasNextPage } = await TicketManager.getTicketComments(
+      req.user,
+      req.params.id as string,
+      pagination,
+    );
 
-    return res.status(200).json({ success: true, dataLength: comments.length, data: comments });
+    return res.status(200).json({ success: true, dataLength: data.length, totalLength, data, nextCursor, hasNextPage });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }

@@ -9,17 +9,34 @@ import { NotificationSSE } from '@sse/notification';
 import { basicUserProjection } from '@projections/user';
 import { basicTicketProjection } from '@projections/ticket';
 import { basicCategoryProjection } from '@projections/category';
+import { IPaginationOptions } from '@utils/filterBuilder';
+import { Types } from 'mongoose';
 
 export const NotificationManager = {
-  getUserNotifications: async (userId: string) => {
-    const notifications = await Notification.find({ recipient: userId })
+  getUserNotifications: async (userId: string, pagination: IPaginationOptions) => {
+    const { limit, cursor } = pagination;
+
+    const query = cursor ? { recipient: userId, _id: { $lt: new Types.ObjectId(cursor) } } : { recipient: userId };
+
+    const notifications = await Notification.find(query)
       .sort({ createdAt: -1 })
+      .limit(limit + 1)
+      .lean()
       .populate([
         { path: 'actor', select: basicUserProjection },
         { path: 'ticket', select: basicTicketProjection },
       ]);
 
-    return notifications;
+    const hasNextPage = notifications.length > limit;
+    const data = hasNextPage ? notifications.slice(0, limit) : notifications;
+    const nextCursor = hasNextPage ? data[data.length - 1]._id.toString() : null;
+
+    return { data, nextCursor, hasNextPage };
+  },
+  getUserNotificationsCount: async (userId: string) => {
+    const count = await Notification.countDocuments({ recipient: userId });
+
+    return count;
   },
   createNotification: async (
     notificationData: {

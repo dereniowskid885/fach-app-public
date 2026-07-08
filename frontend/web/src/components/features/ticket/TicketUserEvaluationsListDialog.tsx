@@ -101,6 +101,7 @@ export default function TicketUserEvaluationsListDialog({
             setSelectedRow={setSelectedEvaluationRow}
             columns={tableColumnsData}
             className="bg-card"
+            showPagination={true}
           />
         )
       }

@@ -1,6 +1,5 @@
 'use client';
 
-import { useGetTicketsCompletedQuery } from '@/services/api/generated/accountApi';
 import TicketFilterPanel from '@/app/[locale]/(protected)/_components/TicketFilterPanel';
 import { EFilterButton } from '@/enums/ui';
 import { getMyTicketsColumns } from '@/helpers/dataTable';
@@ -13,6 +12,7 @@ import { notFound } from 'next/navigation';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import TicketsTablePageContent from '@/app/[locale]/(protected)/_components/TicketsTablePageContent';
+import { paginatedAccountApi } from '@/services/api/enhanced/paginatedAccountApi';
 
 export default function CompletedTickets() {
   const { role, isInitialized: isUserStateInitialized } = useSelector(selectUserData);
@@ -40,17 +40,22 @@ export default function CompletedTickets() {
     data: ticketsData,
     error: getTicketsError,
     isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
     refetch
-  } = useGetTicketsCompletedQuery(
+  } = paginatedAccountApi.endpoints.getTicketsCompletedInfinite.useInfiniteQuery(
     {
       categoryId: selectedCategoryId === EFilterButton.ALL ? undefined : selectedCategoryId,
       status: selectedStatus === EFilterButton.ALL ? undefined : selectedStatus,
-      city: selectedCity === EFilterButton.ALL ? undefined : selectedCity
+      city: selectedCity === EFilterButton.ALL ? undefined : selectedCity,
+      limit: 6
     },
     {
       refetchOnMountOrArgChange: true
     }
   );
+  const tickets = ticketsData?.pages.flatMap(page => page.data ?? []);
+  const hasNextPage = !!ticketsData?.pages[ticketsData.pages.length - 1].nextCursor;
 
   useErrorHandler(getTicketsError);
 
@@ -60,8 +65,8 @@ export default function CompletedTickets() {
   return (
     <TicketsTablePageContent
       pageName="completedTicketsPage"
-      isLoadingTickets={isLoading}
-      ticketsData={ticketsData?.data}
+      isLoadingTickets={isLoading && !isFetchingNextPage}
+      ticketsData={tickets}
       tableColumns={tableColumnsData}
       refetchTickets={refetch}
       filterPanelComponent={
@@ -76,6 +81,10 @@ export default function CompletedTickets() {
           setSelectedStatus={setSelectedStatus}
         />
       }
+      totalTicketsAmount={ticketsData?.pages[0].totalLength ?? 0}
+      isLoadingMore={isFetchingNextPage}
+      onLoadMore={fetchNextPage}
+      hasNextPage={hasNextPage}
     />
   );
 }

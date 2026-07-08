@@ -47,7 +47,10 @@
     "before": "Przed",
     "after": "Po",
     "refresh": "Odśwież",
-    "showDetails": "Zobacz szczegóły"
+    "showDetails": "Zobacz szczegóły",
+    "next": "Dalej",
+    "previous": "Wstecz",
+    "loadMore": "Załaduj więcej"
   },
   "userRole": {
     "admin": "Admin",
@@ -95,7 +98,8 @@
     "userNotAssignedToCategory": "Użytkownik nie jest przypisany do tej kategorii.",
     "missingAcceptedEvaluation": "Brak zaakceptowanej wyceny.",
     "paymentAlreadyProcessed": "Płatność została już zrealizowana.",
-    "paymentFailed": "Nie udało się przetworzyć płatności. Spróbuj ponownie."
+    "paymentFailed": "Nie udało się przetworzyć płatności. Spróbuj ponownie.",
+    "minimumCharacters": "Tekst musi mieć przynajmniej {amount} znaków."
   },
   "sidebar": {
     "mainMenu": "Menu główne"
@@ -262,6 +266,10 @@
     "createdAtHeader": "Data utworzenia",
     "conversationHeader": "Konwersacja",
     "cityHeader": "Miasto"
+  },
+  "ticketTablePageContent": {
+    "showFiltersButton": "Pokaż filtry",
+    "hideFiltersButton": "Ukryj filtry"
   },
   "ticket": {
     "searchPlaceholder": "Szukaj spraw...",
@@ -466,5 +474,9 @@
       "admin_ticket_status_updated": "<u>Zobacz sprawę</u>",
       "admin_ticket_category_updated": "<u>Zobacz sprawę</u>"
     }
+  },
+  "infiniteScroll": {
+    "allLoaded": "Wszystkie elementy załadowane",
+    "empty": "Brak elementów do wyświetlenia"
   }
 }
