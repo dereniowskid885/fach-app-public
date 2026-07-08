@@ -3,6 +3,7 @@ import path from 'path';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
+  transpilePackages: ['shared-types', 'shared-backend'],
   turbopack: {
     root: path.join(__dirname, '..', '..')
   }
