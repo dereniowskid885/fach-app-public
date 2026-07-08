@@ -34,15 +34,11 @@ export default function TicketFilterPanel({
   return (
     <>
       {isCategoryFilters && (isUser(role) || isAdmin(role)) ? (
-        <>
-          <Separator className="bg-border" />
-
-          <TicketCategoryFilter
-            showHeader={true}
-            selectedCategoryId={selectedCategoryId}
-            setSelectedCategoryId={setSelectedCategoryId}
-          />
-        </>
+        <TicketCategoryFilter
+          showHeader={true}
+          selectedCategoryId={selectedCategoryId}
+          setSelectedCategoryId={setSelectedCategoryId}
+        />
       ) : null}
 
       {isCityFilters && (isSpecialist(role) || isAdmin(role)) ? (

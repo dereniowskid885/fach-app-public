@@ -19,6 +19,7 @@ export default function ContentCard({
   index = 0,
   className = '',
   contentClass = '',
+  noBackground = false,
   onClick
 }: IContentCard) {
   return (
@@ -29,7 +30,13 @@ export default function ContentCard({
     >
       <Card
         onClick={onClick}
-        className={cn('rounded-2xl border shadow-xs transition-shadow hover:shadow-md', className)}
+        className={cn(
+          'rounded-2xl',
+          noBackground
+            ? 'border-none bg-transparent shadow-none ring-0 outline-none'
+            : 'border shadow-xs transition-shadow hover:shadow-md',
+          className
+        )}
       >
         <CardContent className={contentClass}>{children}</CardContent>
       </Card>

@@ -4,6 +4,7 @@ import { EIconBadgeVariant } from '@/enums/ui';
 import { Skeleton } from '@/components/shadcn/skeleton';
 import { UserRole } from '@/services/api/generated/accountApi';
 import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 
 export interface IUserRoleBadge {
   role?: UserRole | EUserRole;
@@ -11,6 +12,8 @@ export interface IUserRoleBadge {
 }
 
 export default function UserRoleBadge({ role, className }: IUserRoleBadge) {
+  const t = useTranslations();
+
   let variant;
 
   switch (role) {
@@ -28,7 +31,12 @@ export default function UserRoleBadge({ role, className }: IUserRoleBadge) {
   }
 
   return role ? (
-    <IconBadge variant={variant} text={role} showIcon={false} className={className} />
+    <IconBadge
+      variant={variant}
+      text={t(`userRole.${role}`)}
+      showIcon={false}
+      className={className}
+    />
   ) : (
     <Skeleton className={cn('h-5.5 w-16', className)} />
   );
