@@ -5,11 +5,11 @@ import { EFilterButton } from '@/enums/ui';
 import { getAvailableTicketsColumns } from '@/helpers/dataTable';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { selectUserData } from '@/redux/slices/userSlice';
-import { useGetTicketsSpecialistEvaluationsQuery } from '@/services/api/generated/accountApi';
 import { useLocale, useTranslations } from 'next-intl';
 import { useSelector } from 'react-redux';
 import TicketsTablePageContent from '@/app/[locale]/(protected)/_components/TicketsTablePageContent';
 import { useState } from 'react';
+import { paginatedAccountApi } from '@/services/api/enhanced/paginatedAccountApi';
 
 export default function MyEvaluations() {
   const { role } = useSelector(selectUserData);
@@ -25,16 +25,20 @@ export default function MyEvaluations() {
     data: ticketsData,
     error: getTicketsError,
     isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
     refetch
-  } = useGetTicketsSpecialistEvaluationsQuery(
+  } = paginatedAccountApi.endpoints.getTicketsSpecialistEvaluationsInfinite.useInfiniteQuery(
     {
-      city: selectedCity === EFilterButton.ALL ? undefined : selectedCity
+      city: selectedCity === EFilterButton.ALL ? undefined : selectedCity,
+      limit: 6
     },
     {
-      skip: selectedCity === undefined,
       refetchOnMountOrArgChange: true
     }
   );
+  const tickets = ticketsData?.pages.flatMap(page => page.data ?? []);
+  const hasNextPage = !!ticketsData?.pages[ticketsData.pages.length - 1].nextCursor;
 
   useErrorHandler(getTicketsError);
 
@@ -44,7 +48,7 @@ export default function MyEvaluations() {
     <TicketsTablePageContent
       pageName="myEvaluationsPage"
       isLoadingTickets={isLoading}
-      ticketsData={ticketsData?.data}
+      ticketsData={tickets}
       tableColumns={tableColumnsData}
       refetchTickets={refetch}
       filterPanelComponent={
@@ -54,6 +58,10 @@ export default function MyEvaluations() {
           setSelectedCity={setSelectedCity}
         />
       }
+      totalTicketsAmount={ticketsData?.pages[0].totalLength ?? 0}
+      isLoadingMore={isFetchingNextPage}
+      onLoadMore={fetchNextPage}
+      hasNextPage={hasNextPage}
     />
   );
 }

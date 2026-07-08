@@ -1,14 +1,7 @@
 import Typography from '@/components/ui/Typography';
 import NotificationIcon from './NotificationIcon';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  deleteAllNotifications,
-  deleteNotification,
-  selectNotificationData
-} from '@/redux/slices/notificationSlice';
 import { ENotificationType, ESupportedLanguages, EUserRole } from 'shared-types';
 import { getRelativeTime, getFormattedDate } from '@/utils/date';
-import ContentSection from './ContentSection';
 import { BiBell } from 'react-icons/bi';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '../shadcn/button';
@@ -21,24 +14,36 @@ import { toast } from 'sonner';
 import CloseIcon from './CloseIcon';
 import { Separator } from '../shadcn/separator';
 import { getCapitalizedText, getUserFullName } from '@/utils/shared';
-import { LoadingSpinner } from '../shadcn/loading-spinner';
 import { roleObj } from '@/constants/role';
 import { getNotificationLinkByType } from '@/helpers/notification';
 import { useTicketDetailsDialogContext } from '@/contexts/TicketDetailsDialogContext';
+import { paginatedAccountApi } from '@/services/api/enhanced/paginatedAccountApi';
+import InfiniteScroll from '../features/pagination/InfiniteScroll';
 
 export default function HeaderNotificationList() {
   const t = useTranslations();
   const currentLocale = useLocale();
-  const dispatch = useDispatch();
-  const { notifications } = useSelector(selectNotificationData);
   const { openTicketDetailsDialog } = useTicketDetailsDialogContext();
+
+  const {
+    data: notificationData,
+    error: errorGetNotifications,
+    fetchNextPage,
+    isFetching,
+    isFetchingNextPage,
+    isError
+  } = paginatedAccountApi.endpoints.getNotificationsInfinite.useInfiniteQuery({
+    limit: 5
+  });
+  const notifications = notificationData?.pages.flatMap(page => page.data ?? []);
+  const hasNextPage = !!notificationData?.pages[notificationData.pages.length - 1].nextCursor;
 
   const [triggerDelete, { error: errorMarkAsRead, isLoading: isLoadingMarkAsRead }] =
     useDeleteNotificationsByIdMutation();
   const [triggerDeleteAll, { error: errorMarkAllAsRead, isLoading: isLoadingMarkAllAsRead }] =
     useDeleteNotificationsDeleteAllMutation();
 
-  useErrorHandler(errorMarkAsRead || errorMarkAllAsRead);
+  useErrorHandler(errorGetNotifications || errorMarkAsRead || errorMarkAllAsRead);
 
   const deleteNotificationHandler = async (notificationId?: string) => {
     if (!notificationId) return;
@@ -47,56 +52,49 @@ export default function HeaderNotificationList() {
       id: notificationId
     });
 
-    if (error) {
-      toast.error(t('errors.generic'));
-
-      return;
-    }
-
-    dispatch(deleteNotification(notificationId));
+    if (error) toast.error(t('errors.generic'));
   };
 
   const clearAllHandler = async () => {
     const { error } = await triggerDeleteAll();
 
-    if (error) {
-      toast.error(t('errors.generic'));
-
-      return;
-    }
-
-    dispatch(deleteAllNotifications());
+    if (error) toast.error(t('errors.generic'));
   };
 
-  return notifications.length === 0 ? (
-    <ContentSection
-      bgTransparent={true}
-      className="m-auto flex w-fit flex-col items-center justify-center p-6"
-    >
-      <BiBell size={28} className="text-muted-foreground/70" />
-
-      <Typography variant="muted" className="text-muted-foreground/70 text-center">
-        {t('notifications.empty')}
-      </Typography>
-    </ContentSection>
-  ) : (
+  return (
     <div className="flex flex-col gap-2">
-      <Button variant="ghost" onClick={clearAllHandler}>
+      <Button
+        variant="ghost"
+        onClick={clearAllHandler}
+        disabled={notifications?.length === 0 || isLoadingMarkAllAsRead}
+      >
         {t('common.clearAll')}
       </Button>
 
       <Separator />
 
-      {isLoadingMarkAllAsRead ? (
-        <div className="py-4">
-          <LoadingSpinner className="m-auto" />
-        </div>
-      ) : (
-        <ul className="divide-border no-scrollbar max-h-[75dvh] divide-y overflow-y-auto">
-          {notifications.map(notification => (
+      <ul className="divide-border no-scrollbar max-h-[75dvh] divide-y overflow-y-auto">
+        <InfiniteScroll
+          onLoadMore={fetchNextPage}
+          hasNextPage={hasNextPage}
+          isLoading={isLoadingMarkAllAsRead || (isFetching && !isFetchingNextPage)}
+          isLoadingMore={isFetchingNextPage}
+          itemCount={notifications?.length ?? 0}
+          isError={isError}
+          emptyElement={
+            <>
+              <BiBell size={28} className="text-muted-foreground/70" />
+
+              <Typography variant="muted" className="text-muted-foreground/70 text-center">
+                {t('notifications.empty')}
+              </Typography>
+            </>
+          }
+        >
+          {notifications?.map(notification => (
             <li
               key={notification._id}
-              className={`animation-hover relative flex items-start space-x-3 p-4 pr-6 ${isLoadingMarkAsRead ? 'animate-pulse' : ''}`}
+              className={`animation-hover relative flex items-start space-x-3 p-4 pr-8 ${isLoadingMarkAsRead ? 'animate-pulse' : ''}`}
             >
               <NotificationIcon type={notification.type as ENotificationType} />
 
@@ -165,13 +163,13 @@ export default function HeaderNotificationList() {
               </div>
 
               <CloseIcon
-                className="absolute top-0 right-2"
+                className="absolute top-2 right-2"
                 onClick={() => deleteNotificationHandler(notification._id)}
               />
             </li>
           ))}
-        </ul>
-      )}
+        </InfiniteScroll>
+      </ul>
     </div>
   );
 }

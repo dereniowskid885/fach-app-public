@@ -1,4 +1,4 @@
-import { useGetTicketsByIdCommentsQuery, User } from '@/services/api/generated/accountApi';
+import { User } from '@/services/api/generated/accountApi';
 import DialogComponent from '@/components/ui/DialogComponent';
 import TicketStatusIcon from './TicketStatusIcon';
 import Typography from '@/components/ui/Typography';
@@ -17,7 +17,7 @@ import ContentSection from '@/components/ui/ContentSection';
 import ContentSectionItem from '@/components/ui/ContentSectionItem';
 import { getFormattedPriceAmount, getFormattedResponseTime, getUserFullName } from '@/utils/shared';
 import { ESectionItemType } from '@/enums/ui';
-import { EUserRole, isAdmin, isSpecialist } from 'shared-types';
+import { EUserRole, isSpecialist } from 'shared-types';
 import UserRoleBadge from '../user/UserRoleBadge';
 import { Textarea } from '@/components/shadcn/textarea';
 import { useEffect, useRef, useState } from 'react';
@@ -38,6 +38,7 @@ import TicketStatusBadge from './TicketStatusBadge';
 import { enhancedAccountApi } from '@/services/api/enhanced/enhancedAccountApi';
 import DialogLoadingOverlay from '@/components/ui/DialogLoadingOverlay';
 import { useTicketDetailsDialogContext } from '@/contexts/TicketDetailsDialogContext';
+import { paginatedAccountApi } from '@/services/api/enhanced/paginatedAccountApi';
 
 export interface ITicketDetailsDialog {
   open: boolean;
@@ -106,7 +107,7 @@ export default function TicketDetailsDialog({
     error: getTicketByIdError
   } = enhancedAccountApi.endpoints.getTicketsById.useQuery(
     { id: ticketId! },
-    { skip: !open || !ticketId, refetchOnMountOrArgChange: isAdmin(role) }
+    { skip: !open || !ticketId, refetchOnMountOrArgChange: true }
   );
   const ticket = getTicketByIdQuery?.data;
 
@@ -116,14 +117,20 @@ export default function TicketDetailsDialog({
     data: commentsData,
     isLoading: isLoadingComments,
     isSuccess: isGetCommentsSuccess,
-    error: getCommentsError
-  } = useGetTicketsByIdCommentsQuery(
-    { id: ticketId! },
+    error: getCommentsError,
+    fetchNextPage: fetchNextCommentsPage,
+    isFetchingNextPage: isFetchingNextCommentsPage
+  } = paginatedAccountApi.endpoints.getTicketsByIdCommentsInfinite.useInfiniteQuery(
+    { id: ticketId!, limit: 6 },
     {
       skip: !open || !ticketId,
       refetchOnMountOrArgChange: true
     }
   );
+  const comments = commentsData?.pages.flatMap(page => page.data ?? []);
+  const hasNextPage = !!commentsData?.pages[commentsData.pages.length - 1].nextCursor;
+  const totalCommentsLength = commentsData?.pages[0].totalLength ?? 0;
+
   const [triggerCreateComment, { isLoading: isLoadingCreate, error: errorTicketCreate }] =
     enhancedAccountApi.endpoints.postTicketsByIdComments.useMutation();
 
@@ -139,7 +146,7 @@ export default function TicketDetailsDialog({
 
     // Additional validation to catch trimmed empty content
     if (!trimmedMessage || trimmedMessage.length < 7) {
-      setErrorMessage(t('common.errorMinimumCharacters', { minimum: 7 }));
+      setErrorMessage(t('errors.minimumCharacters', { amount: 7 }));
       return;
     }
 
@@ -302,16 +309,16 @@ export default function TicketDetailsDialog({
         title={t('ticketDetailsDialog.conversationSectionTitle')}
         Icon={MessageSquare}
         bgTransparent={true}
-        amount={commentsData?.dataLength}
+        amount={totalCommentsLength}
       >
         {isLoadingComments ? (
           <LoadingSpinner className="m-auto" />
-        ) : commentsData?.dataLength === 0 ? (
+        ) : totalCommentsLength === 0 ? (
           <Typography variant="p" className="text-muted-foreground">
             {t('ticketDetailsDialog.noCommentsText')}
           </Typography>
         ) : (
-          commentsData?.data?.map(comment => (
+          comments?.map(comment => (
             <TicketComment
               key={comment._id}
               data={comment}
@@ -319,6 +326,16 @@ export default function TicketDetailsDialog({
             />
           ))
         )}
+
+        {isFetchingNextCommentsPage ? (
+          <LoadingSpinner className="m-auto" />
+        ) : hasNextPage ? (
+          <div className="flex justify-center">
+            <Button variant="ghost" onClick={fetchNextCommentsPage}>
+              {t('common.loadMore')}
+            </Button>
+          </div>
+        ) : null}
       </ContentSection>
 
       {/* Comment input */}

@@ -1,3 +1,5 @@
+'use client';
+
 import HeaderNotificationList from '@/components/ui/HeaderNotificationList';
 import { usePathname } from 'next/navigation';
 import { useLocale } from 'next-intl';
@@ -13,20 +15,30 @@ import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
 import ThemeSwitcher from '@/components/ui/ThemeSwitcher';
 import Logo from './Logo';
 import NavMobile from '../features/nav/NavMobile';
-import { useDispatch, useSelector } from 'react-redux';
-import { hideDotIcon, selectNotificationData } from '@/redux/slices/notificationSlice';
 import AnimateCollapse from './AnimateCollapse';
+import { useEffect, useState } from 'react';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { useGetNotificationsCountQuery } from '@/services/api/generated/accountApi';
 
 export default function Header() {
-  const dispatch = useDispatch();
   const { sidebarWidth } = useSidebarContext();
-  const { isDotIconShown } = useSelector(selectNotificationData);
+
+  const { data, error: errorGetNotifications } = useGetNotificationsCountQuery();
+  const notificationsLength = data?.count ?? 0;
+
+  useErrorHandler(errorGetNotifications);
+
+  const [isDotIconShown, setIsDotIconShown] = useState(false);
 
   const hideDotIconHandler = (open: boolean) => {
     if (!open) return;
 
-    dispatch(hideDotIcon());
+    setIsDotIconShown(false);
   };
+
+  useEffect(() => {
+    setIsDotIconShown(notificationsLength > 0);
+  }, [notificationsLength]);
 
   const currentPath = usePathname();
   const currentLocale = useLocale();

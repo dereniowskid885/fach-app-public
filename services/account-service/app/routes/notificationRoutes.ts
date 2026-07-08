@@ -3,6 +3,7 @@ import {
   streamNotifications,
   deleteAllNotifications,
   deleteNotification,
+  getUserNotificationsCount,
 } from '@controllers/notificationController';
 
 import express from 'express';
@@ -22,6 +23,9 @@ router.use(accessTokenMiddleware);
  *     description: Fetches all notifications for the authenticated user
  *     tags:
  *       - Notifications
+ *     parameters:
+ *       - $ref: '#/components/parameters/CursorQuery'
+ *       - $ref: '#/components/parameters/LimitQuery'
  *     responses:
  *       200:
  *         description: Successfully retrieved all notifications
@@ -36,6 +40,12 @@ router.use(accessTokenMiddleware);
  *                 dataLength:
  *                   type: number
  *                   example: 5
+ *                 nextCursor:
+ *                   type: string
+ *                   example: "64f3b12a6f4c1e9d3a7b5678"
+ *                 hasNextPage:
+ *                   type: boolean
+ *                   example: true
  *                 data:
  *                   type: array
  *                   items:
@@ -74,6 +84,63 @@ router.use(accessTokenMiddleware);
  *                   example: Server error
  */
 router.get('/', getUserNotifications);
+
+/**
+ * @swagger
+ * /notifications/count:
+ *   get:
+ *     summary: Get count of user notifications
+ *     description: Fetches the count of notifications for the authenticated user
+ *     tags:
+ *       - Notifications
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved notification count
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 count:
+ *                  type: number
+ *                  example: 10
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: Missing user data
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.get('/count', getUserNotificationsCount);
 
 /**
  * @swagger

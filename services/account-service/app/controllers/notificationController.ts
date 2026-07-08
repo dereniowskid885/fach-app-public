@@ -1,13 +1,28 @@
 import { NotificationManager } from '@managers/notificationManager';
 import { NotificationSSE } from '@sse/notification';
+import { FilterBuilder } from '@utils/filterBuilder';
 import type { Request, Response } from 'express';
 import { handleAppError, IAppError } from 'shared-backend';
 
 export const getUserNotifications = async (req: Request, res: Response) => {
   try {
-    const notifications = await NotificationManager.getUserNotifications(req.user.userId);
+    const pagination = FilterBuilder.getPagination(req);
+    const { data, nextCursor, hasNextPage } = await NotificationManager.getUserNotifications(
+      req.user.userId,
+      pagination,
+    );
 
-    return res.status(200).json({ success: true, dataLength: notifications.length, data: notifications });
+    return res.status(200).json({ success: true, dataLength: data.length, nextCursor, hasNextPage, data });
+  } catch (err) {
+    handleAppError(res, err as IAppError);
+  }
+};
+
+export const getUserNotificationsCount = async (req: Request, res: Response) => {
+  try {
+    const count = await NotificationManager.getUserNotificationsCount(req.user.userId);
+
+    return res.status(200).json({ success: true, count });
   } catch (err) {
     handleAppError(res, err as IAppError);
   }
