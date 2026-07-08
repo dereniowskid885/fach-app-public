@@ -4,12 +4,12 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { selectUserData } from '@/redux/slices/userSlice';
 import { useSelector } from 'react-redux';
-import { useGetTicketsSpecialistAvailableQuery } from '@/services/api/generated/accountApi';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { getAvailableTicketsColumns } from '@/helpers/dataTable';
 import { EFilterButton } from '@/enums/ui';
 import TicketFilterPanel from '@/app/[locale]/(protected)/_components/TicketFilterPanel';
 import TicketsTablePageContent from '@/app/[locale]/(protected)/_components/TicketsTablePageContent';
+import { paginatedAccountApi } from '@/services/api/enhanced/paginatedAccountApi';
 
 export default function AvailableTickets() {
   const { city, role, isInitialized: isUserStateInitialized } = useSelector(selectUserData);
@@ -34,16 +34,20 @@ export default function AvailableTickets() {
     data: ticketsData,
     error: getTicketsError,
     isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
     refetch
-  } = useGetTicketsSpecialistAvailableQuery(
+  } = paginatedAccountApi.endpoints.getTicketsSpecialistAvailableInfinite.useInfiniteQuery(
     {
-      city: selectedCity === EFilterButton.ALL ? undefined : selectedCity
+      city: selectedCity === EFilterButton.ALL ? undefined : selectedCity,
+      limit: 6
     },
     {
-      skip: selectedCity === undefined,
       refetchOnMountOrArgChange: true
     }
   );
+  const tickets = ticketsData?.pages.flatMap(page => page.data ?? []);
+  const hasNextPage = !!ticketsData?.pages[ticketsData.pages.length - 1].nextCursor;
 
   useErrorHandler(getTicketsError);
 
@@ -53,7 +57,7 @@ export default function AvailableTickets() {
     <TicketsTablePageContent
       pageName="availableTicketsPage"
       isLoadingTickets={isLoading}
-      ticketsData={ticketsData?.data}
+      ticketsData={tickets}
       tableColumns={tableColumnsData}
       refetchTickets={refetch}
       filterPanelComponent={
@@ -63,6 +67,10 @@ export default function AvailableTickets() {
           setSelectedCity={setSelectedCity}
         />
       }
+      totalTicketsAmount={ticketsData?.pages[0].totalLength ?? 0}
+      isLoadingMore={isFetchingNextPage}
+      onLoadMore={fetchNextPage}
+      hasNextPage={hasNextPage}
     />
   );
 }

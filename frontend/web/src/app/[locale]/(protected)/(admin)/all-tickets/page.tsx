@@ -1,6 +1,5 @@
 'use client';
 
-import { useGetTicketsQuery } from '@/services/api/generated/accountApi';
 import TicketFilterPanel from '@/app/[locale]/(protected)/_components/TicketFilterPanel';
 import { EFilterButton } from '@/enums/ui';
 import { getAllTicketsColumns } from '@/helpers/dataTable';
@@ -12,6 +11,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import TicketsTablePageContent from '@/app/[locale]/(protected)/_components/TicketsTablePageContent';
+import { paginatedAccountApi } from '@/services/api/enhanced/paginatedAccountApi';
 
 export default function AllTickets() {
   const { role } = useSelector(selectUserData);
@@ -33,18 +33,22 @@ export default function AllTickets() {
     data: ticketsData,
     error: getTicketsError,
     isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
     refetch
-  } = useGetTicketsQuery(
+  } = paginatedAccountApi.endpoints.getTicketsInfinite.useInfiniteQuery(
     {
       categoryId: selectedCategoryId === EFilterButton.ALL ? undefined : selectedCategoryId,
       status: selectedStatus === EFilterButton.ALL ? undefined : selectedStatus,
-      city: selectedCity === EFilterButton.ALL ? undefined : selectedCity
+      city: selectedCity === EFilterButton.ALL ? undefined : selectedCity,
+      limit: 6
     },
     {
-      skip: selectedCity === undefined,
       refetchOnMountOrArgChange: true
     }
   );
+  const tickets = ticketsData?.pages.flatMap(page => page.data ?? []);
+  const hasNextPage = !!ticketsData?.pages[ticketsData.pages.length - 1].nextCursor;
 
   useErrorHandler(getTicketsError);
 
@@ -55,7 +59,7 @@ export default function AllTickets() {
     <TicketsTablePageContent
       pageName="myTicketsPage"
       isLoadingTickets={isLoading}
-      ticketsData={ticketsData?.data}
+      ticketsData={tickets}
       tableColumns={tableColumnsData}
       refetchTickets={refetch}
       filterPanelComponent={
@@ -70,6 +74,10 @@ export default function AllTickets() {
           setSelectedStatus={setSelectedStatus}
         />
       }
+      totalTicketsAmount={ticketsData?.pages[0].totalLength ?? 0}
+      isLoadingMore={isFetchingNextPage}
+      onLoadMore={fetchNextPage}
+      hasNextPage={hasNextPage}
     />
   );
 }

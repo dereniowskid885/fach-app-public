@@ -3,14 +3,15 @@ import Typography from '@/components/ui/Typography';
 import TicketStatusBadge from '@/components/features/ticket/TicketStatusBadge';
 import TicketSummaryInfo from '@/components/features/ticket/TicketSummaryInfo';
 import { TFunction } from '@/types/i18n';
-import { CellContext } from '@tanstack/react-table';
-import { ChartColumn, Layers, MessageSquare } from 'lucide-react';
+import { CellContext, HeaderContext } from '@tanstack/react-table';
+import { ArrowUpDown, ChartColumn, Layers, MessageSquare } from 'lucide-react';
 import { getLocaleDateString } from './date';
 import UserCard from '@/components/features/user/UserCard';
 import { ETicketStatus, EUserRole } from 'shared-types';
 import TicketDropdownMenu from '@/components/features/ticket/TicketDropdownMenu';
 import TicketCardActionButtons from '@/components/features/ticket/TicketCardActionButtons';
 import { getFormattedPriceAmount, getFormattedResponseTime, getUserFullName } from './shared';
+import { Button } from '@/components/shadcn/button';
 
 /**
  * Shared column definition factories for ticket-related data tables.
@@ -22,7 +23,7 @@ export const getTicketColumn = (t: TFunction) => ({
   accessorKey: 'ticket',
   header: t('ticketDataTable.ticketHeader'),
   cell: (item: CellContext<Ticket, unknown>) => {
-    const ticket = item.row.original as Ticket;
+    const ticket = item.row.original;
 
     return (
       <TicketSummaryInfo
@@ -39,7 +40,7 @@ export const getStatusColumn = (t: TFunction) => ({
   accessorKey: 'status',
   header: t('ticketDataTable.statusHeader'),
   cell: (item: CellContext<Ticket, unknown>) => {
-    const ticket = item.row.original as Ticket;
+    const ticket = item.row.original;
 
     return (
       <div className="flex items-center justify-center">
@@ -54,7 +55,7 @@ export const getCategoryColumn = (t: TFunction) => ({
   accessorKey: 'category',
   header: t('ticketDataTable.categoryHeader'),
   cell: (item: CellContext<Ticket, unknown>) => {
-    const ticket = item.row.original as Ticket;
+    const ticket = item.row.original;
 
     return (
       <div className="flex items-center justify-center gap-2">
@@ -73,7 +74,7 @@ export const getCreatedAtColumn = (t: TFunction, currentLocale: string) => ({
   accessorKey: 'createdAt',
   header: t('ticketDataTable.createdAtHeader'),
   cell: (item: CellContext<Ticket, unknown>) => {
-    const ticket = item.row.original as Ticket;
+    const ticket = item.row.original;
 
     return (
       <div className="text-center">
@@ -90,7 +91,7 @@ export const getAssigneeColumn = (t: TFunction) => ({
   accessorKey: 'assignee',
   header: t('common.assignee'),
   cell: (item: CellContext<Ticket, unknown>) => {
-    const ticket = item.row.original as Ticket;
+    const ticket = item.row.original;
 
     return (
       <UserCard
@@ -114,7 +115,7 @@ export const getConversationColumn = (t: TFunction) => ({
   accessorKey: 'conversation',
   header: t('ticketDataTable.conversationHeader'),
   cell: (item: CellContext<Ticket, unknown>) => {
-    const ticket = item.row.original as Ticket;
+    const ticket = item.row.original;
 
     let ConversationIcon = MessageSquare;
     let conversationAmount = t('ticket.messagesAmount', { count: ticket.commentsCount ?? 0 });
@@ -146,7 +147,7 @@ export const getConversationColumn = (t: TFunction) => ({
 export const getActionColumn = (role: EUserRole | string) => ({
   id: 'action',
   cell: (item: CellContext<Ticket, unknown>) => {
-    const ticket = item.row.original as Ticket;
+    const ticket = item.row.original;
 
     return (
       <div className="text-center">
@@ -158,9 +159,7 @@ export const getActionColumn = (role: EUserRole | string) => ({
 
 export const getDropdownMenuColumn = () => ({
   id: 'dropdownMenu',
-  cell: (item: CellContext<Ticket, unknown>) => (
-    <TicketDropdownMenu ticket={item.row.original as Ticket} />
-  )
+  cell: (item: CellContext<Ticket, unknown>) => <TicketDropdownMenu ticket={item.row.original} />
 });
 
 export const getCityColumn = (t: TFunction) => ({
@@ -212,8 +211,8 @@ export const getSpecialistColumn = (t: TFunction) => ({
   id: 'specialist',
   accessorKey: 'specialist',
   header: t('userRole.specialist'),
-  cell: (item: CellContext<Ticket, unknown>) => {
-    const evaluation = item.row.original as Evaluation;
+  cell: (item: CellContext<Evaluation, unknown>) => {
+    const evaluation = item.row.original;
 
     return (
       <div className="flex flex-col items-center gap-1">
@@ -231,10 +230,20 @@ export const getSpecialistColumn = (t: TFunction) => ({
 
 export const getResponseTimeColumn = (t: TFunction) => ({
   id: 'responseTime',
-  accessorKey: 'responseTime',
-  header: t('evaluation.responseTime'),
-  cell: (item: CellContext<Ticket, unknown>) => {
-    const evaluation = item.row.original as Evaluation;
+  accessorFn: (row: Evaluation) => row.minutes,
+  header: (item: HeaderContext<Evaluation, unknown>) => {
+    const column = item.column;
+
+    return (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        {t('evaluation.responseTime')}
+
+        <ArrowUpDown className="h-4 w-4" />
+      </Button>
+    );
+  },
+  cell: (item: CellContext<Evaluation, unknown>) => {
+    const evaluation = item.row.original;
 
     return (
       <div className="text-center">
@@ -265,10 +274,20 @@ export const getDateOfResponseColumn = (t: TFunction, currentLocale: string) => 
 
 export const getPriceColumn = (t: TFunction) => ({
   id: 'price',
-  accessorKey: 'price',
-  header: t('evaluation.price'),
-  cell: (item: CellContext<Ticket, unknown>) => {
-    const evaluation = item.row.original as Evaluation;
+  accessorFn: (row: Evaluation) => row.price?.amountInCents,
+  header: (item: HeaderContext<Evaluation, unknown>) => {
+    const column = item.column;
+
+    return (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        {t('evaluation.price')}
+
+        <ArrowUpDown className="h-4 w-4" />
+      </Button>
+    );
+  },
+  cell: (item: CellContext<Evaluation, unknown>) => {
+    const evaluation = item.row.original;
 
     return (
       <div className="text-center">

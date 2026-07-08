@@ -42,7 +42,6 @@ export const getAvailableTicketsColumns = (t: TFunction, currentLocale: string) 
   getTicketColumn(t),
   getCityColumn(t),
   getCreatedAtColumn(t, currentLocale),
-  getCreatedByColumn(t),
   getConversationColumn(t),
   getActionColumn(EUserRole.SPECIALIST),
   getDropdownMenuColumn()
@@ -65,7 +64,7 @@ export const getAllTicketsColumns = (t: TFunction, currentLocale: string) => [
 export const getEvaluationsListDialogColumns = (t: TFunction, currentLocale: string) => [
   getSpecialistColumn(t),
   getCityColumn(t),
+  getPriceColumn(t),
   getResponseTimeColumn(t),
-  getDateOfResponseColumn(t, currentLocale),
-  getPriceColumn(t)
+  getDateOfResponseColumn(t, currentLocale)
 ];

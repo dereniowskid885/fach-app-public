@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { ReactNode, useState } from 'react';
 import TicketCreateButton from '../../../../components/features/ticket/TicketCreateButton';
 import { Button } from '@/components/shadcn/button';
-import { RotateCcw } from 'lucide-react';
+import { ChevronDownIcon, ChevronUpIcon, RotateCcw } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
 import { DataTable } from '@/components/ui/DataTable';
 import PageHeader from '@/components/ui/PageHeader';
@@ -17,6 +17,7 @@ import IconBadge from '@/components/ui/IconBadge';
 import { EIconBadgeVariant } from '@/enums/ui';
 import { Skeleton } from '@/components/shadcn/skeleton';
 import { Ticket } from '@/services/api/generated/accountApi';
+import { motion } from 'framer-motion';
 
 export interface ITicketsTablePageContent {
   pageName: string;
@@ -28,6 +29,10 @@ export interface ITicketsTablePageContent {
     id: string;
     cell: (item: CellContext<Ticket, unknown>) => JSX.Element;
   }[];
+  totalTicketsAmount: number;
+  isLoadingMore: boolean;
+  onLoadMore: () => void;
+  hasNextPage?: boolean;
 }
 
 export default function TicketsTablePageContent({
@@ -36,7 +41,11 @@ export default function TicketsTablePageContent({
   isLoadingTickets,
   ticketsData,
   refetchTickets,
-  tableColumns
+  tableColumns,
+  totalTicketsAmount,
+  isLoadingMore,
+  onLoadMore,
+  hasNextPage
 }: ITicketsTablePageContent) {
   const t = useTranslations();
   const {
@@ -47,6 +56,7 @@ export default function TicketsTablePageContent({
   } = useSelector(selectUserData);
 
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [showFilters, setShowFilters] = useState<boolean>(false);
 
   const filteredTickets =
     ticketsData?.filter(ticket => {
@@ -80,7 +90,11 @@ export default function TicketsTablePageContent({
       </div>
 
       <ContentCard index={0} contentClass="space-y-6">
-        <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
+        <motion.div
+          animate={showFilters ? {} : { margin: 0 }}
+          transition={{ duration: 0.3 }}
+          className={'flex flex-col justify-between gap-4 xl:flex-row xl:items-center'}
+        >
           <SearchComponent
             inputValue={searchQuery}
             inputOnChangeHandler={setSearchQuery}
@@ -89,7 +103,9 @@ export default function TicketsTablePageContent({
 
           <div className="flex grow flex-wrap items-center justify-end gap-4">
             <Badge variant="amount" className="mr-auto text-sm">
-              {t('ticket.ticketsAmount', { count: filteredTickets.length ?? 0 })}
+              {t('ticket.ticketsAmount', {
+                count: searchQuery.length > 0 ? (filteredTickets.length ?? 0) : totalTicketsAmount
+              })}
             </Badge>
 
             {isUser(role) ? <TicketCreateButton /> : null}
@@ -100,16 +116,43 @@ export default function TicketsTablePageContent({
               {t('common.refresh')}
             </Button>
           </div>
-        </div>
+        </motion.div>
 
-        {filterPanelComponent}
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: showFilters ? 1 : 0, height: showFilters ? 'auto' : 0 }}
+          transition={{ duration: 0.3 }}
+          className="space-y-6"
+        >
+          {filterPanelComponent}
+        </motion.div>
+      </ContentCard>
+
+      <ContentCard
+        index={1}
+        className="py-0"
+        contentClass="px-0 flex items-center justify-center"
+        noBackground={true}
+      >
+        <Button variant="ghost" size="lg" onClick={() => setShowFilters(!showFilters)}>
+          {showFilters
+            ? t('ticketTablePageContent.hideFiltersButton')
+            : t('ticketTablePageContent.showFiltersButton')}
+          {showFilters ? <ChevronUpIcon /> : <ChevronDownIcon />}
+        </Button>
       </ContentCard>
 
       {isLoadingTickets ? (
         <LoadingSpinner className="m-auto" />
       ) : (
-        <ContentCard index={1} className="py-0" contentClass="px-0">
-          <DataTable data={filteredTickets} columns={tableColumns} />
+        <ContentCard index={2} className="py-0" contentClass="px-0">
+          <DataTable
+            data={filteredTickets}
+            columns={tableColumns}
+            isLoadingMore={isLoadingMore}
+            onLoadMore={onLoadMore}
+            hasNextPage={hasNextPage}
+          />
         </ContentCard>
       )}
     </div>

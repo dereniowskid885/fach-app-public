@@ -1,5 +1,4 @@
 import { ICategoryModel } from '@models/Category';
-import { INotificationModel } from '@models/Notification';
 import { ITicketModel } from '@models/Ticket';
 import { IUserModel } from '@models/User';
 import { Request } from 'express';
@@ -7,7 +6,18 @@ import { JwtPayload } from 'jsonwebtoken';
 import { FilterQuery } from 'mongoose';
 import { ETicketStatus, isSpecialist, isUser } from 'shared-types';
 
+export interface IPaginationOptions {
+  limit: number;
+  cursor: string;
+}
+
 export const FilterBuilder = {
+  getPagination: (req: Request): IPaginationOptions => {
+    const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
+    const cursor = req.query.cursor as string; // last _id from previous page
+
+    return { limit, cursor };
+  },
   getUsers: (req: Request) => {
     const { email, role, verified, category, city } = req.query;
 

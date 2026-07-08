@@ -135,7 +135,20 @@ const injectedRtkApi = api
         invalidatesTags: ['Categories']
       }),
       getNotifications: build.query<GetNotificationsApiResponse, GetNotificationsApiArg>({
-        query: () => ({ url: `/notifications` }),
+        query: queryArg => ({
+          url: `/notifications`,
+          params: {
+            cursor: queryArg.cursor,
+            limit: queryArg.limit
+          }
+        }),
+        providesTags: ['Notifications']
+      }),
+      getNotificationsCount: build.query<
+        GetNotificationsCountApiResponse,
+        GetNotificationsCountApiArg
+      >({
+        query: () => ({ url: `/notifications/count` }),
         providesTags: ['Notifications']
       }),
       getNotificationsStream: build.query<
@@ -171,7 +184,9 @@ const injectedRtkApi = api
             city: queryArg.city,
             status: queryArg.status,
             assignee: queryArg.assignee,
-            createdBy: queryArg.createdBy
+            createdBy: queryArg.createdBy,
+            cursor: queryArg.cursor,
+            limit: queryArg.limit
           }
         }),
         providesTags: ['Ticketing']
@@ -191,7 +206,13 @@ const injectedRtkApi = api
         GetTicketsByIdCommentsApiResponse,
         GetTicketsByIdCommentsApiArg
       >({
-        query: queryArg => ({ url: `/tickets/${queryArg.id}/comments` }),
+        query: queryArg => ({
+          url: `/tickets/${queryArg.id}/comments`,
+          params: {
+            cursor: queryArg.cursor,
+            limit: queryArg.limit
+          }
+        }),
         providesTags: ['Comments']
       }),
       postTicketsByIdPayment: build.mutation<
@@ -211,7 +232,9 @@ const injectedRtkApi = api
           params: {
             categoryId: queryArg.categoryId,
             city: queryArg.city,
-            status: queryArg.status
+            status: queryArg.status,
+            cursor: queryArg.cursor,
+            limit: queryArg.limit
           }
         }),
         providesTags: ['Ticketing']
@@ -222,7 +245,9 @@ const injectedRtkApi = api
           params: {
             categoryId: queryArg.categoryId,
             city: queryArg.city,
-            status: queryArg.status
+            status: queryArg.status,
+            cursor: queryArg.cursor,
+            limit: queryArg.limit
           }
         }),
         providesTags: ['Ticketing']
@@ -234,7 +259,9 @@ const injectedRtkApi = api
         query: queryArg => ({
           url: `/tickets/specialist/available`,
           params: {
-            city: queryArg.city
+            city: queryArg.city,
+            cursor: queryArg.cursor,
+            limit: queryArg.limit
           }
         }),
         providesTags: ['Ticketing']
@@ -246,7 +273,9 @@ const injectedRtkApi = api
         query: queryArg => ({
           url: `/tickets/specialist/evaluations`,
           params: {
-            city: queryArg.city
+            city: queryArg.city,
+            cursor: queryArg.cursor,
+            limit: queryArg.limit
           }
         }),
         providesTags: ['Ticketing']
@@ -547,9 +576,22 @@ export type GetNotificationsApiResponse =
   /** status 200 Successfully retrieved all notifications */ {
     success?: boolean;
     dataLength?: number;
+    nextCursor?: string;
+    hasNextPage?: boolean;
     data?: Notification[];
   };
-export type GetNotificationsApiArg = void;
+export type GetNotificationsApiArg = {
+  /** Cursor for pagination (ID of the last item from the previous page) */
+  cursor?: string;
+  /** Maximum number of items to return (default 20, max 100) */
+  limit?: number;
+};
+export type GetNotificationsCountApiResponse =
+  /** status 200 Successfully retrieved notification count */ {
+    success?: boolean;
+    count?: number;
+  };
+export type GetNotificationsCountApiArg = void;
 export type GetNotificationsStreamApiResponse =
   /** status 200 SSE stream opened successfully */ Notification;
 export type GetNotificationsStreamApiArg = void;
@@ -588,6 +630,9 @@ export type PostTicketsApiArg = {
 export type GetTicketsApiResponse = /** status 200 Array of tickets */ {
   success?: boolean;
   dataLength?: number;
+  totalLength?: number;
+  nextCursor?: string;
+  hasNextPage?: boolean;
   data?: Ticket[];
 };
 export type GetTicketsApiArg = {
@@ -604,6 +649,10 @@ export type GetTicketsApiArg = {
   assignee?: string;
   /** Filter by author (userId) */
   createdBy?: string;
+  /** Cursor for pagination (ID of the last item from the previous page) */
+  cursor?: string;
+  /** Maximum number of items to return (default 20, max 100) */
+  limit?: number;
 };
 export type PostTicketsByIdCommentsApiResponse =
   /** status 200 Ticket comment created successfully */ {
@@ -625,11 +674,18 @@ export type GetTicketsByIdCommentsApiResponse =
   /** status 200 Successfully retrieved ticket comments */ {
     success?: boolean;
     dataLength?: number;
+    totalLength?: number;
+    nextCursor?: string;
+    hasNextPage?: boolean;
     data?: Comment[];
   };
 export type GetTicketsByIdCommentsApiArg = {
   /** Unique ID of the ticket */
   id: string;
+  /** Cursor for pagination (ID of the last item from the previous page) */
+  cursor?: string;
+  /** Maximum number of items to return (default 20, max 100) */
+  limit?: number;
 };
 export type PostTicketsByIdPaymentApiResponse = /** status 200 Ticket payment successfull */ {
   success?: boolean;
@@ -651,6 +707,9 @@ export type PostTicketsByIdPaymentApiArg = {
 export type GetTicketsMyApiResponse = /** status 200 Array of tickets */ {
   success?: boolean;
   dataLength?: number;
+  totalLength?: number;
+  nextCursor?: string;
+  hasNextPage?: boolean;
   data?: Ticket[];
 };
 export type GetTicketsMyApiArg = {
@@ -663,10 +722,17 @@ export type GetTicketsMyApiArg = {
     Example: awaiting_evaluation,in_progress
      */
   status?: string;
+  /** Cursor for pagination (ID of the last item from the previous page) */
+  cursor?: string;
+  /** Maximum number of items to return (default 20, max 100) */
+  limit?: number;
 };
 export type GetTicketsCompletedApiResponse = /** status 200 Array of tickets */ {
   success?: boolean;
   dataLength?: number;
+  totalLength?: number;
+  nextCursor?: string;
+  hasNextPage?: boolean;
   data?: Ticket[];
 };
 export type GetTicketsCompletedApiArg = {
@@ -679,24 +745,42 @@ export type GetTicketsCompletedApiArg = {
     Example: awaiting_evaluation,in_progress
      */
   status?: string;
+  /** Cursor for pagination (ID of the last item from the previous page) */
+  cursor?: string;
+  /** Maximum number of items to return (default 20, max 100) */
+  limit?: number;
 };
 export type GetTicketsSpecialistAvailableApiResponse = /** status 200 Array of tickets */ {
   success?: boolean;
   dataLength?: number;
+  totalLength?: number;
+  nextCursor?: string;
+  hasNextPage?: boolean;
   data?: Ticket[];
 };
 export type GetTicketsSpecialistAvailableApiArg = {
   /** Filter by city */
   city?: string;
+  /** Cursor for pagination (ID of the last item from the previous page) */
+  cursor?: string;
+  /** Maximum number of items to return (default 20, max 100) */
+  limit?: number;
 };
 export type GetTicketsSpecialistEvaluationsApiResponse = /** status 200 Array of tickets */ {
   success?: boolean;
   dataLength?: number;
+  totalLength?: number;
+  nextCursor?: string;
+  hasNextPage?: boolean;
   data?: Ticket[];
 };
 export type GetTicketsSpecialistEvaluationsApiArg = {
   /** Filter by city */
   city?: string;
+  /** Cursor for pagination (ID of the last item from the previous page) */
+  cursor?: string;
+  /** Maximum number of items to return (default 20, max 100) */
+  limit?: number;
 };
 export type GetTicketsByIdApiResponse = /** status 200 Successfully retrieved the ticket */ {
   success?: boolean;
@@ -1022,6 +1106,7 @@ export const {
   usePatchCategoriesByIdSpecialistAssignMutation,
   usePatchCategoriesByIdSpecialistRemoveMutation,
   useGetNotificationsQuery,
+  useGetNotificationsCountQuery,
   useGetNotificationsStreamQuery,
   useDeleteNotificationsDeleteAllMutation,
   useDeleteNotificationsByIdMutation,

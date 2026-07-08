@@ -413,6 +413,8 @@ router.post('/:id/payment', validateTicketPaymentMiddleware, ticketPaymentHandle
  *           type: string
  *         description: Filter by author (userId)
  *         example: "66df7gh8sasd6f66767rt6"
+ *       - $ref: '#/components/parameters/CursorQuery'
+ *       - $ref: '#/components/parameters/LimitQuery'
  *     responses:
  *       200:
  *         description: Array of tickets
@@ -427,6 +429,15 @@ router.post('/:id/payment', validateTicketPaymentMiddleware, ticketPaymentHandle
  *                 dataLength:
  *                   type: number
  *                   example: 24
+ *                 totalLength:
+ *                   type: number
+ *                   example: 100
+ *                 nextCursor:
+ *                   type: string
+ *                   example: "64f3b12a6f4c1e9d3a7b5678"
+ *                 hasNextPage:
+ *                   type: boolean
+ *                   example: true
  *                 data:
  *                   type: array
  *                   items:
@@ -481,6 +492,8 @@ router.get('/', checkAdminRole, getAllTickets);
  *         description: Unique ID of the ticket
  *         schema:
  *           type: string
+ *       - $ref: '#/components/parameters/CursorQuery'
+ *       - $ref: '#/components/parameters/LimitQuery'
  *     responses:
  *       200:
  *         description: Successfully retrieved ticket comments
@@ -495,6 +508,15 @@ router.get('/', checkAdminRole, getAllTickets);
  *                 dataLength:
  *                   type: number
  *                   example: 24
+ *                 totalLength:
+ *                   type: number
+ *                   example: 100
+ *                 nextCursor:
+ *                   type: string
+ *                   example: "64f3b12a6f4c1e9d3a7b5678"
+ *                 hasNextPage:
+ *                   type: boolean
+ *                   example: true
  *                 data:
  *                   type: array
  *                   items:
@@ -556,6 +578,8 @@ router.get('/:id/comments', getTicketComments);
  *         description: Filter by city
  *         example: "Warszawa"
  *       - $ref: '#/components/parameters/TicketStatusQuery'
+ *       - $ref: '#/components/parameters/CursorQuery'
+ *       - $ref: '#/components/parameters/LimitQuery'
  *     responses:
  *       200:
  *         description: Array of tickets
@@ -570,6 +594,15 @@ router.get('/:id/comments', getTicketComments);
  *                 dataLength:
  *                   type: number
  *                   example: 24
+ *                 totalLength:
+ *                   type: number
+ *                   example: 100
+ *                 nextCursor:
+ *                   type: string
+ *                   example: "64f3b12a6f4c1e9d3a7b5678"
+ *                 hasNextPage:
+ *                   type: boolean
+ *                   example: true
  *                 data:
  *                   type: array
  *                   items:
@@ -631,6 +664,8 @@ router.get('/my', getMyTickets);
  *         description: Filter by city
  *         example: "Warszawa"
  *       - $ref: '#/components/parameters/TicketStatusQuery'
+ *       - $ref: '#/components/parameters/CursorQuery'
+ *       - $ref: '#/components/parameters/LimitQuery'
  *     responses:
  *       200:
  *         description: Array of tickets
@@ -645,6 +680,15 @@ router.get('/my', getMyTickets);
  *                 dataLength:
  *                   type: number
  *                   example: 24
+ *                 totalLength:
+ *                   type: number
+ *                   example: 100
+ *                 nextCursor:
+ *                   type: string
+ *                   example: "64f3b12a6f4c1e9d3a7b5678"
+ *                 hasNextPage:
+ *                   type: boolean
+ *                   example: true
  *                 data:
  *                   type: array
  *                   items:
@@ -699,6 +743,8 @@ router.get('/completed', getCompletedTickets);
  *           type: string
  *         description: Filter by city
  *         example: "Warszawa"
+ *       - $ref: '#/components/parameters/CursorQuery'
+ *       - $ref: '#/components/parameters/LimitQuery'
  *     responses:
  *       200:
  *         description: Array of tickets
@@ -713,6 +759,15 @@ router.get('/completed', getCompletedTickets);
  *                 dataLength:
  *                   type: number
  *                   example: 24
+ *                 totalLength:
+ *                   type: number
+ *                   example: 100
+ *                 nextCursor:
+ *                   type: string
+ *                   example: "64f3b12a6f4c1e9d3a7b5678"
+ *                 hasNextPage:
+ *                   type: boolean
+ *                   example: true
  *                 data:
  *                   type: array
  *                   items:
@@ -767,6 +822,8 @@ router.get('/specialist/available', checkSpecialistRole, getSpecialistAvailableT
  *           type: string
  *         description: Filter by city
  *         example: "Warszawa"
+ *       - $ref: '#/components/parameters/CursorQuery'
+ *       - $ref: '#/components/parameters/LimitQuery'
  *     responses:
  *       200:
  *         description: Array of tickets
@@ -781,6 +838,15 @@ router.get('/specialist/available', checkSpecialistRole, getSpecialistAvailableT
  *                 dataLength:
  *                   type: number
  *                   example: 24
+ *                 totalLength:
+ *                   type: number
+ *                   example: 100
+ *                 nextCursor:
+ *                   type: string
+ *                   example: "64f3b12a6f4c1e9d3a7b5678"
+ *                 hasNextPage:
+ *                   type: boolean
+ *                   example: true
  *                 data:
  *                   type: array
  *                   items:

@@ -1,7 +1,6 @@
 'use client';
 
 import { ArrowRight, ClipboardList, RotateCcw } from 'lucide-react';
-import { useGetTicketsMyQuery } from '@/services/api/generated/accountApi';
 import Typography from '@/components/ui/Typography';
 import { LoadingSpinner } from '@/components/shadcn/loading-spinner';
 import { Skeleton } from '@/components/shadcn/skeleton';
@@ -18,24 +17,27 @@ import { EIconBadgeVariant } from '@/enums/ui';
 import { isAdmin, isSpecialist } from 'shared-types';
 import ContentSection from '@/components/ui/ContentSection';
 import { Button } from '@/components/shadcn/button';
+import { paginatedAccountApi } from '@/services/api/enhanced/paginatedAccountApi';
 
 export default function DashboardRecentTickets() {
   const t = useTranslations();
   const { role, city, categoryName, isLoading: isLoadingUserState } = useSelector(selectUserData);
 
   const {
-    data: getTicketsResponse,
+    data: ticketsData,
     isLoading,
     isFetching,
     isError,
     error,
     refetch
-  } = useGetTicketsMyQuery({});
+  } = paginatedAccountApi.endpoints.getTicketsMyInfinite.useInfiniteQuery({
+    limit: 6
+  });
 
   useErrorHandler(error);
 
   const isLoadingTickets = isLoading || isFetching;
-  const userTickets = getTicketsResponse?.data ?? [];
+  const tickets = ticketsData?.pages.flatMap(page => page.data ?? []);
 
   return isError ? null : (
     <section className="space-y-3 lg:col-span-2">
@@ -59,14 +61,14 @@ export default function DashboardRecentTickets() {
               <Skeleton className="h-5 w-10" />
             ) : (
               <Badge variant="amount">
-                {t('ticket.ticketsAmount', { count: userTickets.length ?? 0 })}
+                {t('ticket.ticketsAmount', { count: ticketsData?.pages[0].dataLength ?? 0 })}
               </Badge>
             )}
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <Button variant="ghost" className="animation-hover" onClick={refetch}>
+          <Button variant="ghost" className="animation-hover" onClick={() => refetch()}>
             <RotateCcw size={12} />
           </Button>
 
@@ -83,7 +85,7 @@ export default function DashboardRecentTickets() {
 
       {isLoadingTickets ? (
         <LoadingSpinner className="m-auto" />
-      ) : userTickets.length === 0 ? (
+      ) : tickets?.length === 0 ? (
         <ContentSection
           bgTransparent={true}
           className="m-auto flex w-fit flex-col items-center justify-center p-6"
@@ -94,7 +96,7 @@ export default function DashboardRecentTickets() {
             {t('dashboard.recentTicketsEmpty')}
           </Typography>
 
-          <Button variant="secondary" onClick={refetch}>
+          <Button variant="secondary" onClick={() => refetch()}>
             <RotateCcw size={12} />
 
             {t('common.refresh')}
@@ -102,7 +104,7 @@ export default function DashboardRecentTickets() {
         </ContentSection>
       ) : (
         <div className="grid grid-cols-1 gap-3 xl:grid-cols-2">
-          {userTickets.map((ticket, i) => (
+          {tickets?.map((ticket, i) => (
             <TicketCard key={ticket._id} index={i} ticket={ticket} />
           ))}
         </div>
