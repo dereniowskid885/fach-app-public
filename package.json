@@ -1,0 +1,12 @@
+{
+  "name": "fach-app",
+  "version": "1.0.0",
+  "description": "FachApp is a web-based platform designed to manage and streamline the process of reporting, tracking, and resolving various issues reported by users, with help of specialists.",
+  "private": true,
+  "workspaces": [
+    "frontend/web",
+    "services/account-service",
+    "shared/shared-backend",
+    "shared/shared-types"
+  ]
+}

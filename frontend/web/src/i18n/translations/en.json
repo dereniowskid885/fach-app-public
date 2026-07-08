@@ -1,0 +1,482 @@
+{
+  "lang": {
+    "sidebarButtonText": "Language",
+    "pl": "Polish",
+    "en": "English"
+  },
+  "theme": {
+    "sidebarButtonText": "Theme",
+    "lightVariant": "Light",
+    "darkVariant": "Dark",
+    "systemVariant": "System"
+  },
+  "common": {
+    "appTitle": "FachApp",
+    "noResults": "No results.",
+    "close": "Close",
+    "all": "All",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "back": "Back",
+    "goToLogin": "Go to login",
+    "backToLogin": "Back to login",
+    "goToApp": "Go to app",
+    "sendLink": "Send link",
+    "logout": "Logout",
+    "selectLanguage": "Select language",
+    "selectTheme": "Select theme",
+    "avatar": "Avatar",
+    "unassigned": "Unassigned",
+    "noUpdates": "No updates yet",
+    "viewAll": "View all",
+    "clearAll": "Clear all",
+    "collapse": "Collapse",
+    "search": "Search",
+    "success": "Success",
+    "edit": "Edit",
+    "delete": "Delete",
+    "unknownUser": "Unknown user",
+    "unknown": "Unknown",
+    "city": "City",
+    "category": "Category",
+    "assignee": "Assignee",
+    "createdBy": "Created by",
+    "send": "Send",
+    "charsAmount": "{amount} characters remaining",
+    "saveChanges": "Save Changes",
+    "before": "Before",
+    "after": "After",
+    "refresh": "Refresh",
+    "showDetails": "Show details",
+    "next": "Next",
+    "previous": "Previous",
+    "loadMore": "Load more"
+  },
+  "userRole": {
+    "admin": "Admin",
+    "user": "User",
+    "specialist": "Specialist"
+  },
+  "ticketStatus": {
+    "awaitingEvaluation": "Awaiting evaluation",
+    "awaitingPayment": "Awaiting payment",
+    "inProgress": "In progress",
+    "solutionReview": "Solution review",
+    "moderatorInvestigation": "Moderator investigation",
+    "completed": "Completed",
+    "canceled": "Canceled",
+    "unknown": "Unknown status"
+  },
+  "timeOfDay": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again in a moment.",
+    "invalidToken": "Your session is invalid or has expired. Please log in again.",
+    "invalidLink": "Invalid or expired link.",
+    "tokenNotFound": "Authentication token not found. Please log in again.",
+    "invalidData": "The provided data is invalid. Please check and try again.",
+    "invalidCredentials": "Invalid email or password.",
+    "userNotFound": "User not found.",
+    "userAlreadyExists": "A user with this email already exists.",
+    "userNotVerified": "Your account is not verified yet.",
+    "emailFailed": "Failed to send the email. Please try again later.",
+    "categoryNotFound": "Category not found.",
+    "ticketNotFound": "Ticket not found.",
+    "evaluationNotFound": "Evaluation not found.",
+    "invalidTicketStatus": "Invalid ticket status.",
+    "invalidTicketStatusChange": "Invalid ticket status change.",
+    "specialistCommentNotFound": "Cannot submit ticket for review without a specialist comment.",
+    "alreadyEvaluated": "You have already evaluated this ticket.",
+    "categoryHasSpecialists": "This category has assigned specialists and cannot be removed.",
+    "userAlreadyAssigned": "User is already assigned to this category.",
+    "categoryAlreadyExists": "Category already exists.",
+    "invalidRole": "Invalid user role.",
+    "userAlreadyCategorized": "User is already categorized.",
+    "userNotAssignedToCategory": "User is not assigned to this category.",
+    "missingAcceptedEvaluation": "No accepted evaluation found.",
+    "paymentAlreadyProcessed": "Payment has already been processed.",
+    "paymentFailed": "Failed to process payment. Please try again.",
+    "minimumCharacters": "Text must have at least {amount} characters."
+  },
+  "sidebar": {
+    "mainMenu": "Main Menu"
+  },
+  "dashboard": {
+    "greeting": "{timeOfDayGreeting}, {userName}!",
+    "greetingMessage": "Check out what's new and be up to date.",
+    "createNewTicketButtonText": "Create new ticket",
+    "recentTicketsHeader": "Recent tickets",
+    "recentTicketsEmpty": "No recent tickets - refresh to update."
+  },
+  "pages": {
+    "dashboard": "Dashboard",
+    "availableTickets": "Available tickets",
+    "tickets": "My tickets",
+    "allTickets": "All tickets",
+    "evaluations": "My evaluations",
+    "completedTickets": "Completed tickets",
+    "inbox": "Inbox",
+    "settings": "Settings"
+  },
+  "category": {
+    "select": "Select category",
+    "search": "Search category",
+    "noResults": "No categories found",
+    "unknown": "Unknown category"
+  },
+  "select": {
+    "city": "Select city"
+  },
+  "authLayout": {
+    "title": "Fast and reliable support",
+    "subtitle": "The all-in-one platform for reporting, tracking, and resolving technical challenges with world-class specialists.",
+    "feature1": "Organized category-based ticket management",
+    "feature2": "Easy tracking of ticket progress and updates",
+    "feature3": "Access to qualified specialists on demand",
+    "feature4": "Quick resolution of technical issues",
+    "feature5": "User-friendly intuitive interface",
+    "feature6": "Secure communication and data storage"
+  },
+  "authForm": {
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "email": "E-mail",
+    "emailPlaceholder": "user@example.com",
+    "password": "Password",
+    "passwordConfirm": "Confirm password",
+    "name": "Name",
+    "namePlaceholder": "John",
+    "surname": "Surname",
+    "surnamePlaceholder": "Doe",
+    "city": "City"
+  },
+  "passwordInput": {
+    "info": "Password must be at least 7 characters long",
+    "passwordMatch": "Passwords must match",
+    "newPasswordMatch": "New password and confirm new password must match",
+    "passwordEqualsCurrent": "New password cannot be the same as the current password"
+  },
+  "loginPage": {
+    "authCardDescription": "To be one step away from <span>solution</span>",
+    "forgotPassword": "Forgot password?",
+    "signUpLabel": "Don't have an account?",
+    "continueWith": "Or continue with",
+    "github": "Github",
+    "google": "Google",
+    "accountVerifyTitle": "Account inactive",
+    "accountVerifyDescription": "Do you want to receive a verification link to your email: <span>{email}</span>?",
+    "accountVerifyEmailSent": "Account verification link has been sent!"
+  },
+  "registerPage": {
+    "authCardTitle": "Create your account",
+    "successDialogTitle": "Account created",
+    "successDialogDescription": "Account verification link has been sent to email: <span>{email}</span>",
+    "cityRequired": "City is required"
+  },
+  "passwordReset": {
+    "authCardDescription": "Enter your email to receive a password reset link",
+    "authCardDescriptionSuccess": "Password reset link has been sent to email: <span>{email}</span>"
+  },
+  "passwordResetPage": {
+    "authCardTitle": "Reset password",
+    "authCardTitleSuccess": "Password has been reset",
+    "linkExpired": "Invalid or expired link"
+  },
+  "accountVerifyPage": {
+    "countdownDescription": "Redirecting to login in ",
+    "successTitle": "Account verified",
+    "errorTitle": "An error occurred during verification",
+    "tokenInvalidTitle": "Account verification link is invalid"
+  },
+  "ticketFormDialog": {
+    "title": {
+      "edit": "Edit ticket",
+      "creation": "Create new ticket"
+    },
+    "toastTitle": {
+      "edit": "Your ticket has been updated",
+      "creation": "Ticket created successfully"
+    },
+    "titleFormLabel": "Title",
+    "descriptionFormLabel": "Description",
+    "errorMissingCategory": "Please select ticket category",
+    "errorInvalidCategory": "Invalid category, please select other one.",
+    "errorTitleRequired": "Title cannot be empty",
+    "errorTitleMinLength": "Title must be at least {amount} characters",
+    "errorDescriptionRequired": "Description cannot be empty",
+    "errorDescriptionMinLength": "Description must be at least {amount} characters"
+  },
+  "ticketCancelDialog": {
+    "title": "Are you sure you want to cancel this ticket?",
+    "toastTitle": "Ticket successfully canceled"
+  },
+  "ticketDeleteDialog": {
+    "title": "Are you sure you want to delete this ticket?",
+    "toastTitle": "Ticket successfully deleted"
+  },
+  "ticketCommentDeleteDialog": {
+    "title": "Are you sure you want to delete this comment?",
+    "toastTitle": "Comment deleted successfully"
+  },
+  "ticketPaymentDialog": {
+    "title": "Enter payment details",
+    "toastTitle": "Ticket payment successfully completed"
+  },
+  "evaluation": {
+    "dateOfResponse": "Response deadline",
+    "responseTime": "Response time",
+    "price": "Price",
+    "city": "City"
+  },
+  "evaluationDialog": {
+    "title": {
+      "edit": "Edit evaluation",
+      "creation": "Ticket evaluation"
+    },
+    "toastTitle": {
+      "edit": "Your evaluation has been updated",
+      "creation": "Your evaluation has been sent to the author"
+    },
+    "daysLabel": "Days",
+    "hoursLabel": "Hours",
+    "minutesLabel": "Minutes",
+    "errorMinutes": "Response time cannot be shorter than {amount} min",
+    "errorPrice": "Price cannot be less than {amount} {currency}",
+    "currentEvaluationTitle": "Current evaluation",
+    "currentEvaluationPrice": "Current price"
+  },
+  "evaluationListDialog": {
+    "title": "Current ticket evaluations",
+    "toastTitle": "Ticket evaluation has been accepted",
+    "confirmButtonText": "Accept evaluation"
+  },
+  "buttonsCarousel": {
+    "searchPlaceholder": "Filter...",
+    "categoryFilterHeader": "Categories",
+    "statusFilterHeader": "Statuses",
+    "cityFilterHeader": "Cities"
+  },
+  "ticketDataTable": {
+    "ticketHeader": "Ticket",
+    "statusHeader": "Status",
+    "categoryHeader": "Category",
+    "createdAtHeader": "Creation date",
+    "conversationHeader": "Conversation",
+    "cityHeader": "City"
+  },
+  "ticketTablePageContent": {
+    "showFiltersButton": "Show filters",
+    "hideFiltersButton": "Hide filters"
+  },
+  "ticket": {
+    "searchPlaceholder": "Search tickets...",
+    "ticketsAmount": "{count, plural, =0 {0 tickets} one {# ticket} other {# tickets}}",
+    "evaluationsAmount": "{count, plural, =0 {0 evaluations} one {# evaluation} other {# evaluations}}",
+    "messagesAmount": "{count, plural, =0 {0 messages} one {# message} other {# messages}}"
+  },
+  "ticketSpecialistActionButtons": {
+    "reply": "Reply",
+    "evaluate": "Evaluation",
+    "sendForReview": "Send for review"
+  },
+  "ticketUserActionButtons": {
+    "pay": "Pay",
+    "addComment": "Comment",
+    "showEvaluations": "Show evaluations",
+    "solutionReview": "Resolve the ticket",
+    "checkSolution": "Check solution"
+  },
+  "myTicketsPage": {
+    "headerTitle": {
+      "user": "Your tickets",
+      "specialist": "Tickets to solve",
+      "admin": "Ticket management"
+    },
+    "headerDescription": {
+      "user": "Track the status of tickets you have submitted and continue working with the assigned specialist.",
+      "specialist": "Manage tickets you are currently working on and communicate with their creators.",
+      "admin": "Full overview of all submitted tickets - take administrative action where needed."
+    }
+  },
+  "completedTicketsPage": {
+    "headerTitle": {
+      "user": "Finished tickets",
+      "specialist": "Finished tickets",
+      "admin": ""
+    },
+    "headerDescription": {
+      "user": "Review tickets that have been completed or canceled.",
+      "specialist": "Review tickets you have worked on that are now completed or canceled.",
+      "admin": ""
+    }
+  },
+  "availableTicketsPage": {
+    "headerTitle": {
+      "specialist": "Open requests"
+    },
+    "headerDescription": {
+      "specialist": "Browse tickets submitted by users and send your evaluations."
+    }
+  },
+  "myEvaluationsPage": {
+    "headerTitle": {
+      "specialist": "Your evaluations"
+    },
+    "headerDescription": {
+      "specialist": "Track tickets where you have already submitted your evaluation."
+    }
+  },
+  "responseTime": {
+    "days": "{count, plural, =1 {# day} other {# days}}",
+    "hours": "{count, plural, =1 {# hour} other {# hours}}",
+    "minutes": "{count, plural, =1 {# minute} other {# minutes}}"
+  },
+  "ticketDetailsDialog": {
+    "createdAt": "Created: {date}",
+    "updatedAt": "Updated: {date}",
+    "detailsSectionTitle": "Details",
+    "descriptionSectionTitle": "Description",
+    "acceptedEvaluationSectionTitle": "Accepted evaluation",
+    "conversationSectionTitle": "Conversation",
+    "noCommentsText": "No comments yet. Be the first!",
+    "addMessageSectionTitle": "Add Message",
+    "toastTitle": {
+      "comment": "Comment added",
+      "solutionAccept": "Great, glad your issue is resolved! The ticket has been closed.",
+      "moderatorInvestigation": "Your ticket has been sent for moderator review. We will look into the issue and get back to you shortly."
+    },
+    "noAcceptedEvaluationText": {
+      "user": "Browse the available evaluations submitted by specialists and accept the one that best fits your needs to move forward with your ticket.",
+      "admin": "No evaluation has been accepted yet.",
+      "specialist": "Submit your evaluation or update your existing one to help the user move forward with their ticket."
+    }
+  },
+  "getRelativeTime": {
+    "justNow": "just now",
+    "minutesAgo": "{minutes}m ago",
+    "hoursAgo": "{hours}h ago",
+    "minutesAndHoursAgo": "{hours}h {minutes}m ago"
+  },
+  "ticketSolutionReviewDialog": {
+    "title": "How would you like to close the ticket?",
+    "resolvedTitle": "Accept the solution",
+    "resolvedDescription": "The specialist has resolved your issue. Click to close the ticket and release the payment to the specialist.",
+    "reportIssueTitle": "Report an issue",
+    "reportIssueDescription": "Not satisfied with the solution? Escalate the case to a moderator who will look into the situation."
+  },
+  "ticketDetailsAdminActionButtons": {
+    "changeStatus": "Change status",
+    "assigneeChange": "Assign ticket"
+  },
+  "ticketAdminStatusChangeDialog": {
+    "title": "Choose status",
+    "toastTitle": "Ticket status changed successfully",
+    "statusChangeDescription": {
+      "awaiting_payment": "The ticket will be moved to awaiting payment from the client. A specialist evaluation must be accepted before proceeding. Only available if no payment has been made yet.",
+      "in_progress": "The ticket will be reopened and handed back to the specialist for further work. A specialist evaluation must be accepted before proceeding.",
+      "solution_review": "The ticket will be sent to the client for solution review and approval.",
+      "moderator_investigation": "The ticket will be escalated to a moderator for a thorough investigation.",
+      "completed": "The ticket will be marked as completed and the specialist will receive their payment.",
+      "canceled": "The ticket will be permanently canceled. This action cannot be undone.",
+      "awaiting_evaluation": "The ticket will be reverted to the evaluation stage. The accepted evaluation will be removed, allowing the client to select a new specialist."
+    }
+  },
+  "ticketAdminAssignmentDialog": {
+    "title": "Are you sure you want to assign ticket to yourself?",
+    "confirmButtonText": "Assign",
+    "toastTitle": "The case has been assigned to you"
+  },
+  "ticketSpecialistSendForReviewDialog": {
+    "title": "Are you sure you want to submit this ticket for review?",
+    "confirmButtonText": "Submit for review",
+    "toastTitle": "The ticket has been submitted for review"
+  },
+  "settingsPage": {
+    "title": "Settings",
+    "description": "Manage your account settings and preferences.",
+    "personalForm": {
+      "title": "Personal Information",
+      "description": "Update your personal information, such as name, surname, and city.",
+      "confirmDialogTitle": "Are you sure you want to update your personal information?",
+      "toastTitle": "Your personal information has been updated"
+    },
+    "securityForm": {
+      "title": "Security",
+      "description": "Update your login credentials.",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmNewPassword": "Confirm new password",
+      "confirmDialogTitle": "Are you sure you want to change your password?",
+      "confirmDialogDescription": "This action will log you out from all devices.",
+      "submitButton": "Change password",
+      "toastTitle": "Your password has been updated"
+    },
+    "themeForm": {
+      "title": "Theme",
+      "description": "Customize the appearance of the application. Your selection will be saved and applied immediately.",
+      "toastTitle": "Your theme preference has been saved",
+      "themeDescription": {
+        "light": "Use the light theme",
+        "dark": "Use the dark theme",
+        "system": "Match the system theme"
+      }
+    }
+  },
+  "notifications": {
+    "empty": "You don't have any notifications",
+    "title": {
+      "specialist_evaluation_added": "New specialist evaluation",
+      "specialist_evaluation_edited": "Specialist evaluation updated",
+      "user_evaluation_accepted": "Evaluation accepted",
+      "user_ticket_payment_done": "Payment completed",
+      "comment_added": "New comment",
+      "specialist_send_for_review": "Review request",
+      "user_solution_accepted": "Solution accepted",
+      "user_solution_rejected": "Solution rejected",
+      "admin_ticket_details_updated": "Ticket details updated",
+      "admin_ticket_assignee_updated": "Ticket assignee changed",
+      "admin_ticket_city_updated": "Ticket city changed",
+      "admin_ticket_status_updated": "Ticket status changed",
+      "admin_ticket_category_updated": "Ticket category changed",
+      "admin_ticket_deleted": "Ticket deleted"
+    },
+    "description": {
+      "specialist_evaluation_added": "{actor} has added an evaluation to ticket: \"{ticketTitle}\".",
+      "specialist_evaluation_edited": "{actor} has updated their evaluation for ticket: \"{ticketTitle}\".",
+      "user_evaluation_accepted": "{actor} has accepted your evaluation for ticket: \"{ticketTitle}\".",
+      "user_ticket_payment_done": "{actor} has completed payment for ticket: \"{ticketTitle}\".",
+      "comment_added": "<span>{actorRole}</span> has added a comment to ticket: \"{ticketTitle}\": <i>\"{message}\".</i>",
+      "specialist_send_for_review": "<span>{actorRole}</span> has requested your review of the solution for ticket: \"{ticketTitle}\".",
+      "user_solution_accepted": "{actor} has accepted your solution for ticket: \"{ticketTitle}\".",
+      "user_solution_rejected": "{actor} has rejected your solution. Please wait for a moderator's investigation.",
+      "admin_ticket_details_updated": "<span>{actorRole}</span> has updated your ticket: \"{message}\".",
+      "admin_ticket_assignee_updated": "<span>{actorRole}</span> has changed the assignee of ticket: \"{ticketTitle}\".",
+      "admin_ticket_city_updated": "<span>{actorRole}</span> has updated the city for ticket: \"{ticketTitle}\".",
+      "admin_ticket_status_updated": "<span>{actorRole}</span> has changed the status of ticket: \"{ticketTitle}\".",
+      "admin_ticket_category_updated": "<span>{actorRole}</span> has changed the category of ticket: \"{ticketTitle}\".",
+      "admin_ticket_deleted": "<span>{actorRole}</span> has deleted your ticket: \"{message}\"."
+    },
+    "additionalInfo": {
+      "specialist_evaluation_added": "<u>View ticket</u>",
+      "specialist_evaluation_edited": "<u>View ticket</u>",
+      "user_evaluation_accepted": "Ticket has been moved to <a>My Tickets</a>. <u>View ticket</u>",
+      "user_ticket_payment_done": "<u>View ticket</u>",
+      "comment_added": "<u>View ticket</u>",
+      "specialist_send_for_review": "<u>View ticket</u>",
+      "user_solution_accepted": "Ticket has been moved to <a>Completed Tickets</a>. <u>View ticket</u>",
+      "user_solution_rejected": "<u>View ticket</u>",
+      "admin_ticket_details_updated": "<u>View ticket</u>",
+      "admin_ticket_assignee_updated": "<u>View ticket</u>",
+      "admin_ticket_city_updated": "<u>View ticket</u>",
+      "admin_ticket_status_updated": "<u>View ticket</u>",
+      "admin_ticket_category_updated": "<u>View ticket</u>"
+    }
+  },
+  "infiniteScroll": {
+    "allLoaded": "All items loaded",
+    "empty": "No items found"
+  }
+}

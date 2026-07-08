@@ -1,0 +1,134 @@
+'use client';
+
+import { Button } from '@/components/shadcn/button';
+import { Input } from '@/components/shadcn/input';
+import { Label } from '@/components/shadcn/label';
+import PasswordInput from '@/components/ui/PasswordInput';
+import Typography from '@/components/ui/Typography';
+import { LOGIN_PATH } from '@/constants/routes';
+import { getTokenPayload, isTokenExpired } from '@/utils/token';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { notFound } from 'next/navigation';
+import {
+  PostAuthPasswordResetApiArg,
+  usePostAuthPasswordResetMutation
+} from '@/services/api/generated/accountApi';
+import AuthCard from '../../_components/AuthCard';
+import { useTranslations } from 'next-intl';
+import { getLastPathSegment } from '@/utils/pathname';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { Spinner } from '@/components/shadcn/spinner';
+
+interface IPasswordResetForm {
+  newPassword: string;
+  newPasswordConfirm: string;
+  token: string;
+}
+
+export default function PasswordResetForm() {
+  const t = useTranslations();
+  const { register, handleSubmit, formState, setError } = useForm<IPasswordResetForm>();
+  const pathname = usePathname();
+
+  const token = getLastPathSegment(pathname);
+  const tokenExpired = isTokenExpired(token);
+  const tokenPayload = getTokenPayload(token);
+
+  const [isFormVisible, setFormVisible] = useState<boolean>(!tokenExpired);
+
+  if (!tokenPayload) {
+    notFound();
+  }
+
+  const [triggerPasswordReset, { isLoading, error }] = usePostAuthPasswordResetMutation();
+
+  useErrorHandler(error, {
+    setInlineError: message => setError('root', { message })
+  });
+
+  const submitHandler = async (formData: IPasswordResetForm) => {
+    if (formData.newPassword !== formData.newPasswordConfirm) {
+      setError('root', { message: t('passwordInput.passwordMatch') });
+      return;
+    }
+
+    const payload: PostAuthPasswordResetApiArg = {
+      body: {
+        newPassword: formData.newPassword,
+        token
+      }
+    };
+
+    const { error } = await triggerPasswordReset(payload);
+    if (error) return;
+
+    setFormVisible(false);
+  };
+
+  return (
+    <AuthCard
+      formSubmitHandler={isFormVisible ? handleSubmit(submitHandler) : undefined}
+      titleContent={
+        isFormVisible
+          ? t('passwordResetPage.authCardTitle')
+          : tokenExpired
+            ? t('passwordResetPage.linkExpired')
+            : t('passwordResetPage.authCardTitleSuccess')
+      }
+      mainContent={
+        isFormVisible ? (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="email">{t('authForm.email')}</Label>
+              <Input
+                id="email"
+                type="email"
+                value={tokenPayload.email ?? t('authForm.emailPlaceholder')}
+                minLength={7}
+                maxLength={48}
+                readOnly
+                disabled
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="newPassword">{t('authForm.password')}</Label>
+              <PasswordInput register={register('newPassword')} id="newPassword" />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="newPasswordConfirm">{t('authForm.passwordConfirm')}</Label>
+              <PasswordInput register={register('newPasswordConfirm')} id="newPasswordConfirm" />
+            </div>
+
+            {formState.errors.root && (
+              <Typography variant="p" className="text-destructive mt-2 text-center font-bold">
+                {formState.errors.root.message}
+              </Typography>
+            )}
+          </>
+        ) : null
+      }
+      footerContent={
+        <div className="flex w-full gap-2">
+          {isFormVisible ? (
+            <Button type="submit" className="w-full">
+              {isLoading ? <Spinner /> : null}
+
+              {t('common.confirm')}
+            </Button>
+          ) : null}
+
+          <Link href={LOGIN_PATH} className="w-full">
+            <Button variant="outline" className="w-full">
+              {t('common.backToLogin')}
+            </Button>
+          </Link>
+        </div>
+      }
+    />
+  );
+}

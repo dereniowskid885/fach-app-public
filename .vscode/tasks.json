@@ -1,0 +1,38 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Account Service",
+      "type": "shell",
+      "command": "cd services/account-service && npm run dev",
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Frontend",
+      "type": "shell",
+      "command": "cd frontend/web && npm run dev",
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Stripe CLI",
+      "type": "shell",
+      "command": "stripe listen --forward-to localhost:4000/api/webhooks/stripe",
+      "problemMatcher": []
+    },
+    {
+      "label": "Start App",
+      "dependsOn": ["Start Account Service", "Start Frontend", "Start Stripe CLI"],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Generate all APIs in web",
+      "type": "shell",
+      "command": "npm run apis-generate --prefix frontend/web",
+      "problemMatcher": []
+    }
+  ]
+}

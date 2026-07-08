@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "strict": true,
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "rootDir": "../../",
+    "skipLibCheck": true,
+    "baseUrl": "./app",
+    "paths": {
+      "@web/*": ["../../../frontend/web/src/*"],
+      "@constants/*": ["./constants/*"],
+      "@aggregations/*": ["./aggregations/*"],
+      "@controllers/*": ["./controllers/*"],
+      "@helpers/*": ["./helpers/*"],
+      "@services/*": ["./services/*"],
+      "@managers/*": ["./managers/*"],
+      "@models/*": ["./models/*"],
+      "@routes/*": ["./routes/*"],
+      "@utils/*": ["./utils/*"],
+      "@interfaces/*": ["./interfaces/*"],
+      "@middlewares/*": ["./middlewares/*"],
+      "@schemas/*": ["./schemas/*"],
+      "@sse/*": ["./realtime/sse/*"],
+      "@projections/*": ["./projections/*"]
+    },
+    "typeRoots": ["./node_modules/@types"]
+  },
+  "include": ["app/**/*", "../../shared/shared-backend/types/**/*"],
+  "exclude": ["dist"]
+}

@@ -1,0 +1,814 @@
+import {
+  createUser,
+  deleteUser,
+  getUsers,
+  getUserById,
+  updateUser,
+  updateUserRole,
+  changePassword,
+} from '@controllers/userController';
+
+import express from 'express';
+const router = express.Router();
+
+import { createMiddleware, checkAndParseAccessToken, checkUserRole } from 'shared-backend';
+import {
+  validateCreateUserMiddleware,
+  validateUserPasswordChangeMiddleware,
+  validateUserRoleUpdateMiddleware,
+  validateUserUpdateMiddleware,
+} from 'middlewares/userValidationMiddleware';
+import { EUserRole } from 'shared-types';
+
+// Role middleware
+const checkAdminRole = createMiddleware(checkUserRole, [EUserRole.ADMIN]);
+
+// Auth middleware
+const accessTokenMiddleware = createMiddleware(checkAndParseAccessToken, process.env.ACCESS_TOKEN_SECRET);
+router.use(accessTokenMiddleware);
+
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: Create user (admin only)
+ *     description: Default role is "user", to create a specialist categoryName must be provided and role must be "specialist"
+ *     tags:
+ *       - Users
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - city
+ *               - name
+ *               - surname
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: User's email address
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: User's password
+ *               role:
+ *                 $ref: '#/components/schemas/UserRole'
+ *               categoryName:
+ *                 type: string
+ *                 description: Specialist category name
+ *               name:
+ *                 type: string
+ *                 description: User's first name
+ *               surname:
+ *                 type: string
+ *                 description: User's last name
+ *               city:
+ *                 type: string
+ *                 description: User's city
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: User created successfully
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_INVALID_DATA"
+ *                 message:
+ *                   type: string
+ *                   example: Field categoryName is required while creating specialist
+ *       403:
+ *         description: Forbidden - Attempt to register with admin role
+ *         content:
+ *          application/json:
+ *           schema:
+ *            type: object
+ *            properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_INVALID_DATA"
+ *                 message:
+ *                   type: string
+ *                   example: Cannot register user with admin role
+ *       409:
+ *        description: Conflict - User with this email already exists
+ *        content:
+ *         application/json:
+ *           schema:
+ *            type: object
+ *            properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_ALREADY_EXIST"
+ *                 message:
+ *                   type: string
+ *                   example: User with this email already exists
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.post('/', validateCreateUserMiddleware, checkAdminRole, createUser);
+
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Get all users with filtering options (admin only)
+ *     description: Returns a list of users based on provided filtering criteria
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: query
+ *         name: email
+ *         schema:
+ *           type: string
+ *         description: Filter by user email
+ *       - in: query
+ *         name: role
+ *         schema:
+ *           type: string
+ *         description: Filter by user role (e.g., admin, specialist, user)
+ *         example: "user"
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Filter by user category ID
+ *       - in: query
+ *         name: city
+ *         schema:
+ *           type: string
+ *         description: Filter by user city
+ *       - in: query
+ *         name: verified
+ *         schema:
+ *           type: boolean
+ *         description: Filter by verification status
+ *     responses:
+ *       200:
+ *         description: Fetched users.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 dataLength:
+ *                   type: number
+ *                   example: 24
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TOKEN_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: No access token provided
+ *       403:
+ *         description: Invalid role
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_INVALID_ROLE"
+ *                 message:
+ *                   type: string
+ *                   example: Required role is missing
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.get('/', checkAdminRole, getUsers);
+
+/**
+ * @swagger
+ * /users/change-password:
+ *   patch:
+ *     summary: Change user password
+ *     description: Changes the password of a user based on the provided current password and new password
+ *     tags:
+ *       - Users
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 format: password
+ *               newPassword:
+ *                 type: string
+ *                 format: password
+ *     responses:
+ *       200:
+ *         description: Successfully changed the user password
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Password changed successfully
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_INVALID_DATA"
+ *                 message:
+ *                   type: string
+ *                   example: Current password is incorrect
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TOKEN_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: No access token provided
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: User with provided id not found
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.patch('/change-password', validateUserPasswordChangeMiddleware, changePassword);
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Get user by id (admin only)
+ *     description: Returns user by id
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the user
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Single user object.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TOKEN_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: No access token provided
+ *       403:
+ *         description: Invalid role
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_INVALID_ROLE"
+ *                 message:
+ *                   type: string
+ *                   example: Required role is missing
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: User with provided id not found
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.get('/:id', checkAdminRole, getUserById);
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   patch:
+ *     summary: Update user
+ *     description: Updates user information based on the provided user id
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the user
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                 email:
+ *                   type: string
+ *                 city:
+ *                   type: string
+ *                 isVerified:
+ *                   type: boolean
+ *                 name:
+ *                   type: string
+ *                 surname:
+ *                   type: string
+ *                 theme:
+ *                   $ref: '#/components/schemas/ThemeType'
+ *     responses:
+ *       200:
+ *         description: Successfully updated the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: User updated successfully
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: No data provided for update.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_INVALID_DATA"
+ *                 message:
+ *                   type: string
+ *                   example: No data provided for update
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TOKEN_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: No access token provided
+ *       403:
+ *         description: Required role that allows this action is missing
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_INVALID_ROLE"
+ *                 message:
+ *                   type: string
+ *                   example: Required role that allows this action is missing
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: User with provided id not found
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.patch('/:id', validateUserUpdateMiddleware, updateUser);
+
+/**
+ * @swagger
+ * /users/{id}/role:
+ *   patch:
+ *     summary: Update user role (admin only)
+ *     description: Updates the role of a user based on the provided user ID
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the user
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - role
+ *             properties:
+ *               role:
+ *                 $ref: '#/components/schemas/UserRole'
+ *     responses:
+ *       200:
+ *         description: Successfully updated the user role
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: User role updated successfully
+ *                 data:
+ *                   $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_INVALID_DATA"
+ *                 message:
+ *                   type: string
+ *                   example: Invalid role provided
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TOKEN_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: No access token provided
+ *       403:
+ *         description: Invalid role
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_INVALID_ROLE"
+ *                 message:
+ *                   type: string
+ *                   example: Required role is missing
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: User with provided id not found
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.patch('/:id/role', validateUserRoleUpdateMiddleware, checkAdminRole, updateUserRole);
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     summary: Delete user by id (admin only)
+ *     description: Deletes the user from the system based on the provided user ID
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the user
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successfully deleted the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: User deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_TOKEN_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: No access token provided
+ *       403:
+ *         description: Invalid role
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_INVALID_ROLE"
+ *                 message:
+ *                   type: string
+ *                   example: Required role is missing
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "ERROR_USER_NOT_FOUND"
+ *                 message:
+ *                   type: string
+ *                   example: User with provided id not found
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 status:
+ *                   type: string
+ *                   example: "SERVER_ERROR"
+ *                 message:
+ *                   type: string
+ *                   example: Server error
+ */
+router.delete('/:id', checkAdminRole, deleteUser);
+
+export default router;

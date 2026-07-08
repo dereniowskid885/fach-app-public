@@ -1,0 +1,482 @@
+{
+  "lang": {
+    "sidebarButtonText": "Język",
+    "pl": "Polski",
+    "en": "Angielski"
+  },
+  "theme": {
+    "sidebarButtonText": "Motyw",
+    "lightVariant": "Jasny",
+    "darkVariant": "Ciemny",
+    "systemVariant": "Systemowy"
+  },
+  "common": {
+    "appTitle": "FachApp",
+    "noResults": "Brak wyników.",
+    "close": "Zamknij",
+    "all": "Wszystkie",
+    "confirm": "Potwierdź",
+    "cancel": "Anuluj",
+    "back": "Wróć",
+    "goToLogin": "Przejdź do logowania",
+    "backToLogin": "Wróć do logowania",
+    "goToApp": "Przejdź do aplikacji",
+    "sendLink": "Wyślij link",
+    "logout": "Wyloguj",
+    "selectLanguage": "Wybierz język",
+    "selectTheme": "Wybierz motyw",
+    "avatar": "Awatar",
+    "unassigned": "Nieprzypisany",
+    "noUpdates": "Brak aktualizacji",
+    "viewAll": "Zobacz wszystkie",
+    "clearAll": "Wyczyść wszystkie",
+    "collapse": "Zwiń",
+    "search": "Szukaj",
+    "success": "Sukces",
+    "edit": "Edytuj",
+    "delete": "Usuń",
+    "unknownUser": "Nieznany użytkownik",
+    "unknown": "Nieznany",
+    "city": "Miasto",
+    "category": "Kategoria",
+    "assignee": "Przypisany",
+    "createdBy": "Twórca",
+    "send": "Wyślij",
+    "charsAmount": "Pozostało: {amount} znaków",
+    "saveChanges": "Zapisz zmiany",
+    "before": "Przed",
+    "after": "Po",
+    "refresh": "Odśwież",
+    "showDetails": "Zobacz szczegóły",
+    "next": "Dalej",
+    "previous": "Wstecz",
+    "loadMore": "Załaduj więcej"
+  },
+  "userRole": {
+    "admin": "Admin",
+    "user": "Użytkownik",
+    "specialist": "Specjalista"
+  },
+  "ticketStatus": {
+    "awaitingEvaluation": "Oczekuje na wycenę",
+    "awaitingPayment": "Oczekuje na płatność",
+    "inProgress": "W trakcie rozwiązywania",
+    "solutionReview": "Akceptacja rozwiązania",
+    "moderatorInvestigation": "Badanie przez moderatora",
+    "completed": "Ukończony",
+    "canceled": "Anulowany",
+    "unknown": "Nieznany status"
+  },
+  "timeOfDay": {
+    "morning": "Dzień dobry",
+    "afternoon": "Dzień dobry",
+    "evening": "Dobry wieczór"
+  },
+  "errors": {
+    "generic": "Coś poszło nie tak. Spróbuj ponownie za chwilę.",
+    "invalidToken": "Twoja sesja wygasła lub jest nieprawidłowa. Zaloguj się ponownie.",
+    "invalidLink": "Link wygasł lub jest nieprawidłowy.",
+    "tokenNotFound": "Brak tokena uwierzytelniającego. Zaloguj się ponownie.",
+    "invalidData": "Wprowadzone dane są nieprawidłowe. Sprawdź i spróbuj ponownie.",
+    "invalidCredentials": "Nieprawidłowy email lub hasło.",
+    "userNotFound": "Użytkownik nie został znaleziony.",
+    "userAlreadyExists": "Użytkownik z tym adresem email już istnieje.",
+    "userNotVerified": "Twoje konto nie zostało jeszcze zweryfikowane.",
+    "emailFailed": "Nie udało się wysłać wiadomości email. Spróbuj ponownie później.",
+    "categoryNotFound": "Kategoria nie została znaleziona.",
+    "ticketNotFound": "Sprawa nie została znaleziona.",
+    "evaluationNotFound": "Ocena nie została znaleziona.",
+    "invalidTicketStatus": "Nieprawidłowy status sprawy.",
+    "invalidTicketStatusChange": "Nieprawidłowa zmiana statusu sprawy.",
+    "specialistCommentNotFound": "Nie można przesłać sprawy do weryfikacji bez komentarza specjalisty.",
+    "alreadyEvaluated": "Ta sprawa została już przez Ciebie oceniona.",
+    "categoryHasSpecialists": "Ta kategoria ma przypisanych specjalistów i nie może zostać usunięta.",
+    "userAlreadyAssigned": "Użytkownik jest już przypisany do tej kategorii.",
+    "categoryAlreadyExists": "Kategoria już istnieje.",
+    "invalidRole": "Nieprawidłowa rola użytkownika.",
+    "userAlreadyCategorized": "Użytkownik został już przypisany do kategorii.",
+    "userNotAssignedToCategory": "Użytkownik nie jest przypisany do tej kategorii.",
+    "missingAcceptedEvaluation": "Brak zaakceptowanej wyceny.",
+    "paymentAlreadyProcessed": "Płatność została już zrealizowana.",
+    "paymentFailed": "Nie udało się przetworzyć płatności. Spróbuj ponownie.",
+    "minimumCharacters": "Tekst musi mieć przynajmniej {amount} znaków."
+  },
+  "sidebar": {
+    "mainMenu": "Menu główne"
+  },
+  "dashboard": {
+    "greeting": "{timeOfDayGreeting}, {userName}!",
+    "greetingMessage": "Sprawdź, co nowego i bądź na bieżąco.",
+    "createNewTicketButtonText": "Utwórz nową sprawę",
+    "recentTicketsHeader": "Ostatnie sprawy",
+    "recentTicketsEmpty": "Brak ostatnich zgłoszeń - odśwież, aby uaktualnić."
+  },
+  "pages": {
+    "dashboard": "Pulpit",
+    "availableTickets": "Dostępne sprawy",
+    "tickets": "Moje sprawy",
+    "allTickets": "Wszystkie sprawy",
+    "evaluations": "Moje ewaluacje",
+    "completedTickets": "Ukończone sprawy",
+    "inbox": "Wiadomości",
+    "settings": "Ustawienia"
+  },
+  "category": {
+    "select": "Wybierz kategorie",
+    "search": "Wyszukaj kategorię",
+    "noResults": "Nie znaleziono kategorii",
+    "unknown": "Nieznana kategoria"
+  },
+  "select": {
+    "city": "Wybierz miasto"
+  },
+  "authLayout": {
+    "title": "Szybka i fachowa pomoc",
+    "subtitle": "Wszechstronna platforma do zgłaszania, śledzenia i rozwiązywania problemów technicznych z udziałem światowej klasy specjalistów.",
+    "feature1": "Zorganizowane zarządzanie zgłoszeniami według kategorii",
+    "feature2": "Łatwe śledzenie postępów i aktualizacji zgłoszeń",
+    "feature3": "Dostęp do wykwalifikowanych specjalistów na żądanie",
+    "feature4": "Szybkie rozwiązywanie problemów technicznych",
+    "feature5": "Intuicyjny interfejs użytkownika przyjazny dla użytkownika",
+    "feature6": "Bezpieczna komunikacja i przechowywanie danych"
+  },
+  "authForm": {
+    "signIn": "Zaloguj się",
+    "signUp": "Zarejestruj się",
+    "email": "E-mail",
+    "emailPlaceholder": "jankowalski@gmail.com",
+    "password": "Hasło",
+    "passwordConfirm": "Powtórz hasło",
+    "name": "Imię",
+    "namePlaceholder": "Jan",
+    "surname": "Nazwisko",
+    "surnamePlaceholder": "Kowalski",
+    "city": "Miasto"
+  },
+  "passwordInput": {
+    "info": "Hasło musi mieć przynajmniej 7 znaków",
+    "passwordMatch": "Hasła muszą być takie same",
+    "newPasswordMatch": "Nowe hasło i potwierdzenie nowego hasła muszą być takie same",
+    "passwordEqualsCurrent": "Nowe hasło nie może być takie samo jak obecne hasło"
+  },
+  "loginPage": {
+    "authCardDescription": "Aby być krok od <span>rozwiązania</span>",
+    "forgotPassword": "Zapomniałeś hasła?",
+    "signUpLabel": "Nie masz konta?",
+    "continueWith": "Lub kontynuuj za pomocą",
+    "github": "Github",
+    "google": "Google",
+    "accountVerifyTitle": "Konto nieaktywne",
+    "accountVerifyDescription": "Czy chcesz otrzymać link aktywacyjny na e-mail: <span>{email}</span>?",
+    "accountVerifyEmailSent": "Link do aktywacji konta został wysłany!"
+  },
+  "registerPage": {
+    "authCardTitle": "Stwórz swoje konto",
+    "successDialogTitle": "Konto zostało utworzone",
+    "successDialogDescription": "Link do weryfikacji konta został wysłany na e-mail: <span>{email}</span>",
+    "cityRequired": "Miasto jest wymagane"
+  },
+  "passwordReset": {
+    "authCardDescription": "Wprowadź swój e-mail, aby uzyskać link do zresetowania hasła",
+    "authCardDescriptionSuccess": "Link do zresetowania hasła został wysłany na e-mail: <span>{email}</span>"
+  },
+  "passwordResetPage": {
+    "authCardTitle": "Zresetuj hasło",
+    "authCardTitleSuccess": "Hasło zostało zresetowane",
+    "linkExpired": "Link wygasł lub jest nieprawidłowy"
+  },
+  "accountVerifyPage": {
+    "countdownDescription": "Przekierowanie do logowania za ",
+    "successTitle": "Konto zostało aktywowane",
+    "errorTitle": "Wystąpił błąd podczas weryfikacji",
+    "tokenInvalidTitle": "Link do aktywacji konta jest nieprawidłowy"
+  },
+  "ticketFormDialog": {
+    "title": {
+      "edit": "Edycja sprawy",
+      "creation": "Stwórz nową sprawę"
+    },
+    "toastTitle": {
+      "edit": "Twoja sprawa została zaktualizowana",
+      "creation": "Twoja sprawa utworzona pomyślnie"
+    },
+    "titleFormLabel": "Tytuł",
+    "descriptionFormLabel": "Opis",
+    "errorMissingCategory": "Wybierz kategorię sprawy",
+    "errorInvalidCategory": "Nieprawidłowa kategoria, proszę wybrać inną.",
+    "errorTitleRequired": "Tytuł nie może być pusty",
+    "errorTitleMinLength": "Tytuł musi mieć minimum {amount} znaków",
+    "errorDescriptionRequired": "Opis nie może być pusty",
+    "errorDescriptionMinLength": "Opis musi mieć minimum {amount} znaków"
+  },
+  "ticketCancelDialog": {
+    "title": "Czy na pewno chcesz anulować sprawę?",
+    "toastTitle": "Sprawa anulowana pomyślnie"
+  },
+  "ticketDeleteDialog": {
+    "title": "Czy na pewno chcesz usunąć sprawę?",
+    "toastTitle": "Sprawa usunięta pomyślnie"
+  },
+  "ticketCommentDeleteDialog": {
+    "title": "Czy na pewno chcesz usunąć komentarz?",
+    "toastTitle": "Komentarz usunięty pomyślnie"
+  },
+  "ticketPaymentDialog": {
+    "title": "Wypełnij dane płatności",
+    "toastTitle": "Płatność zakończona sukcesem"
+  },
+  "evaluation": {
+    "dateOfResponse": "Termin odpowiedzi",
+    "responseTime": "Czas odpowiedzi",
+    "price": "Cena",
+    "city": "Miasto"
+  },
+  "evaluationDialog": {
+    "title": {
+      "edit": "Edycja wyceny",
+      "creation": "Wycena sprawy"
+    },
+    "toastTitle": {
+      "edit": "Twoja wycena została zaktualizowana",
+      "creation": "Twoja wycena została wysłana do autora"
+    },
+    "daysLabel": "Dni",
+    "hoursLabel": "Godziny",
+    "minutesLabel": "Minuty",
+    "errorMinutes": "Czas odpowiedzi nie może być krótszy niż {amount} min",
+    "errorPrice": "Cena nie może być mniejsza niż {amount} {currency}",
+    "currentEvaluationTitle": "Obecna wycena",
+    "currentEvaluationPrice": "Obecna cena"
+  },
+  "evaluationListDialog": {
+    "title": "Aktualne wyceny sprawy",
+    "toastTitle": "Wycena sprawy została zaakceptowana",
+    "confirmButtonText": "Zaakceptuj wycenę"
+  },
+  "buttonsCarousel": {
+    "searchPlaceholder": "Filtruj...",
+    "categoryFilterHeader": "Kategorie",
+    "statusFilterHeader": "Statusy",
+    "cityFilterHeader": "Miasta"
+  },
+  "ticketDataTable": {
+    "ticketHeader": "Sprawa",
+    "statusHeader": "Status",
+    "categoryHeader": "Kategoria",
+    "createdAtHeader": "Data utworzenia",
+    "conversationHeader": "Konwersacja",
+    "cityHeader": "Miasto"
+  },
+  "ticketTablePageContent": {
+    "showFiltersButton": "Pokaż filtry",
+    "hideFiltersButton": "Ukryj filtry"
+  },
+  "ticket": {
+    "searchPlaceholder": "Szukaj spraw...",
+    "ticketsAmount": "{count, plural, =0 {0 spraw} one {# sprawa} few {# sprawy} many {# spraw} other {# spraw}}",
+    "evaluationsAmount": "{count, plural, =0 {0 ewaluacji} one {# ewaluacja} few {# ewaluacje} many {# ewaluacji} other {# ewaluacji}}",
+    "messagesAmount": "{count, plural, =0 {0 wiadomości} one {# wiadomość} few {# wiadomości} many {# wiadomości} other {# wiadomości}}"
+  },
+  "ticketSpecialistActionButtons": {
+    "reply": "Odpowiedz",
+    "evaluate": "Wycena",
+    "sendForReview": "Zgłoś rozwiązanie"
+  },
+  "ticketUserActionButtons": {
+    "pay": "Opłać",
+    "addComment": "Skomentuj",
+    "showEvaluations": "Zobacz wyceny",
+    "solutionReview": "Zakończ sprawę",
+    "checkSolution": "Sprawdź rozwiązanie"
+  },
+  "myTicketsPage": {
+    "headerTitle": {
+      "user": "Twoje sprawy",
+      "specialist": "Sprawy do rozwiązania",
+      "admin": "Zarządzanie sprawami"
+    },
+    "headerDescription": {
+      "user": "Śledź status swoich spraw, przeglądaj wyceny i kontynuuj współpracę ze specjalistą.",
+      "specialist": "Zarządzaj sprawami, nad którymi aktualnie pracujesz, i komunikuj się z ich twórcami.",
+      "admin": "Pełny podgląd wszystkich spraw – podejmuj działania administracyjne tam, gdzie są potrzebne."
+    }
+  },
+  "completedTicketsPage": {
+    "headerTitle": {
+      "user": "Zakończone sprawy",
+      "specialist": "Zakończone sprawy",
+      "admin": "admin"
+    },
+    "headerDescription": {
+      "user": "Przeglądaj sprawy, które zostały ukończone lub anulowane.",
+      "specialist": "Przeglądaj sprawy, nad którymi pracowałeś i które zostały ukończone lub anulowane.",
+      "admin": "admin"
+    }
+  },
+  "availableTicketsPage": {
+    "headerTitle": {
+      "specialist": "Dostępne sprawy"
+    },
+    "headerDescription": {
+      "specialist": "Przeglądaj sprawy użytkowników i wysyłaj swoje wyceny."
+    }
+  },
+  "myEvaluationsPage": {
+    "headerTitle": {
+      "specialist": "Twoje wyceny"
+    },
+    "headerDescription": {
+      "specialist": "Śledź sprawy, dla których wysłałeś już swoją wycenę."
+    }
+  },
+  "responseTime": {
+    "days": "{count, plural, =1 {# dzień} few {# dni} many {# dni} other {# dni}}",
+    "hours": "{count, plural, =1 {# godzina} few {# godziny} many {# godzin} other {# godzin}}",
+    "minutes": "{count, plural, =1 {# minuta} few {# minuty} many {# minut} other {# minut}}"
+  },
+  "ticketDetailsDialog": {
+    "createdAt": "Utworzono: {date}",
+    "updatedAt": "Zaktualizowano: {date}",
+    "detailsSectionTitle": "Szczegóły",
+    "descriptionSectionTitle": "Opis",
+    "acceptedEvaluationSectionTitle": "Zaakceptowana wycena",
+    "conversationSectionTitle": "Konwersacja",
+    "noCommentsText": "Brak komentarzy. Napisz pierwszy!",
+    "addMessageSectionTitle": "Dodaj wiadomość",
+    "toastTitle": {
+      "comment": "Komentarz dodany",
+      "solutionAccept": "Świetnie, cieszymy się, że problem został rozwiązany! Sprawa została zamknięta.",
+      "moderatorInvestigation": "Twoja sprawa została przekazana do weryfikacji moderatora. Przyjrzymy się sprawie i wkrótce się odezwiemy."
+    },
+    "noAcceptedEvaluationText": {
+      "user": "Przeglądaj dostępne wyceny przesłane przez specjalistów i zaakceptuj tę, która najlepiej odpowiada Twoim potrzebom, aby kontynuować realizację sprawy.",
+      "admin": "Żadna wycena nie została jeszcze zaakceptowana.",
+      "specialist": "Prześlij swoją wycenę lub zaktualizuj istniejącą, aby pomóc użytkownikowi przejść do kolejnego etapu realizacji sprawy."
+    }
+  },
+  "getRelativeTime": {
+    "justNow": "przed chwilą",
+    "minutesAgo": "{minutes, plural, =1 {# minutę temu} few {# minuty temu} many {# minut temu} other {# minut temu}}",
+    "hoursAgo": "{hours, plural, =1 {# godzinę temu} few {# godziny temu} many {# godzin temu} other {# godzin temu}}",
+    "minutesAndHoursAgo": "{hours, plural, =1 {# godzinę} few {# godziny} many {# godzin} other {# godzin}} {minutes, plural, =1 {# minutę temu} few {# minuty temu} many {# minut temu} other {# minut temu}}"
+  },
+  "ticketSolutionReviewDialog": {
+    "title": "Jak chcesz zamknąć sprawę?",
+    "resolvedTitle": "Zaakceptuj rozwiązanie",
+    "resolvedDescription": "Specjalista rozwiązał Twój problem. Kliknij aby zamknąć ticket i wypłacić wynagrodzenie specjaliście.",
+    "reportIssueTitle": "Zgłoś problem",
+    "reportIssueDescription": "Rozwiązanie nie jest satysfakcjonujące? Przekaż sprawę moderatorowi, który przyjrzy się sytuacji."
+  },
+  "ticketDetailsAdminActionButtons": {
+    "changeStatus": "Zmień status",
+    "assigneeChange": "Przypisz sprawę"
+  },
+  "ticketAdminStatusChangeDialog": {
+    "title": "Wybierz status",
+    "toastTitle": "Status sprawy został zmieniony",
+    "statusChangeDescription": {
+      "awaiting_payment": "Sprawa zostanie przekazana do oczekiwania na płatność od klienta. Przed kontynuacją musi zostać zaakceptowana wycena specjalisty. Opcja dostępna wyłącznie jeśli płatność nie została jeszcze zrealizowana.",
+      "in_progress": "Sprawa zostanie wznowiona i przekazana do realizacji przez specjalistę. Przed kontynuacją musi zostać zaakceptowana wycena specjalisty.",
+      "solution_review": "Sprawa zostanie przekazana do weryfikacji rozwiązania przez klienta.",
+      "moderator_investigation": "Sprawa zostanie przekazana do moderatora w celu dokładnego zbadania sytuacji.",
+      "completed": "Sprawa zostanie oznaczona jako zakończona, a specjalista otrzyma wynagrodzenie.",
+      "canceled": "Sprawa zostanie anulowana. Tej operacji nie można cofnąć.",
+      "awaiting_evaluation": "Sprawa zostanie cofnięta do etapu wyceny. Zaakceptowana wycena zostanie usunięta, a klient będzie mógł wybrać nowego specjalistę."
+    }
+  },
+  "ticketAdminAssignmentDialog": {
+    "title": "Czy na pewno chcesz przypisać sprawę do siebie?",
+    "confirmButtonText": "Przypisz",
+    "toastTitle": "Sprawa została przypisana do Ciebie"
+  },
+  "ticketSpecialistSendForReviewDialog": {
+    "title": "Czy na pewno chcesz przesłać tę sprawę do weryfikacji?",
+    "confirmButtonText": "Prześlij do weryfikacji",
+    "toastTitle": "Sprawa została przesłana do weryfikacji"
+  },
+  "settingsPage": {
+    "title": "Ustawienia",
+    "description": "Zarządzaj swoim kontem i preferencjami.",
+    "personalForm": {
+      "title": "Informacje osobiste",
+      "description": "Zaktualizuj swoje imię, nazwisko, lub miasto.",
+      "confirmDialogTitle": "Czy na pewno chcesz zaktualizować swoje informacje osobiste?",
+      "toastTitle": "Twoje informacje osobiste zostały zaktualizowane"
+    },
+    "securityForm": {
+      "title": "Bezpieczeństwo",
+      "description": "Zaktualizuj swoje dane logowania.",
+      "currentPassword": "Obecne hasło",
+      "newPassword": "Nowe hasło",
+      "confirmNewPassword": "Potwierdź nowe hasło",
+      "confirmDialogTitle": "Czy na pewno chcesz zmienić swoje hasło?",
+      "confirmDialogDescription": "Ta operacja spowoduje wylogowanie ze wszystkich urządzeń.",
+      "submitButton": "Zmień hasło",
+      "toastTitle": "Twoje hasło zostało zaktualizowane"
+    },
+    "themeForm": {
+      "title": "Motyw",
+      "description": "Dostosuj wygląd aplikacji. Wybór zostanie zapisany i zastosowany natychmiast.",
+      "toastTitle": "Motyw został zaktualizowany",
+      "themeDescription": {
+        "light": "Użyj jasnego motywu",
+        "dark": "Użyj ciemnego motywu",
+        "system": "Dopasuj do motywu systemowego"
+      }
+    }
+  },
+  "notifications": {
+    "empty": "Nie masz żadnych powiadomień",
+    "title": {
+      "specialist_evaluation_added": "Nowa wycena specjalisty",
+      "specialist_evaluation_edited": "Wycena specjalisty zaktualizowana",
+      "user_evaluation_accepted": "Wycena zaakceptowana",
+      "user_ticket_payment_done": "Płatność zrealizowana",
+      "comment_added": "Nowy komentarz",
+      "specialist_send_for_review": "Rozwiązanie wysłane do weryfikacji",
+      "user_solution_accepted": "Rozwiązanie zaakceptowane",
+      "user_solution_rejected": "Rozwiązanie odrzucone",
+      "admin_ticket_details_updated": "Szczegóły sprawy zaktualizowane",
+      "admin_ticket_assignee_updated": "Zmieniono przypisanie sprawy",
+      "admin_ticket_city_updated": "Zmieniono miasto sprawy",
+      "admin_ticket_status_updated": "Status sprawy zmieniony",
+      "admin_ticket_category_updated": "Kategoria sprawy zmieniona",
+      "admin_ticket_deleted": "Sprawa usunięta"
+    },
+    "description": {
+      "specialist_evaluation_added": "{actor} dodał ocenę do sprawy: \"{ticketTitle}\".",
+      "specialist_evaluation_edited": "{actor} zaktualizował swoją wycenę dla sprawy: \"{ticketTitle}\".",
+      "user_evaluation_accepted": "{actor} zaakceptował Twoją wycene dla sprawy: \"{ticketTitle}\".",
+      "user_ticket_payment_done": "{actor} opłacił sprawę: \"{ticketTitle}\".",
+      "comment_added": "<span>{actorRole}</span> dodał komentarz do sprawy: \"{ticketTitle}\": <i>\"{message}\".</i>",
+      "specialist_send_for_review": "<span>{actorRole}</span> poprosił o weryfikację rozwiązania dla sprawy: \"{ticketTitle}\".",
+      "user_solution_accepted": "{actor} zaakceptował Twoje rozwiązanie dla sprawy: \"{ticketTitle}\".",
+      "user_solution_rejected": "{actor} odrzucił Twoje rozwiązanie. Proszę oczekiwać na weryfikację moderatora.",
+      "admin_ticket_details_updated": "<span>{actorRole}</span> zaktualizował Twoją sprawę: \"{message}\".",
+      "admin_ticket_assignee_updated": "<span>{actorRole}</span> zmienił osobę przypisaną do sprawy: \"{ticketTitle}\".",
+      "admin_ticket_city_updated": "<span>{actorRole}</span> zaktualizował miasto w sprawie: \"{ticketTitle}\".",
+      "admin_ticket_status_updated": "<span>{actorRole}</span> zmienił status sprawy: \"{ticketTitle}\".",
+      "admin_ticket_category_updated": "<span>{actorRole}</span> zmienił kategorię sprawy: \"{ticketTitle}\".",
+      "admin_ticket_deleted": "<span>{actorRole}</span> usunął sprawę: \"{message}\"."
+    },
+    "additionalInfo": {
+      "specialist_evaluation_added": "<u>Zobacz sprawę</u>",
+      "specialist_evaluation_edited": "<u>Zobacz sprawę</u>",
+      "user_evaluation_accepted": "Sprawa została przeniesiona do <a>Moje sprawy</a>. <u>Zobacz sprawę</u>",
+      "user_ticket_payment_done": "<u>Zobacz sprawę</u>",
+      "comment_added": "<u>Zobacz sprawę</u>",
+      "specialist_send_for_review": "<u>Zobacz sprawę</u>",
+      "user_solution_accepted": "Sprawa została przeniesiona do <a>Ukończone sprawy</a>. <u>Zobacz sprawę</u>",
+      "user_solution_rejected": "<u>Zobacz sprawę</u>",
+      "admin_ticket_details_updated": "<u>Zobacz sprawę</u>",
+      "admin_ticket_assignee_updated": "<u>Zobacz sprawę</u>",
+      "admin_ticket_city_updated": "<u>Zobacz sprawę</u>",
+      "admin_ticket_status_updated": "<u>Zobacz sprawę</u>",
+      "admin_ticket_category_updated": "<u>Zobacz sprawę</u>"
+    }
+  },
+  "infiniteScroll": {
+    "allLoaded": "Wszystkie elementy załadowane",
+    "empty": "Brak elementów do wyświetlenia"
+  }
+}
